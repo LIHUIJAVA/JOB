@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>移位</title>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/whs/gdsBitDistion.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/whs/gdsBit.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/common/drag.js"></script>
+
+	</head>
+	<style>
+		select {
+			outline: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			width: 220px;
+			border: 0;
+			border-bottom: 1px solid #B8C7CE
+		}
+		
+		select:-ms-expand {
+			display: none;
+		}
+		
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+		
+		#big_wrap {
+			width: 100%;
+			height: 100%;
+			background-color: #000;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 999;
+			opacity: 0.3;
+			display: none;
+		}
+		
+		.invty_List {
+			font-size: 14px;
+			margin: 0 auto;
+			margin-top: 10%
+		}
+		body {
+			overflow-x: hidden;
+		}
+		#box .order-title div {
+			margin-top: 55px;
+			margin-left: 20px;
+		}
+		#gbox_jqGrids {
+			width: 100%!important;
+		}
+	</style>
+
+	<body>
+		<div id="big_wrap"></div>
+		<div id="purchaseOrder">
+			<div class="purchaseTit jz">
+				<div class="buttons">
+					<button class="search1">查询</button>
+					<button class="delete">删除</button>
+					<button class="move1">移位选择</button>
+					<button class="move2">确认移位</button>
+				</div>
+			</div>
+			
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="col-md-4">
+						<span>转入货位编码</span><input type="text" id="gdsBitEncd" name="gdsBitEncd" value="" />
+						<span><img class="biao_gdsBitEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="col-md-4">
+						<span>转出货位编码</span><input type="text" id="gdsBitEncd1" name="gdsBitEncd1" value="" />
+						<span><img class="biao1_gdsBitEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="col-md-4">
+						<span>仓库编码</span><input type="text" id="whsEncd" class="whsEncd" name="whsEncd" value=""/>
+						<span><img class="biao_whsEncd" id="whsNm" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="col-md-4">
+						<span>存货编码</span>
+						<input type="text" id="invtyEncd" class="invtyEncd encds" name="invtyEncd" value=""/>
+						<input type="text" id="invtyNm" class="invtyNm names" name="invtyNm" value="" readonly="readonly" />
+						<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="col-md-4">
+						<span>批次</span><input type="text" id="batNum" class="batNum" name="batNum" value=""/>
+						<span><img class="biao_batNum" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="col-md-4">
+						<span>是否移位完成</span>
+						<select name="isOporFish" id="isOporFish">
+							<option value=""></option>
+							<option value="1">是</option>
+							<option value="0">否</option>
+						</select>
+					</div>
+				</form>
+			</div>
+			<table id="invtyWhs_jqGrids"></table>
+			<div id="invtyWhs_jqGridPager"></div>
+		</div>
+		
+		<div id="wraps" style="opacity: 0;">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="back">返回</button>
+					<button class="search">查询</button>
+					<button class="move">移位</button>
+				</div>
+			</div>
+			
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="col-md-4">
+						<span>货位编码</span><input type="text" class="gdsBitEncd" value="" />
+					</div>
+					<div class="col-md-4">
+						<span>仓库编码</span><input type="text" id="whsEncd" class="whsEncd" name="whsEncd" value=""/>
+						<span><img class="biao_whsEncd" id="whsNm" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="col-md-4">
+						<span>存货编码</span><input type="text" id="invtyEncd" class="invtyEncd" name="invtyEncd" value=""/>
+						<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="col-md-4">
+						<span>批次</span><input type="text" id="batNum" class="batNum" name="batNum" value=""/>
+						<span><img class="biao_batNum" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+				</form>
+			</div>
+			<table id="jqGrids"></table>
+			<div id="gdsBit_jqGridPager"></div>
+		</div>
+		
+		<div id="box">
+			<div id="insertClsList" class="invty_List">
+				<div class="purchaseOrder">
+					<div class="purchaseTit">
+						<div class="buttons">
+							<button class="sure">确定</button>
+							<button class="cancel">取消</button>
+						</div>
+					</div>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="col-md-24">
+							<span>货位编码<b>*</b></span><input type="text" class="gdsBitEncd2" id="gdsBitEncd2" name="gdsBitEncd2" value="" readonly="readonly"/>
+							<span><img class="biao2_gdsBitEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="col-md-24">
+							<span>区域编码</span><input type="text" class="regnEncd" id="regnEncd" name="regnEncd" value="" readonly="readonly"/>
+							<!--<span><img class="biao_regnEncd" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="col-md-24">
+							<span>移位数量</span><input type="text" class="qty" name="qty" value="" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

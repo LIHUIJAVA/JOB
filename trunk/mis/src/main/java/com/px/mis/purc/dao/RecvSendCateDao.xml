@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.RecvSendCateDao">
+<!--  按照收发类别编号查询 -->
+  <sql id="Base_Column_List">
+    recv_send_cate_id, recv_send_cate_nm, recv_send_ind, ico, level, pid, memo, cnt_pty_subj_encd
+  </sql>
+  <select id="selectRecvSendCateByRecvSendCateId" parameterType="String" resultType="RecvSendCate">
+    select 
+    <include refid="Base_Column_List" />
+    from recv_send_cate
+    where recv_send_cate_id = #{recvSendCateId}
+  </select>
+  
+  <!--   查询所有收发类型 -->
+  <select id="selectRecvSendCate"  resultType="RecvSendCate">
+    select
+    <include refid="Base_Column_List" />
+    from recv_send_cate
+  </select>
+  
+ <!--  按照收发类型编号删除 -->
+  <delete id="deleteRecvSendCateByRecvSendCateId" parameterType="String">
+    delete from recv_send_cate
+    where recv_send_cate_id = #{recvSendCateId}
+  </delete>
+  
+  <!-- 添加收发类别 -->
+  <insert id="insertRecvSendCate" parameterType="RecvSendCate">
+    insert into recv_send_cate (recv_send_cate_id, recv_send_cate_nm, recv_send_ind, 
+      ico , level, pid, cnt_pty_subj_encd, memo
+      )
+    values (#{recvSendCateId}, #{recvSendCateNm}, #{recvSendInd}, 
+      #{ico}, #{level}, #{pid}, #{cntPtySubjEncd}, #{memo}
+      )
+  </insert>
+  
+  <!-- 按照收发类别编号修改 -->
+  <update id="updateRecvSendCateByRecvSendCateId" parameterType="RecvSendCate">
+    update recv_send_cate
+    <set>
+      <if test="recvSendCateNm != null">
+        recv_send_cate_nm = #{recvSendCateNm},
+      </if>
+      <if test="recvSendInd != null">
+        recv_send_ind = #{recvSendInd},
+      </if>
+      <if test="ico != null">
+        ico = #{ico},
+      </if>
+      <if test="level != null">
+        level = #{level},
+      </if>
+      <if test="pid != null">
+        pid = #{pid},
+      </if>
+      <if test="cntPtySubjEncd != null">
+        cnt_pty_subj_encd = #{cntPtySubjEncd},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+    where recv_send_cate_id = #{recvSendCateId}
+  </update>
+
+
+</mapper>

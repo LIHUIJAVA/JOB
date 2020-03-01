@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.PlatOrderPaymethodDao">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.PlatOrderPaymethod">
+	INSERT INTO plat_order_paymethod (pay_status, order_id, plat_id, store_id, payment_number, paymoney_time, pay_way, 
+    pay_money, banktypecode, offLinePayFlag, merchantPercent, platformPercent)
+	VALUES 
+	<foreach collection="list" item="item" index="index" separator="," close=";">
+		(#{item.payStatus},#{item.orderId},#{item.platId}, #{item.storeId}, #{item.paymentNumber},
+		#{item.paymoneyTime},#{item.payWay},#{item.payMoney},#{item.banktypecode},#{item.offLinePayFlag},
+		#{item.merchantPercent},#{item.platformPercent})
+	</foreach>
+  </insert>
+  
+  
+</mapper>

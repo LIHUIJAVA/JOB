@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.EntrsAgnAdjSubDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.purc.entity.EntrsAgnAdjSub">
+    <id column="ordr_num" jdbcType="BIGINT" property="ordrNum" />
+    <result column="whs_encd" jdbcType="VARCHAR" property="whsEncd" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ordr_num, whs_encd, invty_encd, adj_sngl_id, qty, quotn, no_tax_uprc, no_tax_amt, 
+    tax_rate, discnt_amt, tax_amt, cntn_tax_uprc, prc_tax_sum, un_bllg_rtn_goods_qty, 
+    bllg_qty, rtn_goods_ind, stl_uprc, stl_qty, stl_amt, accm_stl_amt, final_stl_qty, 
+    final_stl_amt, accm_out_whs_qty, prdc_dt, invldtn_dt, bat_num, is_complimentary, 
+    memo,stl_prc_tax_sum,bx_qty
+  </sql>
+  <select id="selectEntrsAgnAdjSubByAdjSnglId" parameterType="String" resultType="EntrsAgnAdjSub">
+    select 
+    <include refid="Base_Column_List" />
+    from entrs_agn_adj_sub
+    where adj_sngl_id = #{adjSnglId}
+  </select>
+  <delete id="deleteEntrsAgnAdjSubByAdjSnglId" parameterType="String">
+    delete from entrs_agn_adj_sub
+    where adj_sngl_id = #{adjSnglId}
+  </delete>
+  <insert id="insertEntrsAgnAdjSub" parameterType="EntrsAgnAdjSub">
+    insert into entrs_agn_adj_sub (ordr_num, whs_encd, invty_encd, 
+      adj_sngl_id, qty, quotn, 
+      no_tax_uprc, no_tax_amt, tax_rate, 
+      discnt_amt, tax_amt, cntn_tax_uprc, 
+      prc_tax_sum, un_bllg_rtn_goods_qty, bllg_qty, 
+      rtn_goods_ind, stl_uprc, stl_qty, 
+      stl_amt, accm_stl_amt, final_stl_qty, 
+      final_stl_amt, accm_out_whs_qty, prdc_dt, 
+      invldtn_dt, bat_num, is_complimentary, 
+      memo,stl_prc_tax_sum,bx_qty)
+    values
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+     (#{item.ordrNum}, #{item.whsEncd}, #{item.invtyEncd}, 
+      #{item.adjSnglId}, #{item.qty}, #{item.quotn}, 
+      #{item.noTaxUprc}, #{item.noTaxAmt}, #{item.taxRate}, 
+      #{item.discntAmt}, #{item.taxAmt}, #{item.cntnTaxUprc}, 
+      #{item.prcTaxSum}, #{item.unBllgRtnGoodsQty}, #{item.bllgQty}, 
+      #{item.rtnGoodsInd}, #{item.stlUprc}, #{item.stlQty}, 
+      #{item.stlAmt}, #{item.accmStlAmt}, #{item.finalStlQty}, 
+      #{item.finalStlAmt}, #{item.accmOutWhsQty}, #{item.prdcDt}, 
+      #{item.invldtnDt}, #{item.batNum}, #{item.isComplimentary}, 
+      #{item.memo},#{item.stlPrcTaxSum},#{item.bxQty})
+    </foreach>
+  </insert>
+
+</mapper>

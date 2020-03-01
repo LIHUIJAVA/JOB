@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.sell.dao.PrintersDao">
+
+	<select id="selectListPrinters" parameterType="Map"
+		resultType="com.px.mis.sell.entity.Printers">
+		SELECT
+		idx,warehouse_id,printer_id,printer_name,printer_type_value,printer_wide,printer_high,printer_speed
+		FROM printers
+		<where>
+			<if test="printerName != null and printerName != ''">
+				AND printer_name like "%"#{printerName}"%"
+			</if>
+		</where>
+		LIMIT ${index},${num}
+	</select>
+
+
+	<delete id="deletePrinters" parameterType="int">
+		DELETE FROM printers
+		WHERE idx=#{idx}
+	</delete>
+	<update id="updatePrinters"
+		parameterType="com.px.mis.sell.entity.Printers">
+		UPDATE printers
+		<set>
+			<if test="warehouseId != null">
+				warehouse_id = #{warehouseId,jdbcType=INTEGER},
+			</if>
+			<if test="printerId != null">
+				printer_id = #{printerId,jdbcType=VARCHAR},
+			</if>
+			<if test="printerName != null">
+				printer_name = #{printerName,jdbcType=VARCHAR},
+			</if>
+			<if test="printerTypeValue != null">
+				printer_type_value = #{printerTypeValue,jdbcType=VARCHAR},
+			</if>
+			<if test="printerWide != null">
+				printer_wide = #{printerWide,jdbcType=INTEGER},
+			</if>
+			<if test="printerHigh != null">
+				printer_high = #{printerHigh,jdbcType=INTEGER},
+			</if>
+			<if test="printerSpeed != null">
+				printer_speed = #{printerSpeed,jdbcType=INTEGER},
+			</if>
+		</set>
+		WHERE idx = #{idx,jdbcType=INTEGER}
+	</update>
+
+
+
+	<insert id="insertPrinters"
+		parameterType="com.px.mis.sell.entity.Printers">
+		insert into printers (idx,warehouse_id, printer_id,
+		printer_name,
+		printer_type_value, printer_wide, printer_high,
+		printer_speed)
+		values (#{idx}, #{warehouseId}, #{printerId},
+		#{printerName},#{printerTypeValue},#{printerWide},#{printerHigh},#{printerSpeed})
+	</insert>
+
+	<select id="printersByidx" parameterType="int" resultType="int">
+		select count(idx) from printers
+	</select>
+
+	<select id="selectByIdx" parameterType="int"
+		resultType="com.px.mis.sell.entity.Printers">
+		SELECT idx,
+		warehouse_id,
+		printer_id,
+		printer_name,
+		printer_type_value,
+		printer_wide,
+		printer_high,
+		printer_speed
+		FROM printers where idx=#{idx}
+	</select>
+</mapper>

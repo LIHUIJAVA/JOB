@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.PursStlSnglMasTabDao">
+  <sql id="Base_Column_List">
+    a.*,b.*,b.memo as memos,pt.purs_typ_nm,mu.user_name,mu.dep_name,
+    pd.provr_nm,mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_nm,
+    ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+    ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost
+  </sql>
+  <!-- 根据主表做分页查询 -->
+  <select id="selectPursStlSnglMasTabList" parameterType="Map" resultMap="pursStlSnglMap" >
+  	SELECT <include refid="Base_Column_List" />
+	FROM purs_stl_sngl_mas_tab a LEFT JOIN purs_stl_sub_tab b ON a.stl_sngl_id = b.stl_sngl_id
+								 LEFT JOIN purs_type as pt ON a.purs_typ_id = pt.purs_typ_id 
+		                    	 LEFT JOIN mis_user mu on a.acc_num=mu.acc_num 
+		                     	 LEFT JOIN provr_doc pd on a.provr_id=pd.provr_id
+		                     	 LEFT JOIN whs_doc wd on b.whs_encd=wd.whs_encd
+		                     	 LEFT JOIN invty_doc ind on b.invty_encd=ind.invty_encd
+		                     	 LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    <where>
+  		<if test="stlSnglId != null and stlSnglId != ''">
+            AND a.to_gds_sngl_id=#{stlSnglId}
+        </if>
+        <if test="stlSnglDt1 != null and stlSnglDt1 != ''">
+            AND a.stl_sngl_dt &gt;=#{stlSnglDt1}
+        </if>
+        <if test="stlSnglDt2 != null and stlSnglDt2 != ''">
+            AND a.stl_sngl_dt &lt;=#{stlSnglDt2}
+        </if>
+        <if test="isNtChk != null and isNtChk != ''">
+            AND a.is_nt_chk=#{isNtChk}
+        </if>
+        <if test="provrId != null and provrId != ''">
+            AND a.provr_id=#{provrId}
+        </if>
+        <if test="invtyEncd != null and invtyEncd != ''">
+            AND b.invty_encd=#{invtyEncd}
+        </if>
+  	</where>
+	ORDER BY a.stl_sngl_id DESC
+	LIMIT #{index},#{num} 
+  </select>
+  <!-- 查询总行数 -->
+  <select id="selectPursStlSnglMasTabCount" parameterType="Map" resultType="Integer">
+	SELECT count(a.stl_sngl_id)
+  	FROM purs_stl_sngl_mas_tab a LEFT JOIN purs_stl_sub_tab b ON a.stl_sngl_id = b.stl_sngl_id 
+  							     LEFT JOIN purs_type as pt ON a.purs_typ_id = pt.purs_typ_id 
+		                    	 LEFT JOIN mis_user mu on a.acc_num=mu.acc_num 
+		                     	 LEFT JOIN provr_doc pd on a.provr_id=pd.provr_id
+		                     	 LEFT JOIN whs_doc wd on b.whs_encd=wd.whs_encd
+		                     	 LEFT JOIN invty_doc ind on b.invty_encd=ind.invty_encd
+		                     	 LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    <where>
+  		<if test="stlSnglId != null and stlSnglId != ''">
+            AND a.to_gds_sngl_id=#{stlSnglId}
+        </if>
+        <if test="stlSnglDt1 != null and stlSnglDt1 != ''">
+            AND a.stl_sngl_dt &gt;=#{stlSnglDt1}
+        </if>
+        <if test="stlSnglDt2 != null and stlSnglDt2 != ''">
+            AND a.stl_sngl_dt &lt;=#{stlSnglDt2}
+        </if>
+        <if test="isNtChk != null and isNtChk != ''">
+            AND a.is_nt_chk=#{isNtChk}
+        </if>
+        <if test="provrId != null and provrId != ''">
+            AND a.provr_id=#{provrId}
+        </if>
+        <if test="invtyEncd != null and invtyEncd != ''">
+            AND b.invty_encd=#{invtyEncd}
+        </if>
+  	</where>
+  </select>
+  <!-- 根据主键查询单个 -->
+  <select id="selectPursStlSnglMasTabByStlSnglId" parameterType="String" resultMap="pursStlSnglMap">
+  	SELECT <include refid="Base_Column_List" />
+	FROM purs_stl_sngl_mas_tab a LEFT JOIN purs_stl_sub_tab b ON a.stl_sngl_id = b.stl_sngl_id 
+								 LEFT JOIN purs_type as pt ON a.purs_typ_id = pt.purs_typ_id 
+		                    	 LEFT JOIN mis_user mu on a.acc_num=mu.acc_num 
+		                     	 LEFT JOIN provr_doc pd on a.provr_id=pd.provr_id
+		                     	 LEFT JOIN whs_doc wd on b.whs_encd=wd.whs_encd
+		                     	 LEFT JOIN invty_doc ind on b.invty_encd=ind.invty_encd
+		                     	 LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+	WHERE a.stl_sngl_id=#{stlSnglId}
+  </select>
+  <resultMap type="PursStlSnglMasTab" id="pursStlSnglMap" autoMapping="true">
+		<id property="stlSnglId" column="stl_sngl_id" />
+	    <collection property="pursSubList" ofType="PursStlSubTab" autoMapping="true"><!-- 采购结算子表 -->
+		    <id property="incrsId" column="incrs_id" /> 
+		    <result property="memo" column="memos" /> 
+	    </collection>
+  </resultMap>
+  
+  <!-- 不带分页的全部查询 -->
+  <select id="printingPursStlSnglMasTabList" parameterType="Map" resultMap="pursStlSnglMap" >
+  	SELECT <include refid="Base_Column_List" />
+	FROM purs_stl_sngl_mas_tab a LEFT JOIN purs_stl_sub_tab b ON a.stl_sngl_id = b.stl_sngl_id
+								 LEFT JOIN purs_type as pt ON a.purs_typ_id = pt.purs_typ_id 
+		                    	 LEFT JOIN mis_user mu on a.acc_num=mu.acc_num 
+		                     	 LEFT JOIN provr_doc pd on a.provr_id=pd.provr_id
+		                     	 LEFT JOIN whs_doc wd on b.whs_encd=wd.whs_encd
+		                     	 LEFT JOIN invty_doc ind on b.invty_encd=ind.invty_encd
+		                     	 LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    <where>
+  		<if test="stlSnglId != null and stlSnglId != ''">
+            AND a.to_gds_sngl_id=#{stlSnglId}
+        </if>
+        <if test="stlSnglDt1 != null and stlSnglDt1 != ''">
+            AND a.stl_sngl_dt &gt;=#{stlSnglDt1}
+        </if>
+        <if test="stlSnglDt2 != null and stlSnglDt2 != ''">
+            AND a.stl_sngl_dt &lt;=#{stlSnglDt2}
+        </if>
+        <if test="isNtChk != null and isNtChk != ''">
+            AND a.is_nt_chk=#{isNtChk}
+        </if>
+        <if test="provrId != null and provrId != ''">
+            AND a.provr_id=#{provrId}
+        </if>
+        <if test="invtyEncd != null and invtyEncd != ''">
+            AND b.invty_encd=#{invtyEncd}
+        </if>
+  	</where>
+	ORDER BY a.stl_sngl_id DESC
+  </select>
+  
+    <!--  查询审核状态 -->
+  <select id="selectPursStlSnglMasTabIsNtChk" parameterType="String" resultType="Integer">
+    select is_nt_chk from purs_stl_sngl_mas_tab where stl_sngl_id=#{stlSnglId}
+  </select>
+
+  <!-- 根据主键删除 -->
+  <delete id="deletePursStlSnglMasTabByStlSnglId" parameterType="java.lang.String">
+  	DELETE FROM purs_stl_sngl_mas_tab a LEFT JOIN purs_stl_sub_tab b ON a.stl_sngl_id = b.stl_sngl_id
+  	WHERE stl_sngl_id=#{stlSnglId}
+  </delete>
+    <!-- 根据主键批量删除 -->
+  <delete id="deletePursStlSnglMasTabList" parameterType="java.lang.String">
+  	DELETE FROM purs_stl_sngl_mas_tab a LEFT JOIN purs_stl_sub_tab b ON a.stl_sngl_id = b.stl_sngl_id
+  	WHERE stl_sngl_id in
+	<foreach item="stlSnglId" collection="list" open="(" close=")" separator=",">
+	     #{stlSnglId}
+	</foreach>
+  </delete>
+  
+  <insert id="insertPursStlSnglMasTab" parameterType="com.px.mis.account.entity.PursStlSnglMasTab">
+  	INSERT INTO purs_stl_sngl_mas_tab(
+  	stl_sngl_id,stl_sngl_dt,purs_typ_id,purs_inv_num,provr_id,dept_id,form_typ_encd,acc_num,
+  	user_name,cust_id,setup_pers,setup_tm,is_nt_chk,memo
+  	)
+  	VALUES(#{stlSnglId},#{stlSnglDt},#{pursTypId},#{pursInvNum},#{provrId},
+  			#{deptId},#{formTypEncd},#{accNum},#{userName},#{custId},
+  			#{setupPers},now(),0,#{memo})
+  </insert>
+  
+  <update id="updatePursStlSnglMasTab" parameterType="com.px.mis.account.entity.PursStlSnglMasTab">
+  	UPDATE purs_stl_sngl_mas_tab
+    <set>
+      <if test="stlSnglId != null">
+        stl_sngl_id = #{stlSnglId},
+      </if>
+      <if test="stlSnglDt != null">
+        stl_sngl_dt &gt;= #{stlSnglDt},
+      </if>
+      <if test="pursTypId != null">
+        purs_typ_id = #{pursTypId},
+      </if>
+      <if test="pursInvNum != null">
+        purs_inv_num = #{pursInvNum},
+      </if>
+      <if test="provrId != null">
+        provr_id = #{provrId},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId},
+      </if>
+      <if test="formTypEncd != null">
+        form_typ_encd = #{formTypEncd},
+      </if>
+      <if test="accNum != null">
+        acc_num = #{accNum},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName},
+      </if>
+      <if test="custId != null">
+        cust_id = #{custId},
+      </if>
+      <if test="mdfr != null">
+        mdfr = #{mdfr},
+      </if>
+      <if test="modiTm != null">
+        modi_tm = #{modiTm},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+    WHERE stl_sngl_id = #{stlSnglId}
+  </update>
+</mapper>

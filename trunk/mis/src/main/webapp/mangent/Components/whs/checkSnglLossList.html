@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>盘点损益单列表</title>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+	</head>
+	<style>
+		select{
+			outline: none;
+			appearance:none;
+			-moz-appearance:none;
+			-webkit-appearance:none;
+			width:220px;
+			border:0;
+			border-bottom:1px solid #B8C7CE
+		}
+		select:-ms-expand { display: none; }
+	</style>
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/whs/checkSnglLossList.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">盘点损益单列表</h1>-->
+				<div class="buttons">
+					<button class="exportExcel">导出</button>
+					<button class="delOrder">删除</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+					<button id="find">查询</button>
+					<button class="joint_search">整单联查</button>
+				</div>
+
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="purchaseType col-md-4">
+						<span>损益单号</span><input type="text" class="checkFormNum" name="checkFormNum" value=""/>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>来源单号</span><input type="text" class="srcFormNum" name="srcFormNum" value=""/>
+					</div>
+					<div class="orderDates col-md-4">
+						<span>损益日期</span><input type="text" class="checkDt1 date1" name="checkDt1" value="" calendar="YYYY-MM-DD" />到<input type="text" class="checkDt2 date2" name="checkDt2" value="" calendar="YYYY-MM-DD" />
+					</div>
+					<div class="businessType col-md-4">
+						<span>盘点仓库<b>*</b></span>
+						<input type="text" id="whsEncd" class="whsEncd encds" name="whsEncd" value="" />
+						<input type="text" id="whsNm" class="whsNm1 names" name="whsNm" value="" readonly="readonly" />
+						<span><img class="whsNm" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>存货编码</span>
+						<input type="text" id="invtyEncd" class="encds" name="invtyEncd" value="" />
+						<input type="text" id="invtyNm" class="names" name="invtyNm" value="" />
+						<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>批次</span><input type="text" id="batNum" name="batNum" value="" />
+						<span><img class="biao_batNum" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="businessType col-md-4">
+						<span>存货分类编码</span>
+						<input type="text" id="invtyCls" class="invtyCls encds" name="invtyClsEncd" value="" />
+						<input type="text" id="invtyClsNm" class="invtyClsNm names" name="invtyClsNm" value="" readonly="readonly" />
+						<span><img class="invtyClsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="department col-md-4" style="display: none;">
+						<span>部门</span><input type="text" id="deptId" class="deptId encds" name="deptId" value="" />
+						<input type="text" id="deptName" class="deptName names" name="deptName" value="" readonly="readonly" />
+						<span><img class="biao_deptId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="salesman col-md-4">
+						<span>创建人</span><input type="text" id="user" class="inputText encds" name="accNum" value=""/>
+						<input type="text" id="userName" name="userName" class="inputText names" value="" readonly="readonly" />
+						<span><img class="biao_userId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>是否审核</span>
+						<select name="isNtChk" id="isNtChk">
+							<option value="" selected value></option>
+							<option value="1">已审</option>
+							<option value="0">未审</option>
+						</select>
+					</div>
+					<div class="businessType col-md-4">
+						<span>备注查询</span><input type="text" class="memo" name="memo" value="" />
+					</div>
+				</form>
+			</div>
+			<table id="jqGrids"></table>
+			<div id="jqgridPager"></div>
+		</div>
+	</body>
+
+</html>

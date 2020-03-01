@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.ProjClsDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.purc.entity.ProjCls">
+    <id column="ordr_Num" jdbcType="BIGINT" property="ordrNum" />
+    <result column="proj_Encd" jdbcType="VARCHAR" property="projEncd" />
+    <result column="proj_Nm" jdbcType="VARCHAR" property="projNm" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+  </resultMap>
+  <!--  新增项目分类 -->
+   <insert id="insertProjCls" parameterType="ProjCls">
+    insert into proj_cls  values ( #{projEncd},  #{projNm}, #{ordrNum},#{memo} )
+   </insert>
+  <!-- 修改项目分类 -->
+  <update id="updateProjClsByOrdrNum" parameterType="ProjCls">
+    update proj_cls
+    <set>
+     
+      <if test="projEncd != null">
+        proj_Encd = #{projEncd},
+      </if>
+      <if test="projNm != null">
+        proj_Nm = #{projNm},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+    where ordr_Num = #{ordrNum}
+  </update>
+  <!-- 删除项目分类 -->
+  <delete id="deleteProjClsByOrdrNum" parameterType="Integer">
+    delete from proj_cls where ordr_Num = #{ordrNum}
+  </delete>
+  <!--   按照自增序号查询项目分类 -->
+  <sql id="Base_Column_List">
+    ordr_num, proj_Encd,proj_Nm, memo
+  </sql>
+  <select id="selectProjClsByOrdrNum" parameterType="Integer" resultType="ProjCls">
+    select 
+    <include refid="Base_Column_List" />
+    from proj_cls
+    where ordr_num = #{ordrNum}
+  </select>
+  <!--   按照项目编码查询客户分类 -->
+ <select id="selectProjClsByProjEncd" parameterType="String" resultType="ProjCls">
+    select 
+    <include refid="Base_Column_List" />
+    from proj_cls
+    where proj_encd = #{projEncd}
+  </select>
+  <select id="selectList" parameterType="Map"
+		resultType="com.px.mis.purc.entity.ProjCls">
+		SELECT proj_Encd, proj_Nm, ordr_Num, memo 
+		FROM proj_cls
+		<where>
+			<if test="projEncd != null and projEncd != ''">
+				AND proj_Encd=#{projEncd}
+			</if>
+			<if test="projNm != null and projNm != ''">
+				AND proj_nm=#{projNm}
+			</if>
+			
+
+		</where>
+		order by ordr_Num desc LIMIT #{index},#{num}
+	</select>
+
+	<select id="selectCount" parameterType="Map" resultType="int">
+		SELECT count(*)
+		FROM proj_cls
+		<where>
+		<if test="projEncd != null and projEncd != ''">
+				AND proj_Encd=#{projEncd}
+			</if>
+
+			<if test="projNum != null and projNum != ''">
+				AND proj_Nm=#{projNum}
+			</if>
+			<if test="memo != null and memo != ''">
+				AND memo=#{memo}
+			</if>
+		</where>
+	</select>
+<!-- 批量删除 -->
+	<delete id="delProjCls" parameterType="java.util.List">
+		DELETE FROM proj_cls WHERE ordr_num IN
+		<foreach collection="list" item="ordrNum" open="(" separator=","
+			close=")">
+			#{ordrNum}
+		</foreach>
+	</delete>
+
+</mapper>

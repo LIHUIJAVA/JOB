@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Home</title>
+		<link rel="stylesheet" type="text/css" href="../assets/css/Home/Home.css" />
+		<script type="text/javascript" src="../assets/js/common/jquery.min.js"></script>
+		<!--<script src="../assets/common/dist/js/app_iframe.1.js"></script>-->
+	</head>
+
+	<body>
+		<!--主页内容-->
+		<div class="buoyinlet">
+
+			<!-- begin:: 业务系统 -->
+			<div class="business">
+				<h3 class="k-content__head-title">业务系统</h3>
+				<ol>
+					<li>
+						<img src="../assets/img/business_01.png" alt="业务系统" />
+						<span>待业务处理</span>
+					</li>
+					<li>
+						<img src="../assets/img/business_02.jpg" alt="业务系统" />
+						<span>待客审任务</span>
+					</li>
+					<li>
+						<img src="../assets/img/business_03.jpg" alt="业务系统" />
+						<span>待打印任务</span>
+					</li>
+					<li>
+						<img src="../assets/img/business_04.jpg" alt="业务系统" />
+						<span>待上传任务</span>
+					</li>
+					<li>
+						<img src="../assets/img/business_05.jpg" alt="业务系统" />
+						<span>待财审任务</span>
+					</li>
+					<li>
+						<img src="../assets/img/business_06.jpg" alt="业务系统" />
+						<span>待发货任务</span>
+					</li>
+					<li>
+						<img src="../assets/img/business_07.jpg" alt="业务系统" />
+						<span>待收货任务</span>
+					</li>
+				</ol>
+			</div>
+			<!-- end:: 业务系统结束 -->
+
+			<!-- begin:: 收藏夹  -->
+			<div class="folder">
+				<h3 class="k-content__head-title">收藏夹</h3>
+				<ol>
+					<li class='pandian'>
+						<img src="../assets/img/folder_01.jpg" alt="收藏夹" />
+						<span>盘点损益表</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_02.jpg" alt="收藏夹" />
+						<span>委托发货单列表</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_03.jpg" alt="收藏夹" />
+						<span>店铺档案</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_04.jpg" alt="收藏夹" />
+						<span>销售发票列表</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_05.jpg" alt="收藏夹" />
+						<span>采购退货单</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_06.jpg" alt="收藏夹" />
+						<span>调拨汇总表</span>
+					</li>
+				</ol>
+			</div>
+			<!-- end:: 收藏夹结束  -->
+
+			<!-- begin:: 常用功能  -->
+			<div class="commen">
+
+				<h3 class="k-content__head-title">常用功能</h3>
+				<ol>
+					<li value="a003002003">
+							<img src="../assets/img/folder_01.jpg" alt="常用功能" />
+							<span>盘点损益表</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_02.jpg" alt="常用功能" />
+						<span>委托发货单列表</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_03.jpg" alt="常用功能" />
+						<span>店铺档案</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_04.jpg" alt="常用功能" />
+						<span>销售发票列表</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_05.jpg" alt="常用功能" />
+						<span>采购退货单</span>
+					</li>
+					<li>
+						<img src="../assets/img/folder_06.jpg" alt="常用功能" />
+						<span>调拨汇总表</span>
+					</li>
+				</ol>
+				<!-- end:: 常用功能结束  -->
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+			$(function() {
+				$('ol li').hover(function() {
+					$(this).addClass('bgColor');
+				}, function() {
+					$(this).removeClass('bgColor');
+				});
+			});
+
+//			$(function() {
+//				$("a").click(function() {
+//					//					var a = this.getAttribute('value')
+//					//					console.log(this.getAttribute('value'))
+//					//					console.log($("." + a))
+//					//					$("." + a).click(function(){
+//					//						
+//					//					})
+//					this.href = "whs/checkSnglLoss.html"
+//
+//				})
+//			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.system.dao.UserMenuDao">
+  <insert id="insert" parameterType="com.px.mis.system.entity.UserMenu">
+	INSERT INTO user_menu (user_id,menu_id)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.userId}, #{item.menuId})
+    </foreach>
+  </insert>
+  
+  <select id="selectUserMenu" parameterType="java.lang.String" resultType="com.px.mis.system.entity.Menu">
+<!--   	SELECT menu.*
+  	FROM menu left join user_menu on user_menu.menu_id = menu.id
+  	WHERE user_menu.user_id = #{userId} -->
+	SELECT
+		menu.* 
+	FROM
+		mis_user
+		JOIN role_menu ON mis_user.role_id = role_menu.role_id 
+		AND mis_user.acc_num = #{userId}
+		JOIN menu ON role_menu.menu_id = menu.id
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  user_menu
+  	WHERE user_id = #{userId}
+  </delete>
+  
+  <delete id="deleteByRoleId" parameterType="java.lang.String">
+  	DELETE user_menu FROM user_menu, mis_user
+  	WHERE user_menu.user_id = mis_user.acc_num AND mis_user.role_id = #{roleId}
+  </delete>
+  
+</mapper>

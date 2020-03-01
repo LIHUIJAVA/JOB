@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.GdsBitMapper">
+    <resultMap id="BaseResultMap" type="GdsBit"
+               autoMapping="true">
+        <id column="gds_bit_encd" property="gdsBitEncd"/>
+        <result column="regn_encd" property="regnEncd"/>
+        <result column="gds_bit_nm" property="gdsBitNm"/>
+        <result column="gds_bit_typ" property="gdsBitTyp"/>
+        <result column="gds_bit_cd" property="gdsBitCd"/>
+        <result column="gds_bit_qty" property="gdsBitQty"/>
+        <result column="memo" property="memo"/>
+        <result column="gds_bit_cd_encd" property="gdsBitCdEncd"/>
+        <result column="setup_pers" property="setupPers"/>
+        <result column="setup_tm" property="setupTm"/>
+        <result column="mdfr" property="mdfr"/>
+        <result column="modi_tm" property="modiTm"/>
+    </resultMap>
+    <!-- 查询所有货位类型 -->
+    <select id="selectgTypList" resultType="GdsBitTyp">
+        select *
+        from Gds_bit_typ
+    </select>
+    <!-- 新增货位档案 -->
+    <insert id="insertGdsBit" parameterType="GdsBit">
+        insert into gds_bit (gds_bit_encd, regn_encd, gds_bit_nm,
+                             gds_bit_typ, gds_bit_cd, gds_bit_qty, memo, gds_bit_cd_encd, setup_pers,
+                             setup_tm, gds_bit_typ_encd, whs_encd)
+        values (#{gdsBitEncd}, #{regnEncd}, #{gdsBitNm},
+                #{gdsBitTyp}, #{gdsBitCd},
+                #{gdsBitQty}, #{memo},
+                #{gdsBitCdEncd}, #{setupPers},
+                now(), #{gdsBitTypEncd}, #{whsEncd})
+    </insert>
+    <!-- 修改货位档案 -->
+    <update id="updateGdsBit" parameterType="GdsBit">
+        update gds_bit
+        <set>
+            <!-- 			<if test="whsEncd != null and  whsEncd != ''">
+                            whs_encd = #{whsEncd},
+                        </if> -->
+            <if test="gdsBitNm != null and  gdsBitNm != ''">
+                gds_bit_nm = #{gdsBitNm},
+            </if>
+            <if test="gdsBitTyp != null and  gdsBitTyp != ''">
+                gds_bit_typ = #{gdsBitTyp},
+            </if>
+            <if test="gdsBitCd != null and  gdsBitCd != ''">
+                gds_bit_cd = #{gdsBitCd},
+            </if>
+            <if test="gdsBitQty != null and  gdsBitQty != ''">
+                gds_bit_qty = #{gdsBitQty},
+            </if>
+            <if test="memo != null and  memo != ''">
+                memo = #{memo},
+            </if>
+            <if test="gdsBitCdEncd != null and  gdsBitCdEncd != ''">
+                gds_bit_cd_encd = #{gdsBitCdEncd},
+            </if>
+            <if test="gdsBitTypEncd != null and  gdsBitTypEncd != ''">
+                gds_bit_typ_encd = #{gdsBitTypEncd},
+            </if>
+            <if test="mdfr != null and  mdfr != ''">
+                mdfr = #{mdfr},
+            </if>
+            modi_tm = now()
+        </set>
+        where gds_bit_encd = #{gdsBitEncd}
+    </update>
+    <!-- 删除货位档案 -->
+    <delete id="deleteGdsBit" parameterType="java.lang.String">
+        delete
+        from gds_bit
+        where gds_bit_encd = #{gdsBitEncd}
+    </delete>
+    <!-- 批删 -->
+    <delete id="deleteGdsBitList" parameterType="java.util.List">
+        delete
+        from gds_bit
+        where gds_bit_encd in
+        <foreach item="gdsBitEncd" collection="list" open="("
+                 close=")" separator=",">
+            #{gdsBitEncd}
+        </foreach>
+    </delete>
+    <!-- 批量查询 -->
+    <select id="selectGBitList" resultType="GdsBit">
+        SELECT * from gds_bit
+        WHERE gds_bit_encd in
+        <foreach collection="gdsBitEncd" item="gdsBitEncd" open="("
+                 close=")" separator=",">
+            #{gdsBitEncd}
+        </foreach>
+    </select>
+    <!-- 简单查 货位档案 -->
+    <sql id="Gds_Bit_List">
+        GBit.gds_bit_encd as gdsBitEncd, GBit.regn_encd as regnEncd,
+		GBit.gds_bit_nm as gdsBitNm,GBit.gds_bit_typ as gdsBitTyp,
+		GBit.gds_bit_cd as gdsBitCd,GBit.gds_bit_qty as gdsBitQty,
+		GBit.memo, GBit.gds_bit_cd_encd as gdsBitCdEncd,
+		GBit.setup_pers as setupPers,GBit.setup_tm as setupTm,
+		GBit.mdfr, GBit.modi_tm as modiTm,
+		GBit.gds_bit_typ_encd as gdsBitTypEncd,
+		GBitType.gds_bit_typ_encd as gdsBitTypEncd,
+		GBitType.gds_bit_typ_nm as gdsBitTypNm
+    </sql>
+    <select id="selectGdsBit" parameterType="Map"
+            resultType="GdsBit">
+        SELECT gds_bit.gds_bit_encd,
+               gds_bit.regn_encd,
+               gds_bit.gds_bit_nm,
+               gds_bit.gds_bit_typ,
+               gds_bit.gds_bit_typ_encd,
+               gds_bit.gds_bit_cd,
+               gds_bit.gds_bit_qty,
+               gds_bit.memo,
+               gds_bit.gds_bit_cd_encd,
+               gds_bit.Setup_Pers,
+               gds_bit.Setup_Tm,
+               gds_bit.Mdfr,
+               gds_bit.Modi_Tm,
+               regn.regn_nm,
+               whs_doc.whs_nm,
+               GBitType.gds_bit_typ_nm,
+               whs_doc.whs_encd
+        FROM gds_bit
+                 LEFT JOIN gds_bit_typ AS GBitType ON gds_bit.gds_bit_typ = GBitType.gds_bit_typ_encd
+                 LEFT JOIN regn ON gds_bit.regn_encd = regn.regn_encd
+                 LEFT JOIN whs_doc ON whs_doc.whs_encd = regn.whs_encd
+        WHERE gds_bit.gds_bit_encd = #{gdsBitEncd}
+
+    </select>
+    <select id="selectGdsBitbyId"
+            resultType="GdsBit">
+        SELECT gds_bit.gds_bit_encd,
+               gds_bit.regn_encd,
+               gds_bit.gds_bit_nm,
+               gds_bit.gds_bit_typ,
+               gds_bit.gds_bit_typ_encd,
+               gds_bit.gds_bit_cd,
+               gds_bit.gds_bit_qty,
+               gds_bit.memo,
+               gds_bit.gds_bit_cd_encd,
+               gds_bit.Setup_Pers,
+               gds_bit.Setup_Tm,
+               gds_bit.Mdfr,
+               gds_bit.Modi_Tm,
+               regn.regn_nm,
+               whs_doc.whs_nm,
+               GBitType.gds_bit_typ_nm,
+               whs_doc.whs_encd
+        FROM gds_bit
+                 LEFT JOIN gds_bit_typ AS GBitType ON gds_bit.gds_bit_typ = GBitType.gds_bit_typ_encd
+                 LEFT JOIN regn ON gds_bit.regn_encd = regn.regn_encd
+                 LEFT JOIN whs_doc ON whs_doc.whs_encd = regn.whs_encd
+        WHERE gds_bit.gds_bit_encd = #{gdsBitEncd}
+
+
+    </select>
+    <select id="selectGdsBitList"
+            resultType="GdsBit">
+        SELECT gds_bit.gds_bit_encd,
+               gds_bit.regn_encd,
+               gds_bit.gds_bit_nm,
+               gds_bit.gds_bit_typ,
+               gds_bit.gds_bit_typ_encd,
+               gds_bit.gds_bit_cd,
+               gds_bit.gds_bit_qty,
+               gds_bit.memo,
+               gds_bit.gds_bit_cd_encd,
+               gds_bit.Setup_Pers,
+               gds_bit.Setup_Tm,
+               gds_bit.Mdfr,
+               gds_bit.Modi_Tm,
+               regn.regn_nm,
+               whs_doc.whs_nm,
+               GBitType.gds_bit_typ_nm,
+               whs_doc.whs_encd
+        FROM gds_bit
+                 LEFT JOIN gds_bit_typ AS GBitType ON gds_bit.gds_bit_typ = GBitType.gds_bit_typ_encd
+                 LEFT JOIN regn ON gds_bit.regn_encd = regn.regn_encd
+                 LEFT JOIN whs_doc ON whs_doc.whs_encd = regn.whs_encd
+        WHERE gds_bit.gds_bit_encd = #{gdsBitEncd}
+
+    </select>
+    <!-- 分页查 -->
+    <select id="selectList" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+        gds_bit.gds_bit_encd,
+        -- gds_bit.regn_encd,
+        gds_bit.gds_bit_nm,
+        gds_bit.gds_bit_typ,
+        gds_bit.gds_bit_typ_encd,
+        gds_bit.gds_bit_cd,
+        gds_bit.gds_bit_qty,
+        gds_bit.memo,
+        gds_bit.gds_bit_cd_encd,
+        gds_bit.Setup_Pers,
+        gds_bit.Setup_Tm,
+        gds_bit.Mdfr,
+        gds_bit.Modi_Tm,
+        -- regn.regn_nm,
+        -- whs_doc.whs_nm,
+        GBitType.gds_bit_typ_nm
+        -- ,whs_doc.whs_encd
+        FROM
+        gds_bit
+        LEFT JOIN gds_bit_typ AS GBitType ON gds_bit.gds_bit_typ = GBitType.gds_bit_typ_encd
+        -- LEFT JOIN regn ON gds_bit.regn_encd = regn.regn_encd
+        -- LEFT JOIN whs_doc ON whs_doc.whs_encd = regn.whs_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND gds_bit.memo like #{memo}
+            </if>
+            <if test=" gdsBitEncd != null and  gdsBitEncd!= ''">
+                <bind name="gdsBitEncd" value="'%'+ gdsBitEncd +'%'"/>
+                AND gds_bit.gds_bit_encd like #{gdsBitEncd}
+            </if>
+            <if test=" gdsBitNm != null and  gdsBitNm!= ''">
+                <bind name="gdsBitNm" value="'%'+ gdsBitNm +'%'"/>
+                AND gds_bit.gds_bit_nm like #{gdsBitNm}
+            </if>
+            <if test=" setupPers != null and  setupPers != ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND gds_bit.setup_pers like #{setupPers}
+            </if>
+            <if test=" gdsBitTypEncd != null and  gdsBitTypEncd != ''">
+                <bind name="gdsBitTypEncd" value="'%'+ gdsBitTypEncd +'%'"/>
+                AND gds_bit.gds_bit_typ_encd like #{gdsBitTypEncd}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        LIMIT #{index},#{num}
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+        SELECT count( gds_bit.gds_bit_encd)
+        FROM
+        gds_bit
+        LEFT JOIN gds_bit_typ AS GBitType ON gds_bit.gds_bit_typ = GBitType.gds_bit_typ_encd
+        -- LEFT JOIN regn ON gds_bit.regn_encd = regn.regn_encd
+        -- LEFT JOIN whs_doc ON whs_doc.whs_encd = regn.whs_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND gds_bit.memo like #{memo}
+            </if>
+            <if test=" gdsBitEncd != null and  gdsBitEncd!= ''">
+                <bind name="gdsBitEncd" value="'%'+ gdsBitEncd +'%'"/>
+                AND gds_bit.gds_bit_encd like #{gdsBitEncd}
+            </if>
+            <if test=" gdsBitNm != null and  gdsBitNm!= ''">
+                <bind name="gdsBitNm" value="'%'+ gdsBitNm +'%'"/>
+                AND gds_bit.gds_bit_nm like #{gdsBitNm}
+            </if>
+            <if test=" setupPers != null and  setupPers != ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND gds_bit.setup_pers like #{setupPers}
+            </if>
+            <if test=" gdsBitTypEncd != null and  gdsBitTypEncd != ''">
+                <bind name="gdsBitTypEncd" value="'%'+ gdsBitTypEncd +'%'"/>
+                AND gds_bit.gds_bit_typ_encd like #{gdsBitTypEncd}
+            </if>
+        </where>
+    </select>
+    <!-- 打印 -->
+    <select id="selectListDaYin" parameterType="Map"
+            resultType="GdsBit">
+        SELECT
+        gds_bit.gds_bit_encd,
+        -- gds_bit.regn_encd,
+        gds_bit.gds_bit_nm,
+        gds_bit.gds_bit_typ,
+        gds_bit.gds_bit_typ_encd,
+        gds_bit.gds_bit_cd,
+        gds_bit.gds_bit_qty,
+        gds_bit.memo,
+        gds_bit.gds_bit_cd_encd,
+        gds_bit.Setup_Pers,
+        gds_bit.Setup_Tm,
+        gds_bit.Mdfr,
+        gds_bit.Modi_Tm,
+        -- regn.regn_nm,
+        -- whs_doc.whs_nm,
+        GBitType.gds_bit_typ_nm
+        -- ,whs_doc.whs_encd
+        FROM
+        gds_bit
+        LEFT JOIN gds_bit_typ AS GBitType ON gds_bit.gds_bit_typ = GBitType.gds_bit_typ_encd
+        -- LEFT JOIN regn ON gds_bit.regn_encd = regn.regn_encd
+        -- LEFT JOIN whs_doc ON whs_doc.whs_encd = regn.whs_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND gds_bit.memo like #{memo}
+            </if>
+            <if test=" gdsBitEncd != null and  gdsBitEncd!= ''">
+                <bind name="gdsBitEncd" value="'%'+ gdsBitEncd +'%'"/>
+                AND gds_bit.gds_bit_encd like #{gdsBitEncd}
+            </if>
+            <if test=" gdsBitNm != null and  gdsBitNm!= ''">
+                <bind name="gdsBitNm" value="'%'+ gdsBitNm +'%'"/>
+                AND gds_bit.gds_bit_nm like #{gdsBitNm}
+            </if>
+            <if test=" setupPers != null and  setupPers != ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND gds_bit.setup_pers like #{setupPers}
+            </if>
+            <if test=" gdsBitTypEncd != null and  gdsBitTypEncd != ''">
+                <bind name="gdsBitTypEncd" value="'%'+ gdsBitTypEncd +'%'"/>
+                AND gds_bit.gds_bit_typ_encd like #{gdsBitTypEncd}
+            </if>
+        </where>
+    </select>
+
+</mapper>

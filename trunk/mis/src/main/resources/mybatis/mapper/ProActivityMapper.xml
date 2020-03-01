@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProActivity">
+  <resultMap id="BaseResultMap" type="com.px.mis.ec.entity.ProActivity">
+    <result column="pro_act_id" jdbcType="VARCHAR" property="proActId" />
+    <result column="pro_act_name" jdbcType="VARCHAR" property="proActName" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="alone_execute" jdbcType="VARCHAR" property="aloneExecute" />
+    <result column="limit_pro" jdbcType="INTEGER" property="limitPro" />
+    <result column="take_store" jdbcType="VARCHAR" property="takeStore" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="create_date" jdbcType="DATE" property="createDate" />
+    <result column="auditor" jdbcType="VARCHAR" property="auditor" />
+    <result column="audit_date" jdbcType="DATE" property="auditDate"/>
+    <result column="audit_result" jdbcType="VARCHAR" property="auditResult" />
+    <result column="memo" jdbcType="VARCHAR" property="memo"/>
+  </resultMap>
+  <insert id="insert" parameterType="com.px.mis.ec.entity.ProActivity">
+	INSERT INTO pro_activity (pro_act_id, pro_act_name, start_date, end_date, alone_execute, limit_pro, take_store, creator, create_date, auditor, audit_date, audit_result, memo)
+	VALUES (#{proActId}, #{proActName}, #{startDate}, #{endDate}, #{aloneExecute}, #{limitPro}, #{takeStore}, #{creator}, #{createDate}, #{auditor}, #{auditDate}, #{auditResult}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ProActivity">
+  	SELECT pro_act_id as proActId, pro_act_name as proActName, start_date as startDate, end_date as endDate, alone_execute as aloneExecute, limit_pro as limitPro, 
+  	take_store as takeStore, creator as creator, create_date as createDate, auditor, audit_date as auditDate, audit_result as auditResult, memo
+  	FROM pro_activity 
+  	WHERE pro_act_id = #{proActId}
+  </select>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.ProActivity">
+  	UPDATE pro_activity 
+  	SET pro_act_name=#{proActName}, start_date=#{startDate}, end_date=#{endDate}, alone_execute=#{aloneExecute}, limit_pro=#{limitPro},
+  	take_store=#{takeStore}, creator=#{creator}, create_date=#{createDate}, auditor=#{auditor}, audit_date=#{auditDate}, audit_result=#{auditResult}, memo=#{memo}
+  	WHERE pro_act_id = #{proActId}
+  </update>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE pa, pas 
+  	FROM  pro_activity as pa LEFT JOIN pro_activitys as pas ON pa.pro_act_id = pas.pro_act_id 
+  	WHERE pa.pro_act_id=#{proActId}
+  </delete>
+  
+  <select id="selectList" parameterType="Map" resultType="java.util.Map">
+	SELECT pa.pro_act_id as proActId, pa.pro_act_name as proActName, pa.start_date as startDate, pa.end_date as endDate, pa.alone_execute as aloneExecute, pa.limit_pro as limitPro, 
+  	pa.take_store as takeStore, pa.creator as creator, pa.create_date as createDate, pa.auditor, pa.audit_date as auditDate, pa.audit_result as auditResult, 
+  	pas.all_goods as allGoods, pas.goods_range as goodsRange, pas.plan_creator as planCreator, pas.gift_num as giftNum, pas.has_gift_num ashasGiftNum , pas.memo
+  	FROM pro_activity as pa LEFT JOIN pro_activitys as pas ON pa.pro_act_id = pas.pro_act_id 
+  	<where>
+  		<if test="accNum != null and accNum != ''">
+            AND acc_num=#{accNum}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="Integer">
+	SELECT count(*)
+  	FROM pro_activity as pa LEFT JOIN pro_activitys as pas ON pa.pro_act_id = pas.pro_act_id 
+  	<where>
+  		<if test="accNum != null and accNum != ''">
+            AND acc_num=#{accNum}
+        </if>
+  	</where>
+  </select>
+  
+  
+</mapper>

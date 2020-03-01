@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.SellComnInvSubDao">
+  <!-- 根据外键删除 -->
+  <delete id="deleteSellComnInvSubBySellInvNum" parameterType="java.lang.String">
+  		DELETE FROM sell_comn_inv_sub
+  		WHERE sell_inv_num=#{sellInvNum}
+  </delete>
+  <!-- 添加 -->
+  <insert id="insertSellComnInvSub" parameterType="com.px.mis.account.entity.SellComnInvSub">
+  	INSERT INTO sell_comn_inv_sub(ordr_num,sell_inv_num, invty_encd, whs_encd,
+       qty, measr_corp_id,cntn_tax_uprc, 
+       prc_tax_sum, no_tax_uprc, no_tax_amt, 
+       tax_amt,tax_rate, bat_num,intl_bat,
+       bx_qty, is_nt_rtn_goods,delv_sngl_num,
+       invty_fst_lvl_cls, memo,sell_sngl_nums,sell_sngl_sub_id,out_whs_id,
+       out_whs_sub_id,proj_encd)
+  	VALUES(null,#{sellInvNum},#{invtyEncd},#{whsEncd},#{qty},
+		  	#{measrCorpId},#{cntnTaxUprc},#{prcTaxSum},#{noTaxUprc},#{noTaxAmt},
+		  	#{taxAmt},#{taxRate},#{batNum},#{intlBat},#{bxQty},
+		  	#{isNtRtnGoods},#{delvSnglNum},#{invtyFstLvlCls},#{memo},#{sellSnglNums},
+		  	#{sellSnglSubId},#{outWhsId},#{outWhsSubId},#{projEncd})
+  </insert>
+  
+ <!--  批量添加 -->
+  <insert id="insertSellComnInvSubList" parameterType="com.px.mis.account.entity.SellComnInvSub">
+  	INSERT INTO sell_comn_inv_sub(sell_inv_num, invty_encd, whs_encd,
+       qty, measr_corp_id,cntn_tax_uprc, 
+       prc_tax_sum, no_tax_uprc, no_tax_amt, 
+       tax_amt,tax_rate, bat_num,intl_bat,
+       bx_qty, is_nt_rtn_goods,delv_sngl_num,
+       invty_fst_lvl_cls, memo,sell_sngl_nums,sell_sngl_sub_id,out_whs_id,
+       out_whs_sub_id,proj_encd)
+  	VALUES
+  	<foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.sellInvNum}, #{item.invtyEncd},#{item.whsEncd},
+       #{item.qty}, #{item.measrCorpId}, #{item.cntnTaxUprc}, 
+       #{item.prcTaxSum}, #{item.noTaxUprc}, #{item.noTaxAmt}, 
+       #{item.taxAmt}, #{item.taxRate}, #{item.batNum},#{item.intlBat},
+       #{item.bxQty}, #{item.isNtRtnGoods}, #{item.delvSnglNum},
+       #{item.invtyFstLvlCls}, #{item.memo},#{item.sellSnglNums},
+       #{item.sellSnglSubId},#{item.outWhsId},#{item.outWhsSubId},#{item.projEncd})
+    </foreach>
+  </insert>
+  <!-- 根据主键更新 -->
+  <update id="updateSellComnInvSub" parameterType="com.px.mis.account.entity.SellComnInvSub">
+  	UPDATE sell_comn_inv_sub
+    <set>
+      <if test="projEncd != null">
+        proj_encd = #{projEncd},
+      </if>
+      <if test="sellSnglNums != null">
+        sell_sngl_nums = #{sellSnglNums},
+      </if>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum},
+      </if>
+      <if test="sellInvNum != null">
+        sell_inv_num = #{sellInvNum},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd},
+      </if>
+      <if test="whsEncd != null">
+        whs_encd = #{whsEncd},
+      </if>
+      <if test="qty != null">
+        qty = #{qty},
+      </if>
+      <if test="measrCorpId != null">
+        measr_corp_id = #{measrCorpId},
+      </if>
+      <if test="noTaxUprc != null">
+        no_tax_uprc = #{noTaxUprc},
+      </if>
+      <if test="noTaxAmt != null">
+        no_tax_amt = #{noTaxAmt},
+      </if>
+      <if test="cntnTaxUprc != null">
+        cntn_tax_uprc = #{cntnTaxUprc},
+      </if>
+      <if test="prcTaxSum != null">
+        prc_tax_sum = #{prcTaxSum},
+      </if>
+      <if test="taxAmt != null">
+        tax_amt = #{taxAmt},
+      </if>
+      <if test="taxRate != null">
+        tax_rate = #{taxRate},
+      </if>
+      <if test="batNum != null">
+        bat_num = #{batNum},
+      </if>
+      <if test="isComplimentary != null">
+        Is_complimentary = #{isComplimentary},
+      </if>
+      <if test="delvSnglNum != null">
+        delv_sngl_num = #{delvSnglNum},
+      </if>
+      <if test="invtyFstLvlCls != null">
+        invty_fst_lvl_cls = #{invtyFstLvlCls},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+      <if test="intlBat != null">
+        intl_bat = #{intlBat},
+      </if>
+      <if test="bxQty != null">
+        bx_qty = #{bxQty},
+      </if>
+      <if test="sellSnglNums != null">
+        sell_sngl_nums = #{sellSnglNums},
+      </if>
+      <if test="sellSnglSubId != null">
+        sell_sngl_sub_id = #{sellSnglSubId},
+      </if>
+      <if test="outWhsId != null">
+        out_whs_id = #{outWhsId},
+      </if>
+      <if test="outWhsSubId != null">
+        out_whs_sub_id = #{outWhsSubId},
+      </if>
+    </set>
+    WHERE ordr_num = #{ordrNum}
+  </update>
+</mapper>

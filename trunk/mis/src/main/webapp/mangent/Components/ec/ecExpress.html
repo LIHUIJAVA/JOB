@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>电子面单账户</title>
+		<!DOCTYPE html>
+		<html>
+
+		<head>
+			<meta charset="UTF-8">
+			<title>电子面单账户</title>
+			<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+			<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+			<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+			<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+			<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+			<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+			<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+			<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+			<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+			<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+			<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+			<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+			<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+			<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+			<script type="text/javascript" src="../../assets/js/mis/ec/ecExpress.js"></script>
+			<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+			<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+			<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+			<style type="text/css">
+				select {
+					outline: none;
+					appearance: none;
+					-moz-appearance: none;
+					-webkit-appearance: none;
+					width: 220px;
+					border: 0;
+					border-bottom: 1px solid #B8C7CE
+				}
+				
+				select:-ms-expand {
+					display: none;
+				}
+				
+				.down {
+					width: 400px;
+					height: 400px;
+					border: 1px solid #CCCCCC;
+					background-color: #FFFFFF;
+					position: absolute;
+					top: 80px;
+					left: 40%;
+					z-index: 3;
+					display: none;
+				}
+				
+				.inp {
+					margin-top: 50px;
+				}
+				
+				.inpDate {
+					margin-top: 185px;
+					margin-left: 15px;
+					width: 510px!important;
+				}
+				
+				.down .order-title div {
+					width: 420px;
+				}
+				
+				.box {
+					z-index: 1;
+				}
+				
+				#mengban {
+					z-index: 2;
+					position: absolute;
+					top: 0;
+					left: 0;
+					height: 100%!important;
+					opacity: 0.2;
+					background-color: #000000;
+				}
+				
+				body {
+					height: 100%;
+				}
+				
+				#oneSerch_jqgrids {
+					width: 100%!important;
+				}
+				#mengban {
+					/*z-index: 999!important;*/
+					height: 130%!important;
+				}
+			</style>
+		</head>
+
+		<body>
+			<div id="purchaseOrder">
+				<div class="purchaseTit">
+					<!--<h1 class="title">现存量查询</h1>-->
+					<div class="buttons">
+						<button class="print">打印</button>
+						<!--<button class="importExcel">导入</button>
+						<button class="exportExcel">导出</button>-->
+						<button id="find">查询</button>
+						<button class="download">下载</button>
+					</div>
+
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="purchaseType col-md-4">
+							<span>电商平台</span>
+							<select class="ecId" name="ecId">
+								</option>
+							</select>
+						</div>
+					</form>
+
+				</div>
+
+				<table id="jqGrids"></table>
+				<div id="jqgridPager"></div>
+			</div>
+
+			<!--<div id="mengban"></div>-->
+			<div class="down" style="opacity: 0;">
+				<div class="purchaseTit">
+					<!--<h1 class="title">全部订单</h1>-->
+					<div class="buttons">
+						<button class="true">确定</button>
+						<button class="falses">取消</button>
+					</div>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="supplier col-md-4 inp">
+							<span>电商平台<b>*</b></span>
+							<select class="ecId1" name="ecId1">
+								</option>
+							</select>
+						</div>
+					</form>
+				</div>
+			</div>
+		</body>
+
+		</html>
+	</head>
+
+	<body>
+	</body>
+
+</html>

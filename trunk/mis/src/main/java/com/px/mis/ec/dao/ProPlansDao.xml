@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.ProPlansDao">
+  <insert id="insert" useGeneratedKeys="true" keyProperty="no" parameterType="com.px.mis.ec.entity.ProPlans">
+	INSERT INTO pro_plans (pro_plan_id,money,number,integral_mul, gift_num,gift_way,gift_range,memo)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.proPlanId}, #{item.money}, #{item.number}, #{item.integralMul},
+      #{item.giftNum}, #{item.giftWay}, #{item.giftRange}, #{item.memo})
+    </foreach>
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ProPlans">
+  	SELECT no,pro_plan_id,money,number,integral_mul, gift_num,gift_way,gift_range,memo,top_limit
+  	FROM pro_plans 
+  	WHERE pro_plan_id = #{proPlanId}
+  </select>
+  
+  <select id="selectByNo" parameterType="int" resultType="com.px.mis.ec.entity.ProPlans">
+  	SELECT no,pro_plan_id,money,number,integral_mul, gift_num,gift_way,gift_range,memo
+  	FROM pro_plans 
+  	WHERE no = #{no}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  pro_plans
+  	WHERE pro_plan_id = #{proPlanId}
+  </delete>
+  <select id="selectMoneyORDERLIMIT" resultType="com.px.mis.ec.entity.ProPlans">
+		SELECT
+			pro_plans.* 
+		FROM
+			pro_plans 
+		WHERE
+			pro_plan_id = #{proPlanId}
+			AND money <![CDATA[<=]]> #{money}
+		ORDER BY
+			money DESC 
+		LIMIT 0,
+		1
+	</select>
+	  <select id="selectNumberORDERLIMIT"  resultType="com.px.mis.ec.entity.ProPlans">
+		SELECT
+			pro_plans.* 
+		FROM
+			pro_plans 
+		WHERE
+			pro_plan_id = #{proPlanId}
+			AND number <![CDATA[<=]]> #{number}
+		ORDER BY
+			number DESC 
+		LIMIT 0,
+		1
+	</select>
+	<select id="selectORDERLIMIT"  resultType="com.px.mis.ec.entity.ProPlans">
+		SELECT
+			pro_plans.* 
+		FROM
+			pro_plans 
+		WHERE
+			pro_plan_id = #{proPlanId}
+		LIMIT 0,
+		1
+	</select>
+</mapper>

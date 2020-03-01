@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.GoodRecordDao">
+
+	<insert id="insert"
+		parameterType="com.px.mis.ec.entity.GoodRecord">
+		INSERT INTO good_record (good_id, store_id, ec_id,
+		good_name, good_sku,
+		ec_good_id, ec_good_name, good_mode, upset_price,
+		safe_inv,
+		sku_prop, online_status, operator, operat_time, is_sec_sale,
+		memo)
+		VALUES(#{goodId}, #{storeId}, #{ecId}, #{goodName}, #{goodSku},
+		#{ecGoodId}, #{ecGoodName}, #{goodMode}, #{upsetPrice}, #{safeInv},
+		#{skuProp}, #{onlineStatus}, #{operator}, #{operatTime}, #{isSecSale},
+		#{memo})
+	</insert>
+	
+	<insert id="insertList" parameterType="com.px.mis.ec.entity.GoodRecord">
+		INSERT INTO good_record (good_id, store_id, ec_id,
+		good_name, good_sku,
+		ec_good_id, ec_good_name, good_mode, upset_price,
+		safe_inv,
+		sku_prop, online_status, operator, operat_time, is_sec_sale,
+		memo)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.goodId}, #{item.storeId}, #{item.ecId}, #{item.goodName}, #{item.goodSku},
+		#{item.ecGoodId}, #{item.ecGoodName}, #{item.goodMode}, #{item.upsetPrice}, #{item.safeInv},
+		#{item.skuProp}, #{item.onlineStatus}, #{item.operator}, #{item.operatTime}, #{item.isSecSale},
+		#{item.memo})
+		</foreach>
+	</insert>
+	<!-- 批量保存 -->
+	<insert id="download"
+		parameterType="com.px.mis.ec.entity.GoodRecord">
+		INSERT INTO good_record (id,ec_good_id, store_id, ec_id, ec_good_name,
+		good_sku, good_id, good_name, good_mode, operator, operat_time,is_sec_sale,upset_price,
+		safe_inv,sku_prop,memo,online_status)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id},#{item.ecGoodId},#{item.storeId},#{item.ecId},#{item.ecGoodName},#{item.goodSku},#{item.goodId},
+			#{item.goodName},#{item.goodMode},#{item.operator},#{item.operatTime},#{item.isSecSale},#{item.upsetPrice},
+			#{item.safeInv},#{item.skuProp},#{item.memo},#{item.onlineStatus})
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		ec_good_id = VALUES (ec_good_id), store_id =
+		VALUES (store_id), ec_id = VALUES (ec_id), ec_good_name = VALUES
+		(ec_good_name),
+		good_sku = VALUES (good_sku), good_id = VALUES
+		(good_id), good_name = VALUES (good_name), good_mode = VALUES
+		(good_mode),
+		operator = VALUES (operator), operat_time = VALUES
+		(operat_time),is_sec_sale = VALUES
+		(is_sec_sale),upset_price = VALUES (upset_price),safe_inv = VALUES (safe_inv),sku_prop = VALUES (sku_prop),
+		memo = VALUES (memo)
+	</insert>
+
+	<select id="select" parameterType="java.lang.String"
+		resultType="com.px.mis.ec.entity.GoodRecord">
+		SELECT id,good_id, store_id, ec_id, good_name, good_sku,
+		ec_good_id,
+		ec_good_name, good_mode, upset_price, safe_inv,
+		sku_prop,
+		online_status, operator, operat_time, is_sec_sale, memo
+		FROM
+		good_record join ec_platform on(good_record.ec_id=ec_platform.ec_id)
+		join store_settings on(good_record.store_id=store_settings.store_id)
+		WHERE ec_good_id = #{ecGoodId}
+	</select>
+
+	<select id="selectBySku" parameterType="java.lang.String"
+		resultType="com.px.mis.ec.entity.GoodRecord">
+	SELECT id
+	FROM good_record join ec_platform
+	on(good_record.ec_id=ec_platform.ec_id)
+	join store_settings
+	on(good_record.store_id=store_settings.store_id)
+	WHERE good_sku =
+	#{goodSku}
+	</select>
+
+
+
+	<select id="selectByEcGoodIdAndSku"
+		parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT id
+		FROM good_record
+		join ec_platform
+		on(good_record.ec_id=ec_platform.ec_id)
+		join store_settings
+		on(good_record.store_id=store_settings.store_id)
+
+		<where>
+			<if test="ecGoodId != null and ecGoodId != ''">
+				AND ec_good_id = #{ecGoodId}
+			</if>
+			<if test="goodSku != null and goodSku != ''">
+				AND good_sku = #{goodSku}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByEcGoodIdAnd"
+		parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT id
+		FROM good_record
+		join store_settings
+		on(good_record.store_id=store_settings.store_id)
+
+		<where>
+			<if test="ecGoodId != null and ecGoodId != ''">
+				AND good_record.ec_good_id = #{ecGoodId}
+			</if>
+			<if test="goodSku != null and goodSku != ''">
+				AND good_record.good_sku = #{goodSku}
+			</if>
+			<if test="storeId != null and storeId != ''">
+			AND store_settings.store_id = #{storeId}
+			</if>
+			<if test="ecId != null and ecId != ''">
+			AND good_record.ec_id = #{ecId}
+			</if>
+		</where>
+	</select>
+
+
+	<select id="selectById" parameterType="Integer"
+		resultType="com.px.mis.ec.entity.GoodRecord">
+		SELECT *
+		FROM good_record
+		join ec_platform
+		on(good_record.ec_id=ec_platform.ec_id)
+		join store_settings
+		on(good_record.store_id=store_settings.store_id)
+
+		WHERE id = #{id}
+	</select>
+
+	<delete id="delete" parameterType="Integer">
+		DELETE FROM good_record
+		WHERE
+		id in 
+		<foreach item="oid" collection="list" open="(" close=")"
+                 separator=",">
+            #{oid}
+        </foreach>
+		
+	</delete>
+
+	<update id="update"
+		parameterType="com.px.mis.ec.entity.GoodRecord">
+		UPDATE good_record
+		<set>
+			<if test="goodId != null and goodId != ''">
+				good_id = #{goodId},
+			</if>
+			<if test="storeId != null and storeId != ''">
+				store_id = #{storeId},
+			</if>
+			<if test="ecId != null and ecId != ''">
+				ec_id = #{ecId},
+			</if>
+
+			<if test="goodName != null and goodName != ''">
+				good_name = #{goodName},
+			</if>
+
+			<if test="goodSku != null and goodSku != ''">
+				good_sku = #{goodSku},
+			</if>
+			<if test="ecGoodId != null and ecGoodId != ''">
+				ec_good_id = #{ecGoodId},
+			</if>
+			<if test="ecGoodName != null and ecGoodName != ''">
+				ec_good_name = #{ecGoodName},
+			</if>
+			<if test="goodMode != null and goodMode != ''">
+				good_mode = #{goodMode},
+			</if>
+			<if test="upsetPrice != null and upsetPrice != ''">
+				upset_price = #{upsetPrice},
+			</if>
+			<if test="safeInv != null and safeInv != ''">
+				safe_inv = #{safeInv},
+			</if>
+			<if test="skuProp != null and skuProp != ''">
+				sku_prop = #{skuProp},
+			</if>
+			<if test="onlineStatus != null and onlineStatus != ''">
+				online_status = #{onlineStatus},
+			</if>
+			<if test="operator != null and operator != ''">
+				operator = #{operator},
+			</if>
+			operat_time =now(),
+			<!-- <if test="operatTime != null and operatTime != ''"> operat_time =#{operatTime}, 
+				</if> -->
+			<if test="isSecSale != null and isSecSale != ''">
+				is_sec_sale = #{isSecSale},
+			</if>
+			<if test="memo != null and memo != ''">
+				memo = #{memo},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<select id="selectList" parameterType="Map"
+		resultType="com.px.mis.ec.entity.GoodRecord">
+		SELECT good_record.id,good_record.good_id, good_record.store_id, good_record.ec_id, invty_doc.invty_nm as good_name, good_record.good_sku, good_record.ec_good_id,
+		good_record.ec_good_name, good_record.good_mode, good_record.upset_price, good_record.safe_inv,
+		good_record.sku_prop,store_record.store_name,ec_platform.ec_name,
+		good_record.online_status, good_record.operator, good_record.operat_time, good_record.is_sec_sale, good_record.memo
+		FROM
+		good_record left join ec_platform on(good_record.ec_id=ec_platform.ec_id)
+		left join store_record on(good_record.store_id=store_record.store_id)
+		left join invty_doc on(good_record.good_id = invty_doc.invty_encd)
+		<where>
+			<if test="goodId != null and goodId != ''">
+				AND good_record.good_id = #{goodId}
+			</if>
+			<if test="goodName != null and goodName != ''">
+				AND good_record.good_name = #{goodName}
+			</if>
+			<if test="ecId != null and ecId != ''">
+				AND good_record.ec_id = #{ecId}
+			</if>
+			<if test="ecGoodId != null and ecGoodId != ''">
+				AND good_record.ec_good_id = #{ecGoodId}
+			</if>
+			<if test="ecGoodName != null and ecGoodName != ''">
+				AND good_record.ec_good_name = #{ecGoodName}
+			</if>
+			<if test="goodSku != null and goodSku != ''">
+				AND good_record.good_sku = #{goodSku}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND store_record.store_id = #{storeId}
+			</if>
+			<if test="goodMode != null and goodMode != ''">
+				AND good_mode = #{goodMode}
+			</if>
+		</where>
+		LIMIT #{index},#{num}
+	</select>
+	
+	<select id="exportList" parameterType="Map"
+		resultType="Map">
+		SELECT
+	good_record.store_id as 店铺编码,
+	store_record.store_name AS 店铺名称,
+	ec_platform.ec_name AS 平台名称,
+	good_record.good_id as 存货编码,
+	invty_doc.invty_nm AS 存货名称,
+	good_record.ec_good_id as 店铺商品编码,
+	good_record.good_sku as 商品SKU,
+	good_record.ec_good_name as 平台商品名称,
+	good_record.good_mode as 规格,
+	good_record.upset_price as 最低售价,
+	good_record.safe_inv as 安全库存,
+	good_record.sku_prop as sku属性,
+	good_record.online_status as 线上状态,
+	good_record.operator as 操作人,
+	good_record.operat_time as 操作时间,
+	good_record.is_sec_sale as 是否二销,
+	good_record.memo as 备注 
+FROM
+	good_record
+	LEFT JOIN ec_platform ON ( good_record.ec_id = ec_platform.ec_id )
+	LEFT JOIN store_record ON ( good_record.store_id = store_record.store_id )
+	LEFT JOIN invty_doc ON (
+	good_record.good_id = invty_doc.invty_encd)
+		<where>
+			<if test="goodId != null and goodId != ''">
+				AND good_record.good_id = #{goodId}
+			</if>
+			<if test="goodName != null and goodName != ''">
+				AND good_record.good_name = #{goodName}
+			</if>
+			<if test="ecId != null and ecId != ''">
+				AND good_record.ec_id = #{ecId}
+			</if>
+			<if test="ecGoodId != null and ecGoodId != ''">
+				AND good_record.ec_good_id = #{ecGoodId}
+			</if>
+			<if test="ecGoodName != null and ecGoodName != ''">
+				AND good_record.ec_good_name = #{ecGoodName}
+			</if>
+			<if test="goodSku != null and goodSku != ''">
+				AND good_record.good_sku = #{goodSku}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND store_record.store_id = #{storeId}
+			</if>
+			<if test="goodMode != null and goodMode != ''">
+				AND good_mode = #{goodMode}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectCount" parameterType="Map" resultType="int">
+		SELECT count(id)
+		FROM good_record
+		left join ec_platform on(good_record.ec_id=ec_platform.ec_id)
+		left join store_record on(good_record.store_id=store_record.store_id)
+		left join invty_doc on(good_record.good_id = invty_doc.invty_encd)
+		<where>
+			<if test="goodId != null and goodId != ''">
+				AND good_record.good_id = #{goodId}
+			</if>
+			<if test="goodName != null and goodName != ''">
+				AND good_record.good_name = #{goodName}
+			</if>
+			<if test="ecId != null and ecId != ''">
+				AND good_record.ec_id = #{ecId}
+			</if>
+			<if test="ecGoodId != null and ecGoodId != ''">
+				AND good_record.ec_good_id = #{ecGoodId}
+			</if>
+			<if test="ecGoodName != null and ecGoodName != ''">
+				AND good_record.ec_good_name = #{ecGoodName}
+			</if>
+			<if test="goodSku != null and goodSku != ''">
+				AND good_record.good_sku = #{goodSku}
+			</if>
+			<if test="storeId != null and storeId != ''">
+				AND store_record.store_id = #{storeId}
+			</if>
+			<if test="goodMode != null and goodMode != ''">
+				AND good_mode = #{goodMode}
+			</if>
+		</where>
+	</select>
+	<select id="selectBySkuAndEcGoodId"
+		resultType="com.px.mis.ec.entity.GoodRecord">
+		SELECT *
+		FROM good_record join ec_platform
+		on(good_record.ec_id=ec_platform.ec_id)
+		join store_settings
+		on(good_record.store_id=store_settings.store_id)
+		<where>
+			<if test="goodSku != null and goodSku != ''">
+				AND good_sku = #{goodSku}
+			</if>
+			<if test="ecGoodId != null and ecGoodId != ''">
+				AND ec_good_id = #{ecGoodId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectGoodRecordBySkuAndEcGoodId"
+		resultType="com.px.mis.ec.entity.GoodRecord">
+		SELECT *
+		FROM good_record 
+		<where>
+			<if test="goodSku != null and goodSku != ''">
+				AND good_sku = #{goodSku}
+			</if>
+			<if test="ecGoodId != null and ecGoodId != ''">
+				AND ec_good_id = #{ecGoodId}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>标签设置</title>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/ec/Print_muBanList.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<style>
+			.editable.inline-edit-cell.ui-widget-content.ui-corner-all {
+				width: 100% !important;
+			}
+			
+			.info>div {
+				width: 33%;
+				display: inline-block;
+			}
+			
+			#jqgrids_cb {
+				width: 17px!important;
+			}
+			
+			#jqgrids_rn {
+				width: 28px!important;
+			}
+			.down {
+				width: 400px;
+				height: 400px;
+				border: 1px solid #CCCCCC;
+				background-color: #FFFFFF;
+				position: absolute;
+				top: 80px;
+				left: 37%;
+				z-index: 3;
+				/*display: none;*/
+			}
+			
+			.iup {
+				margin-top: 50px;
+			}
+			#mengban {
+				z-index: 2;
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%!important;
+				opacity: 0.2;
+				background-color: #000000;
+			}
+			select {
+				outline: none;
+				appearance: none;
+				-moz-appearance: none;
+				-webkit-appearance: none;
+				width: 220px;
+				border: 0;
+				border-bottom: 1px solid #B8C7CE
+			}
+			
+			select:-ms-expand {
+				display: none;
+			}
+			#print_muBanList_jqgrids {
+				width: 100%!important;
+			}
+		</style>
+	</head>
+
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/ec/Print_biaoQian.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="addOrder">增行</button>
+					<!--<button class="updite">修改</button>-->
+					<button class="saveOrder">保存</button>
+					<button class="break">刷新</button>
+					<button class="clear">清空</button>
+					<button class="del">删除</button>
+					<!--<button class="back">返回</button>-->
+					<button id="chaxun">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>模板编码</span>
+							<!--<input type="text" id="storeName" style="display: none;"/>-->
+							<input type="text" id="templateId" name="templateId1" value="" readonly="readonly"/>
+							<span><img class="templateId_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+							<!--<span><img class="storeId1_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<!--<div class="supplier col-md-4">
+							<span>模板名称 </span>
+							<input type="text" class="TemplateName" name="TemplateName" value="" />
+						</div>-->
+						<div class="supplier col-md-4">
+							<span>标签编码</span>
+							<input type="text" class="labelId" name="labelId" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>类型标签 </span>
+							<select name="labelTypeValue">
+								<option selected value="">请选择</option>
+								<option value="1">Barcode</option>
+								<option value="2">Image</option>
+								<option value="3">LineHorizontal</option>
+								<option value="4">LineVertical</option>
+								<option value="5">Text</option>
+							</select>
+						</div>
+						<div class="supplier col-md-4">
+							<span>条码类型 </span>
+							<select name="barcodeTypeValue">
+								<option selected value="">请选择</option>
+								<option value="1">一维码</option>
+								<option value="2">二维码</option>
+							</select>
+						</div>
+						<div class="supplier col-md-4">
+							<!--<input type="checkbox" class="IsFixed" name="IsFixed" value="0" />-->
+							<span>是否固定值 </span>
+							<select name="isFixed">
+								<option selected value="">请选择</option>
+								<option value="0">非固定值</option>
+								<option value="1">固定值</option>
+							</select>
+						</div>
+						<div class="supplier col-md-4">
+							<span>打印的内容 </span>
+							<input type="text" class="printcontent" name="printcontent" value="" />
+						</div>
+
+					</div>
+				</form>
+			</div>
+			
+			<table id="print_jqgrids"></table>
+			<div id="print_jqGridPager"></div>
+		</div>
+		
+		
+		<div id="muban" style="opacity: 0;">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="true">确定</button>
+					<button class="false">取消</button>
+					<button id="inquiry">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>模板编码</span>
+							<!--<input type="text" id="storeName" style="display: none;"/>-->
+							<input type="text" id="templateId" name="templateId2" value=""/>
+							<!--<span><img class="storeId_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+
+						</div>
+						<div class="supplier col-md-4">
+							<span>模板名称 </span>
+							<input type="text" id="templateName" name="templateName2" value="" />
+							<!--<span><img class="storeId1_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>操作员 </span>
+							<input type="text" id="opid" name="opid2" value="" />
+						</div>
+						<!--<div class="supplier col-md-4">
+							<span>操作员姓名 </span>
+							<input type="text" id="opname" name="opname"  readonly="readonly" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>备注 </span>
+							<input type="text" id="reamrk" name="reamrk"  readonly="readonly" value="" />
+						</div>-->
+					</div>
+				</form>
+			</div>
+			
+			<table id="print_muBanList_jqgrids"></table>
+			<div id="print_muBanList_jqGridPager"></div>
+		</div>
+	</body>
+
+</html>

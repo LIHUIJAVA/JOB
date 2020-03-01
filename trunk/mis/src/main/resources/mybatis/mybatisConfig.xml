@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+     <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING" /><!--  开启驼峰，开启后，只要数据库字段和对象属性名字母相同，无论中间加多少下划线都可以识别 -->
+        <setting name="mapUnderscoreToCamelCase" value="true" /> 
+        <setting name="callSettersOnNulls" value="true"/>
+    </settings>
+    
+    <!--别名-->
+    <typeAliases>
+        <package name="com.px.mis.whs.entity"></package>
+        <package name="com.px.mis.purc.entity"></package>
+        <package name="com.px.mis.system.entity"></package>
+        <package name="com.px.mis.ec.entity"></package>
+        <package name="com.px.mis.account.entity"></package>
+    </typeAliases>
+</configuration>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.EcAccountDao">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.EcAccount">
+	INSERT INTO `ec_account` (
+	`store_id`,
+	`bill_no`,
+	`ec_order_id`,
+	`order_type`,
+	`good_no`,
+	`sh_order_id`,
+	`good_name`,
+	`start_time`,
+	`jifei_time`,
+	`jiesuan_time`,
+	`cost_type`,
+	`money`,
+	`money_type`,
+	`memo`,
+	`shop_id`,
+	`direction`,
+	`cost_date`,
+	`check_result`,
+	`checker_id`,
+	`check_time`,
+	`is_check_type`,
+	`creator`,
+	`create_time`
+)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+    (#{item.storeId}, #{item.billNo}, #{item.ecOrderId}, #{item.orderType}, #{item.goodNo}, #{item.shOrderId}, #{item.goodName}, 
+    #{item.startTime}, #{item.jifeiTime}, #{item.jiesuanTime}, #{item.costType}, #{item.money}, #{item.moneyType}, #{item.memo}, #{item.shopId}, 
+    #{item.direction}, #{item.costDate}, #{item.checkResult}, #{item.checkerId}, #{item.checkTime}, #{item.isCheckType}, #{item.creator}, #{item.createTime})
+    </foreach>
+  </insert>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.EcAccount">
+  	UPDATE ec_account 
+  	SET check_result=#{checkResult},checker_id=#{checkerId},check_time=#{checkTime}
+  	WHERE bill_no=#{billNo}
+  </update>
+  
+  <delete id="delete" >
+  delete from ec_account where bill_no in 
+   <foreach item="billNo" collection="list" open="(" close=")"
+                 separator=",">
+            #{billNo}
+        </foreach>
+  </delete>
+  
+  <select id="selectList" parameterType="java.util.Map" resultType="com.px.mis.ec.entity.EcAccount">
+  select a.*,s.store_name as storeName,m.user_name as checkerName from ec_account a 
+  left join store_record s on a.store_id=s.store_id
+  left join mis_user m on a.checker_id = m.acc_num
+  <where>
+  		<if test="storeId != null and storeId != ''">
+            AND a.store_id = #{storeId}
+        </if>
+        <if test="ecOrderId != null and ecOrderId != ''">
+			AND a.ec_order_id=#{ecOrderId}
+        </if>
+        <if test="checkResult != null and checkResult != ''">
+            AND a.check_Result = #{checkResult}
+        </if>
+        <if test="isCheckType != null and isCheckType != ''">
+			AND a.is_check_type =#{isCheckType}
+		</if>
+		<if test="checkerId != null and checkerId != ''">
+			AND a.checker_id =#{checkerId}
+		</if>
+        <if test="startTime1 != null and startTime1 != '' ">
+			AND a.start_time <![CDATA[>=]]> #{startTime1}
+		</if>
+		<if test="startTime2 != null and startTime2 != ''">
+			AND a.start_time <![CDATA[<=]]> #{startTime2}
+		</if>
+		 <if test="checkTime1 != null and checkTime1 != '' ">
+			AND a.check_time <![CDATA[>=]]> #{checkTime1}
+		</if>
+		<if test="checkTime2 != null and checkTime2 != ''">
+			AND a.check_time <![CDATA[<=]]> #{checkTime2}
+		</if>
+		<if test="jiesuanTime1 != null and jiesuanTime1 != '' ">
+			AND a.jiesuan_time <![CDATA[>=]]> #{jiesuanTime1}
+		</if>
+		<if test="jiesuanTime2 != null and jiesuanTime2 != ''">
+			AND a.jiesuan_time <![CDATA[<=]]> #{jiesuanTime2}
+		</if>
+		
+  	</where>
+  	LIMIT #{index},#{num}
+  
+  </select>
+  <select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  select count(a.bill_no) from ec_account a 
+  left join store_record s on a.store_id=s.store_id
+  left join mis_user m on a.checker_id = m.acc_num
+  <where>
+  		<if test="storeId != null and storeId != ''">
+            AND a.store_id = #{storeId}
+        </if>
+        <if test="ecOrderId != null and ecOrderId != ''">
+			AND a.ec_order_id=#{ecOrderId}
+        </if>
+        <if test="checkResult != null and checkResult != ''">
+            AND a.check_Result = #{checkResult}
+        </if>
+        <if test="isCheckType != null and isCheckType != ''">
+			AND a.is_check_type =#{isCheckType}
+		</if>
+		<if test="checkerId != null and checkerId != ''">
+			AND a.checker_id =#{checkerId}
+		</if>
+        <if test="startTime1 != null and startTime1 != '' ">
+			AND a.start_time <![CDATA[>=]]> #{startTime1}
+		</if>
+		<if test="startTime2 != null and startTime2 != ''">
+			AND a.start_time <![CDATA[<=]]> #{startTime2}
+		</if>
+		 <if test="checkTime1 != null and checkTime1 != '' ">
+			AND a.check_time <![CDATA[>=]]> #{checkTime1}
+		</if>
+		<if test="checkTime2 != null and checkTime2 != ''">
+			AND a.check_time <![CDATA[<=]]> #{checkTime2}
+		</if>
+		<if test="jiesuanTime1 != null and jiesuanTime1 != '' ">
+			AND a.jiesuan_time <![CDATA[>=]]> #{jiesuanTime1}
+		</if>
+		<if test="jiesuanTime2 != null and jiesuanTime2 != ''">
+			AND a.jiesuan_time <![CDATA[<=]]> #{jiesuanTime2}
+		</if>
+  	</where>
+  
+  </select>
+  
+  <select id="selectByBillNo" resultType="com.px.mis.ec.entity.EcAccount">
+  	select * from ec_account where bill_no =#{billNo}
+  </select>
+  <select id="selectByEcOrderId" resultType="com.px.mis.ec.entity.EcAccount" parameterType="java.lang.String">
+ 	select * from ec_account where ec_order_id =#{ecOrderId} and is_check_type = 1 and check_result=0
+  	and start_time <![CDATA[>=]]>#{startDate}
+	and start_time <![CDATA[<=]]>#{endDate}
+  </select>
+ 
+  <update id="autoCheck" parameterType="java.lang.String" statementType="CALLABLE" >
+  	{call autoCheck(
+  	<!-- #{checker},#{checkTime})} -->
+		#{checker,mode=IN,jdbcType=VARCHAR},#{checkTime,mode=IN,jdbcType=VARCHAR})}
+  		<!-- update ec_account
+		SET check_result=1,
+		checker_id="sys",
+		check_time=#{checkTime}
+		where is_check_type=1
+		and check_result=0
+		and start_time <![CDATA[>=]]>#{startDate}
+		and start_time <![CDATA[<=]]>#{endDate}
+		and ec_order_id in (
+		
+		select distinct aa.ec_order_id from 
+		((select account.store_id,account.ec_order_id,0-sum(money) as moneysum from ec_account account
+		where account.is_check_type=1
+		and account.check_result=0
+		and start_time <![CDATA[>=]]>#{startDate}
+		and start_time<![CDATA[<=]]>#{endDate}
+		group by account.store_id, account.ec_order_id) 
+		union all
+		(select ordr.store_id,ordr.ec_order_id,sum(pay_money) as moneysum from plat_order ordr
+		where 
+		ordr.trade_dt <![CDATA[>=]]>#{startDate}
+		and ordr.trade_dt <![CDATA[<=]]>#{endDate}
+		and ordr.is_audit=1
+		group by ordr.store_id, ordr.ec_order_id)
+		union all
+		(select store_id,ec_order_id,0-sum(all_ref_money) as moneysum from refund_order
+		where tre_date <![CDATA[>=]]>#{startDate}
+		and tre_date <![CDATA[<=]]>#{endDate}
+		and is_audit=1
+		group by store_id,ec_order_id)) aa
+		group by aa.ec_order_id
+		HAVING sum(aa.moneysum)=0
+		) -->
+		
+		  
+  </update>
+  
+  <select id="goToCheck" resultType="com.px.mis.ec.entity.EcAccountDiff" parameterType="java.util.Map">
+  	select #{storeId} as storeId, #{storeName} as storeName, aa.ec_order_id,sum(aa.accountMoneySum) as accountMoneySum,sum(aa.ordrMoneySum) as ordrMoneySum,SUM(aa.refundMoneySum) as refundMoneySum,(		sum(aa.ordrMoneySum) + SUM(aa.refundMoneySum) - sum(aa.accountMoneySum)) as difference from 
+		(
+		(select account.ec_order_id, sum(account.money) as accountMoneySum,0 as ordrMoneySum,0 as refundMoneySum from ec_account account
+		where account.store_id= #{storeId} and account.is_check_type=1
+		and account.check_result=0
+		and account.start_time<![CDATA[>=]]>#{startDate}
+		and account.start_time<![CDATA[<=]]>#{endDate}
+		group by account.ec_order_id)
+		UNION ALL
+		
+		(select ordr.ec_order_id,0 as accountMoneySum,sum(ordr.pay_money) as ordrMoneySum,0 as refundMoneySum from plat_order ordr
+		where ordr.store_id= #{storeId} and ordr.is_audit=1 and check_result=0
+		<!-- and ordr.trade_dt<![CDATA[>=]]>#{startDate}
+		and ordr.trade_dt<![CDATA[<=]]>#{endDate} -->
+		group by ordr.ec_order_id)
+		
+		UNION ALL
+		
+		(select refund.ec_order_id,0 as accountMoneySum,0 as ordrMoneySum,(0-sum(refund.all_ref_money)) as refundMoneySum from refund_order refund
+		where refund.store_id= #{storeId} and refund.is_audit=1 and check_result = 0
+		<!-- and refund.tre_date<![CDATA[>=]]>#{startDate}
+		and refund.tre_date<![CDATA[<=]]>#{endDate} -->
+		group BY refund.ec_order_id)
+		) as aa
+		group by aa.ec_order_id
+		LIMIT #{index},#{num}
+  </select>
+    <select id="goToCheckCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+  	select count(bb.ec_order_id) from 
+  	(select aa.ec_order_id as ec_order_id from 
+		(
+		(select account.ec_order_id, sum(account.money) as accountMoneySum,0 as ordrMoneySum,0 as refundMoneySum from ec_account account
+		where account.store_id= #{storeId} and account.is_check_type=1
+		and account.check_result=0
+		and account.start_time<![CDATA[>=]]>#{startDate}
+		and account.start_time<![CDATA[<=]]>#{endDate}
+		group by account.ec_order_id)
+		UNION ALL
+		
+		(select ordr.ec_order_id,0 as accountMoneySum,sum(ordr.pay_money) as ordrMoneySum,0 as refundMoneySum from plat_order ordr
+		where ordr.store_id= #{storeId} and ordr.is_audit=1 and check_result =0 
+		<!-- and ordr.trade_dt<![CDATA[>=]]>#{startDate}
+		and ordr.trade_dt<![CDATA[<=]]>#{endDate} -->
+		group by ordr.ec_order_id)
+		
+		UNION ALL
+		
+		(select refund.ec_order_id,0 as accountMoneySum,0 as ordrMoneySum,(0-sum(refund.all_ref_money)) as refundMoneySum from refund_order refund
+		where refund.store_id= #{storeId} and refund.is_audit=1 and check_result = 0
+	<!-- 	and refund.tre_date<![CDATA[>=]]>#{startDate}
+		and refund.tre_date<![CDATA[<=]]>#{endDate} -->
+		group BY refund.ec_order_id)
+		) as aa
+		group by aa.ec_order_id) as bb
+  </select>
+  
+  <select id="selectMapp" resultType="com.px.mis.ec.entity.EcAccountMapp" parameterType="java.lang.String">
+  select * from ec_account_mapp where plat_id=#{platId}
+  </select>
+</mapper>

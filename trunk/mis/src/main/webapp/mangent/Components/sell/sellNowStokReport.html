@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>销售现存量报表</title>
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/sell/sellNowStokReport.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+
+		<!--<script type="text/javascript" src="../../assets/js/mis/baseDoc/insertInvtyList.js"></script>-->
+		<!--<script type="text/javascript" src="../../assets/js/mis/baseDoc/whsDocList.js"></script>-->
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<style type="text/css">
+			#whs_jqgrids {
+				width: 100%!important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<!--<button class="print">打印</button>-->
+					<button class="exportExcel">导出</button>
+					<button id="find">查询</button>
+				</div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="orderNumbers col-md-4">
+						<span>仓库编码</span><input type="text" id="whsEncd" class="whsEncd encds" name="whsEncd" value="" />
+						<input type="text" id="whsNm" class="whsNm1 names" name="whsNm" value="" readonly="readonly" />
+						<span><img class="biao_whsEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>存货编码</span>
+						<input type="text" id="invtyEncd" class="encds" name="invtyEncd" value="" />
+						<input type="text" id="invtyNm" class="names" name="invtyNm" value="" />
+						<span><img class="invtyEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>批号</span><input type="text" id="batNum" name="batNum" value="" />
+						<span><img class="biao_batNum" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div id="addr" style="display: none;"></div>
+					<div class="purchaseType col-md-4">
+						<span>存货分类编码</span><input type="text" id="invtyCls" class="invtyClsEncd encds" name="invtyClsEncd" value="" />
+						<input type="text" id="invtyClsNm" class="invtyClsNm names" name="invtyClsNm" value="" readonly="readonly" />
+						<span><img class="invtyClsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+				</form>
+
+			</div>
+
+			<table id="sellNowStokReport_jqGrids"></table>
+			<div id="sellNowStokReport_jqgridPager"></div>
+		</div>
+
+	</body>
+
+</html>
+
+</html>

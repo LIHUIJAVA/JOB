@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReturnStatus">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.ReturnStatus">
+	INSERT INTO return_status (return_status_id, return_status_name, memo)
+    VALUES(#{returnStatusId}, #{returnStatusName}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ReturnStatus">
+  	SELECT return_status_id, return_status_name, memo
+  	FROM return_status 
+  	WHERE return_status_id = #{returnStatusId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  return_status
+  	WHERE return_status_id = #{returnStatusId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.ReturnStatus">
+  	UPDATE return_status 
+  	SET return_status_id = #{returnStatusId}, return_status_name=#{returnStatusName}, memo=#{memo}
+  	WHERE return_status_id = #{returnStatusId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.ReturnStatus">
+	SELECT return_status_id, return_status_name, memo
+  	FROM return_status 
+  	<where>
+  		<if test="returnStatusId != null and returnStatusId != ''">
+            AND return_status_id = #{returnStatusId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(*)
+  	FROM return_status 
+  	<where>
+  		<if test="returnStatusId != null and returnStatusId != ''">
+            AND return_status_id = #{returnStatusId}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

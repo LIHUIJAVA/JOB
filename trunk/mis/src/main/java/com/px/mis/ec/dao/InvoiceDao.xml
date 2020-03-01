@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.InvoiceDao">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.InvoiceInfo">
+	INSERT INTO invoice_info (plat_id, order_id, shop_id, invoice_type, invoice_title, invoice_content_id, 
+				invoice_consignee_email, invoice_consignee_phone, invoice_code)
+	VALUES 
+	<foreach collection="list" item="item" index="index" separator="," close=";">
+		(#{item.platId}, #{item.orderId}, #{item.shopId}, #{item.invoiceType}, #{item.invoiceTitle},
+		#{item.invoiceContentId}, #{item.invoiceConsigneeEmail}, #{item.invoiceConsigneePhone}, #{item.invoiceCode})
+	</foreach>
+  </insert>
+  
+   <delete id="delete" parameterType="java.lang.String">
+  delete from invoice_info where  order_id=#{0}
+  </delete>
+  
+</mapper>

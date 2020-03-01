@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>发出商品汇总表</title>
+
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/account/sendProductPool.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style>
+		#formSave select {
+			outline: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			width: 180px;
+			border: 0;
+			border-bottom: 1px solid #B8C7CE
+		}
+		
+		#formSave select:-ms-expand {
+			display: none;
+		}
+		body {
+			overflow-x:hidden;
+		}
+	</style>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="exportExcel">导出</button>
+					<button class="find">查询</button>
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>汇总方式</span>
+							<select id="poolType">
+								<option disabled selected value></option>
+								<option value="1">按仓库汇总</option>
+								<option value="2">按存货汇总</option>
+								<option value="3">按客户+存货汇总</option>
+							</select>
+						</div>
+						<div class="supplier col-md-4">
+							<span>仓库编码</span><input type="text" id="whsEncd" class="whsEncd encds" name="whsEncd" value="" />
+							<input type="text" id="whsNm" class="whsNm names" name="whsNm" value="" readonly="readonly" />
+							<span><img class="biao_whsEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="purchaseType col-md-4">
+							<span>存货分类编码</span><input type="text" id="invtyCls" class="invtyCls encds" name="invtyClsEncd" value="" />
+							<input type="text" id="invtyClsNm" class="invtyClsNm names" name="invtyClsNm" value="" readonly="readonly" />
+							<span><img class="invtyClsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>存货编码</span><input type="text" id="invtyEncd" class="invtyEncd encds" name="invtyEncd" value="" />
+							<input type="text" id="invtyNm" class="invtyNm names" name="invtyNm" value="" readonly="readonly" />
+							<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="col-md-4">
+							<span>批次</span><input type="text" id="batNum" name="batNum" value="" />
+							<span><img class="biao_batNum" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>日期</span>
+							<input type="text" class="formSDt date1" value="" calendar="YYYY-MM-DD" />到<input type="text" class="formEDt date2" value="" calendar="YYYY-MM-DD" />
+						</div>
+						<!--<div class="supplier col-md-4">
+							<span>记账日期</span>
+							<input type="text" class="bookOkSDt" value="" calendar="YYYY-MM-DD" />到<input type="text" class="bookOkEDt" value="" calendar="YYYY-MM-DD" />
+						</div>-->
+					</div>
+				</form>
+			</div>
+			<table id="send_jqgrids"></table>
+			<div id="jqGridPager"></div>
+		</div>
+
+		<!--出入库类型-->
+		<div id="outIntoWhsList" style="opacity: 0;">
+			<div class="purchaseTit">
+				<h1 class="title">出入库类型</h1>
+				<div class="buttons">
+					<button class="addWhs2">确定</button>
+					<button class="cancel2">取消</button>
+				</div>
+			</div>
+			<div id="wrap">
+				<table id="in_jqgrids"></table>
+				<div id="in_jqGridPager"></div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

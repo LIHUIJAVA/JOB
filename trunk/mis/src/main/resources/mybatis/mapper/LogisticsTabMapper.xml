@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LogisticsTab">
+  <insert id="insert" parameterType="com.px.mis.ec.entity.LogisticsTab">
+	INSERT INTO logistics_tab
+	VALUES (null,#{expressCode},#{saleEncd},#{orderId},#{outWhsId},
+			#{ecOrderId},now(),#{goodNum},#{goodMoney},#{payMoney},
+			#{buyerNote},#{sellerNote},#{recAddress},#{recName},
+			#{recMobile},#{memo},#{bizTypId},#{sellTypId},
+			#{deliverWhs},#{recvSendCateId},#{gdFlowEncd},#{expressEncd},
+			#{adjustStatus},#{isPick},#{isShip},#{isBackPlatform},
+			#{packageDate},#{volume},#{weight},#{freight})
+  </insert>
+  
+  <insert id="insertList" parameterType="com.px.mis.ec.entity.LogisticsTab">
+	INSERT INTO logistics_tab
+	VALUES 
+	<foreach collection="list" item="item" index="index" separator="," close=";">
+		(null,#{item.expressCode},#{item.saleEncd},#{item.orderId},#{item.outWhsId},
+			#{item.ecOrderId},now(),#{item.goodNum},#{item.goodMoney},#{item.payMoney},
+			#{item.buyerNote},#{item.sellerNote},#{item.recAddress},#{item.recName},
+			#{item.recMobile},#{item.memo},#{item.bizTypId},#{item.sellTypId},
+			#{item.deliverWhs},#{item.recvSendCateId},#{item.gdFlowEncd},#{item.expressEncd},
+			#{item.adjustStatus},#{item.isPick},#{item.isShip},#{item.isBackPlatform},
+			#{item.packageDate},#{item.volume},#{item.weight},#{item.freight})
+	</foreach>
+  </insert>
+  
+  <select id="select" parameterType="int" resultType="com.px.mis.ec.entity.LogisticsTab">
+  	SELECT ordr_num,express_code,sale_encd,order_id,out_whs_id,
+		  	ec_order_id,create_date,good_num,good_money,pay_money,
+		  	buyer_note,seller_note,rec_address,rec_name,rec_mobile,
+		  	memo,biz_typ_id,sell_typ_id,deliver_whs,recv_send_cate_id,
+		  	gd_flow_encd,express_encd,adjust_status,is_pick,is_ship,
+		  	is_back_platform,package_date,volume,weight,freight
+  	FROM logistics_tab 
+  	WHERE ordr_num = #{ordrNum}
+  </select>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.LogisticsTab">
+  	UPDATE logistics_tab 
+  	SET ordr_num=#{ordrNum},express_code=#{expressCode},sale_encd=#{saleEncd},order_id=#{orderId},out_whs_id=#{outWhsId},
+		  	ec_order_id=#{ecOrderId},create_date=#{createDate},good_num=#{goodNum},good_money=#{goodMoney},pay_money=#{payMoney},
+		  	buyer_note=#{buyerNote},seller_note=#{sellerNote},rec_address=#{recAddress},rec_name=#{recName},rec_mobile=#{recMobile},
+		  	memo=#{memo},biz_typ_id=#{bizTypId},sell_typ_id=#{sellTypId},deliver_whs=#{deliverWhs},recv_send_cate_id=#{recvSendCateId},
+		  	gd_flow_encd=#{gdFlowEncd},express_encd=#{expressEncd},adjust_status=#{adjustStatus},is_pick=#{isPick},is_ship=#{isShip},
+		  	is_back_platform=#{isBackPlatform},package_date=#{packageDate},volume=#{volume},weight=#{weight},freight=#{freight}
+  	WHERE ordr_num = #{ordrNum}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+  	DELETE 
+  	FROM logistics_tab 
+  	WHERE ordr_num=#{ordrNum}
+  </delete>
+  <delete id="deleteByOrderId" parameterType="String">
+  	DELETE 
+  	FROM logistics_tab 
+  	WHERE order_id=#{orderId}
+  </delete>
+  
+  <select id="selectList" parameterType="Map" resultType="java.util.Map">
+	SELECT ordr_num,express_code,sale_encd,order_id,out_whs_id,
+		  	ec_order_id,create_date,good_num,good_money,pay_money,
+		  	buyer_note,seller_note,rec_address,rec_name,rec_mobile,
+		  	memo,biz_typ_id,sell_typ_id,deliver_whs,recv_send_cate_id,
+		  	gd_flow_encd,express_encd,adjust_status,is_pick,is_ship,
+		  	is_back_platform,package_date,volume,weight,freight
+	FROM logistics_tab 
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectByOrderId" parameterType="String" resultType="com.px.mis.ec.entity.LogisticsTab">
+	SELECT ordr_num,express_code,sale_encd,order_id,out_whs_id,
+		  	ec_order_id,create_date,good_num,good_money,pay_money,
+		  	buyer_note,seller_note,rec_address,rec_name,rec_mobile,
+		  	memo,biz_typ_id,sell_typ_id,deliver_whs,recv_send_cate_id,
+		  	gd_flow_encd,express_encd,adjust_status,is_pick,is_ship,
+		  	is_back_platform,package_date,volume,weight,freight
+	FROM logistics_tab 
+  	WHERE order_id=#{orderId}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="Integer">
+	SELECT count(ordr_num)
+  	FROM logistics_tab 
+  </select>
+</mapper>

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.TermBgnBalDao">
+     <!-- 新增期初余额 -->
+	<insert id="insertTermBgnBal" parameterType="com.px.mis.account.entity.TermBgnBal">
+		INSERT INTO term_bgn_bal
+		(ordr_num,whs_encd,invty_encd,qty,no_tax_uprc,no_tax_amt,tax_rate,tax_amt,cntn_tax_uprc,
+		prc_tax_sum,bat_num,prdc_dt,bao_zhi_qi,invldtn_dt,invty_subj_id,dept_id,memo,
+		setup_pers,setup_tm,proj_encd,bx_qty,is_nt_book_entry)
+		VALUES(#{ordrNum},#{whsEncd},#{invtyEncd},#{qty},#{noTaxUprc},#{noTaxAmt},
+			   #{taxRate},#{taxAmt},#{cntnTaxUprc},#{prcTaxSum},#{batNum},#{prdcDt},
+			   #{baoZhiQi},#{invldtnDt},#{invtySubjId},#{deptId},#{memo},
+			   #{setupPers},now(),#{projEncd},#{bxQty},#{isNtBookEntry})
+	</insert>
+	
+	<!-- 导入期初余额 -->
+	<insert id="insertTermBgnBalUpload" parameterType="com.px.mis.account.entity.TermBgnBal">
+		INSERT INTO term_bgn_bal
+		(ordr_num,whs_encd,invty_encd,qty,no_tax_uprc,no_tax_amt,tax_rate,tax_amt,cntn_tax_uprc,
+		prc_tax_sum,bat_num,prdc_dt,bao_zhi_qi,invldtn_dt,invty_subj_id,dept_id,memo,
+		is_nt_book_entry,book_entry_pers,book_entry_tm,setup_pers,setup_tm,
+		modi_pers,modi_tm,proj_encd,bx_qty)
+		VALUES(#{ordrNum},#{whsEncd},#{invtyEncd},#{qty},#{noTaxUprc},#{noTaxAmt},
+			   #{taxRate},#{taxAmt},#{cntnTaxUprc},#{prcTaxSum},#{batNum},#{prdcDt},
+			   #{baoZhiQi},#{invldtnDt},#{invtySubjId},#{deptId},#{memo},
+			   #{isNtBookEntry},#{bookEntryPers},#{bookEntryTm},
+			   #{setupPers},#{setupTm},#{modiPers},#{modiTm},#{projEncd},#{bxQty})
+	</insert>
+	
+	<update id="updateTermBgnBalByOrdrNum" parameterType="com.px.mis.account.entity.TermBgnBal">
+	 UPDATE invty_term_bgn_tab
+	    <set>
+	      <if test="ordrNum != null">
+	        ordr_num = #{ordrNum},
+	      </if>
+	      <if test="whsEncd != null">
+	        whs_encd = #{whsEncd},
+	      </if>
+	      <if test="invtyEncd != null">
+	        invty_encd = #{invtyEncd},
+	      </if>
+	      <if test="qty != null">
+	        qty = #{qty},
+	      </if>
+	      <if test="noTaxUprc != null">
+	        no_tax_uprc = #{noTaxUprc},
+	      </if>
+	      <if test="noTaxAmt != null">
+	        no_tax_amt = #{noTaxAmt},
+	      </if>
+	      <if test="taxAmt != null">
+	        tax_amt = #{taxAmt},
+	      </if>
+	      <if test="taxRate != null">
+	        tax_rate = #{taxRate},
+	      </if>
+	      <if test="cntnTaxUprc != null">
+	        cntn_tax_uprc = #{cntnTaxUprc},
+	      </if>
+	      <if test="prcTaxSum != null">
+	        prc_tax_sum = #{prcTaxSum},
+	      </if>
+	      <if test="batNum != null">
+	        bat_num = #{batNum},
+	      </if>
+	      <if test="prdcDt != null">
+	        prdc_dt = #{prdcDt},
+	      </if>
+	      <if test="baoZhiQi != null">
+	        bao_zhi_qi = #{baoZhiQi},
+	      </if>
+	      <if test="invldtnDt != null">
+	        invldtn_dt = #{invldtnDt},
+	      </if>
+	      <if test="invtySubjId != null">
+	        invty_subj_id = #{invtySubjId},
+	      </if>
+	      <if test="memo != null">
+	        memo = #{memo},
+	      </if>
+	      <if test="deptId != null">
+	        dept_id = #{deptId},
+	      </if>
+	 	  <if test="modiPers != null">
+	        modi_pers = #{modiPers},
+	      </if>
+	      <if test="modiTm != null">
+	        modi_tm = #{modiTm},
+	      </if>
+	      <if test="projEncd != null">
+	        proj_encd = #{projEncd},
+	      </if>
+	      <if test="bxQty != null">
+	        bx_qty = #{bxQty},
+	      </if>
+	    </set>
+	   WHERE ordr_num = #{ordrNum}
+	</update>
+	
+	<!-- 分页查询期初余额 -->
+	<select id="selectTermBgnBalList" parameterType="Map" resultType="com.px.mis.account.entity.TermBgnBal">
+		 SELECT a.*,b.whs_nm,c.invty_nm,c.spc_model,c.bx_rule,d.dept_name,e.subj_nm subjNm,mcd.measr_corp_nm
+		 FROM term_bgn_bal a LEFT JOIN whs_doc b ON	a.whs_encd = b.whs_encd
+							 LEFT JOIN invty_doc c ON a.invty_encd = c.invty_encd
+							 LEFT JOIN dept_doc d ON a.dept_id = d.dept_id
+							 LEFT JOIN acct_itm_doc e on a.invty_subj_id = e.subj_id
+							 LEFT JOIN measr_corp_doc mcd on c.measr_corp_id=mcd.measr_corp_id
+		<where>
+			<if test="invtyEncd!= null and invtyEncd != ''">
+				AND a.invty_encd=#{invtyEncd}
+			</if>
+			<if test="whsEncd!= null and whsEncd!= ''">
+				AND a.whs_encd=#{whsEncd}
+			</if>
+		</where>
+	<if test="ordr_num != null and ordr_num !=''">
+	 ORDER BY ordr_num
+	</if>
+	<if test="index != null and index != '' and num != null and num != ''">
+	LIMIT #{index},#{num}
+	</if>
+	 
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectTermBgnBalCount" parameterType="Map" resultType="int">
+		SELECT count(*)
+		FROM term_bgn_bal a LEFT JOIN whs_doc b ON	a.whs_encd = b.whs_encd
+						 LEFT JOIN invty_doc c ON a.invty_encd = c.invty_encd
+						 LEFT JOIN dept_doc d ON a.dept_id = d.dept_id
+						 LEFT JOIN acct_itm_doc e on a.invty_subj_id = e.subj_id
+						 LEFT JOIN measr_corp_doc mcd on c.measr_corp_id=mcd.measr_corp_id
+		<where>
+			<if test="invtyEncd!= null and invtyEncd != ''">
+				AND a.invty_encd=#{invtyEncd}
+			</if>
+			<if test="whsEncd!= null and whsEncd!= ''">
+				AND a.whs_encd=#{whsEncd}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteTermBgnBalByOrdrNum" parameterType="int">
+	 DELETE FROM term_bgn_bal WHERE ordr_num in 
+	 	<foreach item="ordrNum" collection="list" open="("
+			close=")" separator=",">
+			#{ordrNum}
+		</foreach>
+	</delete>
+	
+	<!-- 查询单个期初余额 -->
+	<select id="selectTermBgnBalByOrdrNum" parameterType="Map" resultType="com.px.mis.account.entity.TermBgnBal">
+		 SELECT a.*,b.whs_nm,c.invty_nm,c.spc_model,c.bx_rule,d.dept_name
+		 FROM term_bgn_bal a LEFT JOIN whs_doc b ON	a.whs_encd = b.whs_encd
+							 LEFT JOIN invty_doc c ON a.invty_encd = c.invty_encd
+							 LEFT JOIN dept_doc d ON a.dept_id = d.dept_id
+						 	<!-- LEFT JOIN invty_subj_set_tab e on a. -->
+		 where ordr_num=#{ordrNum}
+	</select>
+	
+	<select id="selectTermBgnBal" parameterType="Map" resultType="com.px.mis.account.entity.TermBgnBal">
+		SELECT a.*,b.whs_nm,c.invty_nm,c.spc_model,c.bx_rule,d.dept_name,e.subj_nm subjNm,mcd.measr_corp_nm
+		 FROM term_bgn_bal a LEFT JOIN whs_doc b ON	a.whs_encd = b.whs_encd
+							 LEFT JOIN invty_doc c ON a.invty_encd = c.invty_encd
+							 LEFT JOIN dept_doc d ON a.dept_id = d.dept_id
+							 LEFT JOIN acct_itm_doc e on a.invty_subj_id = e.subj_id
+							 LEFT JOIN measr_corp_doc mcd on c.measr_corp_id=mcd.measr_corp_id
+		<where>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND a.invty_encd = #{invtyEncd}
+			</if>
+			<if test="whsEncd != null and whsEncd != ''">
+				AND a.whs_encd = #{whsEncd}
+			</if>
+			<if test="batNum != null and batNum != ''">
+				AND a.bat_num = #{batNum}
+			</if>
+			<if test="isBookOk != null and isBookOk != ''">
+				AND a.is_nt_book_Entry = #{isBookOk}
+			</if>
+		</where>
+	</select>
+	<!--记账查询期初余额  -->
+	<select id="selectBgnBalList" parameterType="Map" resultType="com.px.mis.account.entity.TermBgnBal">
+		SELECT a.* FROM term_bgn_bal a 
+		<where>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND a.invty_encd = #{invtyEncd}
+			</if>
+			<if test="whsEncd != null and whsEncd != ''">
+				AND a.whs_encd = #{whsEncd}
+			</if>
+			<if test="batNum != null and batNum != ''">
+				AND a.bat_num = #{batNum}
+			</if>
+			<if test="isBookOk != null and isBookOk != ''">
+				AND a.is_nt_book_Entry = #{isBookOk}
+			</if>
+		</where>
+	</select>
+	<update id="updateTermIsBookOk" parameterType="java.util.List">
+		update term_bgn_bal 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_book_Entry =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.isNtBookEntry}
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.bookEntryPers}
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.bookEntryTm}
+				</foreach>
+			</trim>	
+		</trim>
+		where ordr_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.ordrNum}
+		</foreach>
+	</update>
+	
+</mapper>

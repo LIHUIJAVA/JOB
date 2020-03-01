@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.ProdStruMapper">
+    <resultMap id="BaseResultMap" type="ProdStru"
+               autoMapping="true">
+        <id column="mom_encd" property="momEncd"/>
+        <result column="ordr_num" property="ordrNum"/>
+        <result column="memo" property="memo"/>
+    </resultMap>
+
+    <resultMap id="PStru" type="ProdStru" autoMapping="true">
+        <id column="mom_encd" property="momEncd"/>
+        <result column="ordr_num" property="ordrNum"/>
+        <result column="memo" property="memo"/>
+        <collection property="struSubList" ofType="ProdStruSubTab"
+                    autoMapping="true">
+            <id column="sub_encd" property="subEncd"/>
+            <result column="ordr_num" property="ordrNum"/>
+            <result column="mom_encd" property="momEncd"/>
+        </collection>
+    </resultMap>
+    <!-- 新增产品结构 -->
+    <insert id="insertProdStru"
+            parameterType="com.px.mis.whs.entity.ProdStru">
+        <selectKey resultType="java.lang.String" order="AFTER"
+                   keyProperty="ordrNum">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into prod_stru (mom_encd, mom_Nm,ed_comnt,mom_spc,
+        memo,is_nt_wms, is_nt_chk, is_nt_cmplt,
+        is_nt_clos, print_cnt,
+        setup_pers, setup_tm
+        )
+        values (#{momEncd},
+        #{momNm},#{edComnt},#{momSpc},
+        #{memo}, 0, 0, 0, 0, 0,
+        #{setupPers}, now())
+    </insert>
+    <insert id="insertProdStruSubTab" parameterType="java.util.List">
+        insert into prod_stru_sub_tab(sub_encd, ordr_num, mom_encd,
+        sub_Nm,sub_spc,measr_corp,bx_rule,
+        sub_qty, mom_qty, memo
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.subEncd}, #{item.ordrNum}, #{item.momEncd},
+            #{item.subNm},#{item.subSpc},#{item.measrCorp},#{item.bxRule},
+            #{item.subQty}, #{item.momQty}, #{item.memo}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 修改产品结构 -->
+    <update id="updateProdStru" parameterType="ProdStru">
+        update prod_stru
+        <set>
+            <if test="momEncd != null">
+                mom_encd = #{momEncd},
+            </if>
+            <if test="momNm != null">
+                mom_Nm = #{momNm},
+            </if>
+            <if test="edComnt != null">
+                ed_comnt = #{edComnt},
+            </if>
+            <if test="momSpc != null">
+                mom_spc = #{momSpc},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="isNtWms != null">
+                is_nt_wms = #{isNtWms},
+            </if>
+            <if test="isNtChk != null">
+                is_nt_chk = #{isNtChk},
+            </if>
+            <if test="isNtCmplt != null">
+                is_nt_cmplt = #{isNtCmplt},
+            </if>
+            <if test="isNtClos != null">
+                is_nt_clos = #{isNtClos},
+            </if>
+            <if test="printCnt != null">
+                print_cnt = #{printCnt},
+            </if>
+            <if test="mdfr != null">
+                mdfr = #{mdfr},
+            </if>
+            modi_tm = now()
+        </set>
+        where ordr_num = #{ordrNum}
+    </update>
+
+    <!-- 删除产品结构 -->
+    <!-- 单表删除 -->
+    <delete id="deleteProdStru">
+        delete
+        from prod_stru
+        where ordr_num = #{ordrNum}
+    </delete>
+    <delete id="deleteProdStruSubTab">
+        delete
+        from prod_stru_sub_tab
+        where ordr_num =
+              #{ordrNum}
+    </delete>
+    <!--批量删除 -->
+    <delete id="deleteAllProdStru" parameterType="java.util.List">
+        delete ps,psSubTab
+        from prod_stru as ps
+        left join prod_stru_sub_tab as
+        psSubTab
+        ON ps.ordr_num = psSubTab.ordr_num
+        where ps.ordr_num in
+        <foreach item="ordrNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{ordrNum}
+        </foreach>
+    </delete>
+    <!-- 简单查 产品结构 -->
+    <sql id="Prod_Stru_List">
+        prod_stru.mom_encd AS momEncd,
+		prod_stru.ordr_num AS
+		ordrNum,
+		prod_stru.mom_Nm AS momNm,
+		prod_stru.ed_comnt AS edComnt,
+		prod_stru.mom_spc AS momSpc,
+		prod_stru.memo,
+		prod_stru.is_nt_wms AS
+		isNtWms,
+		prod_stru.is_nt_chk AS isNtChk,
+		prod_stru.is_nt_cmplt AS
+		isNtCmplt,
+		prod_stru.is_nt_clos AS isNtClos,
+		prod_stru.print_cnt AS
+		printCnt,
+		prod_stru.setup_pers AS setupPers,
+		prod_stru.setup_tm AS
+		setupTm,
+		prod_stru.mdfr,
+		prod_stru.modi_tm AS modiTm,
+		chkr,
+		chk_tm
+		aschkTm,
+		measr_corp_doc.measr_corp_nm measrCorpNm
+    </sql>
+    <select id="selectProdStru" parameterType="Map"
+            resultType="ProdStru">
+        select
+        <include refid="Prod_Stru_List"/>
+        from prod_stru
+        LEFT JOIN invty_doc ON invty_doc.invty_encd =
+        prod_stru.mom_encd
+        LEFT JOIN measr_corp_doc ON
+        measr_corp_doc.measr_corp_id
+        =
+        invty_doc.measr_corp_id
+        where ordr_num =
+        #{ordrNum}
+    </select>
+
+
+    <resultMap id="PStruAmbDisambSngl" type="ProdStru" autoMapping="true">
+        <id column="ordrNum" property="ordrNum"/>
+        <result column="momEncd" property="momEncd"/>
+        <result column="momNm" property="momNm"/>
+        <result column="edComnt" property="edComnt"/>
+        <result column="momSpc" property="momSpc"/>
+        <result column="memo" property="memo"/>
+        <result column="setupPers" property="setupPers"/>
+        <result column="setupTm" property="setupTm"/>
+        <result column="mdfr" property="mdfr"/>
+        <result column="modiTm" property="modiTm"/>
+        <result column="chkr" property="chkr"/>
+        <result column="chkTm" property="chkTm"/>
+        <result column="isNtWms" property="isNtWms"/>
+        <result column="isNtChk" property="isNtChk"/>
+        <result column="isNtCmplt" property="isNtCmplt"/>
+        <result column="isNtCmplt" property="isNtCmplt"/>
+        <result column="printCnt" property="printCnt"/>
+        <result column="measrCorpNm" property="measrCorpNm"/>
+        <result column="mbxRule" property="mbxRule"/>
+        <result column="moptaxRate" property="moptaxRate"/>
+        <result column="mcrspdBarCd" property="mcrspdBarCd"/>
+        <result column="minvtyCd" property="minvtyCd"/>
+        <result column="mbaoZhiQiDt" property="mbaoZhiQiDt"/>
+        <result column="mrefCost" property="mrefCost"/>
+        <collection property="struSubList" ofType="ProdStruSubTab"
+                    autoMapping="true">
+            <id column="ordrNumSub" property="ordrNumSub"/>
+            <result column="subEncd" property="subEncd"/>
+            <result column="ordrNum" property="ordrNum"/>
+            <result column="momEncd" property="momEncd"/>
+            <result column="subNm" property="subNm"/>
+            <result column="subSpc" property="subSpc"/>
+            <result column="measrCorp" property="measrCorp"/>
+            <result column="subQty" property="subQty"/>
+            <result column="momQty" property="momQty"/>
+            <result column="smemo" property="memo"/>
+            <result column="smeasrCorpNm" property="smeasrCorpNm"/>
+            <result column="bxRule" property="bxRule"/>
+            <result column="soptaxRate" property="soptaxRate"/>
+            <result column="scrspdBarCd" property="scrspdBarCd"/>
+            <result column="sinvtyCd" property="sinvtyCd"/>
+            <result column="sbaoZhiQiDt" property="sbaoZhiQiDt"/>
+            <result column="srefCost" property="srefCost"/>
+        </collection>
+    </resultMap>
+    <select id="selectMomEncdAmbDisambSngl" parameterType="Map" resultMap="PStruAmbDisambSngl">
+        SELECT prod_stru.ordr_num ordrNum,
+        prod_stru.mom_encd momEncd,
+        prod_stru.mom_Nm momNm,
+        prod_stru.ed_comnt edComnt,
+        prod_stru.mom_spc momSpc,
+        prod_stru.memo memo,
+        prod_stru.setup_pers setupPers,
+        prod_stru.setup_tm setupTm,
+        prod_stru.mdfr mdfr,
+        prod_stru.modi_tm modiTm,
+        prod_stru.chkr chkr,
+        prod_stru.chk_tm chkTm,
+        prod_stru.is_nt_wms isNtWms,
+        prod_stru.is_nt_chk isNtChk,
+        prod_stru.is_nt_cmplt isNtCmplt,
+        prod_stru.is_nt_clos isNtCmplt,
+        prod_stru.print_cnt printCnt,
+        mmeasr_corp_doc.measr_corp_nm measrCorpNm,
+        minvty_doc.bx_rule mbxRule,
+        minvty_doc.optax_rate moptaxRate,
+        minvty_doc.crspd_bar_cd mcrspdBarCd,
+        minvty_doc.invty_cd minvtyCd,
+        minvty_doc.bao_zhi_qi_dt mbaoZhiQiDt,
+        minvty_doc.ref_cost mrefCost,
+        prod_stru_sub_tab.ordr_num_sub ordrNumSub,
+        prod_stru_sub_tab.sub_encd subEncd,
+        prod_stru_sub_tab.ordr_num ordrNum,
+        prod_stru_sub_tab.mom_encd momEncd,
+        prod_stru_sub_tab.sub_Nm subNm,
+        sinvty_doc.spc_model subSpc,
+        prod_stru_sub_tab.measr_corp measrCorp,
+        prod_stru_sub_tab.sub_qty subQty,
+        prod_stru_sub_tab.mom_qty momQty,
+        prod_stru_sub_tab.memo smemo,
+        smeasr_corp_doc.measr_corp_nm smeasrCorpNm,
+        sinvty_doc.bx_rule bxRule,
+        sinvty_doc.optax_rate soptaxRate,
+        sinvty_doc.crspd_bar_cd scrspdBarCd,
+        sinvty_doc.invty_cd sinvtyCd,
+        sinvty_doc.bao_zhi_qi_dt sbaoZhiQiDt,
+        sinvty_doc.ref_cost srefCost
+        FROM prod_stru
+        JOIN prod_stru_sub_tab ON prod_stru_sub_tab.mom_encd = prod_stru.mom_encd
+        AND prod_stru.is_nt_chk = 1
+        LEFT JOIN invty_doc sinvty_doc ON sinvty_doc.invty_encd = prod_stru_sub_tab.sub_encd
+        LEFT JOIN measr_corp_doc smeasr_corp_doc ON smeasr_corp_doc.measr_corp_id = sinvty_doc.measr_corp_id
+
+
+        LEFT JOIN invty_doc minvty_doc ON minvty_doc.invty_encd = prod_stru.mom_encd
+        LEFT JOIN measr_corp_doc mmeasr_corp_doc ON mmeasr_corp_doc.measr_corp_id = minvty_doc.measr_corp_id
+
+        WHERE
+        minvty_doc.pto = 0
+        <if test="momEncd != null and momEncd != '' ">
+            AND prod_stru.mom_encd = #{momEncd}
+        </if>
+        <if test="isNtChk != null and isNtChk != '' ">
+            AND prod_stru.is_nt_chk = #{isNtChk}
+        </if>
+        <if test="index !=null and num!=null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="countMomEncdAmbDisambSngl" parameterType="Map"
+            resultType="Integer">
+        SELECT
+        count(distinct prod_stru.mom_encd)
+        FROM prod_stru
+        JOIN prod_stru_sub_tab ON prod_stru_sub_tab.mom_encd = prod_stru.mom_encd
+        AND prod_stru.is_nt_chk = 1
+        LEFT JOIN invty_doc sinvty_doc ON sinvty_doc.invty_encd = prod_stru_sub_tab.sub_encd
+        LEFT JOIN measr_corp_doc smeasr_corp_doc ON smeasr_corp_doc.measr_corp_id = sinvty_doc.measr_corp_id
+        LEFT JOIN invty_doc minvty_doc ON minvty_doc.invty_encd = prod_stru.mom_encd
+        LEFT JOIN measr_corp_doc mmeasr_corp_doc ON mmeasr_corp_doc.measr_corp_id = minvty_doc.measr_corp_id
+
+        WHERE
+        minvty_doc.pto = 0
+        <if test="momEncd != null and momEncd != '' ">
+            AND prod_stru.mom_encd = #{momEncd}
+        </if>
+    </select>
+    <select id="selectMomEncd" parameterType="Map" resultMap="PStru">
+
+        SELECT *
+        FROM prod_stru
+                 JOIN prod_stru_sub_tab ON prod_stru_sub_tab.mom_encd = prod_stru.mom_encd
+                 LEFT JOIN invty_doc ON invty_doc.invty_encd = prod_stru_sub_tab.sub_encd
+                 LEFT JOIN measr_corp_doc ON measr_corp_doc.measr_corp_id = invty_doc.measr_corp_id
+        where prod_stru.mom_encd =
+              #{momEncd}
+    </select>
+
+    <select id="selectProdStruList" parameterType="java.util.List"
+            resultType="ProdStru">
+        select
+        * , measr_corp_doc.measr_corp_nm measrCorpNm
+        from prod_stru
+        LEFT
+        JOIN
+        invty_doc ON invty_doc.invty_encd = prod_stru.mom_encd
+        LEFT JOIN
+        measr_corp_doc ON measr_corp_doc.measr_corp_id =
+        invty_doc.measr_corp_id
+
+        where ordr_num in
+        <foreach item="item" collection="list" open="(" close=")"
+                 separator=",">
+
+            #{item.ordrNum}
+        </foreach>
+
+
+    </select>
+
+    <select id="selectProdStruSubTabList" parameterType="Map"
+            resultType="ProdStruSubTab">
+        SELECT prod_stru_sub_tab.ordr_num_sub  ordrNumSub,
+               prod_stru_sub_tab.sub_encd   AS subEncd,
+               prod_stru_sub_tab.ordr_num   AS ordrNum,
+               prod_stru_sub_tab.mom_encd   AS momEncd,
+               prod_stru_sub_tab.sub_Nm     AS subNm,
+               prod_stru_sub_tab.sub_spc    AS subSpc,
+               prod_stru_sub_tab.measr_corp AS measrCorp,
+               prod_stru_sub_tab.bx_rule    AS bxRule,
+               prod_stru_sub_tab.sub_qty    AS subQty,
+               prod_stru_sub_tab.mom_qty    AS momQty,
+               prod_stru_sub_tab.memo,
+               measr_corp_doc.measr_corp_nm    smeasrCorpNm
+        FROM prod_stru_sub_tab
+                 LEFT JOIN invty_doc ON invty_doc.invty_encd = prod_stru_sub_tab.sub_encd
+                 LEFT JOIN measr_corp_doc ON measr_corp_doc.measr_corp_id = invty_doc.measr_corp_id
+        where ordr_num =
+              #{ordrNum}
+    </select>
+
+    <!-- 分页查 -->
+    <select id="selectList" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+        pa.*, measr_corp_doc.measr_corp_nm measrCorpNm
+
+        FROM
+        prod_stru as
+        pa
+
+        LEFT JOIN invty_doc ON invty_doc.invty_encd = pa.mom_encd
+        LEFT JOIN
+        measr_corp_doc ON measr_corp_doc.measr_corp_id =
+        invty_doc.measr_corp_id
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND pa.memo like #{memo}
+            </if>
+            <if test="momEncd != null and momEncd != ''">
+                <bind name="momEncd" value="'%'+ momEncd +'%'"/>
+                AND pa.mom_encd like #{momEncd}
+            </if>
+            <if test="isNtChk != null and isNtChk != ''">
+                AND pa.is_nt_chk=#{isNtChk}
+            </if>
+            <if test="momNm != null and momNm != ''">
+                <bind name="momNm" value="'%'+ momNm +'%'"/>
+                AND pa.mom_nm like #{momNm}
+            </if>
+            <if test="momSpc != null and momSpc != ''">
+                <bind name="momSpc" value="'%'+ momSpc +'%'"/>
+                AND pa.mom_spc like #{momSpc}
+            </if>
+            <if test="setupPers != null and setupPers != ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND pa.setup_pers like #{setupPers}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        <if test="index !=null and num!=null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+        SELECT count( pa.mom_encd)
+        FROM
+        prod_stru as pa
+
+        LEFT JOIN invty_doc ON
+        invty_doc.invty_encd = pa.mom_encd
+        LEFT JOIN measr_corp_doc ON
+        measr_corp_doc.measr_corp_id =
+        invty_doc.measr_corp_id
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND pa.memo like #{memo}
+            </if>
+            <if test="momEncd != null and momEncd != ''">
+                <bind name="momEncd" value="'%'+ momEncd +'%'"/>
+                AND pa.mom_encd like #{momEncd}
+            </if>
+            <if test="isNtChk != null and isNtChk != ''">
+                AND pa.is_nt_chk=#{isNtChk}
+            </if>
+            <if test="momNm != null and momNm != ''">
+                <bind name="momNm" value="'%'+ momNm +'%'"/>
+                AND pa.mom_nm like #{momNm}
+            </if>
+            <if test="momSpc != null and momSpc != ''">
+                <bind name="momSpc" value="'%'+ momSpc +'%'"/>
+                AND pa.mom_spc like #{momSpc}
+            </if>
+            <if test="setupPers != null and setupPers != ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND pa.setup_pers like #{setupPers}
+            </if>
+        </where>
+    </select>
+    <select id="queryListPrint" parameterType="Map"
+            resultType="ProdStruMap">
+        SELECT prod_stru.ordr_num ordrNum,
+        prod_stru.mom_encd momEncd,
+        prod_stru.mom_Nm momNm,
+        prod_stru.ed_comnt edComnt,
+        prod_stru.mom_spc momSpc,
+        prod_stru.memo memo,
+        prod_stru.setup_pers setupPers,
+        prod_stru.setup_tm setupTm,
+        prod_stru.mdfr mdfr,
+        prod_stru.modi_tm modiTm,
+        prod_stru.chkr chkr,
+        prod_stru.chk_tm chkTm,
+        prod_stru.is_nt_wms isNtWms,
+        prod_stru.is_nt_chk isNtChk,
+        prod_stru.is_nt_cmplt isNtCmplt,
+        prod_stru.is_nt_clos isNtCmplt,
+        prod_stru.print_cnt printCnt,
+        mmeasr_corp_doc.measr_corp_nm measrCorpNm,
+        minvty_doc.bx_rule mbxRule,
+        minvty_doc.optax_rate moptaxRate,
+        minvty_doc.crspd_bar_cd mcrspdBarCd,
+        minvty_doc.invty_cd minvtyCd,
+        minvty_doc.bao_zhi_qi_dt mbaoZhiQiDt,
+        minvty_doc.ref_cost mrefCost,
+        prod_stru_sub_tab.ordr_num_sub ordrNumSub,
+        prod_stru_sub_tab.sub_encd subEncd,
+        prod_stru_sub_tab.ordr_num ordrNum,
+        prod_stru_sub_tab.mom_encd momEncd,
+        prod_stru_sub_tab.sub_Nm subNm,
+        sinvty_doc.spc_model subSpc,
+        prod_stru_sub_tab.measr_corp measrCorp,
+        prod_stru_sub_tab.sub_qty subQty,
+        prod_stru_sub_tab.mom_qty momQty,
+        prod_stru_sub_tab.memo smemo,
+        smeasr_corp_doc.measr_corp_nm smeasrCorpNm,
+        sinvty_doc.bx_rule bxRule,
+        sinvty_doc.optax_rate soptaxRate,
+        sinvty_doc.crspd_bar_cd scrspdBarCd,
+        sinvty_doc.invty_cd sinvtyCd,
+        sinvty_doc.bao_zhi_qi_dt sbaoZhiQiDt,
+        sinvty_doc.ref_cost srefCost
+        FROM prod_stru
+        JOIN prod_stru_sub_tab ON prod_stru_sub_tab.mom_encd = prod_stru.mom_encd
+        LEFT JOIN invty_doc sinvty_doc ON sinvty_doc.invty_encd = prod_stru_sub_tab.sub_encd
+        LEFT JOIN measr_corp_doc smeasr_corp_doc ON smeasr_corp_doc.measr_corp_id = sinvty_doc.measr_corp_id
+        LEFT JOIN invty_doc minvty_doc ON minvty_doc.invty_encd = prod_stru.mom_encd
+        LEFT JOIN measr_corp_doc mmeasr_corp_doc ON mmeasr_corp_doc.measr_corp_id = minvty_doc.measr_corp_id
+
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND prod_stru.memo like #{memo}
+            </if>
+            <if test="memos != null and memos != ''">
+                <bind name="memos" value="'%'+ memos +'%'"/>
+                AND prod_stru_sub_tab.memo like #{memos}
+            </if>
+            <if test="momEncd != null and momEncd != ''">
+                <bind name="momEncd" value="'%'+ momEncd +'%'"/>
+                AND prod_stru.mom_encd like #{momEncd}
+            </if>
+            <if test="momNm != null and momNm != ''">
+                <bind name="momNm" value="'%'+ momNm +'%'"/>
+                AND prod_stru.mom_nm like #{momNm}
+            </if>
+            <if test="momSpc != null and momSpc != ''">
+                <bind name="momSpc" value="'%'+ momSpc +'%'"/>
+                AND prod_stru.mom_spc like #{momSpc}
+            </if>
+            <if test="isNtChk != null and isNtChk != ''">
+                AND prod_stru.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="setupPers != null and setupPers != ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND prod_stru.setup_pers like #{setupPers}
+            </if>
+        </where>
+    </select>
+    <!-- 查询 获取该母件的产品结构信息 -->
+    <select id="selectProdStruByMom" resultMap="PStru">
+        SELECT
+        pa.*,paTab.*, measr_corp_doc.measr_corp_nm measrCorpNm
+
+        FROM
+        prod_stru as pa JOIN
+        prod_stru_sub_tab as paTab on
+        pa.ordr_num=paTab.ordr_num
+        LEFT JOIN invty_doc ON invty_doc.invty_encd
+        =
+        pa.mom_encd
+        LEFT JOIN measr_corp_doc ON measr_corp_doc.measr_corp_id =
+        invty_doc.measr_corp_id
+
+        <where>
+
+            <if test="ordrNum != null and ordrNum != ''">
+                AND pa.mom_encd=#{ordrNum}
+            </if>
+        </where>
+    </select>
+    <!-- 审核 -->
+    <update id="updatePStruChk" parameterType="java.util.List">
+        update prod_stru
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when ordr_num =
+                    #{item.ordrNum} then 1
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when ordr_num = #{item.ordrNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when ordr_num =
+                    #{item.ordrNum} then #{item.chkTm}
+                </foreach>
+            </trim>
+        </trim>
+        where ordr_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.ordrNum}
+        </foreach>
+    </update>
+    <!-- 弃审 -->
+    <update id="updatePStruNoChk" parameterType="java.util.List">
+        update prod_stru
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when ordr_num =
+                    #{item.ordrNum} then 0
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when ordr_num = #{item.ordrNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when ordr_num =
+                    #{item.ordrNum} then now()
+                </foreach>
+            </trim>
+        </trim>
+        where ordr_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.ordrNum}
+        </foreach>
+    </update>
+
+
+    <!-- 新增产品结构 -->
+    <insert id="exIinsertProdStru"
+            parameterType="com.px.mis.whs.entity.ProdStru">
+        <selectKey resultType="java.lang.String" order="AFTER"
+                   keyProperty="ordrNum">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into prod_stru (
+        mom_encd,
+        mom_Nm,
+        ed_comnt,
+        mom_spc,
+        memo,
+        setup_pers,
+        setup_tm,
+        mdfr,
+        modi_tm,
+        chkr,
+        chk_tm,
+        is_nt_wms,
+        is_nt_chk,
+        is_nt_cmplt,
+        is_nt_clos,
+        print_cnt
+        )
+        values (#{momEncd},
+        #{momNm},#{edComnt},#{momSpc},
+        #{memo},
+        #{setupPers},
+        <if test="setupTm  == '' ">
+            null
+        </if>
+        <if test="setupTm  != '' ">
+            #{setupTm}
+        </if>
+
+        , #{mdfr},
+        <if test="modiTm  == '' ">
+            null
+        </if>
+        <if test="modiTm  != '' ">
+            #{modiTm}
+        </if>
+        ,
+        #{chkr},
+        <if test="chkTm  == '' ">
+            null
+        </if>
+        <if test="chkTm  != '' ">
+            #{chkTm}
+        </if>
+        ,
+        #{isNtWms},
+        #{isNtChk}, #{isNtCmplt}, #{isNtClos},
+
+        #{printCnt}
+        )
+    </insert>
+</mapper>

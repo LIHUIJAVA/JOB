@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.OutIntoWhsAdjSnglDao">
+
+    <!-- 出入库调整单手动封装数据 -->
+    <resultMap type="com.px.mis.account.entity.OutIntoWhsAdjSngl" id="myResult" autoMapping="true">
+        <id column="form_num" property="formNum"/>
+        <result column="form_tm" property="formTm"/>
+        <collection property="outIntoList" ofType="com.px.mis.account.entity.OutIntoWhsAdjSnglSubTab"
+                    autoMapping="true">
+            <id column="ordr_num" property="ordrNum"/>
+            <result column="a_memo" property="memo"/>
+            <result column="e_memos" property="memos"/>
+        </collection>
+    </resultMap>
+    <!-- 带条件的分页查询 -->
+    <select id="selectOutIntoWhsAdjSnglList" parameterType="map" resultMap="myResult">
+        SELECT 	a.`form_num`,
+		a.`form_tm`,
+		a.`recv_send_cate_id`,
+		a.`acc_num`,
+		a.`user_name`,
+		a.`dept_id`,
+		a.`cust_id`,
+		a.`provr_id`,
+		a.`is_fifo_adj_ban`,
+		a.`is_crspd_out_whs_sngl`,
+		a.`out_into_whs_ind`,
+		a.`beadj_out_into_whs_mastab_ind`,
+		a.`is_nt_sell`,
+		a.`is_nt_book_entry`,
+		a.`book_entry_pers`,
+		a.`book_entry_tm`,
+		a.`mdfr_pers`,
+		a.`mdfr_tm`,
+		a.`setup_pers`,
+		a.`setup_tm`,
+		a.`to_form_typ_encd`,
+		a.`is_nt_make_vouch`,
+		a.`mak_vouch_pers`,
+		a.`mak_vouch_tm`,
+		a.`form_typ_encd`,
+		a.`form_typ_name` ,
+        a.memo as a_memo,
+        b.recv_send_cate_nm,c.dept_name,
+        e.`ordr_num`, e.`form_num`,e.`adj_sub_ind`, e.`invty_encd`, e.`whs_encd`, e.`bat_num`, e.`amt`,e.`to_ordr_num`, e.`proj_encd`, e.`proj_nm`
+        ,e.memo as e_memos,
+        f.whs_nm,g.invty_nm,g.spc_model,g.bx_rule,
+        h.provr_nm,i.cust_nm,j.measr_corp_nm
+        FROM out_into_whs_adj_sngl a LEFT JOIN out_into_whs_adj_sngl_sub_tab e ON a.form_num = e.form_num
+        LEFT JOIN recv_send_cate b ON a.recv_send_cate_id = b.recv_send_cate_id
+        LEFT JOIN dept_doc c ON a.dept_id = c.dept_id
+        <!-- LEFT JOIN mis_user d ON a.acc_num = d.acc_num -->
+        LEFT JOIN whs_doc f ON e.whs_encd = f.whs_encd
+        LEFT JOIN invty_doc g ON e.invty_encd = g.invty_encd
+        LEFT JOIN provr_doc h ON a.provr_id = h.provr_id
+        LEFT JOIN cust_doc i ON a.cust_id = i.cust_id
+        LEFT JOIN measr_corp_doc j ON g.measr_corp_id = j.measr_corp_id
+        <where>
+            <if test="formNum != null and formNum != ''">
+                AND a.form_num=#{formNum}
+            </if>
+            <if test="formTm1 != null and formTm1 != ''">
+                AND a.form_tm &gt;= #{formTm1}
+            </if>
+            <if test="formTm2 != null and formTm2 != ''">
+                AND a.form_tm &lt;= #{formTm2}
+            </if>
+            <if test="whsEncd != null and whsEncd != ''">
+                AND e.whs_encd=#{whsEncd}
+            </if>
+            <if test="deptId != null and deptId != ''">
+                AND a.dept_id=#{deptId}
+            </if>
+            <if test="custId != null and custId != ''">
+                AND a.cust_id=#{custId}
+            </if>
+            <if test="provrId != null and provrId != ''">
+                AND a.provr_id=#{provrId}
+            </if>
+            <if test="invtyEncd != null and invtyEncd != ''">
+                AND e.invty_encd=#{invtyEncd}
+            </if>
+            <if test="memo !=null and memo.trim()!=''">
+          		<bind name="memo" value="'%'+ memo +'%'"/>
+             AND a.memo like #{memo}
+        	</if>
+			<if test="adjFormNumList != null and adjFormNumList.size() > 0 ">
+				AND a.form_num IN 
+				<foreach collection="adjFormNumList" item="formNum" open="(" close=")" separator=",">
+					#{formNum}
+				</foreach>
+			</if>	
+			<if test="isBookOk != null and isBookOk != ''">
+                AND a.is_book_ok=#{isBookOk}
+            </if> 
+             <if test="loginTime != null and loginTime != ''">
+				AND DATE_FORMAT(a..form_tm, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+			 </if>
+        </where>
+        ORDER BY a.form_num DESC
+        <if test="index != null and  num != null">
+            LIMIT #{index},#{num}
+        </if>
+        
+    </select>
+    <!-- 条件查询总行数 -->
+    <select id="selectOutIntoWhsAdjSnglCount" resultType="Integer">
+        SELECT count(a.form_num)
+        FROM out_into_whs_adj_sngl a LEFT JOIN out_into_whs_adj_sngl_sub_tab e ON a.form_num = e.form_num
+        LEFT JOIN recv_send_cate b ON a.recv_send_cate_id = b.recv_send_cate_id
+        LEFT JOIN dept_doc c ON a.dept_id = c.dept_id
+        <!-- LEFT JOIN mis_user d ON a.acc_num = d.acc_num -->
+        LEFT JOIN whs_doc f ON e.whs_encd = f.whs_encd
+        LEFT JOIN invty_doc g ON e.invty_encd = g.invty_encd
+        LEFT JOIN provr_doc h ON a.provr_id = h.provr_id
+        LEFT JOIN cust_doc i ON a.cust_id = i.cust_id
+        LEFT JOIN measr_corp_doc j ON g.measr_corp_id = j.measr_corp_id
+        <where>
+            <if test="formNum != null and formNum != ''">
+                AND a.form_num=#{whsEncd}
+            </if>
+            <if test="formTm1 != null and formTm1 != ''">
+                AND a.form_tm &gt;= #{formTm1}
+            </if>
+            <if test="formTm2 != null and formTm2 != ''">
+                AND a.form_tm &lt;= #{formTm2}
+            </if>
+            <if test="whsEncd != null and whsEncd != ''">
+                AND e.whs_encd=#{whsEncd}
+            </if>
+             <if test="memo !=null and memo.trim()!=''">
+          		<bind name="memo" value="'%'+ memo +'%'"/>
+             AND a.memo like #{memo}
+        	</if>
+            <if test="deptId != null and deptId != ''">
+                AND a.dept_id=#{deptId}
+            </if>
+            <if test="custId != null and custId != ''">
+                AND a.cust_id=#{custId}
+            </if>
+            <if test="provrId != null and provrId != ''">
+                AND a.provr_id=#{provrId}
+            </if>
+            <if test="invtyEncd != null and invtyEncd != ''">
+                AND e.invty_encd=#{invtyEncd}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据主键查询单个 -->
+    <select id="selectOutIntoWhsAdjSnglByFormNum" parameterType="String" resultMap="myResult">
+        SELECT a.*,
+        b.recv_send_cate_nm,c.dept_name,
+        e.*,e.memo memos,
+        f.whs_nm,g.invty_nm,g.spc_model,g.bx_rule,
+        h.provr_nm,i.cust_nm,j.measr_corp_nm
+        FROM out_into_whs_adj_sngl a LEFT JOIN out_into_whs_adj_sngl_sub_tab e ON a.form_num = e.form_num
+        LEFT JOIN recv_send_cate b ON a.recv_send_cate_id = b.recv_send_cate_id
+        LEFT JOIN dept_doc c ON a.dept_id = c.dept_id
+        <!-- LEFT JOIN mis_user d ON a.acc_num = d.acc_num -->
+        LEFT JOIN whs_doc f ON e.whs_encd = f.whs_encd
+        LEFT JOIN invty_doc g ON e.invty_encd = g.invty_encd
+        LEFT JOIN provr_doc h ON a.provr_id = h.provr_id
+        LEFT JOIN cust_doc i ON a.cust_id = i.cust_id
+        LEFT JOIN measr_corp_doc j ON g.measr_corp_id = j.measr_corp_id
+        WHERE a.form_num=#{formNum}
+    </select>
+
+    <select id="selectOutIntoWhsAdjSnglFinalDealList" resultMap="myResult">
+        SELECT
+        a.*,b.*
+        FROM
+        out_into_whs_adj_sngl a
+        INNER JOIN out_into_whs_adj_sngl_sub_tab b ON a.form_num = b.form_num
+
+        <if test="bookOkDt != null and bookOkDt != ''">
+            AND DATE_FORMAT(a.form_tm, '%Y%m') = DATE_FORMAT(#{bookOkDt}, '%Y%m')
+        </if>
+        <if test="invtyEncd != null and invtyEncd != ''">
+            AND b.invty_encd = #{invtyEncd}
+        </if>
+        <if test="invtyEncdList != null and invtyEncdList.size() > 0 ">
+			AND b.invty_encd IN
+			<foreach collection="invtyEncdList" item="formNum" open="(" close=")" separator=",">
+				#{invtyEncd}
+			</foreach>
+		</if>
+    </select>
+    <!-- 根据主键删除 -->
+    <delete id="deleteOutIntoWhsAdjSnglByFormNum" parameterType="java.util.List">
+        DELETE a,b FROM out_into_whs_adj_sngl a
+        LEFT JOIN out_into_whs_adj_sngl_sub_tab b ON a.form_num = b.form_num
+        WHERE a.form_num in
+        <foreach item="formNum" collection="list" open="(" close=")" separator=",">
+            #{formNum}
+        </foreach>
+    </delete>
+    <!-- 根据主键批量删除主子表 -->
+    <delete id="deleteOutIntoWhsAdjSnglList" parameterType="list" >
+        DELETE a,b FROM out_into_whs_adj_sngl a
+        LEFT JOIN out_into_whs_adj_sngl_sub_tab b ON a.form_num = b.form_num
+        WHERE a.form_num in
+        <foreach item="formNum" collection="list" open="(" close=")" separator=",">
+            #{formNum}
+        </foreach>
+    </delete>
+    <!-- 添加 -->
+    <insert id="insertOutIntoWhsAdjSngl" parameterType="com.px.mis.account.entity.OutIntoWhsAdjSngl">
+  	 insert into out_into_whs_adj_sngl (form_num, form_tm, recv_send_cate_id, 
+      acc_num, user_name, dept_id, 
+      cust_id, provr_id, is_fifo_adj_ban, 
+      is_crspd_out_whs_sngl, out_into_whs_ind, beadj_out_into_whs_mastab_ind, 
+      is_nt_sell, is_nt_book_entry,  
+      setup_pers, setup_tm, memo, 
+      to_form_typ_encd, is_nt_make_vouch,form_typ_encd, form_typ_name)
+    values (#{formNum}, #{formTm}, #{recvSendCateId}, 
+      #{accNum}, #{userName}, #{deptId}, 
+      #{custId}, #{provrId}, #{isFifoAdjBan}, 
+      #{isCrspdOutWhsSngl}, #{outIntoWhsInd}, #{beadjOutIntoWhsMastabInd}, 0, 0, 
+      #{setupPers}, #{setupTm}, #{memo}, 
+      #{toFormTypEncd}, 0,  #{formTypEncd}, #{formTypName})
+  </insert>
+    <!-- 更新 -->
+    <update id="updateOutIntoWhsAdjSnglByFormNum" parameterType="com.px.mis.account.entity.OutIntoWhsAdjSngl">
+        UPDATE out_into_whs_adj_sngl
+        <set>
+            <if test="formNum != null">
+                form_num = #{formNum},
+            </if>
+            <if test="formTm != null">
+                form_tm = #{formTm},
+            </if>
+            <if test="recvSendCateId != null">
+                recv_send_cate_id = #{recvSendCateId},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+            <if test="custId != null">
+                cust_id = #{custId},
+            </if>
+            <if test="provrId != null">
+                provr_id = #{provrId},
+            </if>
+            <if test="outIntoWhsInd != null">
+                out_into_whs_ind = #{outIntoWhsInd},
+            </if>
+            <if test="isFifoAdjBan != null">
+                is_fifo_adj_ban = #{isFifoAdjBan},
+            </if>
+            <if test="isCrspdOutWhsSngl != null">
+                is_crspd_out_whs_sngl = #{isCrspdOutWhsSngl},
+            </if>
+            <if test="beadjOutIntoWhsMastabInd != null">
+                beadj_out_into_whs_mastab_ind = #{beadjOutIntoWhsMastabInd},
+            </if>
+            <if test="isNtSell != null">
+                is_nt_sell = #{isNtSell},
+            </if>
+            <if test="mdfrPers != null">
+                mdfr_pers = #{mdfrPers},
+            </if>
+                mdfr_tm = now(),
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+        </set>
+        WHERE form_num = #{formNum}
+    </update>
+
+    <!--  查询是否记账 -->
+    <select id="selectOutIntoWhsAdjSnglIsNtBookEntry" parameterType="String" resultType="INTEGER"> 
+  	SELECT
+		is_nt_book_entry
+	FROM
+		out_into_whs_adj_sngl where form_num = #{formNum}
+  </select>
+    <!-- 添加导入 -->
+    <insert id="EXinsertOutIntoWhsAdjSngl" parameterType="com.px.mis.account.entity.OutIntoWhsAdjSngl">
+  	INSERT INTO out_into_whs_adj_sngl(form_num,
+	form_tm,
+	recv_send_cate_id,
+	acc_num,
+	user_name,
+	dept_id,
+	cust_id,
+	provr_id,
+	is_fifo_adj_ban,
+	is_crspd_out_whs_sngl,
+	out_into_whs_ind,
+	beadj_out_into_whs_mastab_ind,
+	is_nt_sell,
+	is_nt_book_entry,
+	book_entry_pers,
+	book_entry_tm,
+	mdfr_pers,
+	mdfr_tm,
+	setup_pers,
+	setup_tm,
+	memo,to_form_typ_encd,is_nt_make_vouch,
+    mak_vouch_pers,mak_vouch_tm)
+	VALUES(#{formNum},
+	#{formTm},
+	#{recvSendCateId},
+	#{accNum},
+	#{userName},
+	#{deptId},
+	#{custId},
+	#{provrId},
+	#{isFifoAdjBan},
+	#{isCrspdOutWhsSngl},
+	#{outIntoWhsInd},
+	#{beadjOutIntoWhsMastabInd},
+	#{isNtSell},
+	#{isNtBookEntry},
+	#{bookEntryPers},
+	#{bookEntryTm},
+	#{mdfrPers},
+	#{mdfrTm},
+	#{setupPers},
+	#{setupTm},
+	#{memo},#{toFormTypEncd},#{isNtMakeVouch},#{makVouchPers},#{makVouchTm})
+  </insert>
+  
+  <update id="updateOutIntoAdjList" parameterType="java.util.List">
+  	update out_into_whs_adj_sngl
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_book_entry =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.isNtBookEntry != null ">
+						when form_num = #{item.formNum} then #{item.isNtBookEntry}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.bookEntryPers != null">
+						when form_num = #{item.formNum} then #{item.bookEntryPers}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.bookEntryTm != null">
+						when form_num = #{item.formNum} then #{item.bookEntryTm}
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		where form_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+  </update>
+  
+</mapper>

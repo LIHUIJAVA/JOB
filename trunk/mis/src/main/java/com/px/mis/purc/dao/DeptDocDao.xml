@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.DeptDocDao">
+    <!-- 新增部门档案 -->
+   <insert id="insertDeptDoc" parameterType="DeptDoc">
+     insert into dept_doc (dept_id, dept_name, tel, addr, memo) 
+     values (#{deptId}, #{deptName}, #{tel}, #{addr}, #{memo})
+   </insert>
+    <!-- 修改部门档案 -->
+   <update id="updateDeptDocByDeptEncd" parameterType="DeptDoc">
+     update dept_doc
+    <set>
+      <if test="deptName != null">
+        dept_name = #{deptName},
+      </if>
+      <if test="tel != null">
+        tel = #{tel},
+      </if>
+      <if test="addr != null">
+        addr = #{addr},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+     where dept_id = #{deptId}
+   </update>
+   <!-- 删除部门档案 -->
+   <delete id="deleteDeptDocByDeptEncd" parameterType="String">
+     delete from dept_doc where dept_Id = #{deptId}
+   </delete>
+   <!-- 按照编号查询部门档案 -->
+   <sql id="Base_Column_List">
+    dept_id, dept_name, tel, addr, memo
+   </sql>
+   <select id="selectDeptDocByDeptEncd" parameterType="String" resultType="DeptDoc">
+    select 
+    <include refid="Base_Column_List" />
+    from dept_doc
+    where dept_id = #{deptId}
+   </select>
+   <!-- 分页查询所有部门档案 -->
+   <select id="selectDeptDocList" parameterType="Map" resultType="DeptDoc">
+    select 
+    <include refid="Base_Column_List" />
+    from dept_doc
+    <where>
+  		<if test="deptId != null and deptId != ''">
+            AND dept_id=#{deptId}
+        </if>
+        <if test="deptName != null and deptName != ''">
+            AND dept_name=#{deptName}
+        </if>
+  	</where>
+    order by dept_id DESC
+    LIMIT #{index},#{num}
+   </select>
+   <select id="selectDeptDocCount" parameterType="Map"  resultType="Integer">
+	SELECT count(*) from dept_doc
+	<where>
+  		<if test="deptId != null and deptId != ''">
+            AND dept_id=#{deptId}
+        </if>
+        <if test="deptName != null and deptName != ''">
+            AND dept_name=#{deptName}
+        </if>
+  	</where>
+  </select>
+  
+  <!-- 打印以及输入输出所有部门档案 -->
+  <select id="printingDeptDocList" parameterType="Map" resultType="DeptDoc">
+    select 
+    <include refid="Base_Column_List" />
+    from dept_doc
+  </select>
+  <!-- 按照编号部门档案编号是否存在 -->
+  <select id="selectDeptId" parameterType="String" resultType="String">
+    select dept_id from dept_doc where dept_id = #{deptId}
+  </select>
+  <!--   批量删除部门档案 -->
+  <delete id="deleteDeptDocList" parameterType="java.util.List">
+	delete from dept_doc where dept_id in
+	<foreach item="deptId" collection="list" open="(" close=")" separator=",">
+	     #{deptId}
+	</foreach>
+  </delete>
+
+</mapper>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>赠品范围</title>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/invtyList.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<style>
+			#present_jqgrids {
+				width: 100%!important;
+			}
+		</style>
+	</head>
+
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/ec/present.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+		
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="addOLine">增加</button>
+					<button class="del">删除</button>
+					<button class="editOrder">修改</button>
+					<button class="saveOrder">保存</button>
+					<button class="clear">重置</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="businessType col-md-4">
+						<span>赠品范围编码 <b>*</b></span><input type="text" class="presentRangeEncd" name="presentRangeEncd" value="" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>赠品范围名称 <b>*</b></span><input type="text" class="presentRangeName" name="presentRangeName" value="" />
+					</div>
+				</form>
+			</div>
+			<table id="present_jqgrids"></table>
+			<div id="present_jqGridPager"></div>
+		</div>
+		
+		<!--存货-->
+		<div id="wwrap" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<h1 class="title">存货档案</h1>
+				</div>
+				<div class="purchaseTit" style="margin:20px">
+					<div class="buttons">
+						<button class="true">确定</button>
+						<button class="false">取消</button>
+						<button class="find">查询</button>
+					</div>
+				</div>
+
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-3">
+								<span>存货编码</span>
+								<input type="text" class="invtyEncd1" name="invtyEncd1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货名称</span>
+								<input type="text" class="invtyNm1" name="invtyNm1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货分类编码</span>
+								<input type="text" class="invtyClsEncd1" name="invtyClsEncd1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货分类名称</span>
+								<input type="text" class="invtyClsNm1" name="invtyClsNm1" value="" />
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<aside>
+					<!--左列树-->
+					<div id="tree"></div>
+				</aside>
+
+				<div id="wrap">
+					<table id="jqgrids"></table>
+					<div id="jqGridPager"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

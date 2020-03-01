@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>用户查询列表</title>
+	</head>
+	<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+	<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+	<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+	<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+	<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+	
+	<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+	<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+	<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../../assets/js/mis/system/userList.js"></script>
+	<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+	<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+	<body>
+		<div class="box">
+			<div class="purchaseTit">
+				<!--<h1 class="title">用户查询列表</h1>-->
+			
+				<div class="buttons">
+					<button id="find">查询</button>
+					<button class="true">确定</button>
+					<button class="false">取消</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-3">
+							<span>用户名 </span>
+							<input type="text" class="userName" name="userName" value="" />
+						</div>
+						<div class="supplier col-md-3">
+							<span>用户号 </span>
+							<input type="text" class="accNum" name="accNum" value="" />
+						</div>
+						<div class="supplier col-md-3">
+							<span>角色编码 </span>
+							<input type="text" class="roleId" name="roleId1" value="" />
+						</div>
+						<div class="supplier col-md-3">
+							<span>角色名称</span>
+							<input type="text" class="roleName" name="roleName" value="" />
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+			<table id="user_jqgrids"></table>
+			<div id="user_jqGridPager"></div>
+	</body>
+
+</html>
+<style>
+	.ui-state-highlight {
+		color: red !important;
+	}
+	
+	.editable.inline-edit-cell.ui-widget-content.ui-corner-all {
+		width: 100% !important;
+	}
+	
+	#gbox_jqgrids {
+		margin: 0 auto;
+		/*margin-top: 80px;*/
+	}
+</style>

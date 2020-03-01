@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.EcExpressDao">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.EcExpress">
+	INSERT INTO ec_express (plat_id, provider_code, provider_id, provider_name,provider_type,branch_code,branch_name,
+	amount,province_id,province_name,city_id,city_name,country_id,country_name,countryside_id,countryside_name,address)
+	VALUES 
+	<foreach collection="list" item="item" index="index" separator="," close=";">
+		(#{item.platId}, #{item.providerCode}, #{item.providerId}, #{item.providerName}, #{item.providerType},
+		#{item.branchCode}, #{item.branchName}, #{item.amount}, #{item.provinceId}, #{item.provinceName}, #{item.cityId}
+		, #{item.cityName}, #{item.countryId}, #{item.countryName}, #{item.countrysideId}, #{item.countrysideName}, #{item.address})
+	</foreach>
+  </insert>
+  
+   <delete id="delete" parameterType="java.lang.String">
+  delete from ec_express where plat_id=#{0}
+  </delete>
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.EcExpress">
+  select * from ec_express where plat_id=#{0} and provider_code=#{1} and province_name=#{2} 
+  and city_name=#{3} and country_name=#{4} and address=#{5}
+  </select>
+      <select id="exSelect" parameterType="java.lang.String" resultType="java.util.Map">
+  	SELECT id, express_name, express_code
+  	FROM express_code_and_name 
+  	WHERE express_code = #{expressCode}
+  </select>
+  
+  <select id="selectList" parameterType="map" resultType="com.px.mis.ec.entity.EcExpress">
+  select ee.*,ep.ec_name as platName from ec_express ee,ec_platform ep
+  where ee.plat_id=ep.ec_id
+  <if test="ecId !=null and ecId != '' ">
+  	AND ee.plat_id=#{ecId}
+  </if>
+  <if test="providerName !=null and providerName != '' ">
+  	AND ee.provider_name=#{providerName}
+  </if>
+  LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="map" resultType="int">
+  select count(ee.id) from ec_express ee,ec_platform ep
+  where ee.plat_id=ep.ec_id
+  <if test="ecId !=null and ecId != '' ">
+  	AND ee.plat_id=#{ecId}
+  </if>
+  <if test="providerName !=null and providerName != '' ">
+  	AND ee.provider_name=#{providerName}
+  </if>
+  </select>
+</mapper>

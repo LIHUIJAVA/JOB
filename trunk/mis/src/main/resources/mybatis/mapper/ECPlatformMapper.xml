@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ECPlatform">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.ECPlatform">
+	INSERT INTO ec_platform (ec_id,ec_name,memo)
+    VALUES(#{ecId}, #{ecName}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ECPlatform">
+  	SELECT ec_id, ec_name, memo
+  	FROM ec_platform 
+  	WHERE ec_id = #{ecId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  ec_platform
+  	WHERE ec_id = #{ecId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.ECPlatform">
+  	UPDATE ec_platform 
+  	SET ec_id=#{ecId}, ec_name=#{ecName}, memo=#{memo}
+  	WHERE ec_id=#{ecId}
+  </update>
+  
+  <select id="selectAll" resultType="Map">
+	SELECT ec_id, ec_name
+  	FROM ec_platform
+  </select>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.ECPlatform">
+	SELECT ec_id, ec_name, memo
+  	FROM ec_platform 
+  	<where>
+  		<if test="ecId != null and ecId != ''">
+            AND ec_id=#{ecId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(*)
+  	FROM ec_platform 
+  	<where>
+  		<if test="ecId != null and ecId != ''">
+            AND ec_id=#{ecId}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

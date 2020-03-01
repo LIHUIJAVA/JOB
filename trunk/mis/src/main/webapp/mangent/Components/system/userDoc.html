@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>用户档案</title>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/insertUserWhs.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+
+		<style>
+			.editable.inline-edit-cell.ui-widget-content.ui-corner-all {
+				width: 100% !important;
+			}
+			form {
+				display: inline-block;
+				font-size: 14px;
+			}
+			/*.under{
+				width:80%;
+				float:right
+			}*/
+			.left{
+				width:500px;
+				display: inline-block;
+			}
+			.right{
+				width:500px;
+				display: inline-block;
+			}
+			.ui-jqgrid-btable.ui-common-table{
+				width:100%!important
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="box" id="userSearch">
+			<div class="purchaseTit">
+				<!--<h1 class="title">用户档案</h1>-->
+				<div class="buttons">
+					<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>
+					<button id="whs">对应仓库</button>
+					<button class="addOrder">增行</button>
+					<button class="delOrder">删行</button>
+					<button class="saveOrder">保存</button>
+					<button id="find">查询</button>
+					<button class="print">打印</button>
+					<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-6">
+							<span>用户号</span>
+							<input type="text" class="userId" name="userId1" value="" />
+						</div>
+						<div class="supplier col-md-6">
+							<span>用户名称</span>
+							<input type="text" class="userName" name="userId1" value="" />
+						</div>
+						<div class="supplier col-md-6">
+							<span>角色编码</span>
+							<input type="text" class="roleId" name="roleId1" value="" />
+						</div>
+						<div class="department col-md-4">
+							<span>部门</span><input type="text" id="deptId" class="deptId encds" name="deptId" value="" />
+							<input type="text" id="deptName" class="deptName names roleLevel1" name="deptName roleLevel1" value="" readonly="readonly" />
+							<span><img class="biao_deptId" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+					</div>
+				</form>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqGridPager"></div>
+		</div>
+		<div id="whsGrid" style="display: none;">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="add">添加</button>
+					<button class="del">删除</button>
+					<button class="return">返回</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="salesman col-md-4">
+							<span>业务员 <b>*</b></span><input type="text" id="user" class="inputText encds" name="accNum" value="" />
+							<input type="text" id="userName" class="inputText names" value="" readonly="readonly" />
+							<!--<span><img class="biao_userId" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+					</div>
+				</form>
+			</div>
+			<aside>
+				<!--左列树-->
+				<div id="tree"></div>
+			</aside>
+			<div class="under">
+				<div class="left">
+					<table id="jqGrids_list"></table>
+					<div id="jqGridPager_list"></div>
+				</div>
+				<div class="right">
+					<table id="deteil_list"></table>
+					<div id="deteilPager_list"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+<script>
+	document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/system/userDoc.js?" + new Date().getTime() + "'></scr" + "ipt>");
+</script>
+</html>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.ExpressCorpMapper">
+    <resultMap id="BaseResultMap" type="ExpressCorp"
+               autoMapping="true">
+        <id column="express_encd" jdbcType="VARCHAR" property="expressEncd"/>
+        <result column="express_nm" jdbcType="VARCHAR"
+                property="expressNm"/>
+        <result column="express_typ" jdbcType="VARCHAR"
+                property="expressTyp"/>
+    </resultMap>
+
+    <!-- 新增快递公司 -->
+    <insert id="insertExpressCorp" parameterType="ExpressCorp">
+        insert into express_corp (express_encd, express_nm, express_typ,
+                                  exp_order_id,
+                                  sell_home_info, buy_home_info,
+                                  is_nt_sprt_gds_to_pay,
+                                  gds_to_pay_serv_cost, is_nt_stp_use,
+                                  first_wet, first_wet_str_price,
+                                  print_cnt, memo, is_nt_chk,
+                                  setup_pers, setup_tm,
+                                  deliver,
+                                  deliver_Phone,
+                                  deliver_Mobile,
+                                  company_Code,
+                                  province,
+                                  city,
+                                  country, detailed_address)
+        values (#{expressEncd}, #{expressNm}, #{expressTyp},
+                #{expOrderId},
+                #{sellHomeInfo}, #{buyHomeInfo},
+                #{isNtSprtGdsToPay},
+                #{gdsToPayServCost}, #{isNtStpUse},
+                #{firstWet}, #{firstWetStrPrice},
+                #{printCnt},
+                #{memo}, 0,
+                #{setupPers}, now(),
+                #{deliver},
+                #{deliverPhone},
+                #{deliverMobile},
+                #{companyCode},
+                #{province},
+                #{city},
+                #{country}, #{detailedAddress})
+    </insert>
+    <!-- 修改快递公司 -->
+    <update id="updateExpressCorp" parameterType="ExpressCorp">
+        update express_corp
+        <set>
+            <if test="deliver != null  and deliver != '' ">
+                deliver =#{deliver},
+            </if>
+            <if test="deliverPhone != null and deliverPhone != ''">
+                deliver_phone = #{deliverPhone},
+            </if>
+            <if test="deliverMobile != null and deliverMobile != ''">
+                deliver_mobile = #{deliverMobile},
+            </if>
+            <if test="companyCode != null and companyCode != ''">
+                company_code= #{companyCode},
+            </if>
+            <if test="province != null and province != ''">
+                province= #{province},
+            </if>
+            <if test="city != null and city != ''">
+                city= #{city},
+            </if>
+            <if test="country != null and country != ''">
+                country = #{country},
+            </if>
+            <if test="expressNm != null and expressNm != ''">
+                express_nm = #{expressNm},
+            </if>
+            <if test="expressTyp != null and expressTyp != ''">
+                express_typ = #{expressTyp},
+            </if>
+            <if test="expOrderId != null and expOrderId != ''">
+                exp_order_id = #{expOrderId},
+            </if>
+            <if test="sellHomeInfo != null and sellHomeInfo != ''">
+                sell_home_info = #{sellHomeInfo},
+            </if>
+            <if test="buyHomeInfo != null and buyHomeInfo != ''">
+                buy_home_info = #{buyHomeInfo},
+            </if>
+            <if test="isNtSprtGdsToPay != null">
+                is_nt_sprt_gds_to_pay = #{isNtSprtGdsToPay},
+            </if>
+            <if test="gdsToPayServCost != null and gdsToPayServCost != ''">
+                gds_to_pay_serv_cost = #{gdsToPayServCost},
+            </if>
+            <if test="isNtStpUse != null">
+                is_nt_stp_use = #{isNtStpUse},
+            </if>
+            <if test="firstWet != null and firstWet != ''">
+                first_wet = #{firstWet},
+            </if>
+            <if test="firstWetStrPrice != null and firstWetStrPrice != ''">
+                first_wet_str_price = #{firstWetStrPrice},
+            </if>
+            <if test="printCnt != null ">
+                print_cnt = #{printCnt},
+            </if>
+            <if test="memo != null and memo != ''">
+                memo = #{memo},
+            </if>
+            <if test="isNtChk != null">
+                is_nt_chk = #{isNtChk},
+            </if>
+            <if test="mdfr != null and mdfr != ''">
+                mdfr=#{mdfr},
+            </if>
+            <if test="detailedAddress != null and detailedAddress != ''">
+                detailed_Address=#{detailedAddress},
+            </if>
+
+            modi_tm=now(),
+        </set>
+        where express_encd = #{expressEncd}
+    </update>
+    <!--删除快递公司 -->
+    <delete id="deleteExpressCorp" parameterType="java.lang.String">
+        delete
+        from express_corp
+        where express_encd = #{expressEncd}
+    </delete>
+    <!-- 批删 -->
+    <delete id="deleteECorpList" parameterType="java.util.List">
+        delete
+        from express_corp
+        where express_encd in
+        <foreach item="expressEncd" collection="list" open="("
+                 close=")" separator=",">
+            #{expressEncd}
+        </foreach>
+    </delete>
+    <!-- 批量查询 -->
+    <select id="selectECorpAllList" resultType="ExpressCorp">
+        SELECT * from express_corp
+        WHERE express_encd in
+        <foreach collection="expressEncd" item="expressEncd" open="("
+                 close=")" separator=",">
+            #{expressEncd}
+        </foreach>
+    </select>
+    <!--简单查 快递公司 -->
+    <sql id="Express_Crop_List">
+        express_encd, express_nm, express_typ, exp_order_id,
+		sell_home_info, buy_home_info,
+		is_nt_sprt_gds_to_pay,
+		gds_to_pay_serv_cost, is_nt_stp_use, first_wet,
+		first_wet_str_price,
+		print_cnt,memo,is_nt_chk, setup_pers,
+		setup_tm,mdfr,modi_tm,chkr,chk_tm,
+		deliver,
+		deliver_Phone,
+		deliver_Mobile,
+		company_Code,
+		province,
+		city,
+		country,detailed_address
+    </sql>
+
+    <select id="selectExpressCorp" resultMap="BaseResultMap">
+        select
+        <include refid="Express_Crop_List"/>
+        from express_corp
+        <where>
+            1=1
+            <if test="expressEncd!= null and expressEncd!= ''">
+                AND express_encd = #{expressEncd}
+            </if>
+        </where>
+    </select>
+    <select id="selectExpressEncdName" resultType="expressCorp">
+        SELECT ex.express_encd,
+               ex.company_code,
+               exn.express_name as expressNm
+        FROM express_corp ex
+                 LEFT JOIN express_code_and_name exn ON ex.company_code = exn.express_code
+        WHERE ex.express_encd = #{expressEncd}
+    </select>
+
+    <select id="selectExpressCorpList" resultMap="BaseResultMap">
+        select
+        <include refid="Express_Crop_List"/>
+        from express_corp
+        <where>
+            1=1
+            <if test="expressEncd!= null and expressEncd!= ''">
+                AND express_encd = #{expressEncd}
+            </if>
+        </where>
+    </select>
+    <!-- 分页查 -->
+    <select id="selectList" parameterType="Map"
+            resultMap="BaseResultMap">
+        select
+        eCorp.*
+        From express_corp as eCorp
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND eCorp.memo like #{memo}
+            </if>
+            <if test="expressEncd != null and expressEncd != ''">
+                <bind name="expressEncd" value="'%'+ expressEncd +'%'"/>
+                AND eCorp.express_encd like #{expressEncd}
+            </if>
+            <if test=" expressNm!=null and  expressNm!=''">
+                <bind name="expressNm" value="'%'+ expressNm +'%'"/>
+                AND eCorp.express_nm like #{expressNm}
+            </if>
+            <if test=" expressTyp!= null and  expressTyp!= ''">
+                <bind name="expressTyp" value="'%'+ expressTyp +'%'"/>
+                AND eCorp.express_typ like #{expressTyp}
+            </if>
+            <if test=" setupPers!= null and  setupPers!= ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND eCorp.setup_pers like  #{setupPers}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        LIMIT #{index},#{num}
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+        SELECT count(*)
+        From
+        express_corp as eCorp
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND eCorp.memo like #{memo}
+            </if>
+            <if test="expressEncd != null and expressEncd != ''">
+                <bind name="expressEncd" value="'%'+ expressEncd +'%'"/>
+                AND eCorp.express_encd like #{expressEncd}
+            </if>
+            <if test=" expressNm !=null and  expressNm !=''">
+                <bind name="expressNm" value="'%'+ expressNm +'%'"/>
+                AND eCorp.express_nm like #{expressNm}
+            </if>
+            <if test=" expressTyp!= null and  expressTyp!= ''">
+                <bind name="expressTyp" value="'%'+ expressTyp +'%'"/>
+                AND eCorp.express_typ like #{expressTyp}
+            </if>
+            <if test=" setupPers !=null and  setupPers !=''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND eCorp.setup_pers like #{setupPers}
+            </if>
+        </where>
+    </select>
+    <!-- 打印 -->
+    <select id="selectListDaYin" parameterType="Map"
+            resultType="ExpressCorpMap">
+        select
+        eCorp.*
+        From express_corp as eCorp
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND eCorp.memo like #{memo}
+            </if>
+            <if test="expressEncd != null and expressEncd != ''">
+                <bind name="expressEncd" value="'%'+ expressEncd +'%'"/>
+                AND eCorp.express_encd like #{expressEncd}
+            </if>
+            <if test=" expressNm!=null and  expressNm!=''">
+                <bind name="expressNm" value="'%'+ expressNm +'%'"/>
+                AND eCorp.express_nm like #{expressNm}
+            </if>
+            <if test=" expressTyp!= null and  expressTyp!= ''">
+                <bind name="expressTyp" value="'%'+ expressTyp +'%'"/>
+                AND eCorp.express_typ like #{expressTyp}
+            </if>
+            <if test=" setupPers!= null and  setupPers!= ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND eCorp.setup_pers like #{setupPers}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryExpressCodeAndNameList" resultType="com.px.mis.ec.entity.ExpressCodeAndName">
+        SELECT express_code_and_name.id,
+               express_code_and_name.express_name,
+               express_code_and_name.express_code
+        FROM express_code_and_name
+    </select>
+</mapper>

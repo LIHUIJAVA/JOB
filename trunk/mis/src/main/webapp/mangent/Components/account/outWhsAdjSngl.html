@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>出库调整单</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/account/outWhsAdjSngl.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/insertInvtyList.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/whsDocList.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+		
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style>
+		select {
+			outline: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			width: 220px;
+			border: 0;
+			border-bottom: 1px solid #B8C7CE
+		}
+		
+		select:-ms-expand {
+			display: none;
+		}
+		
+		.ui-jqgrid-hbox, .ui-jqgrid-ftable.ui-common-table  {
+			width: 100%!important;
+		}
+	</style>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="print">打印</button>
+					<button class="exportExcel">导出</button>
+					<button class="addOrder">增加</button>
+					<button class="editOrder">修改</button>
+					<button class="saveOrder">保存</button>
+					<button class="delOrder">删除</button>
+					<button class="upOrder">放弃</button>
+					<button class="remember">记账</button>
+				</div>
+				<div id="mengban"></div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="col-md-4">
+						<span>单据号</span><input type="text" class="inputText" name="formNum" value="" readonly="readonly" />
+					</div>
+					<div class="col-md-4">
+						<span>单据日期 <b>*</b></span><input type="text"  readonly="readonly" class="inputText" name="formTm" value="" calendar="YYYY-MM-DD" />
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>客户 <b>*</b></span><input type="text" id="custId" class="custId encds inputText" name="custId" value="" />
+						<input type="text" id="custNm" class="custNm names inputText" name="custNm" value="" readonly="readonly"/>
+						<span><img class="biao_custId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div id="custId1" style="display: none;"></div>
+					<div id="custNm1" style="display: none;"></div>
+					<div id="fuze" style="display: none;"></div>
+					<div id="addr" style="display: none;"></div>
+					
+					<div class="supplier col-md-4">
+						<span>收发类别编码</span>
+						<input type="text" id="recvSendCateNm" name="recvSendCateId" value="" class="inputText" readonly="readonly" />
+						<span><img class="biao_recv" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="col-md-4">
+						<span>备注</span><input type="text" class="inputText" name="memo" value="" />
+					</div>
+					<input id="recvSendCateId" style="display: none;" value="" />
+				</form>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqgridPager"></div>
+		</div>
+		<!--档案仓库-->
+		<div id="whsDocList" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<div class="addWhs">确定</div>
+						<div class="cancel">取消</div>
+						<div class="whs_find">查询</div>
+					</div>
+				</div>
+
+				<div class="purchaseTit">
+					<h1 class="title">仓库档案</h1>
+				</div>
+				<hr/>
+
+				<table id="whs_jqgrids"></table>
+				<div id="whs_jqGridPager"></div>
+			</div>
+		</div>
+		<!--存货列表-->
+		<div id="insertList" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<button class="find">查询</button>
+						<button class="addWhs">确定</button>
+						<button class="cancel">取消</button>
+					</div>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-6">
+								<span>存货编码</span>
+								<input type="text" class="invtyEncd1" name="invtyEncd1" value="" />
+							</div>
+							<div class="supplier col-md-6">
+								<span>存货名称</span>
+								<input type="text" class="invtyNm1" name="invtyNm1" value="" />
+							</div>
+							<div class="supplier col-md-6">
+								<span>存货分类编码</span>
+								<input type="text" class="invtyClsEncd1" name="invtyClsEncd1" value="" />
+							</div>
+							<div class="supplier col-md-6">
+								<span>存货分类名称</span>
+								<input type="text" class="invtyClsNm1" name="invtyClsNm1" value="" />
+							</div>
+						</div>
+					</form>
+				</div>
+				<div id="supplier" style="display: none;"></div>
+				<aside>
+					<!--左列树-->
+					<div id="tree"></div>
+				</aside>
+
+				<div id="wrap">
+					<table id="insert_jqgrids"></table>
+					<div id="insert_jqGridPager"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

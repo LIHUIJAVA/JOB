@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.VouchTabSubDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.account.entity.VouchTabSub">
+    <id column="ordr_num" property="ordrNum" />
+    <result column="comn_vouch_id"  property="comnVouchId" />
+    <result column="form_num"  property="formNum" />
+    <result column="form_typ_encd"  property="formTypEncd" />
+    <result column="form_typ_name"  property="formTypName" />
+    <result column="invty_encd"  property="invtyEncd" />
+    <result column="invty_nm"  property="invtyNm" />
+    <result column="invty_cls_encd"  property="invtyClsEncd" />
+    <result column="invty_cls_nm"  property="invtyClsNm" />
+    <result column="whs_encd"  property="whsEncd" />
+    <result column="whs_nm"  property="whsNm" />
+    <result column="no_tax_uprc"  property="noTaxUprc" />
+    <result column="no_tax_amt"  property="noTaxAmt" />
+    <result column="tax_amt"  property="taxAmt" />
+    <result column="cntn_tax_uprc"  property="cntnTaxUprc" />
+    <result column="prc_tax_sum"  property="prcTaxSum" />
+    <result column="tax_rate"  property="taxRate" />
+    <result column="qty"  property="qty" />
+    <result column="bx_qty"  property="bxQty" />
+    <result column="bat_num"  property="batNum" />
+    <result column="sub_credit_id"  property="subCreditId" />
+    <result column="sub_credit_type"  property="subCreditType" />
+    <result column="sub_credit_nm"  property="subCreditNm" />
+    <result column="sub_credit_money"  property="subCreditMoney" />
+    <result column="sub_credit_debit_money"  property="subCreditDebitMoney" />
+    <result column="sub_credit_num"  property="subCreditNum" />
+    <result column="sub_credit_debit_num"  property="subCreditDebitNum" />
+    <result column="sub_credit_path"  property="subCreditPath" />
+    <result column="sub_debit_id"  property="subDebitId" />
+    <result column="sub_debit_type"  property="subDebitType" />
+    <result column="sub_debit_nm"  property="subDebitNm" />
+    <result column="sub_debit_money"  property="subDebitMoney" />
+    <result column="sub_debit_credit_money"  property="subDebitCreditMoney" />
+    <result column="sub_debit_num"  property="subDebitNum" />
+    <result column="sub_debit_credit_num"  property="subDebitCreditNum" />
+    <result column="sub_debit_path"  property="subDebitPath" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ordr_num, comn_vouch_id, form_num, form_typ_encd, form_typ_name, invty_encd, invty_nm, 
+    invty_cls_encd, invty_cls_nm, whs_encd, whs_nm, no_tax_uprc, no_tax_amt, tax_amt, 
+    cntn_tax_uprc, prc_tax_sum, tax_rate, qty, bx_qty, bat_num, sub_credit_id, sub_credit_type, 
+    sub_credit_nm, sub_credit_money, sub_credit_debit_money, sub_credit_num, sub_credit_debit_num, 
+    sub_credit_path, sub_debit_id, sub_debit_type, sub_debit_nm, sub_debit_money, sub_debit_credit_money, 
+    sub_debit_num, sub_debit_credit_num, sub_debit_path
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from vouch_tab_sub
+    where ordr_num = #{ordrNum,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from vouch_tab_sub
+    where ordr_num = #{ordrNum,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertTabSub" parameterType="com.px.mis.account.entity.VouchTabSub">
+    insert into vouch_tab_sub (comn_vouch_id, form_num, 
+      form_typ_encd, form_typ_name, invty_encd, 
+      invty_nm, invty_cls_encd, invty_cls_nm, 
+      whs_encd, whs_nm, no_tax_uprc, 
+      no_tax_amt, tax_amt, cntn_tax_uprc, 
+      prc_tax_sum, tax_rate, qty, 
+      bx_qty, bat_num, sub_credit_id, 
+      sub_credit_type, sub_credit_nm, sub_credit_money, 
+      sub_credit_debit_money, sub_credit_num, sub_credit_debit_num, 
+      sub_credit_path, sub_debit_id, sub_debit_type, 
+      sub_debit_nm, sub_debit_money, sub_debit_credit_money, 
+      sub_debit_num, sub_debit_credit_num, sub_debit_path
+      )
+    values (#{comnVouchId}, #{formNum}, 
+      #{formTypEncd}, #{formTypName}, #{invtyEncd}, 
+      #{invtyNm}, #{invtyClsEncd}, #{invtyClsNm}, 
+      #{whsEncd}, #{whsNm}, #{noTaxUprc}, 
+      #{noTaxAmt}, #{taxAmt}, #{cntnTaxUprc}, 
+      #{prcTaxSum}, #{taxRate}, #{qty}, 
+      #{bxQty}, #{batNum}, #{subCreditId}, 
+      #{subCreditType}, #{subCreditNm}, #{subCreditMoney}, 
+      #{subCreditDebitMoney}, #{subCreditNum}, #{subCreditDebitNum}, 
+      #{subCreditPath}, #{subDebitId}, #{subDebitType}, 
+      #{subDebitNm}, #{subDebitMoney}, #{subDebitCreditMoney}, 
+      #{subDebitNum}, #{subDebitCreditNum}, #{subDebitPath}
+      )
+  </insert>
+  <insert id="insertVouchTabSubDlList" parameterType="java.util.List">  
+    INSERT INTO vouch_tab_sub_dl SELECT
+		*
+	FROM
+	vouch_tab_sub
+	WHERE comn_vouch_id in  
+	<foreach collection="list" index="index" item="item"
+		separator="," open="(" close=")">
+		#{item.comnVouchId}
+	</foreach>
+  </insert>
+  <insert id="insertList" parameterType="java.util.List">
+  	 insert into vouch_tab_sub (comn_vouch_id, form_num, 
+      form_typ_encd, form_typ_name, invty_encd, 
+      invty_nm, invty_cls_encd, invty_cls_nm, 
+      whs_encd, whs_nm, no_tax_uprc, 
+      no_tax_amt, tax_amt, cntn_tax_uprc, 
+      prc_tax_sum, tax_rate, qty, 
+      bx_qty, bat_num, sub_credit_id, 
+      sub_credit_type, sub_credit_nm, sub_credit_money, 
+      sub_credit_debit_money, sub_credit_num, sub_credit_debit_num, 
+      sub_credit_path, sub_debit_id, sub_debit_type, 
+      sub_debit_nm, sub_debit_money, sub_debit_credit_money, 
+      sub_debit_num, sub_debit_credit_num, sub_debit_path
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+	    (#{item.comnVouchId}, #{item.formNum}, 
+	      #{item.formTypEncd}, #{item.formTypName}, #{item.invtyEncd}, 
+	      #{item.invtyNm}, #{item.invtyClsEncd}, #{item.invtyClsNm}, 
+	      #{item.whsEncd}, #{item.whsNm}, #{item.noTaxUprc}, 
+	      #{item.noTaxAmt}, #{item.taxAmt}, #{item.cntnTaxUprc}, 
+	      #{item.prcTaxSum}, #{item.taxRate}, #{item.qty}, 
+	      #{item.bxQty}, #{item.batNum}, #{item.subCreditId}, 
+	      #{item.subCreditType}, #{item.subCreditNm}, #{item.subCreditMoney}, 
+	      #{item.subCreditDebitMoney}, #{item.subCreditNum}, #{item.subCreditDebitNum}, 
+	      #{item.subCreditPath}, #{item.subDebitId}, #{item.subDebitType}, 
+	      #{item.subDebitNm}, #{item.subDebitMoney}, #{item.subDebitCreditMoney}, 
+	      #{item.subDebitNum}, #{item.subDebitCreditNum}, #{item.subDebitPath}
+	      )
+      </foreach>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.px.mis.account.entity.VouchTabSub">
+    update vouch_tab_sub
+    <set>
+      <if test="comnVouchId != null">
+        comn_vouch_id = #{comnVouchId},
+      </if>
+      <if test="formNum != null">
+        form_num = #{formNum},
+      </if>
+      <if test="formTypEncd != null">
+        form_typ_encd = #{formTypEncd},
+      </if>
+      <if test="formTypName != null">
+        form_typ_name = #{formTypName},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd},
+      </if>
+      <if test="invtyNm != null">
+        invty_nm = #{invtyNm},
+      </if>
+      <if test="invtyClsEncd != null">
+        invty_cls_encd = #{invtyClsEncd},
+      </if>
+      <if test="invtyClsNm != null">
+        invty_cls_nm = #{invtyClsNm},
+      </if>
+      <if test="whsEncd != null">
+        whs_encd = #{whsEncd},
+      </if>
+      <if test="whsNm != null">
+        whs_nm = #{whsNm},
+      </if>
+      <if test="noTaxUprc != null">
+        no_tax_uprc = #{noTaxUprc},
+      </if>
+      <if test="noTaxAmt != null">
+        no_tax_amt = #{noTaxAmt},
+      </if>
+      <if test="taxAmt != null">
+        tax_amt = #{taxAmt},
+      </if>
+      <if test="cntnTaxUprc != null">
+        cntn_tax_uprc = #{cntnTaxUprc},
+      </if>
+      <if test="prcTaxSum != null">
+        prc_tax_sum = #{prcTaxSum},
+      </if>
+      <if test="taxRate != null">
+        tax_rate = #{taxRate},
+      </if>
+      <if test="qty != null">
+        qty = #{qty},
+      </if>
+      <if test="bxQty != null">
+        bx_qty = #{bxQty},
+      </if>
+      <if test="batNum != null">
+        bat_num = #{batNum},
+      </if>
+      <if test="subCreditId != null">
+        sub_credit_id = #{subCreditId},
+      </if>
+      <if test="subCreditType != null">
+        sub_credit_type = #{subCreditType},
+      </if>
+      <if test="subCreditNm != null">
+        sub_credit_nm = #{subCreditNm},
+      </if>
+      <if test="subCreditMoney != null">
+        sub_credit_money = #{subCreditMoney},
+      </if>
+      <if test="subCreditDebitMoney != null">
+        sub_credit_debit_money = #{subCreditDebitMoney},
+      </if>
+      <if test="subCreditNum != null">
+        sub_credit_num = #{subCreditNum},
+      </if>
+      <if test="subCreditDebitNum != null">
+        sub_credit_debit_num = #{subCreditDebitNum},
+      </if>
+      <if test="subCreditPath != null">
+        sub_credit_path = #{subCreditPath},
+      </if>
+      <if test="subDebitId != null">
+        sub_debit_id = #{subDebitId},
+      </if>
+      <if test="subDebitType != null">
+        sub_debit_type = #{subDebitType},
+      </if>
+      <if test="subDebitNm != null">
+        sub_debit_nm = #{subDebitNm},
+      </if>
+      <if test="subDebitMoney != null">
+        sub_debit_money = #{subDebitMoney},
+      </if>
+      <if test="subDebitCreditMoney != null">
+        sub_debit_credit_money = #{subDebitCreditMoney},
+      </if>
+      <if test="subDebitNum != null">
+        sub_debit_num = #{subDebitNum},
+      </if>
+      <if test="subDebitCreditNum != null">
+        sub_debit_credit_num = #{subDebitCreditNum},
+      </if>
+      <if test="subDebitPath != null">
+        sub_debit_path = #{subDebitPath},
+      </if>
+    </set>
+    where ordr_num = #{ordrNum,jdbcType=BIGINT}
+  </update>
+	
+	
+	<select id="selectVouchTabSubListByMap" parameterType="Map" resultType="VouchTabSub">
+		SELECT
+			*
+		FROM
+			vouch_tab_sub
+		<where>
+			<if test="comnVouchId != null and comnVouchId != ''">
+				AND comn_vouch_id = #{comnVouchId}
+			</if>
+			<if test="formNumList != null and formNumList.size() > 0 ">
+				AND form_num IN
+				<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+					#{formNum}
+				</foreach>
+			</if>		
+		</where>
+
+	</select>
+</mapper>

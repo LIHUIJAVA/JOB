@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>仓库货位对应关系</title>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/whsGds.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/insertRealWhsList.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/whs/gBList.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/whs/regnList.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<style>
+			select {
+				outline: none;
+				appearance: none;
+				-moz-appearance: none;
+				-webkit-appearance: none;
+				width: 220px;
+				border: 0;
+				border-bottom: 1px solid #B8C7CE
+			}
+			
+			select:-ms-expand {
+				display: none;
+			}
+			#whsGds_jqgrids, #zc_jqgrids,#r_jqgrids {
+				width: 100%!important;
+			}
+			.addWhss {
+			    width: 48px;
+			    height: 26px;
+			    display: inline-block;
+			    font-size: 12px;
+			    text-align: center;
+			    margin-right: 10px;
+			    border-radius: 5px;
+			    background-color: #272631;
+			    color: #FFFFFF;
+			    border: none;
+			    padding: 3px 10px;
+			    cursor: pointer;
+			}
+			button {
+				font-size: 12px!important;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<!--<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>-->
+					<button class="addOrder gry">增行</button>
+					<button class="delOrder">删行</button>
+					<button class="saveOrder">保存</button>
+					<!--<button class="update">更新</button>-->
+					<button id="finds">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>货位编码</span>
+							<input type="text" id="gdsBitEncd" class="gdsBitEncd" name="gdsBitEncd1" value=""/>
+							<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>区域编码 </span>
+							<input type="text" id="regnEncd" class="regnEncd" name="regnEncd1" value=""/>
+							<span><img class="biao_regnEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="businessType col-md-4">
+							<span>总仓编码</span>
+							<input type="text" id="realWhs" name="realWhs1" value="" />
+							<input type="text" id="whsEncd" name="whsEncd1" value="" readonly="readonly" style="display: none;"/>
+							<span><img class="biao_whsEncd1" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+					</div>
+				</form>
+			</div>
+			
+			<table id="whsGds_jqgrids"></table>
+			<div id="whsGds_jqGridPager"></div>
+		</div>
+		<!--总仓档案-->
+		<div id="whsDocList" style="opacity: 0;">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="yes">确定</button>
+					<button class="no">取消</button>
+					<button class="finding">查询</button>
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>总仓编码</span>
+							<input type="text" class="realWhs" name="realWhs" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>总仓名称</span>
+							<input type="text" class="realNm" name="realNm" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>部门编码</span>
+							<input type="text" class="deptEncd" name="deptEncd" value="" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<table id="zc_jqgrids"></table>
+			<div id="zc_jqGridPager"></div>
+		</div>
+		
+		<!--货位档案列表-->
+		<div id="insertList" style="opacity: 0;">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="true_gb">确定</button>
+					<button class="false_gb">取消</button>
+					<button class="search_gb">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave" autocomplete="off">
+					<div class="purchaseType col-md-4">
+						<span>货位编码</span><input type="text" id="gdsBitEncd2" class="gdsBitEncd2" name="gdsBitEncd2" value=""/>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>货位名称</span><input type="text" id="gdsBitNm2" class="gdsBitNm2" name="gdsBitNm2" value=""/>
+					</div>
+				</form>
+			</div>
+			<table id="jqGrids"></table>
+			<div id="gds_jqGridPager"></div>
+		</div>
+		
+		<div id="regn" style="opacity: 0;">
+			<div class="purchaseTit">
+				<div class="buttons" style="margin:20px">
+					<button id="true">确定</button>
+					<button id="false">取消</button>
+					<button id="find">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave" autocomplete="off">
+					<div class="purchaseType col-md-4">
+						<span>区域编码</span><input type="text" id="regnEncd" class="regnEncd" name="regnEncd1" value=""/>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>区域名称</span><input type="text" id="regnNm" class="regnNm" name="regnNm1" value=""/>
+					</div>
+
+				</form>
+
+			</div>
+			<table id="r_jqgrids"></table>
+			<div id="r_jqGridPager"></div>		
+		</div>
+	</body>
+</html>

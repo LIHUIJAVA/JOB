@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.PresentModeDao">
+	<!-- 赠品方式表 分页查询所有 -->
+	<select id="selectPresentModeList" parameterType="Map" resultType="com.px.mis.ec.entity.PresentMode">
+	 SELECT no,present_mode_code,present_mode_name
+	 FROM present_mode
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectPresentModeById" parameterType="int" resultType="com.px.mis.ec.entity.PresentMode">
+	 SELECT no,present_mode_code,present_mode_name
+	 FROM present_mode  
+	 WHERE no=#{no}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectPresentModeByPresentModeCode" parameterType="String" resultType="com.px.mis.ec.entity.PresentMode">
+	 SELECT no,present_mode_code,present_mode_name
+	 FROM present_mode  
+	 WHERE present_mode_code=#{presentModeCode}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectPresentModeCount" resultType="int">
+		SELECT count(no)
+		FROM present_mode
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertPresentMode" parameterType="com.px.mis.ec.entity.PresentMode">
+		INSERT INTO present_mode(no,present_mode_code,present_mode_name)
+		VALUES(null,#{presentModeCode},#{presentModeName})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deletePresentModeById" parameterType="int">
+	 DELETE FROM present_mode
+	 WHERE no=#{no} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updatePresentModeById" parameterType="com.px.mis.ec.entity.PresentMode">
+	 UPDATE present_mode
+    <set>
+      <if test="no != null">
+        no = #{no,jdbcType=BIGINT},
+      </if>
+      <if test="presentModeCode != null">
+        present_mode_code = #{presentModeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="presentModeName != null">
+        present_mode_name = #{presentModeName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE no = #{no,jdbcType=BIGINT}
+	</update>
+</mapper>

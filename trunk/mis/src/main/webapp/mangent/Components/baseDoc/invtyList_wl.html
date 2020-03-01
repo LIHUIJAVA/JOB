@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>存货档案</title>		
+		
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />		
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		
+
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/invtyList_wl.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+
+	<body>
+		<div id="wwrap">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<h1 class="title">存货档案</h1>
+				</div>
+				<div class="purchaseTit" style="margin:20px">
+					<div class="buttons">
+						<button class="true">确定</button>
+						<button class="false">取消</button>
+						<button class="find">查询</button>
+					</div>
+				</div>
+				
+				
+				<div class="order-title">
+				<form class="row" id="formSave">			
+				<div class="info">
+					<div class="supplier col-md-3">
+						<span>存货编码</span>
+						<input type="text" class="invtyEncd1" name="invtyEncd1" value="" />
+					</div>
+					<div class="supplier col-md-3">
+						<span>存货名称</span>
+						<input type="text" class="invtyNm1" name="invtyNm1" value="" />
+					</div>
+					<div class="supplier col-md-3">
+						<span>存货分类编码</span>
+						<input type="text" class="invtyClsEncd1" name="invtyClsEncd1" value="" />
+					</div>
+					<div class="supplier col-md-3">
+						<span>存货分类名称</span>
+						<input type="text" class="invtyClsNm1" name="invtyClsNm1" value="" />
+					</div>
+				</div>	
+			</form>			
+			</div>
+			
+				<aside>
+					<!--左列树-->
+					<div id="tree"></div>
+				</aside>
+				
+				<div id="wrap" style="width:75%">
+					<table id="jqgrids"></table>
+					<div id="jqGridPager"></div>
+				</div>
+			</div>
+		</div>
+</body>
+
+</html>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.system.dao.MisUserDao">
+	<insert id="insert"
+		parameterType="com.px.mis.system.entity.MisUser">
+		INSERT INTO mis_user (acc_num, password, acc_set,
+		user_name, dep_id,
+		dep_name, role_id, role_name, phone_no, email,
+		create_date, whs_id,whs_name)
+		VALUES (#{accNum}, #{password},
+		#{accSet}, #{userName}, #{depId},
+		#{depName}, #{roleId}, #{roleName},
+		#{phoneNo}, #{email},
+		<if test="createDate == '' ">
+		null
+		</if>
+		<if test="createDate != '' ">
+		#{createDate}
+		</if>
+		, #{whsId}, #{whsName})
+	</insert>
+	
+	<select id="select" parameterType="String"
+		resultType="com.px.mis.system.entity.MisUser">
+		SELECT acc_num, password, acc_set, user_name , dep_id ,
+		dep_name,
+		role_id , role_name , phone_no, email, create_date, whs_id,
+		whs_name
+		FROM mis_user
+		WHERE acc_num =#{accNum}
+	</select>
+
+	<select id="select2" parameterType="String"
+		resultType="com.px.mis.system.entity.MisUser">
+		SELECT acc_num, password, acc_set, user_name , dep_id ,
+		dep_name,
+		role_id , role_name , phone_no, email, create_date, whs_id,
+		whs_name
+		FROM mis_user
+		WHERE acc_num in (${_parameter})
+	</select>
+
+	<update id="update"
+		parameterType="com.px.mis.system.entity.MisUser">
+		update mis_user
+		<set>
+			<if test="password != null and password != ''">
+				`password` = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="accSet != null and password != ''">
+				acc_set = #{accSet,jdbcType=VARCHAR},
+			</if>
+			<if test="userName != null and userName != ''">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="depId != null and depId != ''">
+				dep_id = #{depId,jdbcType=VARCHAR},
+			</if>
+			<if test="depName != null and depName != ''">
+				dep_name = #{depName,jdbcType=VARCHAR},
+			</if>
+			<if test="roleId != null and roleId != ''">
+				role_id = #{roleId,jdbcType=VARCHAR},
+			</if>
+			<if test="roleName != null and roleName != ''">
+				role_name = #{roleName,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneNo != null and phoneNo != ''">
+				phone_no = #{phoneNo,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null and email != ''">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null and createDate != ''">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="whsId != null and whsId != ''">
+				whs_id = #{whsId,jdbcType=VARCHAR},
+			</if>
+			<if test="whsName != null and whsName != ''">
+				whs_name = #{whsName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where acc_num = #{accNum,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM mis_user
+		WHERE
+		acc_num = #{acc_num}
+	</delete>
+	<delete id="delete2" parameterType="java.lang.String">
+		DELETE FROM mis_user
+		WHERE
+		acc_num in (${_parameter})
+	</delete>
+
+	<select id="selectList" parameterType="Map"
+		resultType="com.px.mis.system.entity.MisUser">
+		SELECT acc_num, password, acc_set, user_name , dep_id , dep_name,
+		role_id , role_name , phone_no, email, create_date, whs_id, whs_name
+		FROM mis_user
+		<where>
+			<if test="accNum != null and accNum != ''">
+				AND acc_num=#{accNum}
+			</if>
+
+			<if test="userName != null and userName != ''">
+				AND user_name=#{userName}
+			</if>
+            <if test="roleId != null and roleId != ''">
+				AND role_id=#{roleId}
+			</if>
+			<if test="roleName != null and roleName != ''">
+				AND role_name=#{roleName}
+			</if>
+			<if test="depName != null and depName != ''">
+				AND dep_name=#{depName}
+			</if>
+			<if test="deptId != null and deptId != ''">
+				AND dep_id=#{deptId}
+			</if>
+
+		</where>
+		order by create_date desc
+	</select>
+
+	<select id="selectCount" parameterType="Map" resultType="int">
+		SELECT count(*)
+		FROM mis_user
+		<where>
+			<if test="accNum != null and accNum != ''">
+				AND acc_num=#{accNum}
+			</if>
+
+			<if test="userName != null and userName != ''">
+				AND user_name=#{userName}
+			</if>
+            <if test="roleId != null and roleId != ''">
+				AND role_id=#{roleId}
+			</if>
+			<if test="roleName != null and roleName != ''">
+				AND role_name=#{roleName}
+			</if>
+			<if test="depName != null and depName != ''">
+				AND dep_name=#{depName}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectAll" parameterType="Map"
+		resultType="com.px.mis.system.entity.MisUser">
+		SELECT acc_num, password, acc_set, user_name , dep_id , dep_name,
+		role_id , role_name , phone_no, email, create_date, whs_id, whs_name
+		FROM mis_user
+		<where>
+			<if test="accNum != null and accNum != ''">
+				AND acc_num=#{accNum}
+			</if>
+			<if test="accSet != null and accSet != ''">
+				AND acc_set=#{accSet}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND user_name=#{userName}
+			</if>
+			<if test="depId != null and depId != ''">
+				AND dep_id=#{depId}
+			</if>
+			<if test="roleId != null and roleId != ''">
+				AND role_id=#{roleId}
+			</if>
+			<if test="phoneNo != null and phoneNo != ''">
+				AND phone_no=#{phoneNo}
+			</if>
+			<if test="email != null and email != ''">
+				AND email=#{email}
+			</if>
+			<if
+				test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+				AND create_date BETWEEN #{startDate} AND #{endDate}
+			</if>
+			<if test="whsId != null and whsId != ''">
+				AND email=#{email}
+			</if>
+		</where>
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="delMisUser" parameterType="java.util.List">
+		DELETE FROM mis_user WHERE acc_num IN
+		<foreach collection="list" item="item" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 批量修改 -->
+	<update id="updateBatch" parameterType="java.util.List">
+		UPDATE mis_user
+		<trim prefix="set" suffixOverrides=",">
+				<trim prefix="password =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.password != null and item.password !=''">
+						when acc_num = #{item.accNum} then #{item.password}
+					</if>
+				</foreach>
+			</trim>
+			
+		
+
+			<trim prefix="user_name =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.userName != null and item.userName != ''">
+						when acc_num=#{item.accNum} then
+						#{item.userName}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="acc_set =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.accSet != null and item.accSet != ''">
+						when acc_num=#{item.accNum} then
+						#{item.accSet}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="dep_id =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.depId != null and item.depId != ''">
+						when acc_num=#{item.accNum} then #{item.depId}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="dep_name =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.depName != null and item.depName != ''">
+						when acc_num=#{item.accNum} then
+						#{item.depName}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="role_id =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.roleId != null and item.roleId != ''">
+						when acc_num=#{item.accNum} then
+						#{item.roleId}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="role_name =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.roleName != null and item.roleName != ''">
+						when acc_num=#{item.accNum} then
+						#{item.roleName}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="phone_no =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.phoneNo != null and item.phoneNo != ''">
+						when acc_num=#{item.accNum} then
+						#{item.phoneNo}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="email =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.email != null and item.email != ''">
+						when acc_num=#{item.accNum} then #{item.email}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="whs_id =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.whsId != null and item.whsId != ''">
+						when acc_num=#{item.accNum} then #{item.whsId}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="whs_name =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.whsName != null and item.whsName != ''">
+						when acc_num=#{item.accNum} then
+						#{item.whsName}
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		WHERE acc_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.accNum}
+		</foreach>
+
+	</update>
+</mapper>

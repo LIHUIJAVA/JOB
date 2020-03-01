@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.MemberRecordDao">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.MemberRecord">
+	INSERT INTO member_record (mem_id, ec_id, nick, name, mem_reg_date, mem_lev_name, mobile, qq, email, wechat, province, 
+	city, county, det_address, valid_doc_type, valid_doc_no, stop_date, alipay_no, mem_points, mem_times, memo)
+    VALUES(#{memId}, #{ecId}, #{nick}, #{name}, #{memRegDate}, #{memLevName}, #{mobile}, #{qq}, #{email}, #{wechat}, #{province},
+	#{city}, #{county}, #{detAddress}, #{validDocType}, #{validDocNo}, #{stopDate}, #{alipayNo}, #{memPoints}, #{memTimes}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.MemberRecord">
+  	SELECT mem_id, ec_id, nick, name, mem_reg_date, mem_lev_name, mobile, qq, email, wechat, province, 
+	city, county, det_address, valid_doc_type, valid_doc_no, stop_date, alipay_no, mem_points, mem_times, memo
+  	FROM member_record 
+  	WHERE mem_id = #{memId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  member_record
+  	WHERE mem_id = #{memId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.MemberRecord">
+  	UPDATE member_record 
+  	SET mem_id=#{memId}, ec_id=#{ecId}, nick=#{nick}, name=#{name}, mem_reg_date=#{memRegDate}, mem_lev_name=#{memLevName}, 
+  	mobile=#{mobile}, qq=#{qq}, email=#{email}, wechat=#{wechat}, province=#{province},
+  	city=#{city}, county=#{county}, det_address=#{detAddress}, valid_doc_type=#{validDocType}, valid_doc_no=#{validDocNo},
+  	stop_date=#{stopDate}, alipay_no=#{alipayNo}, mem_points=#{memPoints}, mem_times=#{memTimes}, memo=#{memo}
+  	WHERE mem_id = #{memId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.MemberRecord">
+	SELECT mem_id, ec_id, nick, name, mem_reg_date, mem_lev_name, mobile, qq, email, wechat, province, 
+	city, county, det_address, valid_doc_type, valid_doc_no, stop_date, alipay_no, mem_points, mem_times, memo
+  	FROM member_record 
+  	<where>
+  		<if test="memId != null and memId != ''">
+            AND mem_id = #{memId}
+        </if>
+        <if test="ecId != null and ecId != ''">
+            AND ec_id = #{ecId}
+        </if>
+        <if test="nick != null and nick != ''">
+            AND nick = #{nick}
+        </if>
+        <if test="name != null and name != ''">
+            AND name = #{name}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			AND mem_reg_date BETWEEN #{startDate} AND #{endDate}
+		</if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(mem_id)
+  	FROM member_record 
+  	<where>
+  		<if test="memId != null and memId != ''">
+            AND mem_id = #{memId}
+        </if>
+        <if test="ecId != null and ecId != ''">
+            AND ec_id = #{ecId}
+        </if>
+        <if test="nick != null and nick != ''">
+            AND nick = #{nick}
+        </if>
+        <if test="name != null and name != ''">
+            AND name = #{name}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			AND mem_reg_date BETWEEN #{startDate} AND #{endDate}
+		</if>
+  	</where>
+  </select>
+  
+</mapper>

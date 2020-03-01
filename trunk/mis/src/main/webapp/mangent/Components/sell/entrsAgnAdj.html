@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>委托代销调整单</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/mis/sell/entrsAgnAdj.js"></script>
+		<!--<script type="text/javascript" src="../../assets/js/mis/baseDoc/insertInvtyList.js"></script>-->
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+	</head>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">委托代销调整单</h1>-->
+				<div class="buttons">
+					<button class="search">查询</button>
+					<button class="editOrder">修改</button>
+					<button class="saveOrder">保存</button>
+				</div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave" autocomplete="off">
+					<div class="salesman col-md-4">
+						<span>仓库编码</span><input type="text" id="whsEncd" class="whsEncd" name="accNum" value="" readonly="readonly"/>
+						<span><img id="whsNm" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderDates col-md-4">
+						<span>发货日期</span><input type="text" class="checkDt1 date1" readonly="readonly" name="checkDt1" value="" calendar="YYYY-MM-DD" />到<input type="text" class="checkDt2 date2" readonly="readonly" name="checkDt2" value="" calendar="YYYY-MM-DD" />
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>客户</span><input type="text" id="custId" class="custId encds" name="custId" value="" />
+						<input type="text" id="custNm" class="custNm names" name="custNm" value="" readonly="readonly"/>
+						<span><img class="biao_custId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div id="custId1" style="display: none;"></div>
+					<div id="custNm1" style="display: none;"></div>
+					<div id="fuze" style="display: none;"></div>
+					<div id="departmentEncd" style="display: none;"></div>
+				</form>
+			</div>
+			<table id="en_jqGrids"></table>
+			<div id="jqgridPager"></div>
+			<div id="addr" style="display: none;"></div>
+		</div>
+	</body>
+
+</html>

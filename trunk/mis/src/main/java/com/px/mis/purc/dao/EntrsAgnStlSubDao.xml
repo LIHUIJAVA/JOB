@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.EntrsAgnStlSubDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.purc.entity.EntrsAgnStlSub">
+    <id column="ordr_num" jdbcType="BIGINT" property="ordrNum" />
+    <result column="whs_encd" jdbcType="VARCHAR" property="whsEncd" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ordr_num, whs_encd, invty_encd, stl_sngl_id, qty, no_tax_uprc, no_tax_amt, tax_amt, 
+    tax_rate, cntn_tax_uprc, prc_tax_sum, prdc_dt, invldtn_dt, bat_num,intl_bat, is_complimentary, 
+    memo,un_bllg_qty,to_ordr_num,sell_ordr_ids,bx_qty,bao_zhi_qi,proj_encd
+  </sql>
+  <select id="selectEntrsAgnStlSubByStlSnglId" parameterType="String" resultType="EntrsAgnStlSub">
+    select 
+    <include refid="Base_Column_List" />
+    from entrs_agn_stl_sub
+    where stl_sngl_id = #{stlSnglId}
+  </select>
+  <delete id="deleteEntrsAgnStlSubByStlSnglId" parameterType="String">
+    delete from entrs_agn_stl_sub
+    where stl_sngl_id = #{stlSnglId}
+  </delete>
+  <insert id="insertEntrsAgnStlSub" parameterType="EntrsAgnStlSub">
+    insert into entrs_agn_stl_sub (ordr_num, whs_encd, invty_encd, 
+      stl_sngl_id, qty, no_tax_uprc, 
+      no_tax_amt, tax_amt, tax_rate, 
+      cntn_tax_uprc, prc_tax_sum, prdc_dt, 
+      invldtn_dt, bat_num,intl_bat, is_complimentary, 
+      memo,un_bllg_qty,to_ordr_num,sell_ordr_ids,bx_qty,bao_zhi_qi,proj_encd)
+    values 
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.ordrNum}, #{item.whsEncd}, #{item.invtyEncd}, 
+      #{item.stlSnglId}, #{item.qty}, #{item.noTaxUprc}, 
+      #{item.noTaxAmt}, #{item.taxAmt}, #{item.taxRate}, 
+      #{item.cntnTaxUprc}, #{item.prcTaxSum}, #{item.prdcDt}, 
+      #{item.invldtnDt}, #{item.batNum},#{item.intlBat}, #{item.isComplimentary}, 
+      #{item.memo},#{item.unBllgQty},#{item.toOrdrNum},#{item.sellOrdrIds},
+      #{item.bxQty},#{item.baoZhiQi},#{item.projEncd})
+    </foreach>
+  </insert>
+  <!--删除之前，备份一下  -->
+  <insert id="insertEntrsAgnStlSubDl" parameterType="list">
+    insert into entrs_agn_stl_sub_dl 
+    select * from entrs_agn_stl_sub where stl_sngl_id in
+    <foreach collection="list" item="stl_sngl_id" open="(" close=")" separator=",">
+    #{stl_sngl_id}
+    </foreach>
+  </insert>
+  
+  <update id="updateEntrsAgnStlUnBllgQtyByOrdrNum" parameterType="Map">
+    update entrs_agn_stl_sub
+    <set>
+        un_bllg_qty = un_bllg_qty-#{unBllgQty}
+    </set>
+    where ordr_num=#{ordrNum}
+  </update>
+  <select id="selectEntrsAgnStlUnBllgQtyByOrdrNum" parameterType="Map" resultType="BigDecimal">
+    select 
+    un_bllg_qty
+    from entrs_agn_stl_sub  
+    where ordr_num = #{ordrNum}
+  </select>
+  <sql id="Base_Column_Lists">
+    ordr_num, whs_encd, invty_encd, stl_sngl_id, qty, no_tax_uprc, no_tax_amt, tax_amt, 
+    tax_rate, cntn_tax_uprc, prc_tax_sum, prdc_dt, invldtn_dt, bat_num,intl_bat, is_complimentary, 
+    memo,un_bllg_qty,to_ordr_num,sell_ordr_ids,bx_qty,bao_zhi_qi,proj_encd,
+    mcd.measr_corp_nm,wd.whs_nm,
+	ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+	ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.crspd_bar_cd
+  </sql>
+  <!-- 根据销售单子表序号查询销售子表信息 -->
+  <select id="selectEntrsAgnStlByStlSnIdAndOrdrNum"
+		parameterType="Map" resultType="EntrsAgnStlSub">
+		select
+		<include refid="Base_Column_Lists" />
+		from entrs_agn_stl_sub as sss LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+						          LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+						          LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        <where>
+			<if test="ordrNum != null and ordrNum!= ''">
+				AND ordr_num =#{ordrNum}
+		    </if>
+		</where>
+	</select>
+	<!-- 参照时根据委托代销发货单号及子表未开票数量批量查询子表信息 -->
+  <select id="selectEntAgStSubByStlIdAndUnBllgQty" parameterType="String" resultType="EntrsAgnStlSub">
+    select 
+    <include refid="Base_Column_List" />
+    from entrs_agn_stl_sub
+    where stl_sngl_id = #{stlSnglId} and un_bllg_qty>0
+  </select>
+</mapper>

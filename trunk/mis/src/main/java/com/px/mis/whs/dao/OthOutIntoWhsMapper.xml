@@ -1,0 +1,1561 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.OthOutIntoWhsMapper">
+    <resultMap id="BaseResultMap" type="OthOutIntoWhs"
+               autoMapping="true">
+        <id column="form_num" property="formNum"/>
+        <result column="ordr_num" property="ordrNum"/>
+        <result column="form_dt" property="formDt"/>
+        <result column="form_dt" property="formDt1"/>
+        <result column="form_dt" property="formDt2"/>
+        <result column="whs_encd" property="whsEncd"/>
+        <result column="src_form_num" property="srcFormNum"/>
+        <result column="out_into_whs_typ_id" property="outIntoWhsTypId"/>
+        <result column="out_status" property="outStatus"/>
+        <result column="in_status" property="inStatus"/>
+        <result column="memo" property="memo"/>
+        <collection property="outIntoSubList"
+                    ofType="OthOutIntoWhsSubTab" autoMapping="true">
+            <id column="ordr_num" property="ordrNum"/>
+            <result column="form_num" property="formNum"/>
+            <result column="invty_encd" property="invtyEncd"/>
+            <result column="qty" property="qty"/>
+            <association property="invtyDoc"
+                         javaType="com.px.mis.purc.entity.InvtyDoc" autoMapping="true">
+                <id property="invtyEncd" column="invty_encd"/>
+                <result property="invtyNm" column="invty_nm"/>
+                <result property="invtyClsEncd" column="invty_cls_encd"/>
+                <result property="baoZhiQiEarWarn"
+                        column="bao_zhi_qi_ear_warn"/>
+                <result property="measrCorpNm" column="measr_corp_nm"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <resultMap id="BaseResultMapPc" type="OthOutIntoWhs"
+               autoMapping="true">
+        <id column="form_num" property="formNum"/>
+        <result column="ordr_num" property="ordrNum"/>
+        <result column="form_dt" property="formDt"/>
+        <result column="form_dt" property="formDt1"/>
+        <result column="form_dt" property="formDt2"/>
+        <result column="whs_encd" property="whsEncd"/>
+        <result column="src_form_num" property="srcFormNum"/>
+        <result column="out_into_whs_typ_id" property="outIntoWhsTypId"/>
+        <result column="out_status" property="outStatus"/>
+        <result column="in_status" property="inStatus"/>
+        <result column="out_into_whs_typ_nm" property="outIntoWhsTypNm"/>
+        <result column="memo" property="memo"/>
+        <collection property="outIntoSubList"
+                    ofType="OthOutIntoWhsSubTab" autoMapping="true">
+            <id column="ordr_num" property="ordrNum"/>
+            <result column="form_num" property="formNum"/>
+            <result column="invty_encd" property="invtyEncd"/>
+            <result column="qty" property="qty"/>
+        </collection>
+    </resultMap>
+    <resultMap id="outIntoSubList" type="OthOutIntoWhsSubTab"
+               autoMapping="true">
+        <id column="ordr_num" property="ordrNum"/>
+        <result column="form_num" property="formNum"/>
+        <result column="invty_encd" property="invtyEncd"/>
+        <result column="qty" property="qty"/>
+        <!-- <association property="invtyDoc" javaType="com.px.mis.purc.entity.InvtyDoc"
+            autoMapping="true"> <id property="invtyEncd" column="invty_encd" /> <result
+            property="invtyNm" column="invty_nm" /> <result property="invtyClsEncd" column="invty_cls_encd"
+            /> <result property="baoZhiQiEarWarn" column="bao_zhi_qi_ear_warn" /> <result
+            property="measrCorpNm" column="measr_corp_nm" /> </association> -->
+    </resultMap>
+
+    <!-- 明细map -->
+
+    <resultMap id="BaseResultTabMap" type="com.px.mis.whs.entity.OthOutIntoWhsSubTab">
+        <id column="ordr_num" jdbcType="BIGINT" property="ordrNum"/>
+        <result column="form_num" jdbcType="VARCHAR" property="formNum"/>
+        <result column="invty_encd" jdbcType="VARCHAR" property="invtyEncd"/>
+        <result column="qty" jdbcType="DECIMAL" property="qty"/>
+        <result column="tax_rate" jdbcType="DECIMAL" property="taxRate"/>
+        <result column="cntn_tax_uprc" jdbcType="DECIMAL" property="cntnTaxUprc"/>
+        <result column="un_tax_uprc" jdbcType="DECIMAL" property="unTaxUprc"/>
+        <result column="book_entry_uprc" jdbcType="DECIMAL" property="bookEntryUprc"/>
+        <result column="cntn_tax_amt" jdbcType="DECIMAL" property="cntnTaxAmt"/>
+        <result column="un_tax_amt" jdbcType="DECIMAL" property="unTaxAmt"/>
+        <result column="intl_bat" jdbcType="VARCHAR" property="intlBat"/>
+        <result column="bat_num" jdbcType="VARCHAR" property="batNum"/>
+        <result column="prdc_dt" jdbcType="TIMESTAMP" property="prdcDt"/>
+        <result column="bao_zhi_qi" jdbcType="VARCHAR" property="baoZhiQi"/>
+        <result column="invldtn_dt" jdbcType="TIMESTAMP" property="invldtnDt"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        ordr_num, form_num, invty_encd, qty, tax_rate, cntn_tax_uprc, un_tax_uprc,
+		book_entry_uprc,
+		cntn_tax_amt, un_tax_amt, intl_bat, bat_num, prdc_dt, bao_zhi_qi, invldtn_dt
+    </sql>
+    <select id="selectOthByOrdrNumKey" parameterType="java.lang.Long"
+            resultMap="BaseResultTabMap">
+        select
+        <include refid="Base_Column_List"/>
+        from oth_out_into_whs_sub_tab
+        where ordr_num = #{ordrNum,jdbcType=BIGINT}
+    </select>
+
+    <!-- 新增其他出入库 -->
+    <insert id="insertOthOutIntoWhs" parameterType="OthOutIntoWhs">
+        insert into
+        oth_out_into_whs (form_num, form_dt,
+        whs_encd,
+        src_form_num,out_into_whs_typ_id,out_status,in_status ,memo,
+        is_nt__wms, is_nt_chk, is_nt_book_entry,
+        is_nt_cmplt, is_nt_clos,
+        print_cnt,
+        setup_pers, setup_tm, chkr, chk_tm,
+        book_entry_pers,
+        book_entry_tm,form_typ_encd,is_nt_make_vouch,recv_send_cate_id)
+        values (#{formNum},
+
+        <if test="formDt  == '' ">
+            null
+        </if>
+        <if test="formDt  != '' ">
+            #{formDt}
+        </if>
+        , #{whsEncd},
+        #{srcFormNum},#{outIntoWhsTypId},
+        #{outStatus},#{inStatus},#{memo},
+        0,0, 0, 0, 0, #{printCnt},
+        #{setupPers}, now(), #{chkr},
+
+        <if test="chkTm  == '' ">
+            null
+        </if>
+        <if test="chkTm  != '' ">
+            #{chkTm}
+        </if>
+        ,
+        #{bookEntryPers},
+
+
+        <if test="bookEntryTm  == '' ">
+            null
+        </if>
+        <if test="bookEntryTm  != '' ">
+            #{bookEntryTm}
+        </if>
+        ,#{formTypEncd},0
+        ,#{recvSendCateId})
+    </insert>
+    <insert id="insertOthOutIntoWhsSubTab" useGeneratedKeys="true" keyProperty="ordrNum"
+            parameterType="java.util.List">
+        insert into oth_out_into_whs_sub_tab( form_num,
+        invty_encd,
+        qty,
+        tax_rate,
+        cntn_tax_uprc, un_tax_uprc, book_entry_uprc,
+        cntn_tax_amt,
+        un_tax_amt, bat_num,
+        prdc_dt, bao_zhi_qi, invldtn_dt,bx_qty,memos,proj_encd,tax_Amt
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.formNum},
+            #{item.invtyEncd},
+            #{item.qty},
+            #{item.taxRate},
+            #{item.cntnTaxUprc}, #{item.unTaxUprc},
+            #{item.bookEntryUprc},
+            #{item.cntnTaxAmt}, #{item.unTaxAmt},
+            #{item.batNum},#{item.prdcDt}
+            , #{item.baoZhiQi},#{item.invldtnDt}
+            ,#{item.bxQty},#{item.memos},#{item.projEncd},#{item.taxAmt}
+            )
+        </foreach>
+    </insert>
+    <!-- 修改其他出入库 -->
+    <update id="updateOthOutIntoWhs" parameterType="OthOutIntoWhs">
+        update oth_out_into_whs
+        <set>
+            <if test="recvSendCateId  !=null  and recvSendCateId != '' ">
+                recv_send_cate_id = #{recvSendCateId},
+            </if>
+            <if test="formDt != null">
+                form_dt = #{formDt},
+            </if>
+            <if test="whsEncd != null">
+                whs_encd = #{whsEncd},
+            </if>
+            <if test="srcFormNum != null">
+                src_form_num = #{srcFormNum},
+            </if>
+            <if test="outIntoWhsTypId != null">
+                out_into_whs_typ_id = #{outIntoWhsTypId},
+            </if>
+            out_status = #{outStatus},
+            in_status = #{inStatus},
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="isNtWms != null">
+                is_nt__wms = #{isNtWms},
+            </if>
+            <if test="isNtChk != null">
+                is_nt_chk = #{isNtChk},
+            </if>
+            <if test="isNtBookEntry != null">
+                is_nt_book_entry = #{isNtBookEntry},
+            </if>
+            <if test="isNtCmplt != null">
+                is_nt_cmplt = #{isNtCmplt},
+            </if>
+            <if test="isNtClos != null">
+                is_nt_clos = #{isNtClos},
+            </if>
+            <if test="printCnt != null">
+                print_cnt = #{printCnt},
+            </if>
+            <if test="mdfr != null">
+                mdfr = #{mdfr},
+            </if>
+            <if test="modiTm != null">
+                modi_tm =now(),
+            </if>
+            <if test="chkr != null">
+                chkr = #{chkr},
+            </if>
+            <if test="chkTm != '' ">
+                chk_tm = #{chkTm},
+            </if>
+            <if test="bookEntryPers != null">
+                book_entry_pers = #{bookEntryPers},
+            </if>
+            <if test="bookEntryTm != ''">
+                book_entry_tm = #{bookEntryTm},
+            </if>
+            <if test="operator != null">
+                operator = #{operator},
+            </if>
+            <if test="operatorId != null">
+                operator_id = #{operatorId},
+            </if>
+
+        </set>
+        where form_num = #{formNum}
+    </update>
+    <!-- 删除其他出入库 -->
+    <delete id="deleteOthOutIntoWhsSubTab">
+        delete
+        from oth_out_into_whs_sub_tab
+        where form_num =
+              #{formNum}
+    </delete>
+    <!--批量删除 -->
+    <delete id="deleteAllOthOutIntoWhs"
+            parameterType="java.util.List">
+        delete oi,oiSubTab
+        from oth_out_into_whs as oi
+        left join
+        oth_out_into_whs_sub_tab as oiSubTab
+        ON oi.form_num = oiSubTab.form_num
+        where oi.form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </delete>
+    <!-- 简单查 其他出入库 -->
+    <sql id="Out_Into_List">
+        oth_out_into_whs.form_num, oth_out_into_whs.form_dt,
+		oth_out_into_whs.whs_encd, oth_out_into_whs.src_form_num,
+		oth_out_into_whs.out_into_whs_typ_id,oth_out_into_whs.out_status,oth_out_into_whs.in_status
+		,
+		oth_out_into_whs.memo, oth_out_into_whs.is_nt__wms,
+		oth_out_into_whs.is_nt_chk,
+		oth_out_into_whs.is_nt_book_entry,
+		oth_out_into_whs.is_nt_cmplt, oth_out_into_whs.is_nt_clos,
+		oth_out_into_whs.print_cnt, oth_out_into_whs.setup_pers,
+		oth_out_into_whs.setup_tm, oth_out_into_whs.mdfr,
+		oth_out_into_whs.modi_tm, oth_out_into_whs.chkr,
+		oth_out_into_whs.chk_tm, oth_out_into_whs.book_entry_pers,
+		oth_out_into_whs.book_entry_tm,out_into_whs_typ.out_into_whs_typ_nm,whs_doc.whs_nm
+		,oth_out_into_whs.form_typ_encd,form_typ_tabs.form_typ_name
+		,oth_out_into_whs.is_nt_make_vouch
+		,oth_out_into_whs.mak_vouch_pers
+		,oth_out_into_whs.mak_vouch_tm,
+        oth_out_into_whs.recv_send_cate_id,
+        recv_send_cate.recv_send_cate_nm
+    </sql>
+    <select id="selectOthOutIntoWhs"
+            parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Out_Into_List"/>,
+        cannib_sngl.tran_out_whs_encd outWhsEncd,
+        cannib_sngl.tran_in_whs_encd inWhsEncd,
+        whs_out.whs_nm outWhsNm,
+        whs_in.whs_nm inWhsNm
+        from
+        oth_out_into_whs LEFT join
+        out_into_whs_typ on
+        (oth_out_into_whs.out_into_whs_typ_id=out_into_whs_typ.out_into_whs_typ_id)
+        LEFT JOIN whs_doc ON ( oth_out_into_whs.whs_encd = whs_doc.whs_encd )
+        LEFT JOIN form_typ_tabs ON(
+        form_typ_tabs.form_typ_encd=oth_out_into_whs.form_typ_encd
+        )LEFT JOIN recv_send_cate ON(
+        recv_send_cate.recv_send_cate_id=oth_out_into_whs.recv_send_cate_id
+        )
+        LEFT JOIN cannib_sngl ON ( cannib_sngl.form_num = oth_out_into_whs.src_form_num )
+        LEFT JOIN whs_doc whs_out ON ( cannib_sngl.tran_out_whs_encd = whs_out.whs_encd )
+        LEFT JOIN whs_doc whs_in ON ( cannib_sngl.tran_in_whs_encd = whs_in.whs_encd )
+        where
+        oth_out_into_whs.form_num = #{formNum}
+    </select>
+    <select id="selectOthOutIntoWhsSubTab"
+            parameterType="java.lang.String" resultMap="BaseResultMap">
+        select oth_out_into_whs.*,
+               oth_out_into_whs_sub_tab.*
+        from oth_out_into_whs
+                 LEFT join
+             out_into_whs_typ on
+                 (oth_out_into_whs.out_into_whs_typ_id = out_into_whs_typ.out_into_whs_typ_id)
+                 LEFT join oth_out_into_whs_sub_tab on
+            oth_out_into_whs_sub_tab.form_num = oth_out_into_whs.form_num
+        where oth_out_into_whs.form_num = #{formNum}
+    </select>
+    <sql id="Out_Into_Tab_List">
+        ordr_num as ordrNum, form_num as formNum,
+		invty_encd as
+		invtyEncd, qty, tax_rate as taxRate, cntn_tax_uprc as cntnTaxUprc,
+		un_tax_uprc as unTaxUprc, book_entry_uprc as bookEntryUprc,
+		cntn_tax_amt as cntnTaxAmt, un_tax_amt as unTaxAmt, bat_num as batNum,
+		prdc_dt as prdcDt, bao_zhi_qi as baoZhiQi, invldtn_dt as invldtnDt
+    </sql>
+    <select id="selectOthOutIntoWhsSubTabList"
+            resultType="OthOutIntoWhsSubTab">
+        SELECT oiTab.*,
+               iDoc.*,
+               mDoc.measr_corp_nm,proj_cls.proj_nm
+        FROM oth_out_into_whs_sub_tab AS oiTab
+                 LEFT JOIN invty_doc AS iDoc ON
+                oiTab.invty_encd =
+                iDoc.invty_encd
+                 LEFT JOIN measr_corp_doc mDoc ON
+                iDoc.measr_corp_id =
+                mDoc.measr_corp_id
+                LEFT JOIN proj_cls   ON
+                proj_cls.proj_encd =
+                oiTab.proj_encd
+        WHERE form_num = #{formNum}
+    </select>
+    <!-- 批量查询 -->
+    <select id="selectOthOutIntoWhsList" resultType="OthOutIntoWhs">
+        SELECT *
+        from oth_out_into_whs
+        WHERE form_num in
+        <foreach collection="formNum" item="formNum" open="("
+                 close=")" separator=",">
+            #{formNum}
+        </foreach>
+    </select>
+    <!-- 分页查 -->
+    <select id="selectList" parameterType="Map"
+            resultType="OthOutIntoWhsMap">
+        SELECT
+        oi.*,
+        oiTab.*,
+        out_into_whs_typ.out_into_whs_typ_nm,
+        whs_doc.whs_nm,
+        form_typ_tabs.form_typ_name,
+        iDoc.invty_nm invtyNm,
+        iDoc.spc_model spcModel,
+        iDoc.invty_cd invtyCd,
+        iDoc.bx_rule bxRule,
+        iDoc.invty_cd invtyCd,
+        iDoc.measr_corp_id measrCorpId,
+        mDoc.measr_corp_nm measrCorpNm,
+        iDoc.crspd_bar_cd crspdBarCd,
+        iDoc.invty_cls_encd invtyClsEncd,
+        invty_cls.invty_cls_nm invtyClsNm,
+        recv_send_cate.recv_send_cate_nm recvSendCateNm,
+        cannib_sngl.tran_out_whs_encd outWhsEncd,
+        cannib_sngl.tran_in_whs_encd inWhsEncd,
+        whs_out.whs_nm outWhsNm,
+        whs_in.whs_nm inWhsNm,
+        proj_cls.proj_nm
+        FROM
+        oth_out_into_whs AS oi
+        LEFT JOIN oth_out_into_whs_sub_tab AS oiTab ON oi.form_num = oiTab.form_num
+        LEFT JOIN invty_doc AS iDoc ON oiTab.invty_encd = iDoc.invty_encd
+        LEFT JOIN out_into_whs_typ ON oi.out_into_whs_typ_id = out_into_whs_typ.out_into_whs_typ_id
+        LEFT JOIN whs_doc ON whs_doc.whs_encd = oi.whs_encd
+        LEFT JOIN form_typ_tabs ON ( form_typ_tabs.form_typ_encd = oi.form_typ_encd )
+        LEFT JOIN measr_corp_doc mDoc ON iDoc.measr_corp_id = mDoc.measr_corp_id
+        LEFT JOIN invty_cls ON invty_cls.invty_cls_encd = iDoc.invty_cls_encd
+        LEFT JOIN recv_send_cate ON(
+        recv_send_cate.recv_send_cate_id=oi.recv_send_cate_id
+        )
+        LEFT JOIN cannib_sngl ON ( cannib_sngl.form_num = oi.src_form_num )
+        LEFT JOIN whs_doc whs_out ON ( cannib_sngl.tran_out_whs_encd = whs_out.whs_encd )
+        LEFT JOIN whs_doc whs_in ON ( cannib_sngl.tran_in_whs_encd = whs_in.whs_encd )
+        LEFT JOIN proj_cls  ON proj_cls.proj_encd = oiTab.proj_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND oi.memo like #{memo}
+            </if>
+            <if test="memos != null and memos != ''">
+                <bind name="memos" value="'%'+ memos +'%'"/>
+                AND oiTab.memos like #{memos}
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                  AND iDoc.invty_cls_encd like #{invtyClsEncd}
+            </if>
+            <if test="recvSendCateId != null and recvSendCateId.size() >0 ">
+                AND oi.recv_send_cate_id in
+                <foreach collection="recvSendCateId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0 ">
+                AND oiTab.invty_encd in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="batNum != null and batNum.size() >0 ">
+                AND oiTab.bat_num in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="formNum != null and formNum.size() >0 ">
+                AND oi.form_num in
+                <foreach collection="formNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and formTypEncd.size() >0">
+                AND oi.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND oi.form_Dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND oi.form_Dt &lt;= #{formDt2}
+            </if>
+            <if test="outIntoWhsTypId != null and outIntoWhsTypId.size() >0 ">
+                AND oi.out_into_whs_typ_id in
+                <foreach collection="outIntoWhsTypId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsEncd != null and whsEncd.size() >0 ">
+                AND oi.whs_encd in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND oi.whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="srcFormNum != null and srcFormNum.size() >0">
+                AND oi.src_form_num in
+                <foreach collection="srcFormNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null  and isNtChk != ''">
+                AND oi.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="setupPers != null  and setupPers != ''">
+                AND oi.setup_pers = #{setupPers}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+        SELECT
+        count( oi.form_num) form_num
+        FROM
+        oth_out_into_whs AS oi
+        LEFT JOIN oth_out_into_whs_sub_tab AS oiTab ON oi.form_num = oiTab.form_num
+        LEFT JOIN invty_doc AS iDoc ON oiTab.invty_encd = iDoc.invty_encd
+        LEFT JOIN out_into_whs_typ ON oi.out_into_whs_typ_id = out_into_whs_typ.out_into_whs_typ_id
+        LEFT JOIN whs_doc ON whs_doc.whs_encd = oi.whs_encd
+        LEFT JOIN form_typ_tabs ON ( form_typ_tabs.form_typ_encd = oi.form_typ_encd )
+        LEFT JOIN measr_corp_doc mDoc ON iDoc.measr_corp_id = mDoc.measr_corp_id
+        LEFT JOIN invty_cls ON invty_cls.invty_cls_encd = iDoc.invty_cls_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND oi.memo like #{memo}
+            </if>
+            <if test="memos != null and memos != ''">
+                <bind name="memos" value="'%'+ memos +'%'"/>
+                AND oiTab.memos like #{memos}
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                  AND iDoc.invty_cls_encd like #{invtyClsEncd}
+            </if>
+            <if test="recvSendCateId != null and recvSendCateId.size() >0 ">
+                AND oi.recv_send_cate_id in
+                <foreach collection="recvSendCateId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="batNum != null and batNum.size() >0 ">
+                AND oiTab.bat_num in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND oi.whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0 ">
+                AND oiTab.invty_encd in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formNum != null and formNum.size() >0 ">
+                AND oi.form_num in
+                <foreach collection="formNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and formTypEncd.size() >0">
+                AND oi.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND oi.form_Dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND oi.form_Dt &lt;= #{formDt2}
+            </if>
+            <if test="outIntoWhsTypId != null and outIntoWhsTypId.size() >0 ">
+                AND oi.out_into_whs_typ_id in
+                <foreach collection="outIntoWhsTypId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsEncd != null and whsEncd.size() >0">
+                AND oi.whs_encd in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="srcFormNum != null and srcFormNum.size() >0">
+                AND oi.src_form_num in
+                <foreach collection="srcFormNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null  and isNtChk != ''">
+                AND oi.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="setupPers != null  and setupPers != ''">
+                AND oi.setup_pers = #{setupPers}
+            </if>
+        </where>
+    </select>
+    <!-- 打印 -->
+    <select id="selectListDaYin" parameterType="Map"
+            resultMap="BaseResultMapPc">
+        SELECT
+        oi.*,
+        oiTab.*,
+        out_into_whs_typ.out_into_whs_typ_nm,
+        whs_doc.whs_nm,
+        form_typ_tabs.form_typ_name,
+        iDoc.invty_nm invtyNm,
+        iDoc.spc_model spcModel,
+        iDoc.invty_cd invtyCd,
+        iDoc.bx_rule bxRule,
+        iDoc.invty_cd invtyCd,
+        iDoc.measr_corp_id measrCorpId,
+        mDoc.measr_corp_nm measrCorpNm,
+        iDoc.crspd_bar_cd crspdBarCd,
+        iDoc.invty_cls_encd invtyClsEncd,
+        invty_cls.invty_cls_nm invtyClsNm,
+        recv_send_cate.recv_send_cate_nm recvSendCateNm
+        FROM
+        oth_out_into_whs AS oi
+        LEFT JOIN oth_out_into_whs_sub_tab AS oiTab ON oi.form_num = oiTab.form_num
+        LEFT JOIN invty_doc AS iDoc ON oiTab.invty_encd = iDoc.invty_encd
+        LEFT JOIN out_into_whs_typ ON oi.out_into_whs_typ_id = out_into_whs_typ.out_into_whs_typ_id
+        LEFT JOIN whs_doc ON whs_doc.whs_encd = oi.whs_encd
+        LEFT JOIN form_typ_tabs ON ( form_typ_tabs.form_typ_encd = oi.form_typ_encd )
+        LEFT JOIN measr_corp_doc mDoc ON iDoc.measr_corp_id = mDoc.measr_corp_id
+        LEFT JOIN invty_cls ON invty_cls.invty_cls_encd = iDoc.invty_cls_encd
+        left join recv_send_cate on oi.recv_send_cate_id=recv_send_cate.recv_send_cate_id
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND oi.memo like #{memo}
+            </if>
+            <if test="memos != null and memos != ''">
+                <bind name="memos" value="'%'+ memos +'%'"/>
+                AND oiTab.memos like #{memos}
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd.size() >0 ">
+                AND iDoc.invty_cls_encd in
+                <foreach collection="invtyClsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="recvSendCateId != null and recvSendCateId.size() >0 ">
+                AND oi.recv_send_cate_id in
+                <foreach collection="recvSendCateId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0 ">
+                AND oiTab.invty_encd in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formNum != null and formNum.size() >0 ">
+                AND oi.form_num in
+                <foreach collection="formNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="batNum != null and batNum.size() >0 ">
+                AND oiTab.bat_num in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="formTypEncd != null and formTypEncd.size() >0">
+                AND oi.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND oi.form_Dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND oi.form_Dt &lt;= #{formDt2}
+            </if>
+            <if test="outIntoWhsTypId != null and outIntoWhsTypId.size() >0 ">
+                AND oi.out_into_whs_typ_id in
+                <foreach collection="outIntoWhsTypId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsEncd != null and whsEncd.size() >0 ">
+                AND oi.whs_encd in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="srcFormNum != null and srcFormNum.size() >0">
+                AND oi.src_form_num in
+                <foreach collection="srcFormNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null  and isNtChk != ''">
+                AND oi.is_nt_chk = #{isNtChk}
+            </if>
+        </where>
+
+    </select>
+    <select id="selectListDaYin1" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+        oi.*,oiTab.*,iDoc.*,out_into_whs_typ.out_into_whs_typ_nm
+        FROM
+        oth_out_into_whs as oi ,
+        oth_out_into_whs_sub_tab as oiTab,
+        invty_doc as
+        iDoc , out_into_whs_typ
+        <where>
+            oi.form_num = oiTab.form_num
+            AND
+            oiTab.invty_encd=iDoc.invty_encd
+            and
+            oi.out_into_whs_typ_id=out_into_whs_typ.out_into_whs_typ_id
+
+            <if test="formNum != null and formNum != ''">
+                AND oi.form_num = #{formNum}
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND oi.form_Dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND oi.form_Dt &lt;= #{formDt2}
+            </if>
+            <if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+                AND oi.out_into_whs_typ_id = #{outIntoWhsTypId}
+            </if>
+            <if test="whsEncd != null and whsEncd != ''">
+                AND oi.whs_encd = #{whsEncd}
+            </if>
+        </where>
+    </select>
+    <!-- 审核 -->
+    <update id="updateOutInWhsChk" parameterType="java.util.List">
+        update oth_out_into_whs
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then 1
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when form_num = #{item.formNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then #{item.chkTm}
+                </foreach>
+            </trim>
+        </trim>
+        where form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.formNum}
+        </foreach>
+        and is_nt_chk = 0
+    </update>
+    <!-- 弃审 -->
+    <update id="updateOutInWhsNoChk" parameterType="java.util.List">
+        update oth_out_into_whs
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then 0
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when form_num = #{item.formNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then now()
+                </foreach>
+            </trim>
+        </trim>
+        where form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.formNum}
+        </foreach>
+        and is_nt_chk = 1
+    </update>
+    <!-- 查询是否是已审核状态 -->
+    <select id="selectIsChk" resultType="OthOutIntoWhs">
+        select *
+        from oth_out_into_whs
+        where form_num = #{formNum}
+    </select>
+
+
+    <!-- PDA 查询入库 -->
+    <select id="selectOINChkr" resultMap="BaseResultMap">
+        SELECT
+        oi.*,
+        oiTab.*,
+        iDoc.*,
+        form_typ_tabs.form_typ_name
+        FROM
+        oth_out_into_whs AS oi
+        JOIN oth_out_into_whs_sub_tab AS oiTab ON oi.form_num = oiTab.form_num
+        AND oi.is_nt_chk = 0
+        AND oi.form_typ_encd = "014"
+        LEFT JOIN invty_doc AS iDoc ON oiTab.invty_encd = iDoc.invty_encd
+        LEFT JOIN form_typ_tabs ON oi.form_typ_encd = form_typ_tabs.form_typ_encd
+        <where>
+            <if test="list != null ">
+                AND oi.whs_encd in
+                <foreach collection="list" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <!-- PDA 查询出库 -->
+    <select id="selectOutChkr" resultMap="BaseResultMap">
+        SELECT
+        oi.*,
+        oiTab.*,
+        iDoc.*,
+        form_typ_tabs.form_typ_name
+        FROM
+        oth_out_into_whs AS oi
+        JOIN oth_out_into_whs_sub_tab AS oiTab ON oi.form_num = oiTab.form_num
+        AND oi.is_nt_chk = 0
+        AND oi.form_typ_encd = "015"
+        LEFT JOIN invty_doc AS iDoc ON oiTab.invty_encd = iDoc.invty_encd
+        LEFT JOIN form_typ_tabs ON oi.form_typ_encd = form_typ_tabs.form_typ_encd
+        <where>
+            <if test="list != null ">
+                AND oi.whs_encd in
+                <foreach collection="list" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询货位表数量 -->
+    <select id="selectMovBitTab" resultType="InvtyTab">
+        select * from mov_bit_tab
+        <where>
+            invty_encd = #{invtyEncd}
+            and whs_encd = #{whsEncd}
+            and regn_encd
+            = #{regnEncd}
+            and gds_bit_encd = #{gdsBitEncd}
+        </where>
+    </select>
+
+
+    <!-- 返回国际批次 -->
+    <update id="updateBat" parameterType="java.util.List">
+        update oth_out_into_whs_sub_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="intl_bat =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when
+                    ordr_num = #{item.ordrNum}
+                    then
+                    #{item.intlBat}
+                </foreach>
+            </trim>
+        </trim>
+        where
+        ordr_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.ordrNum}
+        </foreach>
+    </update>
+
+    <select id="selectOthOutIntoWhsIsInvty" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+        oth.*,oths.*,mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_encd,wd.whs_nm,ind.invty_nm,ind.spc_model,ind.invty_cd,
+        ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,ind.highest_pur_price,ind.lo_sell_prc,
+        ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.invty_cls_encd,cls.invty_cls_nm,typ.out_into_whs_typ_nm
+        FROM
+        oth_out_into_whs as oth
+        LEFT JOIN oth_out_into_whs_sub_tab AS oths
+        ON oth.form_num = oths.form_num
+        LEFT JOIN whs_doc wd ON oth.whs_encd =
+        wd.whs_encd
+        LEFT JOIN invty_doc ind ON oths.invty_encd =
+        ind.invty_encd
+        LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id =
+        mcd.measr_corp_id
+        LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd =
+        ind.invty_cls_encd
+        LEFT JOIN out_into_whs_typ as typ ON
+        oth.out_into_whs_typ_id =
+        typ.out_into_whs_typ_id
+
+        where oth.is_nt_chk = 1
+        <if test="loginTime != null and loginTime != ''">
+            AND DATE_FORMAT(oth.form_dt, '%Y%m') =
+            DATE_FORMAT(#{loginTime}, '%Y%m')
+        </if>
+        <if test="formCodeList != null and formCodeList.size() > 0 ">
+            AND oth.out_into_whs_typ_id IN
+            <foreach collection="formCodeList" item="formCode" open="("
+                     close=")" separator=",">
+                #{formCode}
+            </foreach>
+        </if>
+        <if test="whsEncd != null and whsEncd != ''">
+            AND oth.whs_encd = #{whsEncd}
+        </if>
+        <if test="isNtBookOk != null and isNtBookOk != ''">
+            AND oth.is_nt_book_entry = #{isNtBookOk}
+        </if>
+        <if test="invIdList != null and invIdList.size() > 0 ">
+            AND oths.invty_encd IN
+            <foreach collection="invIdList" item="invId" open="("
+                     close=")" separator=",">
+                #{invId}
+            </foreach>
+        </if>
+    </select>
+
+
+    <select id="insertInvtyTabTermInvty" parameterType="String" resultType="int">
+
+        INSERT INTO invty_tab_term (whs_encd, invty_encd, bat_num, qty, tax_amt, tax_sum, term_dt, is_early)
+        SELECT term_bgn_bal.whs_encd,
+               term_bgn_bal.invty_encd,
+               term_bgn_bal.bat_num,
+               IFNULL(SUM(term_bgn_bal.qty), 0)         qty,
+               IFNULL(SUM(term_bgn_bal.no_tax_amt), 0)  tax_amt,
+               IFNULL(SUM(term_bgn_bal.prc_tax_sum), 0) tax_sum,
+               #{loginTime},
+               1
+        FROM term_bgn_bal
+        GROUP BY whs_encd,
+                 invty_encd,
+                 bat_num
+        HAVING qty != 0
+    </select>
+    <select id="selectInvtyTabTermInvty" parameterType="String" resultType="int">
+        INSERT INTO invty_tab_term (whs_encd, invty_encd, bat_num, qty, tax_amt, tax_sum, term_dt, is_early)
+        SELECT a.whs_encd,
+               a.invty_encd,
+               a.bat_num,
+               IFNULL(SUM(a.qty), 0)     qty,
+               IFNULL(SUM(a.tax_amt), 0) tax_amt,
+               IFNULL(SUM(a.tax_sum), 0) tax_sum,
+               DATE_add(#{loginTime}, INTERVAL 1 MONTH),
+               1
+        FROM (
+                 SELECT invty_tab_term.whs_encd,
+                        invty_tab_term.invty_encd,
+                        invty_tab_term.bat_num,
+                        IFNULL(SUM(invty_tab_term.qty), 0)     qty,
+                        IFNULL(SUM(invty_tab_term.tax_amt), 0) tax_amt,
+                        IFNULL(SUM(invty_tab_term.tax_sum), 0) tax_sum
+                 FROM invty_tab_term
+                 WHERE DATE_FORMAT(invty_tab_term.term_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                   AND is_early = 1
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+                 UNION ALL
+                 SELECT sell_out_whs_sub.whs_encd,
+                        sell_out_whs_sub.invty_encd,
+                        sell_out_whs_sub.bat_num,
+                        0 - IFNULL(SUM(sell_out_whs_sub.qty), 0)         qty,
+                        0 - IFNULL(SUM(sell_out_whs_sub.no_tax_amt), 0)  tax_amt,
+                        0 - IFNULL(SUM(sell_out_whs_sub.prc_tax_sum), 0) tax_sum
+                 FROM sell_out_whs
+                          JOIN sell_out_whs_sub ON sell_out_whs.out_whs_id = sell_out_whs_sub.out_whs_id
+                     AND sell_out_whs.is_nt_chk = 1
+                     AND DATE_FORMAT(sell_out_whs.out_whs_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+                 UNION ALL
+                 SELECT oth_out_into_whs.whs_encd,
+                        oth_out_into_whs_sub_tab.invty_encd,
+                        oth_out_into_whs_sub_tab.bat_num,
+                        IFNULL(SUM(oth_out_into_whs_sub_tab.qty), 0)          qty,
+                        IFNULL(SUM(oth_out_into_whs_sub_tab.un_tax_amt), 0)   tax_amt,
+                        IFNULL(SUM(oth_out_into_whs_sub_tab.cntn_tax_amt), 0) tax_sum
+                 FROM oth_out_into_whs
+                          JOIN oth_out_into_whs_sub_tab ON oth_out_into_whs.form_num = oth_out_into_whs_sub_tab.form_num
+                     AND oth_out_into_whs.form_typ_encd = "014"
+                     AND oth_out_into_whs.is_nt_chk = 1
+                     AND DATE_FORMAT(oth_out_into_whs.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+                 UNION ALL
+                 SELECT oth_out_into_whs.whs_encd,
+                        oth_out_into_whs_sub_tab.invty_encd,
+                        oth_out_into_whs_sub_tab.bat_num,
+                        0 - IFNULL(SUM(oth_out_into_whs_sub_tab.qty), 0)          qty,
+                        0 - IFNULL(SUM(oth_out_into_whs_sub_tab.un_tax_amt), 0)   tax_amt,
+                        0 - IFNULL(SUM(oth_out_into_whs_sub_tab.cntn_tax_amt), 0) tax_sum
+                 FROM oth_out_into_whs
+                          JOIN oth_out_into_whs_sub_tab ON oth_out_into_whs.form_num = oth_out_into_whs_sub_tab.form_num
+                     AND oth_out_into_whs.form_typ_encd = "015"
+                     AND oth_out_into_whs.is_nt_chk = 1
+                     AND DATE_FORMAT(oth_out_into_whs.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+                 UNION ALL
+                 SELECT into_whs_sub.whs_encd,
+                        into_whs_sub.invty_encd,
+                        into_whs_sub.bat_num,
+                        IFNULL(SUM(into_whs_sub.qty), 0)         qty,
+                        IFNULL(SUM(into_whs_sub.no_tax_amt), 0)  tax_amt,
+                        IFNULL(SUM(into_whs_sub.prc_tax_sum), 0) tax_sum
+                 FROM into_whs
+                          JOIN into_whs_sub ON into_whs.into_whs_sngl_id = into_whs_sub.into_whs_sngl_id
+                     AND into_whs.is_nt_chk = 1
+                     AND DATE_FORMAT(into_whs.into_whs_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+             ) a
+        GROUP BY whs_encd,
+                 invty_encd,
+                 bat_num
+        HAVING qty != 0
+        UNION ALL
+        SELECT a.whs_encd,
+               a.invty_encd,
+               a.bat_num,
+               IFNULL(SUM(a.qty), 0)     qty,
+               IFNULL(SUM(a.tax_amt), 0) tax_amt,
+               IFNULL(SUM(a.tax_sum), 0) tax_sum,
+               #{loginTime},
+               0
+        FROM (
+                 SELECT invty_tab_term.whs_encd,
+                        invty_tab_term.invty_encd,
+                        invty_tab_term.bat_num,
+                        IFNULL(SUM(invty_tab_term.qty), 0)     qty,
+                        IFNULL(SUM(invty_tab_term.tax_amt), 0) tax_amt,
+                        IFNULL(SUM(invty_tab_term.tax_sum), 0) tax_sum
+                 FROM invty_tab_term
+                 WHERE DATE_FORMAT(invty_tab_term.term_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                   AND is_early = 1
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+                 UNION ALL
+                 SELECT sell_out_whs_sub.whs_encd,
+                        sell_out_whs_sub.invty_encd,
+                        sell_out_whs_sub.bat_num,
+                        0 - IFNULL(SUM(sell_out_whs_sub.qty), 0)         qty,
+                        0 - IFNULL(SUM(sell_out_whs_sub.no_tax_amt), 0)  tax_amt,
+                        0 - IFNULL(SUM(sell_out_whs_sub.prc_tax_sum), 0) tax_sum
+                 FROM sell_out_whs
+                          JOIN sell_out_whs_sub ON sell_out_whs.out_whs_id = sell_out_whs_sub.out_whs_id
+                     AND sell_out_whs.is_nt_chk = 1
+                     AND DATE_FORMAT(sell_out_whs.out_whs_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+                 UNION ALL
+                 SELECT oth_out_into_whs.whs_encd,
+                        oth_out_into_whs_sub_tab.invty_encd,
+                        oth_out_into_whs_sub_tab.bat_num,
+                        IFNULL(SUM(oth_out_into_whs_sub_tab.qty), 0)          qty,
+                        IFNULL(SUM(oth_out_into_whs_sub_tab.un_tax_amt), 0)   tax_amt,
+                        IFNULL(SUM(oth_out_into_whs_sub_tab.cntn_tax_amt), 0) tax_sum
+                 FROM oth_out_into_whs
+                          JOIN oth_out_into_whs_sub_tab ON oth_out_into_whs.form_num = oth_out_into_whs_sub_tab.form_num
+                     AND oth_out_into_whs.form_typ_encd = "014"
+                     AND oth_out_into_whs.is_nt_chk = 1
+                     AND DATE_FORMAT(oth_out_into_whs.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+                 UNION ALL
+                 SELECT oth_out_into_whs.whs_encd,
+                        oth_out_into_whs_sub_tab.invty_encd,
+                        oth_out_into_whs_sub_tab.bat_num,
+                        0 - IFNULL(SUM(oth_out_into_whs_sub_tab.qty), 0)          qty,
+                        0 - IFNULL(SUM(oth_out_into_whs_sub_tab.un_tax_amt), 0)   tax_amt,
+                        0 - IFNULL(SUM(oth_out_into_whs_sub_tab.cntn_tax_amt), 0) tax_sum
+                 FROM oth_out_into_whs
+                          JOIN oth_out_into_whs_sub_tab ON oth_out_into_whs.form_num = oth_out_into_whs_sub_tab.form_num
+                     AND oth_out_into_whs.form_typ_encd = "015"
+                     AND oth_out_into_whs.is_nt_chk = 1
+                     AND DATE_FORMAT(oth_out_into_whs.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+                 UNION ALL
+                 SELECT into_whs_sub.whs_encd,
+                        into_whs_sub.invty_encd,
+                        into_whs_sub.bat_num,
+                        IFNULL(SUM(into_whs_sub.qty), 0)         qty,
+                        IFNULL(SUM(into_whs_sub.no_tax_amt), 0)  tax_amt,
+                        IFNULL(SUM(into_whs_sub.prc_tax_sum), 0) tax_sum
+                 FROM into_whs
+                          JOIN into_whs_sub ON into_whs.into_whs_sngl_id = into_whs_sub.into_whs_sngl_id
+                     AND into_whs.is_nt_chk = 1
+                     AND DATE_FORMAT(into_whs.into_whs_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+                 GROUP BY whs_encd,
+                          invty_encd,
+                          bat_num
+             ) a
+        GROUP BY whs_encd,
+                 invty_encd,
+                 bat_num
+        HAVING qty != 0
+    </select>
+    <select id="selectInvtyTabTermInvtyCount" parameterType="String" resultType="int">
+        SELECT COUNT(ordr_num)
+        FROM invty_tab_term
+        WHERE is_early = 0
+          AND DATE_FORMAT(invty_tab_term.term_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+    </select>
+
+    <delete id="deleteInvtyTabTermInvty" parameterType="String">
+        DELETE
+        FROM invty_tab_term
+        WHERE (is_early = 0 AND DATE_FORMAT(invty_tab_term.term_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m'))
+           OR (is_early = 1
+            AND DATE_FORMAT(invty_tab_term.term_dt, '%Y%m') =
+                DATE_FORMAT(DATE_add(#{loginTime}, INTERVAL 1 MONTH), '%Y%m')
+            )
+    </delete>
+    <delete id="deleteInvtyTabTerm" parameterType="String">
+        DELETE
+        FROM invty_tab_term
+        WHERE is_early = 1
+          AND DATE_FORMAT(invty_tab_term.term_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+    </delete>
+    <insert id="exInsertOthOutIntoWhs" parameterType="OthOutIntoWhs">
+        insert into
+        oth_out_into_whs (
+
+        form_num ,
+        form_dt ,
+        whs_encd ,
+        src_form_num ,
+        out_into_whs_typ_id ,
+        out_status ,
+        in_status ,
+        memo ,
+        is_nt__wms ,
+        is_nt_chk ,
+        is_nt_book_entry ,
+        is_nt_cmplt ,
+        is_nt_clos ,
+        print_cnt ,
+        setup_pers ,
+        setup_tm ,
+
+        mdfr ,
+        modi_tm ,
+        chkr ,
+        chk_tm ,
+
+        book_entry_pers ,
+        book_entry_tm ,
+        operator ,
+        operator_id
+        ,form_typ_encd
+        ,is_nt_make_vouch
+        ,mak_vouch_pers
+        ,mak_vouch_tm,recv_send_cate_id
+        )
+        values (
+        #{formNum},
+        <if test="formDt  == '' ">
+            null
+        </if>
+        <if test="formDt  != '' ">
+            #{formDt}
+        </if>
+        , #{whsEncd},
+        #{srcFormNum},#{outIntoWhsTypId},
+        #{outStatus},#{inStatus},#{memo},
+
+        #{isNtWms} ,
+        #{isNtChk} ,
+        #{isNtBookEntry} ,
+        #{isNtCmplt} ,
+        #{isNtClos} ,
+        #{printCnt} ,
+        #{setupPers},
+        <if test="setupTm  == '' ">
+            null
+        </if>
+        <if test="setupTm  != '' ">
+            #{setupTm}
+        </if>
+        ,#{mdfr} ,
+        <if test="modiTm  == '' ">
+            null
+        </if>
+        <if test="modiTm  != '' ">
+            #{modiTm}
+        </if>
+        , #{chkr},
+        <if test="chkTm  == '' ">
+            null
+        </if>
+        <if test="chkTm  != '' ">
+            #{chkTm}
+        </if>
+        ,
+        #{bookEntryPers},
+        <if test="bookEntryTm  == '' ">
+            null
+        </if>
+        <if test="bookEntryTm  != '' ">
+            #{bookEntryTm}
+        </if>
+        ,
+        #{operator},
+        #{operatorId}
+        ,#{formTypEncd}
+        ,#{isNtMakeVouch}
+        ,#{makVouchPers}
+        ,
+        <if test="makVouchTm  == '' ">
+            null
+        </if>
+        <if test="makVouchTm  != '' ">
+            #{makVouchTm}
+        </if>
+        ,#{recvSendCateId}
+        )
+    </insert>
+    <insert id="exInsertOthOutIntoWhsSubTab"
+            parameterType="java.util.List">
+        insert into oth_out_into_whs_sub_tab(ordr_num, form_num,
+        invty_encd,
+        qty, tax_rate,
+        cntn_tax_uprc, un_tax_uprc, book_entry_uprc,
+        cntn_tax_amt, un_tax_amt, bat_num,
+        prdc_dt, bao_zhi_qi,
+        invldtn_dt,intl_bat,bx_qty,memos,proj_encd
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.ordrNum}, #{item.formNum},
+            #{item.invtyEncd},
+            #{item.qty},
+            #{item.taxRate},
+            #{item.cntnTaxUprc}, #{item.unTaxUprc},
+            #{item.bookEntryUprc},
+            #{item.cntnTaxAmt}, #{item.unTaxAmt},
+            #{item.batNum},
+            <if test="item.prdcDt  == '' ">
+                null
+            </if>
+            <if test="item.prdcDt  != '' ">
+                #{item.prdcDt}
+            </if>
+            , #{item.baoZhiQi},
+            <if test="item.invldtnDt  == '' ">
+                null
+            </if>
+            <if test="item.invldtnDt  != '' ">
+                #{item.invldtnDt}
+            </if>
+            ,
+            #{item.intlBat}
+            ,#{item.bxQty},#{item.memos},#{item.projEncd}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 修改记账状态 -->
+    <update id="updateOutInWhsBookEntry"
+            parameterType="java.util.List">
+        update oth_out_into_whs
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_book_entry =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.isNtBookEntry != null ">
+                        when form_num =
+                        #{item.formNum} then
+                        #{item.isNtBookEntry}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="book_entry_pers =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.bookEntryPers != null">
+                        when form_num = #{item.formNum} then
+                        #{item.bookEntryPers}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="book_entry_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.bookEntryTm != null">
+                        when form_num =
+                        #{item.formNum} then #{item.bookEntryTm}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.formNum}
+        </foreach>
+    </update>
+
+    <select id="selectOthOutIntoWhsSrc" resultType="OthOutIntoWhs">
+        SELECT *
+        FROM oth_out_into_whs
+                 LEFT JOIN out_into_whs_typ ON (
+                oth_out_into_whs.out_into_whs_typ_id = out_into_whs_typ.out_into_whs_typ_id)
+                 LEFT JOIN form_typ_tabs ON oth_out_into_whs.form_typ_encd = form_typ_tabs.form_typ_encd
+        WHERE oth_out_into_whs.src_form_num = #{srcFormNum}
+          and oth_out_into_whs.out_into_whs_typ_id = #{outIntoWhsTypId}
+    </select>
+    <select id="selectOthOutIntoWhsStream" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+			oth.*,oths.*,mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_encd,wd.whs_nm,ind.invty_nm,ind.spc_model,ind.invty_cd,
+			ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,ind.highest_pur_price,ind.lo_sell_prc,
+			ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.invty_cls_encd,cls.invty_cls_nm,typ.out_into_whs_typ_nm,
+			ftyp.form_typ_name formTypName,proj.proj_nm
+		FROM
+		oth_out_into_whs as oth
+		INNER JOIN oth_out_into_whs_sub_tab AS oths ON oth.form_num = oths.form_num
+		LEFT JOIN whs_doc wd ON oth.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON oths.invty_encd = ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+		LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd
+		LEFT JOIN out_into_whs_typ as typ ON oth.out_into_whs_typ_id = typ.out_into_whs_typ_id
+		LEFT JOIN form_typ_tabs AS ftyp ON oth.form_typ_encd = ftyp.form_typ_encd 	
+		LEFT JOIN proj_cls AS proj ON proj.proj_encd = oths.proj_encd
+		where oth.is_nt_chk = 1
+        <if test="loginTime != null and loginTime != ''">
+            AND DATE_FORMAT(oth.form_dt, '%Y%m') =
+            DATE_FORMAT(#{loginTime}, '%Y%m')
+        </if>
+        <if test="formCodeList != null and formCodeList.size() > 0 ">
+            AND oth.out_into_whs_typ_id IN
+            <foreach collection="formCodeList" item="formCode" open="("
+                     close=")" separator=",">
+                #{formCode}
+            </foreach>
+        </if>
+        <if test="whsEncd != null and whsEncd != ''">
+            AND oth.whs_encd = #{whsEncd}
+        </if>
+        <if test="isNtBookOk != null and isNtBookOk != ''">
+            AND oth.is_nt_book_entry = #{isNtBookOk}
+        </if>
+        <if test="invIdList != null and invIdList.size() > 0 ">
+            AND oths.invty_encd IN
+            <foreach collection="invIdList" item="invId" open="("
+                     close=")" separator=",">
+                #{invId}
+            </foreach>
+        </if>
+        <if test="formSDt != null and formSDt != ''">
+            AND oth.form_dt &gt;= #{formSDt}
+        </if>
+        <if test="formEDt != null and formEDt != ''">
+            AND oth.form_dt &lt;= #{formEDt}
+        </if>
+        <if test="formNum != null and formNum != ''">
+            AND oth.form_num = #{formNum}
+        </if>
+        <if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+            AND oth.out_into_whs_typ_id = #{outIntoWhsTypId}
+        </if>
+        <if test="whsEncdList != null and whsEncdList.size() > 0 ">
+            AND oth.whs_encd IN
+            <foreach collection="whsEncdList" item="whsEncd" open="("
+                     close=")" separator=",">
+                #{whsEncd}
+            </foreach>
+        </if>
+        LIMIT #{index},#{num}
+    </select>
+    <select id="countSelectOthOutIntoWhsStream" parameterType="Map"
+            resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        oth_out_into_whs as oth
+        INNER JOIN oth_out_into_whs_sub_tab AS oths ON oth.form_num = oths.form_num
+        LEFT JOIN whs_doc wd ON oth.whs_encd = wd.whs_encd
+        LEFT JOIN invty_doc ind ON oths.invty_encd = ind.invty_encd
+        LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+        LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd
+        LEFT JOIN out_into_whs_typ as typ ON oth.out_into_whs_typ_id = typ.out_into_whs_typ_id
+        where oth.is_nt_chk = 1
+        <if test="loginTime != null and loginTime != ''">
+            AND DATE_FORMAT(oth.form_dt, '%Y%m') =
+            DATE_FORMAT(#{loginTime}, '%Y%m')
+        </if>
+        <if test="formCodeList != null and formCodeList.size() > 0 ">
+            AND oth.out_into_whs_typ_id IN
+            <foreach collection="formCodeList" item="formCode" open="("
+                     close=")" separator=",">
+                #{formCode}
+            </foreach>
+        </if>
+        <if test="whsEncd != null and whsEncd != ''">
+            AND oth.whs_encd = #{whsEncd}
+        </if>
+        <if test="isNtBookOk != null and isNtBookOk != ''">
+            AND oth.is_nt_book_entry = #{isNtBookOk}
+        </if>
+        <if test="invIdList != null and invIdList.size() > 0 ">
+            AND oths.invty_encd IN
+            <foreach collection="invIdList" item="invId" open="("
+                     close=")" separator=",">
+                #{invId}
+            </foreach>
+        </if>
+        <if test="formSDt != null and formSDt != ''">
+            AND oth.form_dt &gt;= #{formSDt}
+        </if>
+        <if test="formEDt != null and formEDt != ''">
+            AND oth.form_dt &lt;= #{formEDt}
+        </if>
+        <if test="formNum != null and formNum != ''">
+            AND oth.form_num = #{formNum}
+        </if>
+        <if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+            AND oth.out_into_whs_typ_id = #{outIntoWhsTypId}
+        </if>
+        <if test="whsEncdList != null and whsEncdList.size() > 0 ">
+            AND oth.whs_encd IN
+            <foreach collection="whsEncdList" item="whsEncd" open="("
+                     close=")" separator=",">
+                #{whsEncd}
+            </foreach>
+        </if>
+    </select>
+
+
+    <insert id="insertOthOutIntoWhsDl"
+            parameterType="java.util.List">
+        INSERT INTO oth_out_into_whs_dl SELECT
+        *
+        FROM
+        oth_out_into_whs
+        WHERE form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+    <insert id="insertOthOutIntoWhsSubTabDl"
+            parameterType="java.util.List">
+        INSERT INTO oth_out_into_whs_sub_tab_dl SELECT
+        *
+        FROM
+        oth_out_into_whs_sub_tab
+        WHERE form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+
+
+    <select id="selectallInvtyGdsBitListInto" parameterType="string" resultType="MovBitTab">
+        SELECT
+            oth_out_into_whs.whs_encd whsEncd,
+            oth_out_into_whs_sub_tab.invty_encd invtyEncd,
+            oth_out_into_whs_sub_tab.bat_num batNum,
+            oth_out_into_whs.form_num orderNum,
+            oth_out_into_whs_sub_tab.ordr_num serialNum,
+            oth_out_into_whs_sub_tab.qty qty,
+            oth_out_into_whs_sub_tab.prdc_dt prdcDt,
+            CASE
+                WHEN form_typ_encd = '014' THEN
+                    1
+                WHEN form_typ_encd = '015' THEN
+                    0
+                END id
+        FROM
+            oth_out_into_whs
+                JOIN oth_out_into_whs_sub_tab ON ( oth_out_into_whs.form_num = oth_out_into_whs_sub_tab.form_num
+                AND oth_out_into_whs.is_nt_chk = 0
+                AND oth_out_into_whs.form_num = #{formNum}
+                    ) UNION ALL
+        SELECT
+            sell_out_whs_sub.whs_encd whsEncd,
+            sell_out_whs_sub.invty_encd invtyEncd,
+            sell_out_whs_sub.bat_num batNum,
+            sell_out_whs.out_whs_id orderNum,
+            sell_out_whs_sub.ordr_num serialNum,
+            sell_out_whs_sub.qty qty,
+            sell_out_whs_sub.prdc_dt prdcDt,
+            CASE
+                WHEN is_nt_rtn_good = 1 THEN
+                    1
+                WHEN is_nt_rtn_good = 0 THEN
+                    0
+                END id
+        FROM
+            sell_out_whs
+                JOIN sell_out_whs_sub ON ( sell_out_whs.out_whs_id = sell_out_whs_sub.out_whs_id
+                AND sell_out_whs.is_nt_chk = 0
+                AND sell_out_whs.out_whs_id = #{formNum}
+                    ) UNION ALL
+        SELECT
+            into_whs_sub.whs_encd whsEncd,
+            into_whs_sub.invty_encd invtyEncd,
+            into_whs_sub.bat_num batNum,
+            into_whs.into_whs_sngl_id orderNum,
+            into_whs_sub.ordr_num serialNum,
+            into_whs_sub.qty qty,
+            into_whs_sub.prdc_dt prdcDt,
+            CASE
+                WHEN is_nt_rtn_good = 0 THEN
+                    1
+                WHEN is_nt_rtn_good = 1 THEN
+                    0
+                END id
+        FROM
+            into_whs
+                JOIN into_whs_sub ON (
+                    into_whs.into_whs_sngl_id = into_whs_sub.into_whs_sngl_id
+                    AND into_whs.is_nt_chk = 0
+                    AND into_whs.into_whs_sngl_id = #{formNum}
+                )
+    </select>
+
+</mapper>

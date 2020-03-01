@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.DelvMerchdEntrsAgnDtlAcctDao">
+	<!-- 发出商品委托代销明细账 分页查询所有 -->
+	<select id="selectDelvMerchdEntrsAgnDtlAcctList" parameterType="Map" resultType="com.px.mis.account.entity.DelvMerchdEntrsAgnDtlAcct">
+	 SELECT ordr_num ordrNum,form_id formId,form_dt formDt,accti_qty acctiQty,accti_uprc acctiUprc,
+	 		accti_amt acctiAmt,is_nt_chk isNtchk,chkr chkr,chk_tm chkTm,is_nt_make_vouch isNtMakeVouch,
+			recv_send_ind recvSendInd,sell_typ_id sellTypId,crspd_sell_typ_sngl_num crspdSellTypSnglNum,inv_mas_tab_ind invMasTabInd,setup_pers setupPers,
+			setup_tm setupTm,is_nt_book_entry isNtBookEntry,book_entry_pers bookEntryPers,book_entry_tm bookEntryTm,accti_prd acctiPrd,
+			vouch_id vouchId,vouch_dt vouchDt,vouch_cate vouchCate,vouch_memo vouchMemo,delv_merchd_subj_id delvMerchdSubjId,
+			cnt_pty_subj_id cntPtySubjId,form_typ formTyp,biz_typ_id bozTypId,whs_id whsId,dept_id deptId,
+			invty_encd invtyEncd,recv_send_cate_id recvSendCateId,cust_id custId,inv_sub_tab_ind invSubTabInd,biz_mem_id bizMemId,
+			incom_qty incomQty,delv_qty delvQty,incom_uprc incomUprc,delv_uprc delvUprc,incom_amt incomAmt,
+			delv_amt delvAmt,bat_num batNum,inven_type_id invenTypeId,prdc_dt prdcDt,qua_gua_per quaGuaPer,
+			invldtn_dt invldtnDt,memo memo
+	 FROM delv_merchd_entrs_agn_dtl_acct
+	 ORDER BY ordr_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectDelvMerchdEntrsAgnDtlAcctByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.DelvMerchdEntrsAgnDtlAcct">
+	 SELECT ordr_num ordrNum,form_id formId,form_dt formDt,accti_qty acctiQty,accti_uprc acctiUprc,
+	 		accti_amt acctiAmt,is_nt_chk isNtchk,chkr chkr,chk_tm chkTm,is_nt_make_vouch isNtMakeVouch,
+			recv_send_ind recvSendInd,sell_typ_id sellTypId,crspd_sell_typ_sngl_num crspdSellTypSnglNum,inv_mas_tab_ind invMasTabInd,setup_pers setupPers,
+			setup_tm setupTm,is_nt_book_entry isNtBookEntry,book_entry_pers bookEntryPers,book_entry_tm bookEntryTm,accti_prd acctiPrd,
+			vouch_id vouchId,vouch_dt vouchDt,vouch_cate vouchCate,vouch_memo vouchMemo,delv_merchd_subj_id delvMerchdSubjId,
+			cnt_pty_subj_id cntPtySubjId,form_typ formTyp,biz_typ_id bozTypId,whs_id whsId,dept_id deptId,
+			invty_encd invtyEncd,recv_send_cate_id recvSendCateId,cust_id custId,inv_sub_tab_ind invSubTabInd,biz_mem_id bizMemId,
+			incom_qty incomQty,delv_qty delvQty,incom_uprc incomUprc,delv_uprc delvUprc,incom_amt incomAmt,
+			delv_amt delvAmt,bat_num batNum,inven_type_id invenTypeId,prdc_dt prdcDt,qua_gua_per quaGuaPer,
+			invldtn_dt invldtnDt,memo memo
+	 FROM delv_merchd_entrs_agn_dtl_acct
+	 WHERE ordr_num=#{ordrNum}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectDelvMerchdEntrsAgnDtlAcctCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM delv_merchd_entrs_agn_dtl_acct
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertDelvMerchdEntrsAgnDtlAcct" parameterType="com.px.mis.account.entity.DelvMerchdEntrsAgnDtlAcct">
+		INSERT INTO delv_merchd_entrs_agn_dtl_acct
+		VALUES(null,#{formId},#{formDt},#{acctiQty},#{acctiUprc},
+				#{acctiAmt},#{isNtchk},#{chkr},#{chkTm},#{isNtMakeVouch},
+				#{recvSendInd},#{sellTypId},#{crspdSellTypSnglNum},#{invMasTabInd},#{setupPers},
+				now(),#{isNtBookEntry},#{bookEntryPers},#{bookEntryTm},#{acctiPrd},
+				#{vouchId},#{vouchDt},#{vouchCate},#{vouchMemo},#{delvMerchdSubjId},
+				#{cntPtySubjId},#{formTyp},#{bozTypId},#{whsId},#{deptId},
+				#{invtyEncd},#{recvSendCateId},#{custId},#{invSubTabInd},#{bizMemId},
+				#{incomQty},#{delvQty},#{incomUprc},#{delvUprc},#{incomAmt},
+				#{delvAmt},#{batNum},#{invenTypeId},#{prdcDt},#{quaGuaPer},
+				#{invldtnDt},#{memo})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteDelvMerchdEntrsAgnDtlAcctByOrdrNum" parameterType="int">
+	 DELETE FROM delv_merchd_entrs_agn_dtl_acct
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateDelvMerchdEntrsAgnDtlAcctByOrdrNum" parameterType="com.px.mis.account.entity.DelvMerchdEntrsAgnDtlAcct">
+	 UPDATE delv_merchd_entrs_agn_dtl_acct
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="formId != null">
+        form_id = #{formId,jdbcType=VARCHAR},
+      </if>
+      <if test="formDt != null">
+        form_dt = #{formDt,jdbcType=DATE},
+      </if>
+      <if test="acctiQty != null">
+        accti_qty = #{acctiQty,jdbcType=VARCHAR},
+      </if>
+      <if test="acctiUprc != null">
+        accti_uprc = #{acctiUprc,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="acctiAmt != null">
+        accti_amt = #{acctiAmt,jdbcType=VARCHAR},
+      </if>
+      <if test="isNtchk != null">
+        is_nt_chk = #{isNtchk,jdbcType=INTEGER},
+      </if>
+      <if test="chkr != null">
+        chkr = #{chkr,jdbcType=VARCHAR},
+      </if>
+      <if test="chkTm != null">
+        chk_tm = #{chkTm,jdbcType=DATE},
+      </if>
+      <if test="isNtMakeVouch != null">
+        is_nt_make_vouch = #{isNtMakeVouch,jdbcType=INTEGER},
+      </if>
+      
+      <if test="recvSendInd != null">
+        recv_send_ind = #{recvSendInd,jdbcType=VARCHAR},
+      </if>
+      <if test="sellTypId != null">
+        sell_typ_id = #{sellTypId,jdbcType=VARCHAR},
+      </if>
+      <if test="crspdSellTypSnglNum != null">
+        crspd_sell_typ_sngl_num = #{crspdSellTypSnglNum,jdbcType=VARCHAR},
+      </if>
+      <if test="invMasTabInd != null">
+        inv_mas_tab_ind = #{invMasTabInd,jdbcType=VARCHAR},
+      </if>
+      <if test="setupPers != null">
+        setup_pers = #{setupPers,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="setupTm != null">
+        setup_tm = #{setupTm,jdbcType=DATE},
+      </if>
+      <if test="isNtBookEntry != null">
+        is_nt_book_entry = #{isNtBookEntry,jdbcType=INTEGER},
+      </if>
+      <if test="bookEntryPers != null">
+        book_entry_pers = #{bookEntryPers,jdbcType=VARCHAR},
+      </if>
+      <if test="bookEntryTm != null">
+        book_entry_tm = #{bookEntryTm,jdbcType=DATE},
+      </if>
+      <if test="acctiPrd != null">
+        accti_prd = #{acctiPrd,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="vouchId != null">
+        vouch_id = #{vouchId,jdbcType=VARCHAR},
+      </if>
+      <if test="vouchDt != null">
+        vouch_dt = #{vouchDt,jdbcType=DATE},
+      </if>
+      <if test="vouchCate != null">
+        vouch_cate = #{vouchCate,jdbcType=VARCHAR},
+      </if>
+      <if test="vouchMemo != null">
+        vouch_memo = #{vouchMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="delvMerchdSubjId != null">
+        delv_merchd_subj_id = #{delvMerchdSubjId,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="cntPtySubjId != null">
+        cnt_pty_subj_id = #{cntPtySubjId,jdbcType=VARCHAR},
+      </if>
+      <if test="formTyp != null">
+        form_typ = #{formTyp,jdbcType=VARCHAR},
+      </if>
+      <if test="bozTypId != null">
+        biz_typ_id = #{bozTypId,jdbcType=VARCHAR},
+      </if>
+      <if test="whsId != null">
+        whs_id = #{whsId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="recvSendCateId != null">
+        recv_send_cate_id = #{recvSendCateId,jdbcType=VARCHAR},
+      </if>
+      <if test="custId != null">
+        cust_id = #{custId,jdbcType=VARCHAR},
+      </if>
+      <if test="invSubTabInd != null">
+        inv_sub_tab_ind = #{invSubTabInd,jdbcType=VARCHAR},
+      </if>
+      <if test="bizMemId != null">
+        biz_mem_id = #{bizMemId,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="incomQty != null">
+        incom_qty = #{incomQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delvQty != null">
+        delv_qty = #{delvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="incomUprc != null">
+        incom_uprc = #{incomUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="delvUprc != null">
+        delv_uprc = #{delvUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="incomAmt != null">
+        incom_amt = #{incomAmt,jdbcType=DECIMAL},
+      </if>
+      
+      <if test="delvAmt != null">
+        delv_amt = #{delvAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="batNum != null">
+        bat_num = #{batNum,jdbcType=VARCHAR},
+      </if>
+      <if test="invenTypeId != null">
+        inven_type_id = #{invenTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="prdcDt != null">
+        prdc_dt = #{prdcDt,jdbcType=DATE},
+      </if>
+      <if test="quaGuaPer != null">
+        qua_gua_per = #{quaGuaPer,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="invldtnDt != null">
+        invldtn_dt = #{invldtnDt,jdbcType=DATE},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      
+      
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+</mapper>

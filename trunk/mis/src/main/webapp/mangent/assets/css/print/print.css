@@ -1,0 +1,211 @@
+.pdf-title {
+	display: none;
+}
+
+.panel-sm {
+	margin-top: 20px;
+}
+
+.other-ele {
+	display: block;
+}
+
+@media print {
+	@page {
+		size: A4 portrait;
+		/*// A4大小 纵向*/
+	}
+	.other-ele {
+		/*// 打印时将不需要的元素隐藏*/
+		display: none;
+	}
+	.pdf-title {
+		/*// 只在打印时候显示的元素*/
+		display: block;
+	}
+	.panel-sm {
+		/*// 打印时候改变某些元素的样式*/
+		margin: 0;
+		border: 1px solid #bce8f1;
+	}
+}
+
+.a {
+	font-size: 20px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.tab1 {
+	border: 1px solid #CCCCCC;
+	width: 390px;
+	display: inline-block;
+	box-sizing: border-box;
+}
+
+.first {
+	width: 14px;
+}
+
+.two {
+	width: 130px;
+}
+
+.bz {
+	margin: 10px 15px 10px 0;
+}
+
+.danhao {
+	display: inline-block;
+	font-weight: bold;
+	font-size: 25px;
+	margin: 10px 0 10px 0;
+}
+
+.fl {
+	float: left;
+}
+
+.fr {
+	float: right;
+}
+
+.nanchang {
+	margin: 5px 0 5px 5px;
+	font-size: 12px;
+}
+
+.fen {
+	margin: 5px 5px 5px 0;
+	font-weight: 400;
+}
+
+.wgw {
+	display: inline-block;
+	margin-left: 5px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.fone {
+	display: inline-block;
+	margin-right: 145px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.city {
+	margin-top: 15px;
+	margin-bottom: 30px;
+	margin-left: 5px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.wgw1 {
+	display: inline-block;
+	margin-left: 5px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.fone1 {
+	display: inline-block;
+	margin-right: 145px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.city1 {
+	margin-top: 5px;
+	margin-bottom: 15px;
+	margin-left: 5px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.city2 {
+	margin-top: 5px;
+	margin-bottom: 15px;
+	margin-left: 5px;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.txm {
+	display: inline-block;
+}
+
+.pin {
+	margin: 0 0 20px 5px;
+	font-size: 12px;
+}
+
+.liu {
+	display: inline-block;
+	font-size: 12px;
+	margin-bottom: 12px;
+}
+
+.sjr {
+	display: inline-block;
+	margin-bottom: 10px;
+	font-size: 12px;
+}
+
+.time {
+	margin-bottom: 10px;
+}
+
+.ys {
+	margin-right: 5px;
+}
+
+.th1 {
+	width: 130px;
+}
+
+.th2 {
+	width: 60px;
+	font-weight: 400;
+}
+
+.col158width {
+	width: 158px;
+	border-left: 1px solid #CCCCCC;
+}
+
+.col230width {
+	width: 230px;
+}
+
+.tab2 {
+	box-sizing: border-box;
+}
+
+.first1 {
+	width: 24.6px;
+}
+
+#submit {
+	clear: both;
+}
+
+.clearfix:after {
+	content: ".";
+	/*设置内容，必须有内容，没有，则无法实现效果*/
+	visibility: hidden;
+	/*将标签隐藏*/
+	height: 0;
+	/*设置标签的高度为0*/
+	display: block;
+	/*设置标签为块级标签*/
+	clear: both;
+	/*设置清除float浮动*/
+}
+.barcodeTarget {
+	margin: 0 auto;
+}

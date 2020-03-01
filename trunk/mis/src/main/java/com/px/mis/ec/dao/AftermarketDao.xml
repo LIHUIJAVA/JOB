@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.AftermarketDao">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.Aftermarket">
+	INSERT IGNORE INTO aftermarket (apply_id, service_id, apply_time, customer_expect, customer_expect_name, service_status, service_status_name,
+	customer_pin, customer_name, customer_grade, customer_tel, pickware_address, order_id, order_type, order_type_name,
+	actual_pay_price, sku_id, ware_type, ware_type_name, ware_name, approve_pin, approve_name, approve_time, approve_result,
+	approve_result_name, process_pin, process_name, process_time, process_result, process_result_name, is_audit, ec_id, store_id)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+    (#{item.applyId}, #{item.serviceId}, #{item.applyTime}, #{item.customerExpect}, #{item.customerExpectName}, #{item.serviceStatus}, #{item.serviceStatusName}, 
+    #{item.customerPin}, #{item.customerName}, #{item.customerGrade}, #{item.customerTel}, #{item.pickwareAddress}, #{item.orderId}, #{item.orderType}, #{item.orderTypeName}, 
+    #{item.actualPayPrice}, #{item.skuId}, #{item.wareType}, #{item.wareTypeName}, #{item.wareName}, #{item.approvePin}, #{item.approveName}, #{item.approveTime}, #{item.approveResult}, 
+    #{item.approveResultName}, #{item.processPin}, #{item.processName}, #{item.processTime}, #{item.processResult}, #{item.processResultName}, #{item.isAudit},
+    #{item.ecId}, #{item.storeId})
+    </foreach>
+  </insert>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.Aftermarket">
+  	UPDATE aftermarket 
+  	SET apply_id=#{applyId}, service_id=#{serviceId}, apply_time=#{applyTime}, customer_expect=#{customerExpect}, customer_expect_name=#{customerExpectName},
+  	service_status=#{serviceStatus}, service_status_name=#{serviceStatusName}, customer_pin=#{customerPin}, customer_name=#{customerName}, customer_grade=#{customerGrade},
+  	customer_tel=#{customerTel}, pickware_address=#{pickwareAddress}, order_id=#{orderId}, order_type=#{orderType}, order_type_name=#{orderTypeName},
+  	actual_pay_price=#{actualPayPrice}, sku_id=#{skuId}, ware_type=#{wareType}, ware_type_name=#{wareTypeName}, ware_name=#{wareName},
+  	approve_pin=#{approvePin}, approve_name=#{approveName}, approve_time=#{approveTime}, approve_result=#{approveResult}, approve_result_name=#{approveResultName},
+  	process_pin=#{processPin}, process_name=#{processName}, process_time=#{processTime}, process_result=#{processResult}, process_result_name=#{processResultName},
+  	is_audit=#{isAudit}, ec_id=#{ecId}, store_id=#{storeId},audit_hint=#{auditHint}
+  	WHERE service_id=#{serviceId}
+  </update>
+  
+  <delete id="delete" parameterType="com.px.mis.ec.entity.Aftermarket">
+  delete from aftermarket where service_id=#{serviceId}
+  </delete>
+  <update id="audit" parameterType="String">
+  	UPDATE aftermarket 
+  	SET is_audit = CASE is_audit WHEN 0 THEN 1 END and audit_hint=''
+	WHERE service_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </update>
+  
+  <select id="selectById" parameterType="java.lang.Integer" resultType="com.px.mis.ec.entity.Aftermarket">
+  select * from aftermarket where service_id=#{serviceId}
+  </select>
+  
+  <select id="selectByIds" resultType="com.px.mis.ec.entity.Aftermarket">
+	SELECT *
+  	FROM aftermarket 
+  	WHERE is_audit = 0 AND service_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </select>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.Aftermarket">
+	SELECT a.*,s.store_name as storeName 
+  	FROM aftermarket a,store_record s
+  	<where>
+  		a.store_id=s.store_id 
+  		<if test="storeId != null and storeId != ''">
+            AND a.store_id = #{storeId}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND a.order_id = #{orderId}
+        </if>
+        <if test="serviceId != null and serviceId != ''">
+            AND a.service_id = #{serviceId}
+        </if>
+        <if test="startTime != null and startTime != '' ">
+			AND a.apply_time <![CDATA[>=]]> #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND a.apply_time <![CDATA[<=]]> #{endTime}
+		</if>
+		<if test="isAudit != null and endTime != ''">
+			AND a.is_audit =#{isAudit}
+		</if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(a.service_id)
+  	FROM aftermarket a
+  	<where>
+  		<if test="storeId != null and storeId != ''">
+            AND a.store_id = #{storeId}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND a.order_id = #{orderId}
+        </if>
+        <if test="serviceId != null and serviceId != ''">
+            AND a.service_id = #{serviceId}
+        </if>
+        <if test="startTime != null and startTime != '' ">
+			AND a.apply_time <![CDATA[>=]]> #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND a.apply_time <![CDATA[<=]]> #{endTime}
+		</if>
+		<if test="isAudit != null and endTime != ''">
+			AND a.is_audit =#{isAudit}
+		</if>
+  	</where> 
+  </select>
+  
+  <select id="selectProdStruSubTabByInvCode" resultType="com.px.mis.whs.entity.ProdStruSubTab" >
+  	select * from prod_stru_sub_tab where mom_encd=#{invCode}
+  </select>
+</mapper>

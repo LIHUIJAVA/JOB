@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.PursOrdrSubDao">
+  <!--   新增采购订单子表 -->
+  <insert id="insertPursOrdrSub" parameterType="PursOrdrSub">
+    insert into purs_ordr_sub 
+    (ordr_num,purs_ordr_id,invty_encd,no_tax_uprc,no_tax_amt,tax_amt,cntn_tax_uprc, 
+      prc_tax_sum, tax_rate , discnt_amt, 
+      qty, bx_qty,plan_to_gds_dt, measr_corp_id, 
+      is_complimentary,memo,un_to_gds_qty,un_appl_pay_qty,un_appl_pay_amt)
+    values 
+     <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.ordrNum},#{item.pursOrdrId},#{item.invtyEncd}, #{item.noTaxUprc}, 
+      #{item.noTaxAmt}, #{item.taxAmt}, #{item.cntnTaxUprc}, 
+      #{item.prcTaxSum}, #{item.taxRate}, #{item.discntAmt}, 
+      #{item.qty},#{item.bxQty}, #{item.planToGdsDt}, #{item.measrCorpId}, 
+      #{item.isComplimentary},#{item.memo},#{item.unToGdsQty},#{item.unApplPayQty},#{item.unApplPayAmt})
+    </foreach>
+  </insert>
+  <!-- 删除之前,先备份一份 -->
+  	<insert id="insertPursOrdrSubDl" parameterType="list">
+		insert into
+		purs_ordr_sub_dl
+		select * from purs_ordr_sub as pos where
+		pos.purs_ordr_id in
+		<foreach collection="list" item="purs_ordr_id" open="("
+			separator="," close=")">
+			#{purs_ordr_id}
+		</foreach>
+	</insert>
+  <!-- 删除采购订单子表信息 ，在修改采购订单信息时先删除子表信息再新增子表信息功能实现-->
+  <delete id="deletePursOrdrSubByPursOrdrId" parameterType="String">
+    delete from purs_ordr_sub
+    where purs_ordr_id = #{pursOrdrId}
+  </delete>
+  <!-- 根据采购订单单据号查询销售子表信息 -->
+  <select id="selectPursOrdrSubByPursOrdrId" parameterType="String" resultType="pursOrdrSub">
+    select * from purs_ordr_sub where purs_ordr_id=#{pursOrdrId} 
+  </select>
+   <!-- 根据采购订单单据号查询销售子表序号集合 -->
+  <select id="selectPursOrdrSubIdsByPursOrdrId" parameterType="String" resultType="Long">
+    select purs_ordr_sub.ordr_num from purs_ordr_sub where purs_ordr_id=#{pursOrdrId} 
+  </select>
+    <!-- 根据采购订单单据号查询采购订单子表信息，付款申请单参照时使用 -->
+  <select id="selectUnApplPayQtyByPursOrdrId" parameterType="String" resultType="pursOrdrSub">
+    select pos.*, ind.invty_nm,ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.crspd_bar_cd,mcd.measr_corp_nm
+    from purs_ordr_sub pos LEFT JOIN invty_doc ind on pos.invty_encd=ind.invty_encd
+	                       LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    where purs_ordr_id in 
+    <foreach item="pursOrdrId" collection="list" open="(" close=")" separator=",">
+	     #{pursOrdrId}
+	</foreach>
+	and un_appl_pay_amt != 0
+  </select>
+   <!-- 根据采购订单单据号查询采购订单子表信息，到货参照时使用 -->
+  <select id="selectUnToGdsQtyByPursOrdrId" parameterType="String" resultType="pursOrdrSub">
+    select pos.*, ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt baoZhiQi,ind.iptax_rate,ind.optax_rate,
+    ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.crspd_bar_cd,mcd.measr_corp_nm
+    from purs_ordr_sub pos LEFT JOIN invty_doc ind on pos.invty_encd=ind.invty_encd
+	                       LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    where purs_ordr_id in 
+    <foreach item="pursOrdrId" collection="list" open="(" close=")" separator=",">
+	     #{pursOrdrId}
+	</foreach>
+	and un_to_gds_qty != 0
+  </select>
+
+  <select id="selectUnToGdsQtyByInvtyEncd" parameterType="Map" resultType="BigDecimal">
+    select 
+    un_to_gds_qty
+    from purs_ordr_sub
+    where ordr_num=#{ordrNum}
+  </select>
+  <update id="updatePursOrdrSubByInvtyEncd" parameterType="Map">
+    update purs_ordr_sub
+    <set>
+      <if test="unToGdsQty != null">
+        un_to_gds_qty =un_to_gds_qty- #{unToGdsQty},
+      </if>
+    </set>
+    where ordr_num=#{ordrNum}
+  </update>
+  
+  <!-- 查询未付款数量 -->
+  <select id="selectUnApplPayQtyByOrdrNum" parameterType="Map" resultType="pursOrdrSub">
+    select 
+    un_appl_pay_qty,un_appl_pay_amt
+    from purs_ordr_sub
+    where ordr_num=#{ordrNum}
+  </select>
+  <!-- 修改未付款数量 -->
+  <update id="updateUnApplPayQtyByOrdrNum" parameterType="Map">
+    update purs_ordr_sub
+    <set>
+      <if test="unApplPayQty != null">
+        un_appl_pay_qty =un_appl_pay_qty- #{unApplPayQty},
+      </if>
+      <if test="unApplPayAmt != null">
+        un_appl_pay_amt =un_appl_pay_amt- #{unApplPayAmt},
+      </if>
+    </set>
+    where ordr_num=#{ordrNum}
+  </update>
+  <!--  根据采购订单子表序号查采购订单数量，采购入库时使用 -->
+  <select id="selectQtyByOrdrNum" parameterType="Map" resultType="BigDecimal">
+    select 
+    qty
+    from purs_ordr_sub
+    where ordr_num=#{pursOrdrNum}
+  </select>
+  
+  <!-- 采购入库时修改采购订单中的未到货数量 -->
+  <update id="updatePursOrdrSubUnToGdsQty" parameterType="Map">
+    update purs_ordr_sub
+    <set>
+      <if test="unToGdsQty != null">
+        un_to_gds_qty =#{unToGdsQty},
+      </if>
+    </set>
+    where ordr_num=#{pursOrdrNum}
+  </update>
+
+</mapper>

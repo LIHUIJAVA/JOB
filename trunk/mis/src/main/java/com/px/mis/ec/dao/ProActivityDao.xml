@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.ProActivityDao">
+	<insert id="insert"
+		parameterType="com.px.mis.ec.entity.ProActivity">
+		INSERT INTO pro_activity (pro_act_id, pro_act_name,
+		start_date, end_date,
+		alone_execute, limit_pro, take_store, creator,
+		create_date, auditor,
+		audit_date, audit_result, memo,priority)
+		VALUES
+		(#{proActId}, #{proActName}, #{startDate}, #{endDate},
+		#{aloneExecute}, #{limitPro}, #{takeStore}, #{creator}, #{createDate},
+		#{auditor}, #{auditDate}, #{auditResult}, #{memo},#{priority})
+	</insert>
+
+	<select id="select" parameterType="java.lang.String"
+		resultType="com.px.mis.ec.entity.ProActivity">
+		SELECT pro_act_id, pro_act_name, start_date , end_date ,
+		alone_execute ,
+		limit_pro,
+		take_store, creator, create_date, auditor,
+		audit_date, audit_result, memo,priority
+		FROM pro_activity
+		WHERE pro_act_id =
+		#{proActId}
+	</select>
+
+	<update id="update"
+		parameterType="com.px.mis.ec.entity.ProActivity">
+		UPDATE pro_activity
+		SET pro_act_name=#{proActName},
+		start_date=#{startDate},
+		end_date=#{endDate},
+		alone_execute=#{aloneExecute},
+		limit_pro=#{limitPro},
+		take_store=#{takeStore}, creator=#{creator},
+		create_date=#{createDate}, auditor=#{auditor},
+		audit_date=#{auditDate}, audit_result=#{auditResult}, memo=#{memo},priority=#{priority}
+		WHERE pro_act_id = #{proActId}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE pa, pas
+		FROM
+		pro_activity as pa LEFT JOIN pro_activitys as pas ON pa.pro_act_id =
+		pas.pro_act_id
+		WHERE pa.pro_act_id=#{proActId}
+	</delete>
+	<select id="selectStorePayTime" parameterType="String" resultType="com.px.mis.ec.entity.ProActivity">
+	 SELECT *
+	 FROM  pro_activity
+	 WHERE take_store=#{takeStore}
+	 AND #{nowTime}<![CDATA[>=]]>start_date AND #{nowTime}<![CDATA[<=]]>end_date
+	</select>
+	<select id="selectStorePayTimeORDERLIMIT" parameterType="String" resultType="com.px.mis.ec.entity.ProActivity">
+		SELECT
+			pro_activity.* 
+		FROM
+			pro_activity
+			LEFT JOIN pro_activitys ON pro_activity.pro_act_id = pro_activitys.pro_act_id 
+		WHERE
+			pro_activity.take_store = #{takeStore}
+			AND ( pro_activitys.goods_range = #{invtyEncd} OR pro_activitys.all_goods = "1" ) 
+			AND pro_activity.audit_result = 1 
+			AND #{nowTime}<![CDATA[>=]]>pro_activity.start_date AND #{nowTime}<![CDATA[<=]]>pro_activity.end_date
+		ORDER BY
+			priority ASC ,audit_Date ASC
+			LIMIT 0,
+			1
+	</select>
+	<select id="selectList" parameterType="Map"
+		resultType="com.px.mis.ec.entity.ProActivity">
+		SELECT pro_act_id , pro_act_name , start_date , end_date ,
+		alone_execute , limit_pro,
+		take_store , creator , create_date ,
+		auditor, audit_date , audit_result,priority
+		FROM pro_activity
+		<where>
+			<if test="proActId != null and proActId != ''">
+				AND pro_act_id=#{proActId}
+			</if>
+			<if test="proActName != null and proActName != ''">
+				<bind name="proActName" value="'%'+ proActName +'%'"/>
+				AND pro_act_name like #{proActName}
+			</if>
+		</where>
+		LIMIT #{index},#{num}
+	</select>
+
+	<select id="selectCount" parameterType="Map"
+		resultType="Integer">
+		SELECT count(pro_act_id)
+		FROM pro_activity
+		<where>
+			<if test="proActId != null and proActId != ''">
+				AND pro_act_id=#{proActId}
+			</if>
+			<if test="proActName != null and proActName != ''">
+				<bind name="proActName" value="'%'+ proActName +'%'"/>
+				AND pro_act_name like #{proActName}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateAudit" parameterType="java.util.List">
+		update pro_activity
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="audit_result =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when pro_act_id
+					=
+					#{item.proActId} then #{item.auditResult}
+				</foreach>
+			</trim>
+			<trim prefix="auditor =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when pro_act_id
+					= #{item.proActId} then #{item.auditor}
+				</foreach>
+			</trim>
+			<trim prefix="audit_date =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when pro_act_id
+					= #{item.proActId} then #{item.auditDate}
+				</foreach>
+			</trim>
+		</trim>
+		where pro_act_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.proActId}
+		</foreach>
+	</update>
+
+	<select id="selectpro" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT
+		pro_activity.audit_result
+		FROM
+		<if test="proActId != null and  proActId != '' ">
+			pro_activity
+		</if>
+		<if test="proPlanId != null and  proPlanId != '' ">
+			pro_activity
+			LEFT JOIN pro_activitys ON
+			pro_activity.pro_act_id =
+			pro_activitys.pro_act_id
+			LEFT JOIN pro_plan
+			ON
+			pro_activitys.pro_plan_id = pro_plan.pro_plan_id
+		</if>
+		<if test="presentRangeEncd != null and  presentRangeEncd != '' ">
+			pro_activity
+			LEFT JOIN pro_activitys ON pro_activity.pro_act_id =
+			pro_activitys.pro_act_id
+			LEFT JOIN pro_plan ON
+			pro_activitys.pro_plan_id = pro_plan.pro_plan_id
+			LEFT JOIN pro_plans ON
+			pro_plans.pro_plan_id = pro_plan.pro_plan_id
+			LEFT JOIN present_range ON
+			pro_plans.gift_range = present_range.present_range_encd
+		</if>
+
+		<where>
+			<if test="proPlanId != null and  proPlanId != '' ">
+				and pro_plan.pro_plan_id = #{proPlanId}
+			</if>
+			<if test="presentRangeEncd != null and  presentRangeEncd != '' ">
+				and present_range.present_range_encd= #{presentRangeEncd}
+			</if>
+			<if test="proActId != null and  proActId != '' ">
+				and pro_activity.pro_act_id= #{presentRangeEncd}
+			</if>
+		</where>
+		GROUP BY
+		pro_activity.audit_result DESC
+	</select>
+</mapper>

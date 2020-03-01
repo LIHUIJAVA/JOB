@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LogRecord">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.LogRecord">
+	INSERT INTO log_record (log_id, operat_id, operat_name, operat_time, operat_type, operat_order, operat_content, memo)
+    VALUES(#{logId}, #{operatId}, #{operatName}, #{operatTime}, #{operatType}, #{operatOrder}, #{operatContent}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.LogRecord">
+  	SELECT log_id, operat_id, operat_name, operat_time, operat_type, operat_order, operat_content, memo
+  	FROM log_record 
+  	WHERE log_id = #{logId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  log_record
+  	WHERE log_id = #{logId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.LogRecord">
+  	UPDATE log_record 
+  	SET log_id=#{logId}, operat_id=#{operatId}, operat_name=#{operatName}, operat_time=#{operatTime}, operat_type=#{operatType}, 
+  	operat_order=#{operatOrder}, operat_content=#{operatContent}, memo=#{memo}
+  	WHERE log_id = #{logId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.LogRecord">
+	SELECT log_id, operat_id, operat_name, operat_time, operat_type, operat_order, operat_content, memo
+  	FROM log_record 
+  	<where>
+        <if test="operatId != null and operatId != ''">
+            AND operat_id = #{operatId}
+        </if>
+        <if test="operatType != null and operatType != ''">
+            AND operat_type = #{operatType}
+        </if>
+        <if test="operatOrder != null and operatOrder != ''">
+            AND operat_order = #{operatOrder}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			AND operat_time BETWEEN #{startDate} AND #{endDate}
+		</if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(log_id)
+  	FROM log_record 
+  	<where>
+        <if test="operatId != null and operatId != ''">
+            AND operat_id = #{operatId}
+        </if>
+        <if test="operatType != null and operatType != ''">
+            AND operat_type = #{operatType}
+        </if>
+        <if test="operatOrder != null and operatOrder != ''">
+            AND operat_order = #{operatOrder}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			AND operat_time BETWEEN #{startDate} AND #{endDate}
+		</if>
+  	</where>
+  </select>
+  
+</mapper>

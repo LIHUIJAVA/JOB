@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>失效日期维护</title>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/whs/queryInvldtnDtList.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+	</head>
+	<style>
+		select {
+			outline: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			width: 220px;
+			border: 0;
+			border-bottom: 1px solid #B8C7CE
+		}
+		
+		select:-ms-expand {
+			display: none;
+		}
+		.tian {
+			width: 80px!important;
+			text-align: center;
+		}
+	</style>
+	<body>
+
+		<div class="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">促销活动列表</h1>-->
+				<div class="buttons">
+					<button class="exportExcel">导出</button>
+					<button class="search">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="businessType col-md-4">
+						<span>仓库编码</span>
+						<input type="text" id="whsEncd" class="whsEncd encds" name="whsEncd" value="" />
+						<input type="text" id="whsNm" class="whsNm names" name="whsNm" value="" readonly="readonly" />
+						<span><img class="whsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>存货编码</span>
+						<input type="text" id="invtyEncd" name="invtyEncd" class="encds" value="" />
+						<input type="text" id="invtyNm" name="invtyNm" class="names" value="" />
+						<span><img class="invtyEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>批次</span><input type="text" id="batNum" name="batNum" value="" />
+						<span><img class="biao_batNum" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>失效日期</span>
+						<input type="text" class="invldtnDt date" id="invldtnDt" name="invldtnDt" value="" calendar="YYYY-MM-DD" />
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>过期</span>
+						<input type="text" class="prdc tian" id="prdc" name="prdc" value=""/>天或差<input type="text" class="invldtn tian" id="invldtn" name="invldtn" value=""/>天失效
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>是否显示零结存的记录</span>
+						<select name="isBalance" id="isBalance">
+							<option value="" selected>请选择</option>
+							<option value="0">不显示</option>
+							<option value="1">显示</option>
+						</select>
+					</div>
+				</form>
+			</div>
+			<table id="jqGrids"></table>
+			<div id="jqGridPager"></div>
+		</div>
+	</body>
+
+</html>

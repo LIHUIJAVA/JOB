@@ -1,0 +1,148 @@
+/*表格复选框*/
+.checked-focus{
+	width: 16px;
+	height: 16px;		
+}
+input[type="checkbox"]{
+	margin: 4px 0 0 10px;
+}
+/*表格*/
+table{
+	border-radius:10px;
+	overflow:hidden;	
+   
+}
+.table{
+	table-layout: fixed;
+	width: 100%;
+}
+thead tr{
+	height: 38px;
+	position: relative;
+}
+thead tr:first-child th{
+	border-bottom: none!important;
+
+}
+
+thead tr th:not(:first-child):before{
+	content: "";
+    height: 18px;
+    width: 1px;
+    background: #333;
+    float: left;
+    position: relative;
+    top: 0px;
+    right:12px;
+    margin-right: 10px;
+    font-weight: normal;
+}
+#selectAll,checkBox{
+	margin: 0;position: absolute;top:8px;left: 20px;
+}
+
+tbody tr:first-child{
+	position: relative;
+}
+tbody tr{
+	height: 38px;
+	line-height: 38px;	
+}
+tbody tr td {
+    font-size: 12px;
+    color: #333;
+    word-break:break-all;
+    vertical-align:middle !important;
+}
+tbody tr:first-child td{
+   border-top: none!important;
+}
+	
+tbody tr{
+	background: #fff;
+	background-size: 10%;
+	transition: background 500ms;
+}
+tbody tr:hover{
+	background: #eee;
+}
+ tbody tr:first-child td:first-child {
+    border-top-left-radius: 10px;   
+} 
+tbody tr:first-child td:last-child {
+   border-top-right-radius: 10px;
+}   
+thead tr:first-child th{
+	border-bottom: none!important;
+}
+tbody tr:first-child td{
+	border-top: none!important;
+}
+.searchBox{
+	padding: 6px 15px;
+	border: 1px dashed #eee;
+	border-radius: 5px;
+}
+.searchBox  input{
+	display: inline-block;
+    line-height: 30px;
+    color: rgb(0, 0, 0);
+    padding-left: 3px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(204, 204, 204);
+    border-image: initial;
+    margin-left:10px;
+    }
+.searchBox span{
+	display: inline-block;
+    font-size: 16px;
+    padding-right: 27px;
+    margin-right: 10px;
+}  
+.searchBox button {
+	border-radius: 3px;
+	border: 1px solid #ccc;
+	transition: border linear 0.2s, box-shadow linear 0.2s;
+	box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.075);
+	
+	background-color: #428bca;
+	color: #fff;
+	padding: 5px 15px;
+}
+.searchBox button:hover {
+	background: #357ebd;
+	box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.075);
+}
+/*deltr*/
+.removeTr{
+  animation: mymove 1s forwards;
+  transform-origin:top;
+}
+
+@keyframes mymove {
+  from {
+    transform: translateX(0)
+  }
+  to {
+    transform: translateX(100%);
+  }
+ 
+.searchBox button{
+	width: 50px;
+	line-height: 30px;
+	border-radius: 3px;
+	border: 1px solid #ccc;
+	transition: border linear 0.2s, box-shadow linear 0.2s;
+	box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.075);
+	margin-top: 5px;
+	background-color: #428bca;
+	color: #fff;
+}
+.searchBox button:hover {
+	background: #357ebd;
+	box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.075);
+}
+
+	

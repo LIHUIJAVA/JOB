@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.OutIntoWhsAdjSnglSubTabDao">
+  <!-- 根据外键删除 -->
+  <delete id="deleteOutIntoWhsAdjSnglSubTabByFormNum" parameterType="String">
+  		DELETE FROM out_into_whs_adj_sngl_sub_tab
+  		WHERE form_num=#{formNum}
+  </delete>
+  <insert id="insertOutIntoWhsAdjSnglSubTab" parameterType="com.px.mis.account.entity.OutIntoWhsAdjSnglSubTab">
+  	INSERT INTO out_into_whs_adj_sngl_sub_tab(
+  	ordr_num,form_num,adj_sub_ind,
+  	whs_encd,invty_encd,bat_num,amt,memo,to_ordr_num,proj_encd
+  	)
+  	VALUES(#{ordrNum}, #{formNum},#{adjSubInd},#{whsEncd}, #{invtyEncd}, 
+      #{batNum}, #{amt}, #{memo},#{toOrdrNum},#{projEncd})
+  	<!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+<!--     <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.ordrNum}, #{item.fromNum},#{item.whsEncd}, #{item.invtyEncd}, 
+      #{item.beadjOutIntoWhsSubTabInd}, #{item.batNum}, #{item.amt}, #{item.memo})
+    </foreach> -->
+  </insert>
+  <!--批量添加 -->
+  <insert id="insertOutIntoWhsAdjSnglSubTabList" parameterType="com.px.mis.account.entity.OutIntoWhsAdjSnglSubTab">
+  	INSERT INTO out_into_whs_adj_sngl_sub_tab(
+  	ordr_num,from_num,adj_sub_ind,
+  	whs_encd,invty_encd,bat_num,amt,memo,to_ordr_num,proj_encd
+  	)
+  	VALUES
+  	<!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.ordrNum}, #{item.fromNum},#{item.adjSubInd},#{item.whsEncd}, #{item.invtyEncd}, 
+       #{item.batNum}, #{item.amt}, #{item.memo},#{item.toOrdrNum},#{item.projEncd})
+    </foreach>
+  </insert>
+</mapper>

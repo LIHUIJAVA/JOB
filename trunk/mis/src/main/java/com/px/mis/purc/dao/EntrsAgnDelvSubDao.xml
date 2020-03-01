@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.EntrsAgnDelvSubDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.purc.entity.EntrsAgnDelvSub">
+    <id column="ordr_num" jdbcType="BIGINT" property="ordrNum" />
+    <result column="whs_encd" jdbcType="VARCHAR" property="whsEncd" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ordr_num, whs_encd, invty_encd, delv_sngl_id, qty, quotn, no_tax_uprc, no_tax_amt, 
+    tax_rate, tax_amt, cntn_tax_uprc, prc_tax_sum, un_bllg_rtn_goods_qty, bllg_qty, rtn_goods_ind, 
+    stl_uprc, stl_qty, stl_amt, accm_stl_amt, final_stl_qty, final_stl_amt, accm_out_whs_qty, 
+    prdc_dt, invldtn_dt, bat_num, is_complimentary, memo,is_nt_rtn_goods,intl_bat,bx_qty,proj_encd,discnt_ratio
+  </sql>
+  <select id="selectEntrsAgnDelvSubByDelvSnglId" parameterType="String" resultType="EntrsAgnDelvSub">
+    select 
+    <include refid="Base_Column_List" />
+    from entrs_agn_delv_sub
+    where delv_sngl_id = #{delvSnglId}
+  </select>  
+  <delete id="deleteEntrsAgnDelvSubByDelvSnglId" parameterType="String">
+    delete from entrs_agn_delv_sub
+    where delv_sngl_id = #{delvSnglId}
+  </delete>
+  <insert id="insertEntrsAgnDelvSub" parameterType="EntrsAgnDelvSub">
+    insert into entrs_agn_delv_sub (ordr_num, whs_encd, invty_encd, 
+      delv_sngl_id, qty, quotn, 
+      no_tax_uprc, no_tax_amt, tax_rate, 
+      tax_amt, cntn_tax_uprc, prc_tax_sum, 
+      un_bllg_rtn_goods_qty, bllg_qty, rtn_goods_ind, 
+      stl_uprc, stl_qty, stl_amt, 
+      accm_stl_amt, final_stl_qty, final_stl_amt, 
+      accm_out_whs_qty, prdc_dt, bao_zhi_qi,invldtn_dt, 
+      bat_num, is_complimentary, memo,is_nt_rtn_goods,
+      intl_bat,bx_qty,proj_encd,discnt_ratio
+      )
+    values
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.ordrNum}, #{item.whsEncd}, #{item.invtyEncd}, 
+      #{item.delvSnglId}, #{item.qty}, #{item.quotn}, 
+      #{item.noTaxUprc}, #{item.noTaxAmt}, #{item.taxRate}, 
+      #{item.taxAmt}, #{item.cntnTaxUprc}, #{item.prcTaxSum}, 
+      #{item.unBllgRtnGoodsQty}, #{item.bllgQty}, #{item.rtnGoodsInd}, 
+      #{item.stlUprc}, #{item.stlQty}, #{item.stlAmt}, 
+      #{item.accmStlAmt}, #{item.finalStlQty}, #{item.finalStlAmt}, 
+      #{item.accmOutWhsQty}, #{item.prdcDt}, #{item.baoZhiQi},#{item.invldtnDt}, 
+      #{item.batNum}, #{item.isComplimentary}, #{item.memo}, #{item.isNtRtnGoods},
+      #{item.intlBat},#{item.bxQty},#{item.projEncd},#{item.discntRatio} )
+    </foreach>
+  </insert>
+ 
+  <!--删除之前，备份一份到废弃表  -->
+    <insert id="insertEntrsAgnDelvSubDl" parameterType="list">
+    insert into entrs_agn_delv_sub_dl
+    select * from entrs_agn_delv_sub where delv_sngl_id in
+     <foreach collection="list" item="delv_sngl_id" open="(" close=")" separator=",">
+     #{delv_sngl_id}
+     </foreach>
+  </insert>
+
+  <!-- 委托代销发货单审核时根据委托代销发货单编码、存货编码、仓库编码、批次查询对应的数量 -->
+  <select id="selectEntrsAgnDelvSubQty" parameterType="EntrsAgnDelvSub" resultType="BigDecimal">
+    select  qty  FROM entrs_agn_delv_sub 
+    where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum} 
+    and delv_sngl_id = #{delvSnglId} and ordr_num=#{ordrNum}
+  </select>
+   <!--审核委托代销结算单时修改委托代销发货单的金额、数量、单价  -->
+  <update id="updateEntrsAgnDelvSubByEntrsAgnStlSubJia" parameterType="Map">
+       update entrs_agn_delv_sub 
+       <set>
+         stl_qty=stl_qty+#{qty},stl_amt=stl_amt+#{prcTaxSum},stl_uprc=(stl_amt)/(stl_qty)
+       </set>
+       where ordr_num = #{ordrNum}
+  </update>
+  <!--弃审委托代销结算单时修改委托代销发货单的金额、数量、单价  -->
+  <update id="updateEntrsAgnDelvSubByEntrsAgnStlSubJian" parameterType="Map">
+       update entrs_agn_delv_sub 
+       <set>
+         stl_qty=stl_qty-#{qty},stl_amt=stl_amt-#{prcTaxSum},stl_uprc=(stl_amt)/(stl_qty)
+       </set>
+       where ordr_num = #{ordrNum}
+  </update>
+  
+  <!-- 根据委托代销发货单编码、存货编码、仓库编码、批次查询委托代销发货单子表信息 -->
+  <select id="selectEntrsAgnDelvSubByInvBatWhs" parameterType="Map" resultType="EntrsAgnDelvSub">
+    select  *  FROM entrs_agn_delv_sub  <!-- 该查询接口千万不能将子表序号作为查询条件，原因查看委托代销结算单审核功能 -->
+    <where>
+	    <if test="whsEncd != null and whsEncd != ''">
+				AND whs_encd = #{whsEncd}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+				AND invty_encd = #{invtyEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+				AND bat_num = #{batNum}
+		</if>
+		<if test="delvSnglId != null and delvSnglId != ''">
+				AND delv_sngl_id = #{delvSnglId}
+		</if>
+		<if test="toOrdrNum != null and toOrdrNum != ''">
+				AND to_ordr_num = #{toOrdrNum}
+		</if>
+		<if test="delvSnglId != null and delvSnglId != ''">
+				AND delv_sngl_id = #{delvSnglId}
+		</if>
+    </where> 
+  </select>
+  
+    <!-- 委托代销退货单参照时根据委托代销发货单子表信息 -->
+  <select id="selectEntDeSubUnBllgRtnGoodsQty" parameterType="java.util.List" resultType="EntrsAgnDelvSub">
+    select eads.*, ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+    ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.crspd_bar_cd,mcd.measr_corp_nm,wd.whs_nm
+    FROM entrs_agn_delv_sub eads  LEFT JOIN invty_doc ind on eads.invty_encd=ind.invty_encd
+	                         LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id  
+	                         LEFT JOIN whs_doc wd on wd.whs_encd=eads.whs_encd
+	                         
+    where eads.delv_sngl_id  in 
+    <foreach item="delvSnglId" collection="list" open="(" close=")" separator=",">
+	     #{delvSnglId}
+	</foreach>
+	and un_bllg_rtn_goods_qty != 0
+  </select>
+  
+  <!-- 委托代销退货单审核时修改可退货数量 -->
+  <update id="updateEntDeSubUnBllgRtnGoodsQty" parameterType="Map">
+    update entrs_agn_delv_sub
+    <set>
+      <if test="unBllgRtnGoodsQty != null">
+        un_bllg_rtn_goods_qty = un_bllg_rtn_goods_qty-#{unBllgRtnGoodsQty}
+      </if>
+    </set>
+    where ordr_num=#{ordrNum}
+  </update>
+  
+  <!-- 根据退货单子表序号查询退货单的来源单据号-->
+  <select id="selectEntDeSubToOrdrNum" parameterType="Long" resultType="EntrsAgnDelvSub">
+    select  stl_qty,stl_amt,to_ordr_num,un_bllg_rtn_goods_qty,qty  from entrs_agn_delv_sub where ordr_num=#{ordrNum}
+  </select>
+  <select id="selectEntrsAgnDelvSubNums" parameterType="String" resultType="String">
+    select 
+    ordr_num
+    from entrs_agn_delv_sub
+    where delv_sngl_id = #{delvSnglId}
+  </select>
+</mapper>

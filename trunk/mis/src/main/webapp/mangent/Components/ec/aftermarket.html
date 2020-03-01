@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>自主售后</title>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/ec/aftermarket.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/storeRecordListGood.js"></script>
+
+		<style>
+			select {
+				outline: none;
+				appearance: none;
+				-moz-appearance: none;
+				-webkit-appearance: none;
+				width: 220px;
+				border: 0;
+				border-bottom: 1px solid #B8C7CE
+			}
+			
+			select:-ms-expand {
+				display: none;
+			}
+			
+			.editable.inline-edit-cell.ui-widget-content.ui-corner-all {
+				width: 100% !important;
+			}
+			
+			.inp {
+				width: 33%;
+				display: inline-block;
+			}
+			
+			.down {
+				width: 400px;
+				height: 400px;
+				border: 1px solid #CCCCCC;
+				background-color: #FFFFFF;
+				position: absolute;
+				top: 80px;
+				left: 37%;
+				z-index: 3;
+				/*display: none;*/
+			}
+			
+			.iup {
+				margin-top: 50px;
+			}
+			
+			.box {
+				z-index: 1;
+			}
+			
+			#mengban {
+				z-index: 2;
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%!important;
+				opacity: 0.2;
+				background-color: #000000;
+			}
+			
+			body {
+				height: 100%;
+			}
+			.order-title {
+				height: 100%;
+			}
+			#formSaves {
+				height: 100%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="box">
+			<div class="purchaseTit">
+				<!--<h1 class="title">自主售后审核</h1>-->
+				<div class="buttons">
+					<!--<button class="importExcel">导入</button>-->
+					<button class="exportExcel">导出</button>
+
+					<button id="finds">查询</button>
+					<button class="Audit">审核</button>
+
+					<button class="download">下载</button>
+					<button class="print">打印</button>
+
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4 inp">
+							<span>店铺编码</span>
+							<input type="text" class="storeId" name="storeId1" value=""/>
+							<span><img class="storeI_dbiaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4 inp">
+							<span>订单号</span>
+							<input type="text" class="orderId" name="orderId" value="" />
+						</div>
+						<div class="supplier col-md-4 inp">
+							<span>服务单号</span>
+							<input type="text" class="serviceId" name="serviceId" value="" />
+						</div>
+						<div class="supplier col-md-4 inp">
+							<span>审核状态</span>
+							<select class="isAudit" name="isAudit" value="">
+								<option value="">请选择</option>
+								<option value="1">是</option>
+								<option value="2">否</option>
+							</select>
+						</div>
+
+						<div class="supplier col-md-4 inp">
+							<span>申请日期</span>
+							<input type="text" class="startDate date1" name="startDate1" value="" calendar="YYYY-MM-DD" readonly="readonly" />到<input type="text" class="endDate date2" name="endDate1" value="" calendar="YYYY-MM-DD" readonly="readonly" />
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqgridPager"></div>
+		</div>
+
+		<div id="mengban"></div>
+		<div class="down" style="opacity: 0;">
+			<div class="purchaseTit btn">
+				<!--<h1 class="title">全部订单</h1>-->
+				<div class="buttons">
+					<button class="true">确定</button>
+					<button class="falses">取消</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="supplier col-md-24 iup">
+						<span>电商平台<b>*</b></span>
+						<select class="ecId" name="ecId">
+							</option>
+						</select>
+					</div>
+					<div class="supplier col-md-24 iup">
+						<span>平台订单号</span>
+						<input type="text" class="ecOrderId" name="ecOrderId" value="" />
+					</div>
+					<div class="supplier col-md-24 iup">
+						<span>店铺编码<b>*</b></span>
+						<input type="text" id="storeId" name="storeId" value="" readonly="readonly" />
+						<span><img class="storeId1_biaoge" id="storeId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="supplier col-md-24 iup">
+						<span>店铺名称</span>
+						<input type="text" id="storeName" name="storeName" value="" readonly="readonly" />
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div class="formSave_box" style="opacity: 0;">
+			<div class="purchaseTit">
+				<!--<h1 class="title">店铺档案</h1>-->
+				<div class="buttons">
+					<button class="sure">确定</button>
+					<button class="false">取消</button>
+					<button class="findList">查询</button>
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>店铺编码</span>
+							<input type="text" class="storeId" name="storeId1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>店铺名称 </span>
+							<input type="text" class="storeName" name="storeName1" value="" />
+						</div>
+						<div class="supplier  col-md-4">
+							<span>电商平台名称 </span>
+							<input type="text" class="ecName" name="ecName1" value="" />
+						</div>
+						<!--<div class="supplier col-md-4">
+							<span>电商平台编码 </span>
+							<input type="text" class="ecId" name="ecId" value="" />
+						</div>-->
+					</div>
+				</form>
+			</div>
+			<table id="List_jqgrids"></table>
+			<div id="List_jqGridPager"></div>
+		</div>
+	</body>
+
+</html>

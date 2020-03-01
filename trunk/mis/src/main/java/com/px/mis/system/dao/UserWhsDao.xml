@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.system.dao.UserWhsDao">
+  
+  <select id="selectUserWhsByMap" parameterType="Map" resultType="com.px.mis.whs.entity.WhsDoc">
+  	SELECT
+		uses.id as ordrNum, uses.acc_num,whs.*
+	FROM
+		user_whs as uses
+	INNER JOIN whs_doc whs ON whs.whs_encd = uses.real_whs
+	<where>
+		<if test="accNum != null and accNum != ''">
+			AND uses.acc_num = #{accNum}
+		</if>
+		<if test="whsEncd != null and whsEncd != '' ">
+			AND uses.real_whs = #{whsEncd}		
+		</if>
+		<if test="realWhs != null and realWhs != '' ">
+			AND whs.real_whs  = #{realWhs}		
+		</if>
+		<if test="whsList != null and whsList.size() > 0 ">
+			AND uses.real_whs IN
+			<foreach collection="whsList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+	</where>
+  </select>
+  <select id="selectWhsByMap" parameterType="Map" resultType="com.px.mis.whs.entity.WhsDoc">
+  	SELECT
+		*
+	FROM
+		whs_doc 
+	<where>
+		<if test="whsList != null and whsList.size() > 0 ">
+			AND whs_encd NOT IN
+			<foreach collection="whsList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="realWhs != null and realWhs != ''">
+			AND real_whs =#{realWhs}
+		</if>
+	</where>
+  </select>
+  
+  <insert id="insertList" parameterType="java.util.List">
+  	INSERT INTO user_whs(acc_num,real_whs) VALUES 
+  	<foreach collection="list" item="item" index="index" separator="," close=";">
+  		(#{item.accNum},#{item.realWhs})
+  	</foreach>
+  </insert>
+  
+  <delete id="delList" parameterType="java.util.List">
+  	delete from user_whs 
+  	where id in
+	<foreach item="userWhs" collection="list" open="(" close=")" separator=",">
+	     #{userWhs}
+	</foreach>
+  </delete>
+  
+  <select id="selectRealWhs" parameterType="Map" resultType="RealWhs">
+  	SELECT real_whs,real_nm FROM real_whs
+  	<where>
+  		<if test="realWhs != null and realWhs != ''">
+  			AND real_whs = #{realWhs}
+  		</if>
+  	</where>
+  </select>
+  
+</mapper>

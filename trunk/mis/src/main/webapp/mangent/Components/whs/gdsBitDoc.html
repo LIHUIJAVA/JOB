@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>货位档案</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		
+		<!--<script type="text/javascript" src="../../assets/js/mis/whs/regnDoc.js"></script>-->
+		<!--<script type="text/javascript" src="../../assets/js/mis/baseDoc/whsDocList.js"></script>-->
+		
+		<script type="text/javascript" src="../../assets/js/mis/whs/gdsBitDoc.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+	</head>
+	<style>
+		.under {
+				width: 100%;
+				height: 100%;
+				margin-top: 20px;
+				display: flex;
+				justify-content: space-between;
+			}
+			
+			.left {
+				width: 30%;
+				height: 100%;
+				float: left;
+			}
+			
+			.right {
+				width: 70%;
+				height: 100%;
+				text-align: center;
+				/*border:1px solid grey;*/
+				padding: 0 0 0 10px;
+			}
+			form {
+				display: inline-block;
+				font-size: 14px;
+			}
+			body {
+				overflow-x: hidden;
+			}
+	</style>
+	<body>
+		<div class="gdsBit_box">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="importExcel">导入</button>
+					<button class="exportExcels">导出</button>
+					<button class="addOne gry">增行</button>
+					<button class="delOrders">删行</button>
+					<button class="saveOne">保存</button>
+					
+					<button class="upOne">更新</button>
+					<button id="finds">查询</button>
+					<button class="print">打印</button>
+					<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="col-md-4">
+						<span>货位编码</span><input type="text" class="gdsBitEncd" name="gdsBitEncd" value=""/>
+					</div>
+				</form>
+			</div>
+			<table id="jqGrids"></table>
+			<div id="jqgridPager"></div>
+		</div>
+		
+	</body>
+
+</html>
+<style>
+	.ui-state-highlight {
+		color: red !important;
+	}
+	
+	.editable.inline-edit-cell.ui-widget-content.ui-corner-all {
+		width: 100% !important;
+	}
+	#r_jqgrids {
+		width: 100%!important;
+	}
+</style>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.IntoWhsSubDao">
+<!-- 查询采购入库单子表 -->
+  <sql id="Base_Column_List">
+    iws.*,regn_encd,mcd.measr_corp_nm,wd.whs_nm,
+    ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+    ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.crspd_bar_cd
+  </sql>
+  <select id="selectIntoWhsSubByIntoWhsSnglId" parameterType="String" resultType="IntoWhsSub">
+    select 
+    <include refid="Base_Column_List" />
+    from into_whs_sub as iws  LEFT JOIN whs_doc wd on iws.whs_encd=wd.whs_encd
+                     	      LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+                     	      LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    where into_whs_sngl_id = #{intoWhsSnglId}
+  </select>
+  
+  <delete id="deleteIntoWhsSubByIntoWhsSnglId" parameterType="String">
+    delete from into_whs_sub
+    where into_whs_sngl_id = #{intoWhsSnglId}
+  </delete>
+  <insert id="insertIntoWhsSub"  useGeneratedKeys="true" keyProperty="ordrNum" parameterType="IntoWhsSub">
+    insert into into_whs_sub (ordr_num, into_whs_sngl_id, invty_encd, 
+      whs_encd, purs_ordr_sub_tab_ind, purs_to_gds_sngl_sub_tab_ind, 
+      qty, bx_qty, tax_rate, no_tax_uprc, 
+      no_tax_amt, tax_amt, cntn_tax_uprc, 
+      prc_tax_sum, stl_qty, stl_uprc, 
+      stl_Amt, un_bllg_qty, un_bllg_uprc, 
+      un_bllg_amt, tees_qty, tees_uprc, 
+      tees_amt, crspd_inv_num, bao_zhi_qi, 
+      intl_bat, bat_num, prdc_dt, 
+      invldtn_dt, gds_bit_encd, is_complimentary, is_nt_rtn_goods,
+      memo,regn_encd,to_ordr_num,return_qty,proj_encd,purs_ordr_num)
+    values 
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.ordrNum}, #{item.intoWhsSnglId}, #{item.invtyEncd}, 
+      #{item.whsEncd}, #{item.pursOrdrSubTabInd}, #{item.pursToGdsSnglSubTabInd}, 
+      #{item.qty},#{item.bxQty}, #{item.taxRate}, #{item.noTaxUprc}, 
+      #{item.noTaxAmt}, #{item.taxAmt}, #{item.cntnTaxUprc}, 
+      #{item.prcTaxSum}, #{item.stlQty}, #{item.stlUprc}, 
+      #{item.stlAmt}, #{item.unBllgQty}, #{item.unBllgUprc}, 
+      #{item.unBllgAmt}, #{item.teesQty}, #{item.teesUprc}, 
+      #{item.teesAmt}, #{item.crspdInvNum}, #{item.baoZhiQi}, 
+      #{item.intlBat}, #{item.batNum}, #{item.prdcDt}, 
+      #{item.invldtnDt}, #{item.gdsBitEncd}, #{item.isComplimentary}, 
+      #{item.isNtRtnGoods},#{item.memo},#{item.regnEncd},
+      #{item.toOrdrNum},#{item.returnQty},#{item.projEncd},#{item.pursOrdrNum})
+    </foreach>
+    </insert>
+  <!--删除时候备份一份 -->
+  <insert id="insertIntoWhsSubDl"  parameterType="list">
+    insert into into_whs_sub_dl
+  select * from into_whs_sub where into_whs_sngl_id in
+    <foreach collection="list" item="into_whs_sngl_id" open="(" separator="," close=")">
+  	#{into_whs_sngl_id}
+    </foreach>
+    </insert>
+   
+  <!--采购发票参照时 按照多个单据号查询单据明细 -->
+  <select id="selectIntoWhsSubByIntoWhsSnglIds" parameterType="java.util.List" resultType="IntoWhsSub">
+    select 
+    <include refid="Base_Column_List" />
+    from into_whs_sub as iws  LEFT JOIN whs_doc wd on iws.whs_encd=wd.whs_encd
+                     	      LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+                     	      LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    where into_whs_sngl_id in
+    <foreach item="intoWhsSnglId" collection="list" open="(" close=")" separator=",">
+	     #{intoWhsSnglId}
+	</foreach>
+	and un_bllg_qty>0
+  </select>
+  
+  <update id="updateIntoWhsSubByInvWhsBat" parameterType="Map">
+    update into_whs_sub
+    <set>
+        un_bllg_qty = un_bllg_qty-#{unBllgQty},un_bllg_amt = un_bllg_amt-#{unBllgAmt}
+    </set>
+    where ordr_num=#{ordrNum}
+  </update>
+  <select id="selectUnBllgQtyByOrdrNum" parameterType="Map" resultType="BigDecimal">
+    select 
+    un_bllg_qty
+    from into_whs_sub  
+    where ordr_num = #{ordrNum}
+  </select>
+  
+    <!--采购退货单参照时 按照多个单据号查询单据明细 -->
+  <select id="selectIntoWhsSubByUnReturnQty" parameterType="java.util.List" resultType="IntoWhsSub">
+    select 
+    <include refid="Base_Column_List" />
+    from into_whs_sub as iws  LEFT JOIN whs_doc wd on iws.whs_encd=wd.whs_encd
+                     	      LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+                     	      LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    where into_whs_sngl_id in
+    <foreach item="intoWhsSnglId" collection="list" open="(" close=")" separator=",">
+	     #{intoWhsSnglId}
+	</foreach>
+	and return_qty!=0
+  </select>
+  
+  <update id="updateIntoWhsSubUnReturnQty" parameterType="Map">
+    update into_whs_sub
+    <set>
+        return_qty = return_qty-#{returnQty}
+    </set>
+    where ordr_num=#{ordrNum}
+  </update>
+  <select id="selectUnReturnQtyByOrdrNum" parameterType="Map" resultType="BigDecimal">
+    select 
+    return_qty
+    from into_whs_sub  
+    where ordr_num = #{ordrNum}
+  </select>
+  
+</mapper>

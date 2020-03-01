@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>销售单</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/paste.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/myCommon.js'></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/sell/sellSngl.js?" + new Date().getTime() + "'></scr" + "ipt>");
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/batNum.js?" + new Date().getTime() + "'></scr" + "ipt>");
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/whsDocList.js?" + new Date().getTime() + "'></scr" + "ipt>");
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/insertInvtyList.js?" + new Date().getTime() + "'></scr" + "ipt>");
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/ProjClsList.js?" + new Date().getTime() + "'></scr" + "ipt>");
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/system/baseDocAll.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<style>
+		select {
+			outline: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			width: 220px;
+			border: 0;
+			border-bottom: 1px solid #B8C7CE
+		}
+		
+		select:-ms-expand {
+			display: none;
+		}
+		
+		body {
+			overflow-x: hidden;
+		}
+		
+		#insertProjCls_jqgrids {
+			width: 100%!important;
+		}
+	</style>
+
+	<body>
+		<div id="purchaseOrder" style="opacity: 1;">
+			<div class="purchaseTit">
+				<!--<h1 class="title">销售单</h1>-->
+				<div class="buttons">
+					<!--<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>-->
+					<button class="print1">打印</button>
+					<button class="addOrder">增加</button>
+					<button class="editOrder">修改</button>
+					<button class="saveOrder">保存</button>
+					<button class="delOrder">删除</button>
+					<button class="upOrder">放弃</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+					<button class="ctrlc_v">启用粘贴功能</button>
+					<button class="ctrlYes">确定粘贴内容</button>
+					<!--<button class="search">整单联查</button>-->
+				</div>
+			</div>
+			<!--<div id="mengban"></div>-->
+			<div class="order-title">
+				<form class="row" id="formSave" autocomplete="off">
+					<div class="purchaseType col-md-4">
+						<span>销售类型</span><input type="text" class="inputText" name="sellType" value="" readonly="readonly" />
+					</div>
+					<div class="orderDates col-md-4">
+						<span>销售日期</span><input type="text" class="inputText" name="sellSnglDt" value="" readonly="readonly"/>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>销售单号</span><input type="text" class="inputText" name="sellSnglId" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>业务类型<b>*</b></span>
+						<select name="bizType" id="bizType" class="inputText">
+							<option disabled selected value></option>
+							<option value="1">B2B</option>
+							<option value="2">B2C</option>
+						</select>
+					</div>
+					<div class="salesman col-md-4">
+						<span>业务员 <b>*</b><span><input type="text" id="user" class="inputText encds" name="accNum" value=""/>
+						<input type="text" id="userName" class="inputText names" value="" readonly="readonly" />
+						<span><img class="biao_userId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="department col-md-4">
+						<span>部门</span><input type="text" id="deptId" class="deptId encds inputText" name="deptId" value="" />
+						<input type="text" id="deptName" class="deptName names inputText" name="deptName" value="" readonly="readonly" />
+						<span><img class="biao_deptId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>客户名称 <b>*</b><span><input type="text" id="custId" class="custId encds inputText" name="custId" value="" />
+						<input type="text" id="custNm" class="custNm names inputText" name="custNm" value="" readonly="readonly"/>
+						<span><img class="biao_custId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>发货地址</span><input type="text" id="addr" class="inputText" name="addr" value="" />
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>交易编码</span><input type="text" class="inputText" name="txId" value="" readonly="readonly" />
+					</div>
+					<div class="remarks col-md-4">
+						<span>客户订单号</span><input type="text" class="custOrdrNum inputText" name="custOrdrNum" value="" />
+					</div>
+					<div class="remarks col-md-4">
+						<span>表头备注</span><input type="text" class="inputText" name="memo" value="" />
+					</div>
+					<div id="custId1" style="display: none;"></div>
+					<div id="custNm1" style="display: none;"></div>
+					<div id="fuze" style="display: none;"></div>
+					<div id="departmentEncd" style="display: none;"></div>
+
+				</form>
+
+			</div>
+			<div id="findGrid">
+				<table id="find_jqgrids"></table>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqgridPager"></div>
+		</div>
+		<!--仓库档案-->
+		<div id="whsDocList" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<div class="addWhs">确定</div>
+						<div class="cancel">取消</div>
+						<div class="whs_find">查询</div>
+					</div>
+				</div>
+
+				<div class="purchaseTit">
+					<h1 class="title">仓库档案</h1>
+				</div>
+				<hr />
+
+				<table id="whs_jqgrids"></table>
+				<div id="whs_jqGridPager"></div>
+			</div>
+		</div>
+		<!--存货档案-->
+		<div id="insertList" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<button class="find">查询</button>
+						<button class="addWhs">确定</button>
+						<button class="cancel">取消</button>
+					</div>
+				</div>
+
+				<div class="purchaseTit">
+					<h1 class="title">存货档案列表</h1>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-3">
+								<span>存货编码</span>
+								<input type="text" class="invtyEncd1" name="invtyEncd1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货名称</span>
+								<input type="text" class="invtyNm1" name="invtyNm1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货分类编码</span>
+								<input type="text" class="invtyClsEncd1" name="invtyClsEncd1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货分类名称</span>
+								<input type="text" class="invtyClsNm1" name="invtyClsNm1" value="" />
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<aside>
+					<!--左列树-->
+					<div id="tree" style="height:400px"></div>
+				</aside>
+
+				<div id="wrap">
+					<table id="insert_jqgrids"></table>
+					<div id="insert_jqGridPager"></div>
+				</div>
+			</div>
+		</div>
+		<!--批次-->
+		<div id="batNum_list" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit" style="margin:20px">
+					<div class="buttons">
+						<button class="true_bat">确定</button>
+						<button class="cancel">取消</button>
+						<button class="batNum_search">查询</button>
+					</div>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-4">
+								<span>批次</span>
+								<input type="text" class="batNum" name="batNum6" value="" />
+							</div>
+
+						</div>
+					</form>
+				</div>
+				<table id="batNum_jqgrids"></table>
+				<div id="batNum_jqGridPager"></div>
+			</div>
+		</div>
+		<!--项目编码-->
+		<div id="ProjClsList">
+			<div id="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<button class="pro_sure">确定</button>
+						<button class="pro_cancel">取消</button>
+						<button class="search_pro">查询</button>
+					</div>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-4">
+								<span>项目编码</span>
+								<input type="text" id="projEncd1" name="projEncd1" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>项目名称 </span>
+								<input type="text" id="projNm1" name="projNm1" value="" />
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<table id="insertProjCls_jqgrids"></table>
+				<div id="insertProjCls_jqGridPager"></div>
+			</div>
+		</div>
+	</body>
+
+</html>

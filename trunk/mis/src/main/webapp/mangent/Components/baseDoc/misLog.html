@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>日志</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/baseDoc/DeptDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/misLog.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+	</head>
+	<style>
+		select {
+			outline: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			width: 220px;
+			border: 0;
+			border-bottom: 1px solid #B8C7CE
+		}
+		
+		select:-ms-expand {
+			display: none;
+		}
+		#mengban {
+			left: 0;
+		}
+	</style>
+	<body>
+		<div class="purchaseOrder">
+			<div class="purchaseTit" style="margin:20px">
+				<div class="buttons">
+					<button class="exportExcel">导出</button>
+					<button class="delOrder">删行</button>
+					<button class="search">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-3">
+							<span>操作人id </span><input type="text" class="accNum" name="userName" value="" />
+						</div>
+						<div class="supplier col-md-3">
+							<span>操作人ip </span><input type="text" class="accNumIp" name="accNum" value="" />
+						</div>
+						<!--<div class="supplier col-md-3">
+							<span>操作类型名称 </span><input type="text" class="operationName" name="operationName" value="" />
+						</div>-->
+						<div class="supplier col-md-3">
+							<span>操作模块名称</span><input type="text" class="operationModule" name="roleName" value="" />
+						</div>
+						<div class="supplier col-md-3">
+							<span>操作状态</span>
+							<select name="" id="" class="operatingState">
+								<option value=""></option>
+								<option value="成功">成功</option>
+								<option value="失败">失败</option>
+							</select>
+						</div>
+						<div class="supplier col-md-3">
+							<span>操作账套</span><input type="text" class="operatingAccount" name="roleName" value="" />
+						</div>
+						<div class="supplier col-md-3">
+							<span>操作url</span><input type="text" class="operatingUrl" name="roleName" value="" />
+						</div>
+						<div class="supplier col-md-3">
+							<span>登录时间</span>
+							<input type="text" class="accountLandingTimeStart" name="pursOrdrDt1" value="" readonly="readonly"  calendar="YYYY-MM-DD" />到<input type="text" class="accountLandingTimeEnd" name="pursOrdrDt2" value="" readonly="readonly"  calendar="YYYY-MM-DD" />
+						</div>
+						<div class="supplier col-md-3">
+							<span>操作时间 </span>
+							<input type="text" class="operatingTimeStart" name="pursOrdrDt1" value="" readonly="readonly"  calendar="YYYY-MM-DD" />到<input type="text" class="operatingTimeEnd" name="pursOrdrDt2" value="" readonly="readonly"  calendar="YYYY-MM-DD" />
+						</div>
+					</div>
+				</form>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqGridPager"></div>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtyCapOcupLaytTabDao">
+	<!-- 存货资金占用规划表分页查询所有 -->
+	<select id="selectInvtyCapOcupLaytTabList" parameterType="Map" resultType="com.px.mis.account.entity.InvtyCapOcupLaytTab">
+	 SELECT a.ordr_num ordrNum,a.dept_id deptId,a.invty_encd invtyEncd,a.invty_big_cls_encd invtyBigClsEncd,
+	 		a.plan_amt planAmt,a.whs_encd whsEncd,a.memo memo,
+	 		b.dept_name deptNm,c.invty_nm invtyNm,d.invty_cls_nm invtyBigClsNm,e.whs_nm whsNm
+	 FROM invty_cap_ocup_layt_tab a
+	 LEFT JOIN dept_doc b
+	 ON a.dept_id = b.dept_id
+	 LEFT JOIN invty_doc c
+	 ON a.invty_encd = c.invty_encd
+	 LEFT JOIN invty_cls d
+	 ON a.invty_big_cls_encd = d.invty_cls_encd
+	 LEFT JOIN whs_doc e
+	 ON a.whs_encd = e.whs_encd
+	 ORDER BY a.ordr_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectInvtyCapOcupLaytTabByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.InvtyCapOcupLaytTab">
+	 SELECT a.ordr_num ordrNum,a.dept_id deptId,a.invty_encd invtyEncd,a.invty_big_cls_encd invtyBigClsEncd,
+	 		a.plan_amt planAmt,a.whs_encd whsEncd,a.memo memo,
+	 		b.dept_name deptNm,c.invty_nm invtyNm,d.invty_cls_nm invtyBigClsNm,e.whs_nm whsNm
+	 FROM invty_cap_ocup_layt_tab a
+	 LEFT JOIN dept_doc b
+	 ON a.dept_id = b.dept_id
+	 LEFT JOIN invty_doc c
+	 ON a.invty_encd = c.invty_encd
+	 LEFT JOIN invty_cls d
+	 ON a.invty_big_cls_encd = d.invty_cls_encd
+	 LEFT JOIN whs_doc e
+	 ON a.whs_encd = e.whs_encd
+	 WHERE a.ordr_num=#{ordrNum}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectInvtyCapOcupLaytTabCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM invty_cap_ocup_layt_tab
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertInvtyCapOcupLaytTab" parameterType="com.px.mis.account.entity.InvtyCapOcupLaytTab">
+		INSERT INTO invty_cap_ocup_layt_tab
+		VALUES(null,#{deptId},#{invtyEncd},#{invtyBigClsEncd},
+				#{planAmt},#{whsEncd},#{memo})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteInvtyCapOcupLaytTabByOrdrNum" parameterType="int">
+	 DELETE FROM invty_cap_ocup_layt_tab
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateInvtyCapOcupLaytTabByOrdrNum" parameterType="com.px.mis.account.entity.InvtyCapOcupLaytTab">
+	 UPDATE invty_cap_ocup_layt_tab
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="invtyBigClsEncd != null">
+        invty_big_cls_encd = #{invtyBigClsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="planAmt != null">
+        plan_amt = #{planAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="whsEncd != null">
+        whs_encd = #{whsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+</mapper>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>未期末处理</title>
+
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/account/finalNoDeal.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style type="text/css">
+		#mengban.zhezhao{
+			margin-top:-75px;
+		}
+		.buttons span{
+			font-size:16px
+		}
+	</style>
+	<body>
+		<div id="wwrap">
+			<div class="purchaseOrder">
+				<div class="purchaseTit" style="margin:20px">
+					<div class="buttons">
+						<button class="deal">处理</button>
+						<button class="find">查询全部</button>	
+						<input type="checkbox" name="checkbox" id="isCreateAdj" value="1" /><span>结存数量为零金额不为零生成出库调整单</span>
+					</div>
+				</div>
+
+				<aside>
+					<!--左列树-->
+					<div id="tree"></div>
+				</aside>
+
+				<div id="wrap">
+					<table id="jqgrids"></table>
+					<div id="jqGridPager"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

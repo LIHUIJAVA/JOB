@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.AcctItmDocDao">
+	<resultMap id="BaseResultMap" type="com.px.mis.account.entity.AcctItmDoc" autoMapping="true">
+		<id column="subj_id" property="subjId" />
+		<result column="subj_nm" property="subjNm" />
+		<result column="subj_typ" property="subjTyp" />
+		<result column="subj_charc" property="subjCharc" />
+		<result column="encd_lvl_sub" property="encdLvlSub" />
+		<result column="subj_mnem" property="subjMnem" />
+		<result column="is_nt_indv_reco_accti" property="isNtIndvRecoAccti" />
+		<result column="is_nt_cust_reco_accti" property="isNtCustRecoAccti" />
+		<result column="is_nt_provr_reco_accti" property="isNtProvrRecoAccti" />
+		<result column="is_nt_dept_accti" property="isNtDeptAccti" />
+		<result column="is_nt_end_lvl" property="isNtEndLvl" />
+		<result column="is_nt_cash_subj" property="isNtCashSubj" />
+		<result column="is_nt_bank_subj" property="isNtBankSubj" />
+		<result column="is_nt_comn_cashflow_qty_subj" property="isNtComnCashflowQtySubj" />
+		<result column="is_nt_bkat" property="isNtBkat" />
+		<result column="is_nt_day_book_entry" property="isNtDayBookEntry" />
+		<result column="memo" property="memo" />
+		<result column="p_id" property="pId" />
+		<result column="bal_drct" property="balDrct" />
+	</resultMap>
+	<!-- 分页查询所有 -->
+	<select id="selectAcctItmDocList" parameterType="Map" resultType="com.px.mis.account.entity.AcctItmDoc">
+	 SELECT *
+	 FROM acct_itm_doc 
+	 <where>
+        <if test="subjTyp != null and subjTyp != ''">
+            AND subj_typ=#{subjTyp}
+        </if>
+        <if test="subjNm != null and subjNm != ''">
+            AND subj_nm=#{subjNm}
+            
+            <!-- subj_nm like"%"#{subjNm}"%"  -->
+        </if>
+        <if test="subjId !=null and subjId != ''">
+        	AND subj_id = #{subjId}
+        </if>
+  	</where>
+	 ORDER BY subj_id
+	 <if test="index != null and num != null">
+	 LIMIT #{index},#{num}
+	 </if>
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectAcctItmDocCount" parameterType="Map" resultType="int">
+		SELECT count(*)
+		FROM acct_itm_doc 
+		<where>
+	       <if test="subjTyp != null and subjTyp != ''">
+	           AND subj_typ=#{subjTyp}
+	       </if>
+	       <if test="subjNm != null and subjNm != ''">
+	           AND subj_nm=#{subjNm}
+	       </if>
+	       <if test="subjId != null and subjId != ''">
+            AND subj_id=#{subjId}
+        </if>
+  	</where>
+	</select>
+	
+	
+	<!-- 根据会计科目编号查询单个 -->
+	<select id="selectAcctItmDocBySubjId" parameterType="String" resultType="com.px.mis.account.entity.AcctItmDoc">
+	 SELECT *
+	 FROM  acct_itm_doc
+	 WHERE subj_id=#{subjId}
+	</select>
+	
+	<!-- 根据传回来的会计科目父级编号查询会计档案中是否存在该父级id -->
+	<select id="selectAcctItmDocByPId" parameterType="String" resultType="String">
+	 SELECT p_id
+	 FROM  acct_itm_doc
+	 WHERE p_id=#{pId}
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertAcctItmDoc" parameterType="com.px.mis.account.entity.AcctItmDoc">
+		INSERT INTO acct_itm_doc
+		VALUES(#{subjId},#{subjNm},#{subjTyp},
+				#{subjCharc},#{encdLvlSub},#{subjMnem},#{isNtIndvRecoAccti},
+				#{isNtCustRecoAccti},#{isNtProvrRecoAccti},#{isNtDeptAccti},#{isNtEndLvl},
+				#{isNtCashSubj},#{isNtBankSubj},#{isNtComnCashflowQtySubj},#{isNtBkat},
+				#{isNtDayBookEntry},#{memo},#{pId},#{balDrct})
+	</insert>
+
+	<!--导入新赠-->
+	<insert id="insertTolead">
+		insert into acct_itm_doc (subj_id,subj_nm)
+		values (#{pursId},#{pursNm})
+	</insert>
+	<!-- 根据主键删除 -->
+	<delete id="deleteAcctItmDocBySubjId" parameterType="java.util.List">
+	 DELETE FROM acct_itm_doc  
+	 WHERE subj_id in 
+	 <foreach item="subjId" collection="list" open="("
+			close=")" separator=",">
+			#{subjId}
+	</foreach>
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateAcctItmDocBySubjId" parameterType="com.px.mis.account.entity.AcctItmDoc">
+	 UPDATE acct_itm_doc
+    <set>
+      <if test="subjId != null">
+        subj_id = #{subjId,jdbcType=VARCHAR},
+      </if>
+      <if test="subjNm != null">
+        subj_nm = #{subjNm,jdbcType=VARCHAR},
+      </if>
+      <if test="subjTyp != null">
+        subj_typ = #{subjTyp,jdbcType=VARCHAR},
+      </if>
+      <if test="subjCharc != null">
+        subj_charc = #{subjCharc,jdbcType=VARCHAR},
+      </if>
+      <if test="encdLvlSub != null">
+        encd_lvl_sub = #{encdLvlSub,jdbcType=VARCHAR},
+      </if>
+      <if test="subjMnem != null">
+        subj_mnem = #{subjMnem,jdbcType=VARCHAR},
+      </if>
+      <if test="isNtIndvRecoAccti != null">
+        is_nt_indv_reco_accti = #{isNtIndvRecoAccti,jdbcType=INTEGER},
+      </if>
+      <if test="isNtCustRecoAccti != null">
+        is_nt_cust_reco_accti = #{isNtCustRecoAccti,jdbcType=INTEGER},
+      </if>
+      <if test="isNtProvrRecoAccti != null">
+        is_nt_provr_reco_accti = #{isNtProvrRecoAccti,jdbcType=INTEGER},
+      </if>
+      <if test="isNtDeptAccti != null">
+        is_nt_dept_accti = #{isNtDeptAccti,jdbcType=INTEGER},
+      </if>
+      <if test="isNtEndLvl != null">
+        is_nt_end_lvl = #{isNtEndLvl,jdbcType=INTEGER},
+      </if>
+      <if test="isNtCashSubj != null">
+        is_nt_cash_subj = #{isNtCashSubj,jdbcType=INTEGER},
+      </if>
+      <if test="isNtBankSubj != null">
+        is_nt_bank_subj = #{isNtBankSubj,jdbcType=INTEGER},
+      </if>
+      <if test="isNtComnCashflowQtySubj != null">
+        is_nt_comn_cashflow_qty_subj = #{isNtComnCashflowQtySubj,jdbcType=INTEGER},
+      </if>
+      <if test="isNtBkat != null">
+        is_nt_bkat = #{isNtBkat,jdbcType=INTEGER},
+      </if>
+      <if test="isNtDayBookEntry != null">
+        is_nt_day_book_entry = #{isNtDayBookEntry,jdbcType=INTEGER},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="pId != null">
+        p_id = #{pId,jdbcType=VARCHAR},
+      </if>
+      <if test="balDrct != null">
+        bal_drct = #{balDrct,jdbcType=INTEGER},
+      </if>
+      
+    </set>
+    WHERE subj_id = #{subjId}
+	</update>
+	<select id="selectStockByClsEncd" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+			acct.*
+		FROM
+			acct_itm_doc AS acct,
+			invty_subj_set_tab AS subj
+		WHERE
+			1 = 1
+		<choose>  
+             <when test="sellTypId == 2 ">
+             	AND acct.subj_id = subj.entrs_agn_subj_id
+             </when>  
+             <when test="sellTypId != 2">
+             	AND acct.subj_id = subj.invty_subj_id
+             </when>  
+          </choose>
+         
+		<if test="clsEncd != null and clsEncd != ''">
+			AND subj.invty_big_cls_encd = #{clsEncd}
+		</if>
+		
+	</select>
+	
+	<select id="selectOtherByClsEncd" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+			acct.*
+		FROM
+			acct_itm_doc AS acct,
+			invty_cnt_pty_subj_set_tab AS cnt
+		WHERE
+			1 = 1
+		<choose>  
+             <when test="isNtBllg == 1 ">
+             	AND acct.subj_id = cnt.cnt_pty_subj_id
+             </when>  
+             <when test="isNtBllg != 1">
+             	AND acct.subj_id = cnt.tees_subj_encd
+             </when>  
+          </choose>
+         
+		<if test="recvSendCateId != null and recvSendCateId != ''">
+			AND cnt.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="clsEncd != null and clsEncd != ''">
+			AND cnt.invty_big_cls_encd = #{clsEncd}
+		</if>
+	</select>
+	<select id="selectPaySub" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+			acct.*
+		FROM
+			acct_itm_doc AS acct,
+			invty_paybl_subj AS cnt
+		WHERE
+			1 = 1
+		AND acct.subj_id = cnt.paybl_subj_encd
+	</select>
+	
+	<select id="selectIsFinalSubj" parameterType="String" resultType="int">
+		SELECT COUNT(subj_id) FROM acct_itm_doc WHERE p_id = #{debitId}
+	</select>
+	
+</mapper>

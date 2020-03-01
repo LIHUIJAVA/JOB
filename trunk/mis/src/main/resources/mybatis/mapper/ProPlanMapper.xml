@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProPlan">
+  <insert id="insert" parameterType="com.px.mis.ec.entity.ProPlan">
+	INSERT INTO pro_plan (pro_plan_id, pro_plan_name, pro_way, pro_criteria, gift_mul, memo)
+	VALUES (#{proPlanId}, #{proPlanName}, #{proWay}, #{proCriteria}, #{giftMul}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ProPlan">
+  	SELECT pro_plan_id, pro_plan_name, pro_way, pro_criteria, gift_mul, memo
+  	FROM pro_plan 
+  	WHERE pro_plan_id = #{proPlanId}
+  </select>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.ProPlan">
+  	UPDATE pro_plan 
+  	SET pro_plan_name=#{proPlanName}, pro_way=#{proWay}, pro_criteria=#{proCriteria}, gift_mul=#{giftMul}, memo=#{memo}
+  	WHERE pro_plan_id = #{proPlanId}
+  </update>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE pa, pas 
+  	FROM  pro_plan as pa LEFT JOIN pro_plans as pas ON pa.pro_plan_id = pas.pro_plan_id 
+  	WHERE pa.pro_plan_id=#{proPlanId}
+  </delete>
+  
+  <select id="selectList" parameterType="Map" resultType="java.util.Map">
+	SELECT pa.pro_plan_id, pa.pro_plan_name, pa.pro_way, pa.pro_criteria, pa.gift_mul,
+	pas.money, pas.number, pas.integral_mul, pas.gift_num, pas.gift_way, pas.gift_range, pas.memo
+  	FROM pro_plan as pa LEFT JOIN pro_plans as pas ON pa.pro_plan_id = pas.pro_plan_id 
+  	<where>
+  		<if test="accNum != null and accNum != ''">
+            AND acc_num=#{accNum}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="Integer">
+	SELECT count(*)
+  	FROM pro_plan as pa LEFT JOIN pro_plans as pas ON pa.pro_plan_id = pas.pro_plan_id 
+  	<where>
+  		<if test="accNum != null and accNum != ''">
+            AND acc_num=#{accNum}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

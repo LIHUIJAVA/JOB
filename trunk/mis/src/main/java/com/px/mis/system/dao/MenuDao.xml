@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.system.dao.MenuDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.system.entity.Menu">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="ico" jdbcType="VARCHAR" property="ico" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="pid" jdbcType="INTEGER" property="pid" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.px.mis.system.entity.Menu">
+	INSERT INTO menu (id,name,ico,level,url,pid,target_type)
+    VALUES(#{id}, #{name}, #{ico}, #{level}, #{url}, #{pid},#{targetType})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.system.entity.Menu">
+  	SELECT id, name, ico, level, url, pid,target_type
+  	FROM menu 
+  	WHERE id = #{id}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  menu
+  	WHERE id IN  ${_parameter}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.system.entity.Menu">
+  	UPDATE menu 
+  	SET name=#{name}, ico=#{ico}, level=#{level}, url=#{url}, pid=#{pid},target_Type=#{targetType}
+  	WHERE id=#{id}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.system.entity.Menu">
+	SELECT id, name, ico, level, url, pid,target_type
+  	FROM menu 
+  	<where>
+  		<if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND name=#{name}
+        </if>
+        <if test="level != null and level != ''">
+            AND level=#{level}
+        </if>
+        <if test="pid != null and pid != ''">
+            AND pid=#{pid}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(*)
+  	FROM menu 
+  	  	<where>
+  		<if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND name=#{name}
+        </if>
+        <if test="level != null and level != ''">
+            AND level=#{level}
+        </if>
+        <if test="pid != null and pid != ''">
+            AND pid=#{pid}
+        </if>
+  	</where>
+  </select>
+   
+  <select id="selectAll" resultType="com.px.mis.system.entity.Menu">
+	SELECT id, name, ico, level, url, pid,target_type
+  	FROM menu 
+  </select>
+  
+</mapper>

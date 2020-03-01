@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>销售统计表</title>
+
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/sell/sellStatistics.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/common/drag.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style>
+		select {
+			outline: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			width: 180px;
+			border: 0;
+			border-bottom: 1px solid #B8C7CE
+		}
+		
+		select:-ms-expand {
+			display: none;
+		}
+		.calendar.min {
+			z-index: 11111!important;
+		}
+		#box .purchaseType {
+			margin-top: 28px;
+			/*width: 20%!important;*/
+		}
+		body {
+			overflow-x:hidden;
+		}
+	</style>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="find">查询</button>
+					<button class="more">更多查询条件</button>
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave" autocomplete="off">
+					<div class="info">
+						<div class="orderDates col-md-4">
+							<span>存货编码</span>
+							<input type="text" id="invtyEncd" class="invtyEncd encds" name="invtyEncd" value=""/>
+							<input type="text" id="invtyNm" class="invtyNm names" name="invtyNm" value=""/>
+							<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplierOrder col-md-4">
+							<span>客户</span><input type="text" id="custId" class="custId encds" name="custId" value="" />
+							<input type="text" id="custNm" class="custNm names" name="custNm" value="" readonly="readonly"/>
+							<span><img class="biao_custId" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>开票日期</span>
+							<input type="text" class="bllgDt1 date date1" name="bllgDt1" value="" calendar="YYYY-MM-DD" />到<input type="text" class="bllgDt2 date date2" name="bllgDt2" value="" calendar="YYYY-MM-DD" />
+						</div>
+						<div id="addr" style="display: none;"></div>
+					</div>
+				</form>
+			</div>
+			<table id="stic_jqgrids"></table>
+			<div id="stic_jqgridPager"></div>
+		</div>
+		
+		<div id="big_wrap"></div>
+		<div id="box" style="display: block">
+			<!--查询条件-->
+			<div id="insertClsList" class="search_more" style="display: ;">
+				<div class="purchaseOrder">
+					<div class="purchaseTit">
+						<div class="buttons">
+							<button class="sure">确定</button>
+							<button class="cancel">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="order-title" style="width:550px">
+				<form class="row" id="formSave" autocomplete="off">
+					
+					<div class="purchaseType col-md-4">
+						<span>存货编码</span>
+						<input type="text" class="invtyEncd encds" name="invtyEncd1" value=""/>
+						<input type="text" class="invtyNm names" name="invtyNm1" value=""/>
+						<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>客户</span><input type="text" id="custId1" class="custId1 encds" name="custId1" value="" />
+						<input type="text" id="custNm1" class="custNm1 names" name="custNm1" value="" readonly="readonly"/>
+						<span><img class="biao_custId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>开票日期</span>
+						<input type="text" class="date date1" name="bllgDt3" value="" calendar="YYYY-MM-DD"/>到<input type="text" class="date date2" name="bllgDt4" value="" calendar="YYYY-MM-DD"/>
+					</div>
+					
+					
+					<div class="purchaseType col-md-4">
+						<span>存货代码</span><input type="text" id="invtyCd" name="invtyCd" value="" />
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>仓库编码</span><input type="text" id="whsEncd" class="whsEncd encds" name="whsEncd" value="" />
+						<input type="text" id="whsNm" class="whsNm names" name="whsNm" value="" readonly="readonly" />
+						<span><img class="biao_whsEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>批次</span><input type="text" id="batNum" name="batNum" value="" />
+						<span><img class="biao_batNum" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>业务员编码</span><input type="text" id="user" class="inputText encds" name="accNum" value=""/>
+						<input type="text" id="userName" class="inputText names" value="" readonly="readonly" />
+						<span><img class="accNum_biaoge" id="fuze" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>部门编码</span>
+						<input type="text" id="deptId" class="encds" name="deptId" value="" />
+						<input type="text" id="deptName" class="names" name="deptName" value="" />
+						<span><img class="depId_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+		
+				</form>
+			</div>
+		</div>
+	</body>
+
+</html>                                                    

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta charset="UTF-8" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>供应商档案</title>		
+		
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />		
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style>	
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+		#mengban {
+			top:-200px
+		}
+		#edit div {
+			font-size: 12px!important;
+		}
+	</style>
+	<body>
+		<div id="wwrap">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<!--<h1 class="title">供应商档案</h1>-->
+				</div>
+				<div class="purchaseTit">
+					<div class="buttons">
+						<button class="print">打印</button>
+						<button class="importExcel">导入</button>
+						<button class="exportExcel">导出</button>
+						<button class="addOrder">增行</button>
+						<button class="delOrder">删行</button>
+						<button class="find">查询</button>
+						<span>
+							<form id="uploadForm" enctype="multipart/form-data">
+								<input type="file" name="FileUpload" id="FileUpload">
+							</form>
+						</span>
+					</div>
+				</div>
+			
+				<div class="order-title">
+				<form class="row" id="formSave">			
+				<div class="info">
+					<div class="supplier col-md-4">
+						<span>供应商编码</span>
+						<input type="text" class="provrId1" name="provrId1" value="" />
+					</div>
+					<div class="supplier col-md-4">
+						<span>供应商名称</span>
+						<input type="text" class="provrNm1" name="provrNm1" value="" />
+					</div>
+					<div class="supplier col-md-4">
+						<span>供应商分类编码</span>
+						<input type="text" class="provClsId1" name="provClsId1" value="" />
+					</div>
+					
+				</div>	
+			</form>			
+			</div>
+				<aside>
+					<!--左列树-->
+					<div id="tree"></div>
+				</aside>
+				
+				<div id="wrap">
+					<table id="jqgrids"></table>
+					<div id="jqGridPager"></div>
+				</div>
+				<div id="edit" style="top:0">
+					<form action="">
+						<h3></h3>
+						<div class="left">
+						<div>供应商分类：<select id = "select" style="width:176px;position:absolute;z-index:1;"data-edit-select="1"  onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0" > 
+						</select>
+						</div>
+							<div style="margin-left:235px">供应商编码：<input class="provrId" type="text" /></div>
+							<div>供应商名称：<input class="provrNm" type="text" /></div>
+							<div>&emsp;供应商简称：<input type="text" class="provrShtNm"/></div>
+							
+							<div>&emsp;发展日期：<input type="text" class="devDt" calendar="YYYY-MM-DD" /></div>
+							<div>供应商总公司：<input type="text" class="provrTotlCorp"/></div>
+							<div>&emsp;所属地区：<input type="text" class="belgZone"/></div>
+							<div>&emsp;&emsp;所属分类：<input type="text" class="belgCls"/></div>
+							<div>&emsp;&emsp;联系人：<input type="text" class="contcr"/></div>
+							<div>&emsp;&emsp;开户银行：<input type="text" class="opnBnk"/></div>
+							<div>&emsp;注册资金：<input type="text" class="rgstap"/></div>
+							<div>&emsp;&emsp;银行账号：<input type="text" class="bkatNum"/></div>
+							<div>&emsp;所属银行：<input type="text" class="bankEncd"/></div>
+							<div>&emsp;&emsp;&emsp;&emsp;法人：<input type="text" class="lpr"/></div>
+						</div>
+						
+						<div class="right">
+							<div>&emsp;&emsp;&emsp;税号：<input type="text" class="taxNum"/></div>
+							<div>&emsp;&emsp;&emsp;&emsp;地址：<input type="text" class="addr"/></div>
+							<div>&emsp;&emsp;&emsp;电话：<input type="text" class="tel" /></div>
+							<div>&emsp;&emsp;&emsp;&emsp;邮编：<input type="text" class="zipCd"/></div>
+							<div>&emsp;&emsp;&emsp;税率：<input type="text" class="taxRate"/></div>
+							<div>&emsp;&emsp;是否采购：<input type="text" class="isNtPurs"/></div>
+							<div>&emsp;是否委外：<input type="text" class="isOut"/></div>
+							<div>&emsp;&emsp;是否服务：<input type="text" class="isNtServ"/></div>
+							<div>&emsp;&emsp;创建人：<input type="text" class="setupPerson"/></div>
+							<div>&emsp;&emsp;修改人：<input type="text" class="mdfr"/></div>
+							<div>&emsp;&emsp;&emsp;备注：<input type="text" class="memo"/></div>
+						</div>
+					</form>
+					<div>
+						<div style="margin:0 auto;width:120px">
+							<button class="saveOrder">保存</button>
+							<button class="cancel">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+<script>
+	document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/ProvrDoc.js?" + new Date().getTime() + "'></scr" + "ipt>");
+</script>
+
+</html>

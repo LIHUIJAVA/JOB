@@ -1,0 +1,2804 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.FormBookEntryDao">
+	  <resultMap id="BaseResultMap" type="com.px.mis.account.entity.FormBookEntry">
+	    <id column="form_num"   property="formNum" />
+	    <result column="form_dt"   property="formDt" />
+	    <result column="is_nt_chk"   property="isNtChk" />
+	    <result column="chkr"   property="chkr" />
+	    <result column="chk_tm"   property="chkTm" />
+	    <result column="out_into_whs_typ_id"   property="outIntoWhsTypId" />
+	    <result column="out_into_whs_typ_nm"   property="outIntoWhsTypNm" />
+	    <result column="biz_typ_id"   property="bizTypId" />
+	    <result column="biz_typ_nm"   property="bizTypNm" />
+	    <result column="sell_typ_id"   property="sellTypId" />
+	    <result column="sell_typ_nm"   property="sellTypNm" />
+	    <result column="purs_typ_id"   property="pursTypId" />
+	    <result column="purs_typ_nm"   property="pursTypNm" />
+	    <result column="provr_id"   property="provrId" />
+	    <result column="provr_nm"   property="provrNm" />
+	    <result column="recv_send_cate_id"   property="recvSendCateId" />
+	    <result column="recv_send_cate_nm"   property="recvSendCateNm" />
+	    <result column="cust_id"   property="custId" />
+	    <result column="cust_nm"   property="custNm" />
+	    <result column="acc_num"   property="accNum" />
+	    <result column="user_name"   property="userName" />
+	    <result column="is_nt_book_ok"   property="isNtBookOk" />
+	    <result column="book_ok_acc"   property="bookOkAcc" />
+	    <result column="book_ok_dt"   property="bookOkDt" />
+	    <result column="is_nt_bllg"   property="isNtBllg" />
+	    <result column="is_nt_stl"   property="isNtStl" />
+	    <result column="is_nt_make_vouch"   property="isNtMakeVouch" />
+	    <result column="is_nt_upload_head"   property="isNtUploadHead" />
+	    <result column="make_vouch_id"   property="makeVouchId" />
+	    <result column="make_vouch_abst"   property="makeVouchAbst" />
+	    <result column="memo"   property="memo" />
+	    <result column="is_mth_end_stl" property="isMthEndStl"/>
+	    <result column="sell_ordr_ind" property="sellOrdrInd"/>
+	    <result column="form_typ_encd" property="formTypEncd"/>
+	    <result column="form_typ_name" property="formTypName"/>
+	    
+	    <collection property="bookEntrySub" ofType="com.px.mis.account.entity.FormBookEntrySub" autoMapping="true">
+		    <id property="ordrNum" column="ordr_num" />
+		    <result column="form_num"   property="formNum" />
+		    <result column="invty_encd"   property="invtyEncd" />
+		    <result column="invty_nm"   property="invtyNm" />
+		    <result column="invty_cd"   property="invtyCd" />
+		    <result column="spc_model"   property="spcModel" />
+		    <result column="measr_corp_id"   property="measrCorpId" />
+		    <result column="measr_corp_nm"   property="measrCorpNm" />
+		    <result column="bx_rule"   property="bxRule" />
+		    <result column="invty_cls_encd"   property="invtyClsEncd" />
+		    <result column="invty_cls_nm"   property="invtyClsNm" />
+		    <result column="whs_encd"   property="whsEncd" />
+		    <result column="whs_nm"   property="whsNm" />
+		    <result column="no_tax_uprc"   property="noTaxUprc" />
+		    <result column="no_tax_amt"   property="noTaxAmt" />
+		    <result column="tax_amt"   property="taxAmt" />
+		    <result column="cntn_tax_uprc"   property="cntnTaxUprc" />
+		    <result column="prc_tax_sum"   property="prcTaxSum" />
+		    <result column="tax_rate"   property="taxRate" />
+		    <result column="qty"   property="qty" />
+		    <result column="bx_qty"   property="bxQty" />
+		    <result column="bat_num"   property="batNum" />
+		    <result column="intl_bat"   property="intlBat" />
+		    <result column="prdc_dt" property="prdcDt" />
+		    <result column="invldtn_dt"  property="invldtnDt" />
+		    <result column="bao_zhi_qi"   property="baoZhiQi" />
+		    <result column="form_nums" property="formNum"/>
+		    <collection property="subjectCredit" ofType="com.px.mis.account.entity.SubjectCredit" autoMapping="true">
+		    	 <id property="subCreditId" column="sub_credit_id" />
+		    </collection>
+		     <collection property="subjectDebit" ofType="com.px.mis.account.entity.SubjectDebit" autoMapping="true">
+		    	 <id property="subDebitId" column="sub_debit_id" />
+		    </collection>
+	    </collection>
+	   </resultMap>
+	    <resultMap id="BasetMap" type="com.px.mis.account.entity.FormBookEntry">
+	    <id column="form_num"   property="formNum" />
+	    <result column="form_dt"   property="formDt" />
+	    <result column="is_nt_chk"   property="isNtChk" />
+	    <result column="chkr"   property="chkr" />
+	    <result column="chk_tm"   property="chkTm" />
+	    <result column="out_into_whs_typ_id"   property="outIntoWhsTypId" />
+	    <result column="out_into_whs_typ_nm"   property="outIntoWhsTypNm" />
+	    <result column="biz_typ_id"   property="bizTypId" />
+	    <result column="biz_typ_nm"   property="bizTypNm" />
+	    <result column="sell_typ_id"   property="sellTypId" />
+	    <result column="sell_typ_nm"   property="sellTypNm" />
+	    <result column="purs_typ_id"   property="pursTypId" />
+	    <result column="purs_typ_nm"   property="pursTypNm" />
+	    <result column="provr_id"   property="provrId" />
+	    <result column="provr_nm"   property="provrNm" />
+	    <result column="recv_send_cate_id"   property="recvSendCateId" />
+	    <result column="recv_send_cate_nm"   property="recvSendCateNm" />
+	    <result column="cust_id"   property="custId" />
+	    <result column="cust_nm"   property="custNm" />
+	    <result column="acc_num"   property="accNum" />
+	    <result column="user_name"   property="userName" />
+	    <result column="is_nt_book_ok"   property="isNtBookOk" />
+	    <result column="book_ok_acc"   property="bookOkAcc" />
+	    <result column="book_ok_dt"   property="bookOkDt" />
+	    <result column="is_nt_bllg"   property="isNtBllg" />
+	    <result column="is_nt_stl"   property="isNtStl" />
+	    <result column="is_nt_make_vouch"   property="isNtMakeVouch" />
+	    <result column="is_nt_upload_head"   property="isNtUploadHead" />
+	    <result column="make_vouch_id"   property="makeVouchId" />
+	    <result column="make_vouch_abst"   property="makeVouchAbst" />
+	    <result column="memo"   property="memo" />
+	    <result column="is_mth_end_stl" property="isMthEndStl"/>
+        <result column="setup_pers" property="setupPers"/>
+	    <result column="setup_tm" property="setupTm"/>
+	    <collection property="formBookEntrySub" ofType="com.px.mis.account.entity.FormBookEntrySub" autoMapping="true">
+		    <id property="ordrNum" column="ordr_num" />
+		    <result column="form_num"   property="formNum" />
+		    <result column="invty_encd"   property="invtyEncd" />
+		    <result column="invty_nm"   property="invtyNm" />
+		    <result column="invty_cd"   property="invtyCd" />
+		    <result column="spc_model"   property="spcModel" />
+		    <result column="measr_corp_id"   property="measrCorpId" />
+		    <result column="measr_corp_nm"   property="measrCorpNm" />
+		    <result column="bx_rule"   property="bxRule" />
+		    <result column="invty_cls_encd"   property="invtyClsEncd" />
+		    <result column="invty_cls_nm"   property="invtyClsNm" />
+		    <result column="whs_encd"   property="whsEncd" />
+		    <result column="whs_nm"   property="whsNm" />
+		    <result column="no_tax_uprc"   property="noTaxUprc" />
+		    <result column="no_tax_amt"   property="noTaxAmt" />
+		    <result column="tax_amt"   property="taxAmt" />
+		    <result column="cntn_tax_uprc"   property="cntnTaxUprc" />
+		    <result column="prc_tax_sum"   property="prcTaxSum" />
+		    <result column="tax_rate"   property="taxRate" />
+		    <result column="qty"   property="qty" />
+		    <result column="bx_qty"   property="bxQty" />
+		    <result column="bat_num"   property="batNum" />
+		    <result column="intl_bat"   property="intlBat" />
+		    <result column="prdc_dt" property="prdcDt" />
+		    <result column="invldtn_dt"  property="invldtnDt" />
+		    <result column="bao_zhi_qi"   property="baoZhiQi" />
+		
+		    <collection property="subjectCredit" ofType="com.px.mis.account.entity.SubjectCredit" autoMapping="true">
+		    	 <id property="subCreditId" column="sub_credit_id" />
+		    </collection>
+		     <collection property="subjectDebit" ofType="com.px.mis.account.entity.SubjectDebit" autoMapping="true">
+		    	 <id property="subDebitId" column="sub_debit_id" />
+		    </collection>
+	    </collection>
+	   </resultMap>
+	 <select id="selectByFormNum"  parameterType="java.lang.String" resultType="com.px.mis.account.entity.FormBookEntry">
+	 	SELECT
+			form_num, form_dt, is_nt_chk, chkr, chk_tm, out_into_whs_typ_id, out_into_whs_typ_nm, 
+		    biz_typ_id, biz_typ_nm, sell_typ_id, sell_typ_nm, purs_typ_id, purs_typ_nm, provr_id, 
+		    provr_nm, recv_send_cate_id, recv_send_cate_nm, cust_id, cust_nm, acc_num, user_name, 
+		    is_nt_book_ok, book_ok_acc, book_ok_dt, is_nt_bllg, is_nt_stl, is_nt_make_vouch, 
+		    is_nt_upload_head, make_vouch_id, make_vouch_abst, memo,is_mth_end_stl,setup_pers,setup_tm
+		FROM
+			form_book_entry
+		WHERE
+			form_num = #{formNum}
+	 </select>
+	 <insert id="insertFormList" parameterType="java.util.List">
+		INSERT INTO form_book_entry( form_num, form_dt, is_nt_chk, chkr, chk_tm, out_into_whs_typ_id, out_into_whs_typ_nm, biz_typ_id,
+		biz_typ_nm, sell_typ_id, sell_typ_nm, purs_typ_id, purs_typ_nm, provr_id,provr_nm, recv_send_cate_id, recv_send_cate_nm, 
+		cust_id, cust_nm, acc_num, user_name, is_nt_book_ok, book_ok_acc, book_ok_dt, is_nt_bllg, is_nt_stl, is_nt_make_vouch, 
+    	is_nt_upload_head, make_vouch_id, make_vouch_abst, memo,is_mth_end_stl,sell_ordr_ind,setup_pers,setup_tm,form_typ_encd,form_typ_name,
+    	dept_id,dept_name)
+		VALUES 
+		<foreach collection="list" item="item" index="index" separator="," close=";">
+		(#{item.formNum},#{item.formDt},#{item.isNtChk},#{item.chkr},#{item.chkTm},#{item.outIntoWhsTypId},#{item.outIntoWhsTypNm},#{item.bizTypId},
+		 #{item.bizTypNm},#{item.sellTypId},#{item.sellTypNm}, #{item.pursTypId},#{item.pursTypNm},#{item.provrId},#{item.provrNm},#{item.recvSendCateId},#{item.recvSendCateNm},
+		 #{item.custId},#{item.custNm}, #{item.accNum},#{item.userName},#{item.isNtBookOk},#{item.bookOkAcc},#{item.bookOkDt},#{item.isNtBllg},#{item.isNtStl},#{item.isNtMakeVouch},
+		 #{item.isNtUploadHead},#{item.makeVouchId},#{item.makeVouchAbst},#{item.memo},#{item.isMthEndStl},#{item.sellOrdrInd},
+		 #{item.setupPers},#{item.setupTm},#{item.formTypEncd},#{item.formTypName},#{item.deptId},#{item.deptName})
+		</foreach>
+	  </insert>
+	  <insert id="insertForm" parameterType="com.px.mis.account.entity.FormBookEntry">
+	  	 insert into form_book_entry (form_num, form_dt, is_nt_chk, chkr, chk_tm, out_into_whs_typ_id, out_into_whs_typ_nm, biz_typ_id,
+		biz_typ_nm, sell_typ_id, sell_typ_nm, purs_typ_id, purs_typ_nm, provr_id,provr_nm, recv_send_cate_id, recv_send_cate_nm, 
+		cust_id, cust_nm, acc_num, user_name, is_nt_book_ok, book_ok_acc, book_ok_dt, is_nt_bllg, is_nt_stl, is_nt_make_vouch, 
+    	is_nt_upload_head, make_vouch_id, make_vouch_abst, memo,is_mth_end_stl,sell_ordr_ind,setup_pers,setup_tm,form_typ_encd,form_typ_name,
+    	dept_id,dept_name)
+	     values (#{formNum },#{formDt},#{isNtChk}, #{chkr},#{chkTm}, #{outIntoWhsTypId},#{outIntoWhsTypNm},#{bizTypId},#{bizTypNm},#{sellTypId},
+	     #{sellTypNm},#{pursTypId},#{pursTypNm},#{provrId},#{provrNm},#{recvSendCateId},#{recvSendCateNm},#{custId},#{custNm},#{accNum},#{userName},
+	     #{isNtBookOk},#{bookOkAcc},#{bookOkDt},#{isNtBllg},#{isNtStl},#{isNtMakeVouch},#{isNtUploadHead},#{makeVouchId},#{makeVouchAbst},#{memo}
+	     ,#{isMthEndStl},#{sellOrdrInd},#{setupPers},#{setupTm},#{formTypEncd},#{formTypName},#{deptId},#{deptName})
+	  </insert>
+	  <select id="selectMap" parameterType="Map" resultMap="BaseResultMap">
+	  	SELECT
+			sell.sell_ordr_ind as sell_ordr_ind,form.*,forms.*
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+		LEFT JOIN sell_out_whs AS sell ON sell.out_whs_id = form.form_num
+		WHERE
+			1 = 1
+		
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND form.is_nt_book_ok = #{isNtBookOk}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="comnVouchId != null and comnVouchId != ''">
+			AND form.make_vouch_id = #{comnVouchId}
+		</if>
+		<if test="isNtBllg != null and isNtBllg != ''">
+			AND form.is_nt_bllg = #{isNtBllg}
+		</if>
+		<if test="ntBllg != null and ntBllg != ''">
+			AND forms.un_bllg_qty != 0
+		</if>
+		<if test="isNtUploadHead != null and isNtUploadHead != ''">
+			AND form.is_nt_upload_head = #{isNtUploadHead}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND form.is_mth_end_stl = #{isMthEndStl}
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="bookOkDt != null and bookOkDt != ''">
+			AND DATE_FORMAT(form.book_ok_dt, '%Y%m') = DATE_FORMAT(#{bookOkDt}, '%Y%m')
+		</if>
+		<if test="nowTime != null and nowTime != ''">
+			AND DATE_FORMAT(form.form_dt, '%Y%m') = DATE_FORMAT(#{nowTime}, '%Y%m')
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="invtyEncdS != null and invtyEncdS != ''">
+			AND forms.invty_encd &gt;= #{invtyEncdS}
+		</if>
+		<if test="invtyEncdE != null and invtyEncdE != ''">
+			AND forms.invty_encd &lt;= #{invtyEncdE}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND forms.invty_encd = #{invtyEncd}
+		</if>
+		<if test="bookAcc != null and bookAcc != ''">
+			AND form.book_ok_acc = #{formEDt}
+		</if>
+		
+		<if test="formNum != null and formNum != ''">
+			AND form.form_num = #{formNum}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.form_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="outIntoWhsTypId != null and outIntoWhsTypId != '' ">
+			AND form.out_into_whs_typ_id =#{outIntoWhsTypId}
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND forms.invty_cls_encd = #{invtyClsEncd}
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+	  </select>
+	 <select id="selectMapAndPage" parameterType="Map" resultMap="BaseResultMap">
+	 		SELECT
+			form.*,forms.*
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+		AND form.is_nt_chk = 1
+		where 1=1
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND form.is_nt_book_ok = #{isNtBookOk}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="comnVouchId != null and comnVouchId != ''">
+			AND form.make_vouch_id = #{comnVouchId}
+		</if>
+		<if test="isNtBllg != null and isNtBllg != ''">
+			AND form.is_nt_bllg = #{isNtBllg}
+		</if>
+		<if test="isNtUploadHead != null and isNtUploadHead != ''">
+			AND form.is_nt_upload_head = #{isNtUploadHead}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND form.is_mth_end_stl = #{isMthEndStl}
+		</if>
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(form.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="bookOkDt != null and bookOkDt != ''">
+			AND DATE_FORMAT(form.book_ok_dt, '%Y%m') = DATE_FORMAT(#{bookOkDt}, '%Y%m')
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="invtyEncdS != null and invtyEncdS != ''">
+			AND forms.invty_encd &gt;= #{invtyEncdS}
+		</if>
+		<if test="invtyEncdE != null and invtyEncdE != ''">
+			AND forms.invty_encd &lt;= #{invtyEncdE}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND forms.invty_encd = #{invtyEncd}
+		</if>
+		<if test="bookAcc != null and bookAcc != ''">
+			AND form.book_ok_acc = #{bookAcc}
+		</if>
+		
+		<if test="formNum != null and formNum != ''">
+			AND form.form_num = #{formNum}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.form_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND forms.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND forms.invty_cls_encd like '${invtyClsEncd}%'
+			
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="formTypEncd != null and formTypEncd != ''">
+			AND form.form_typ_encd = #{formTypEncd}
+		</if>
+		 LIMIT #{index},#{num}
+	 </select>
+	 <select id="selectFormNoVoucherGeneratedList" parameterType="Map" resultMap="BaseResultMap">
+	 	SELECT
+			form.*,forms.*
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+		where 1=1
+		AND form.is_nt_chk = 1	
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND form.is_nt_book_ok = #{isNtBookOk}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="comnVouchId != null and comnVouchId != ''">
+			AND form.make_vouch_id = #{comnVouchId}
+		</if>
+		<if test="isNtBllg != null and isNtBllg != ''">
+			AND form.is_nt_bllg = #{isNtBllg}
+		</if>
+		<if test="isNtUploadHead != null and isNtUploadHead != ''">
+			AND form.is_nt_upload_head = #{isNtUploadHead}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND form.is_mth_end_stl = #{isMthEndStl}
+		</if>
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(form.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="bookOkDt != null and bookOkDt != ''">
+			AND DATE_FORMAT(form.book_ok_dt, '%Y%m') = DATE_FORMAT(#{bookOkDt}, '%Y%m')
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="invtyEncdS != null and invtyEncdS != ''">
+			AND forms.invty_encd &gt;= #{invtyEncdS}
+		</if>
+		<if test="invtyEncdE != null and invtyEncdE != ''">
+			AND forms.invty_encd &lt;= #{invtyEncdE}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND forms.invty_encd = #{invtyEncd}
+		</if>
+		<if test="bookAcc != null and bookAcc != ''">
+			AND form.book_ok_acc = #{bookAcc}
+		</if>	
+		<if test="formNum != null and formNum != ''">
+			AND form.form_num = #{formNum}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.form_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+	
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND forms.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND forms.invty_cls_encd = #{invtyClsEncd}
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="formTypEncd != null and formTypEncd != ''">
+			AND form.form_typ_encd = #{formTypEncd}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>
+		<if test="provrId != null and provrId !=''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+		<if test="isSelect != null and isSelect != ''">
+			GROUP BY form.form_num	
+			LIMIT #{index},#{num}
+		</if>
+		
+	 </select>
+	 <select id="countFormNoVoucherGeneratedList" parameterType="Map" resultType="int">
+	 	SELECT
+			count(DISTINCT(form.form_num))
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+		where 1=1
+		AND form.is_nt_chk = 1	
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND form.is_nt_book_ok = #{isNtBookOk}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="comnVouchId != null and comnVouchId != ''">
+			AND form.make_vouch_id = #{comnVouchId}
+		</if>
+		<if test="isNtBllg != null and isNtBllg != ''">
+			AND form.is_nt_bllg = #{isNtBllg}
+		</if>
+		<if test="isNtUploadHead != null and isNtUploadHead != ''">
+			AND form.is_nt_upload_head = #{isNtUploadHead}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND form.is_mth_end_stl = #{isMthEndStl}
+		</if>
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(form.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="bookOkDt != null and bookOkDt != ''">
+			AND DATE_FORMAT(form.book_ok_dt, '%Y%m') = DATE_FORMAT(#{bookOkDt}, '%Y%m')
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="invtyEncdS != null and invtyEncdS != ''">
+			AND forms.invty_encd &gt;= #{invtyEncdS}
+		</if>
+		<if test="invtyEncdE != null and invtyEncdE != ''">
+			AND forms.invty_encd &lt;= #{invtyEncdE}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND forms.invty_encd = #{invtyEncd}
+		</if>
+		<if test="bookAcc != null and bookAcc != ''">
+			AND form.book_ok_acc = #{bookAcc}
+		</if>
+		
+		<if test="formNum != null and formNum != ''">
+			AND form.form_num = #{formNum}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.form_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND forms.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND forms.invty_cls_encd = #{invtyClsEncd}
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="formTypEncd != null and formTypEncd != ''">
+			AND form.form_typ_encd = #{formTypEncd}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>	
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>
+		<if test="provrId != null and provrId !=''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+	 </select>
+	 
+	 <select id="selectMergeMapAndPage" parameterType="Map" resultMap="BaseResultMap">	 	
+	 	SELECT
+			 form_dt, is_nt_chk, chkr, chk_tm, out_into_whs_typ_id, out_into_whs_typ_nm, 
+		    biz_typ_id, biz_typ_nm, sell_typ_id, sell_typ_nm, purs_typ_id, purs_typ_nm, provr_id, 
+		    provr_nm, recv_send_cate_id, recv_send_cate_nm, cust_id, cust_nm, acc_num, user_name, 
+		    is_nt_book_ok, book_ok_acc, book_ok_dt, is_nt_bllg, is_nt_stl, is_nt_make_vouch, 
+		    is_nt_upload_head, make_vouch_id, make_vouch_abst, memo, is_mth_end_stl, sell_ordr_ind as form_num, 
+		    setup_pers, setup_tm, form_typ_encd, form_typ_name,forms.*
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num	
+		where 1=1
+		AND form.is_nt_chk = 1
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND form.is_nt_book_ok = #{isNtBookOk}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="comnVouchId != null and comnVouchId != ''">
+			AND form.make_vouch_id = #{comnVouchId}
+		</if>
+		<if test="isNtBllg != null and isNtBllg != ''">
+			AND form.is_nt_bllg = #{isNtBllg}
+		</if>
+		<if test="isNtUploadHead != null and isNtUploadHead != ''">
+			AND form.is_nt_upload_head = #{isNtUploadHead}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND form.is_mth_end_stl = #{isMthEndStl}
+		</if>
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(form.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="bookOkDt != null and bookOkDt != ''">
+			AND DATE_FORMAT(form.book_ok_dt, '%Y%m') = DATE_FORMAT(#{bookOkDt}, '%Y%m')
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="invtyEncdS != null and invtyEncdS != ''">
+			AND forms.invty_encd &gt;= #{invtyEncdS}
+		</if>
+		<if test="invtyEncdE != null and invtyEncdE != ''">
+			AND forms.invty_encd &lt;= #{invtyEncdE}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND forms.invty_encd = #{invtyEncd}
+		</if>
+		<if test="bookAcc != null and bookAcc != ''">
+			AND form.book_ok_acc = #{bookAcc}
+		</if>
+		
+		<if test="formNum != null and formNum != ''">
+			AND form.sell_ordr_ind = #{formNum}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.sell_ordr_ind IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND forms.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND forms.invty_cls_encd = #{invtyClsEncd}
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="formTypEncd != null and formTypEncd != ''">
+			AND form.form_typ_encd = #{formTypEncd}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>	
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>
+		<if test="provrId != null and provrId !=''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+		<if test="isSelect != null and isSelect != ''">
+			 GROUP BY form.form_num	 
+		 	 LIMIT #{index},#{num}
+		</if>
+		
+	 </select>
+	 <select id="countSelectMapAndPage" parameterType="Map" resultType="int">
+	 	SELECT
+			count(*)
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+		AND form.is_nt_chk = 1
+		where 1=1
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND form.is_nt_book_ok = #{isNtBookOk}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="comnVouchId != null and comnVouchId != ''">
+			AND form.make_vouch_id = #{comnVouchId}
+		</if>
+		<if test="isNtBllg != null and isNtBllg != ''">
+			AND form.is_nt_bllg = #{isNtBllg}
+		</if>
+		<if test="isNtUploadHead != null and isNtUploadHead != ''">
+			AND form.is_nt_upload_head = #{isNtUploadHead}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND form.is_mth_end_stl = #{isMthEndStl}
+		</if>
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(form.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="bookOkDt != null and bookOkDt != ''">
+			AND DATE_FORMAT(form.book_ok_dt, '%Y%m') = DATE_FORMAT(#{bookOkDt}, '%Y%m')
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="invtyEncdS != null and invtyEncdS != ''">
+			AND forms.invty_encd &gt;= #{invtyEncdS}
+		</if>
+		<if test="invtyEncdE != null and invtyEncdE != ''">
+			AND forms.invty_encd &lt;= #{invtyEncdE}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND forms.invty_encd = #{invtyEncd}
+		</if>
+		<if test="bookAcc != null and bookAcc != ''">
+			AND form.book_ok_acc = #{formEDt}
+		</if>
+		
+		<if test="formNum != null and formNum != ''">
+			AND form.sell_ordr_ind = #{formNum}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.sell_ordr_ind IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND forms.invty_cls_encd like '${invtyClsEncd}%'
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="formTypEncd != null and formTypEncd != ''">
+			AND form.form_typ_encd = #{formTypEncd}
+		</if>
+	 </select>
+	  <update id="updateIsNtBook">
+	  	update form_book_entry
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_mth_end_stl =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when form_num = #{item.formNum} then #{item.isMthEndStl}
+				</foreach>
+			</trim>
+			<trim prefix="book_ok_dt =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when form_num = #{item.formNum} then #{item.bookOkDt}
+				</foreach>
+			</trim>
+			<trim prefix="book_ok_acc =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when form_num = #{item.formNum} then #{item.bookOkAcc}
+				</foreach>
+			</trim>
+			<trim prefix="is_nt_book_ok =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when form_num = #{item.formNum} then #{item.isNtBookOk}
+				</foreach>
+			</trim>
+		</trim>
+		where form_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	  </update>
+	  
+	  <update id="updateFormVouch" parameterType="java.util.List">
+		update form_book_entry 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_make_vouch =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when form_num = #{item.formNum} then #{item.isNtMakeVouch}
+				</foreach>
+			</trim>
+			<trim prefix="make_vouch_id =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when form_num = #{item.formNum} then #{item.makeVouchId}
+				</foreach>
+			</trim>
+				
+		</trim>
+		where form_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	  </update>
+	  <update id="updateGruopFormVouch" parameterType="java.util.List">
+	  	update form_book_entry 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_make_vouch =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_ordr_ind = #{item.sellOrdrInd} then #{item.isNtMakeVouch}
+				</foreach>
+			</trim>
+			<trim prefix="make_vouch_id =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_ordr_ind = #{item.sellOrdrInd} then #{item.makeVouchId}
+				</foreach>
+			</trim>
+				
+		</trim>
+		where sell_ordr_ind in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.sellOrdrInd}
+		</foreach>
+	  </update>
+	 <delete id="delectFormBookList" parameterType="java.util.List">
+	 	delete form,forms 
+	  	FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+	    where form.form_num in
+		<foreach item="formBook" collection="list" open="(" close=")" separator=",">
+		     #{formBook.formNum}
+		</foreach>
+	 </delete>
+	 
+	    <!--查询流水帐 -->
+	  <select id="selectStreamMap" parameterType="Map" resultMap="BaseResultMap">
+	  	SELECT
+			form.*, forms.*
+		FROM
+			form_book_entry_sub AS forms
+		INNER JOIN form_book_entry AS form ON form.form_num = forms.form_num
+		where form.is_nt_chk = 1
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND form.is_nt_book_ok = #{isNtBookOk}
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>	
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND forms.invty_encd = #{invtyEncd}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND form.form_num = #{formNum}
+		</if>
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(form.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="invtyCls != null and invtyCls != ''">
+			AND forms.invty_cls_encd = #{invtyCls}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		<!--单据类型编码  -->
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+				AND out_into_whs_typ_id IN
+				<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+					#{formCode}
+				</foreach>
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		 <if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		 </if>
+		 <if test="whsEncdList != null and whsEncdList.size() > 0 ">
+			AND forms.whs_encd IN 
+			<foreach collection="whsEncdList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		
+		<if test="index != null and index != '' and num != null and num != ''">
+			LIMIT #{index},#{num}
+		</if>
+	  </select>
+	  <select id="countSelectStreamMap" parameterType="Map" resultType="int">
+	  	SELECT
+			count(*)
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+		where form.is_nt_chk = 1
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND form.is_nt_book_ok = #{isNtBookOk}
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>	
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND forms.invty_encd = #{invtyEncd}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND form.form_num = #{formNum}
+		</if>
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(form.form_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND forms.invty_cls_encd = #{invtyClsEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		 </if>
+		 <if test="whsEncdList != null and whsEncdList.size() > 0 ">
+			AND forms.whs_encd IN 
+			<foreach collection="whsEncdList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+	  </select>
+	  <select id="sumFormBookQtyAndAmt"  parameterType="Map"  resultType="FormBookEntrySub"> 	 
+	  	SELECT
+			SUM(sub.qty) as qty,SUM(sub.no_tax_amt) as no_tax_amt
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS sub ON form.form_num = sub.form_num
+		WHERE
+			form.is_nt_chk = 1
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.out_into_whs_typ_id IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="outIntoTypeId != null and outIntoTypeId != ''">
+			AND form.out_into_whs_typ_id = #{outIntoTypeId}
+		</if>
+		<if test="isNtBllg != null and isNtBllg != ''">
+			AND form.is_nt_bllg = #{isNtBllg}
+		</if>	
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND sub.bat_num = #{batNum}
+		</if>
+	  </select>
+	  <!-- 生成凭证-选单-未生成凭证列表-销售单 -->
+	  <select id="selectSellSnglNoVoucherGeneratedList" parameterType="Map" resultMap="BaseResultMap">
+	  	SELECT
+			form.sell_sngl_id  form_num,form.sell_sngl_dt form_dt,form.user_name acc_num,
+			form.chkr chkr,form.chk_tm chk_tm,form.recv_send_cate_id recv_send_cate_id,
+			form.*,sub.*,form.cust_id cust_id,cust.cust_nm cust_nm,form.biz_typ_id biz_typ_id,
+			biz.biz_typ_nm biz_typ_nm,form.form_typ_encd,typ.form_typ_name,whs.whs_nm as whs_nm
+		FROM
+			sell_sngl AS form
+		INNER JOIN sell_sngl_sub AS sub ON form.sell_sngl_id = sub.sell_sngl_id
+		LEFT JOIN cust_doc AS cust ON cust.cust_id = form.cust_id 
+		LEFT JOIN biz_type AS biz ON biz.biz_typ_id = form.biz_typ_id
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		LEFT JOIN whs_doc whs ON whs.whs_encd = sub.whs_encd
+		WHERE form.is_nt_chk = 1 
+		<if test="formSDt != null and formSDt != ''">
+			AND form.sell_sngl_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.sell_sngl_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.sell_sngl_id IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		
+		<if test="custId != null and custId != ''">
+			AND form.cust_id = #{custId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+		<if test="isSelect != null and isSelect != ''">
+			GROUP BY form.sell_sngl_id
+	  		LIMIT #{index},#{num}
+		</if>
+		
+	  </select>
+	  <select id="countSellSnglNoVoucherGeneratedList" parameterType="Map" resultType="int">
+	  	SELECT
+			count(DISTINCT(form.sell_sngl_id))
+		FROM
+			sell_sngl AS form
+		INNER JOIN sell_sngl_sub AS sub ON form.sell_sngl_id = sub.sell_sngl_id
+		LEFT JOIN cust_doc AS cust ON cust.cust_id = form.cust_id 
+		LEFT JOIN biz_type AS biz ON biz.biz_typ_id = form.biz_typ_id
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		WHERE form.is_nt_chk = 1 
+		<if test="formSDt != null and formSDt != ''">
+			AND form.sell_sngl_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.sell_sngl_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.sell_sngl_id IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>	
+		<if test="custId != null and custId != ''">
+			AND form.cust_id = #{custId}
+		</if>
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+	  </select>
+	  <update id="updateSellSnglFormVouch" parameterType="java.util.List">
+	  	update sell_sngl 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_make_vouch =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_sngl_id = #{item.formNum} then #{item.isNtMakeVouch}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_sngl_id = #{item.formNum} then #{item.makVouchPers}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_sngl_id = #{item.formNum} then #{item.makVouchTm}
+				</foreach>
+			</trim>
+				
+		</trim>
+		where sell_sngl_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	  </update>
+	 
+	  <!-- 生成凭证-选单-未生成凭证列表-采购发票 -->
+	  <select id="selectPursInvMasTabNoVoucherGeneratedList" parameterType="Map" resultMap="BaseResultMap">
+	  	SELECT
+			form.purs_inv_num form_num,form.bllg_dt form_dt,form.user_name acc_num,
+			form.chkr chkr,form.chk_tm chk_tm,form.inv_typ out_into_whs_typ_nm,
+			form.provr_id provr_id,provr.provr_nm provr_nm,form.is_nt_book_entry,
+			form.purs_typ_id,purs.purs_typ_nm,form.*,sub.*,form.form_typ_encd,typ.form_typ_name,
+			doc.invty_cls_encd,whs.whs_nm,proj.proj_nm
+		FROM
+			purs_comn_inv AS form
+		INNER JOIN purs_comn_inv_sub AS sub ON form.purs_inv_num = sub.purs_inv_num 
+		LEFT JOIN provr_doc AS provr ON provr.provr_id = form.provr_id
+		LEFT JOIN purs_type purs ON purs.purs_typ_id = form.purs_typ_id
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		LEFT JOIN invty_doc as doc ON doc.invty_encd = sub.invty_encd
+		LEFT JOIN whs_doc as whs ON whs.whs_encd = sub.whs_encd
+		LEFT JOIN proj_cls as proj ON proj.proj_encd = sub.proj_encd
+		WHERE form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.bllg_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.bllg_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.purs_inv_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="provrId != null and provrId != ''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>	
+		<if test="provrId != null and provrId !=''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+		<if test="isSelect != null and isSelect != ''">
+			GROUP BY form.purs_inv_num
+			LIMIT #{index},#{num}
+		</if>
+		
+	  </select>
+	  <select id="countPursInvMasTabNoVoucherGeneratedList" parameterType="Map" resultType="int">
+	  	SELECT
+			count(DISTINCT(form.purs_inv_num))
+		FROM
+			purs_comn_inv AS form
+		INNER JOIN purs_comn_inv_sub AS sub ON form.purs_inv_num = sub.purs_inv_num 
+		LEFT JOIN provr_doc AS provr ON provr.provr_id = form.provr_id
+		LEFT JOIN purs_type purs ON purs.purs_typ_id = form.purs_typ_id
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		LEFT JOIN whs_doc as whs ON whs.whs_encd = sub.whs_encd
+		WHERE form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.bllg_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.bllg_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.purs_inv_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="provrId != null and provrId != ''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>	
+		<if test="provrId != null and provrId !=''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+	  </select>
+	  <update id="updatePursInvMasFormVouch" parameterType="java.util.List">
+	  	update purs_comn_inv 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_make_vouch =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when purs_inv_num = #{item.formNum} then #{item.isNtMakeVouch}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when purs_inv_num = #{item.formNum} then #{item.makVouchPers}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when purs_inv_num = #{item.formNum} then #{item.makVouchTm}
+				</foreach>
+			</trim>
+				
+		</trim>
+		where purs_inv_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	  </update>
+	  
+	  
+	  <!-- 生成凭证-选单-未生成凭证列表-销售发票(专用/普通) -->
+	  <select id="selectSellInvMasTabNoVoucherGeneratedList" parameterType="Map" resultMap="BaseResultMap">
+	    SELECT
+	    <choose>
+		  	<when test="isFindForm != null and isFindForm != ''">		  	
+				form.sell_inv_num form_num,form.bllg_dt form_dt,
+			  	form.inv_typ out_into_whs_typ_nm,biz.biz_typ_nm biz_typ_nm,
+				cust.cust_nm cust_nm,form.*,sub.*,form.form_typ_encd,typ.form_typ_name,doc.invty_cls_encd,whs.whs_nm			
+		  	</when>
+		  	<otherwise>
+	  			form.sell_inv_num form_num,form.bllg_dt form_dt,form.inv_typ out_into_whs_typ_nm,biz.biz_typ_nm biz_typ_nm,
+				cust.cust_nm cust_nm,form.*,sub.invty_encd,sub.whs_encd,sub.qty,sub.measr_corp_id,sub.cntn_tax_uprc,
+				sub.prc_tax_sum,sub.tax_amt,sub.tax_rate,sub.bat_num,sub.bx_qty,sub.is_nt_rtn_goods,sub.sell_sngl_nums,
+				sub.out_whs_id,sub.out_whs_sub_id,sub.sell_sngl_sub_id,sub.rtn_goods_ids,sub.rtn_goods_sub_id,
+	      		form.form_typ_encd,typ.form_typ_name,doc.invty_cls_encd,whs.whs_nm,
+				outs.carr_ovr_amt as no_tax_amt,outs.carr_ovr_uprc no_tax_uprc
+		  	</otherwise>
+	  	</choose>
+	  	FROM sell_comn_inv AS form
+		INNER JOIN sell_comn_inv_sub AS sub ON form.sell_inv_num = sub.sell_inv_num 
+		LEFT JOIN cust_doc AS cust ON cust.cust_id = form.cust_id 
+		LEFT JOIN biz_type AS biz ON biz.biz_typ_id = form.biz_typ_id
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		LEFT JOIN invty_doc as doc ON doc.invty_encd = sub.invty_encd
+		LEFT JOIN whs_doc as whs ON whs.whs_encd = sub.whs_encd
+		LEFT JOIN sell_out_whs_sub as outs ON outs.to_ordr_num = sub.sell_sngl_sub_id
+		WHERE form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.bllg_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.bllg_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.sell_inv_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+	
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="invTyp != null and invTyp != ''">
+			AND form.inv_typ = #{invTyp}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+		<if test="isSelect != null and isSelect != ''">
+			GROUP BY form.sell_inv_num
+			LIMIT #{index},#{num}
+		</if>
+		
+	  </select>
+	  <select id="countSellInvMasTabNoVoucherGeneratedList" parameterType="Map" resultType="int">
+	  	SELECT
+			count(DISTINCT(form.sell_inv_num))
+		FROM
+			sell_comn_inv AS form
+		INNER JOIN sell_comn_inv_sub AS sub ON form.sell_inv_num = sub.sell_inv_num 
+		LEFT JOIN cust_doc AS cust ON cust.cust_id = form.cust_id 
+		LEFT JOIN biz_type AS biz ON biz.biz_typ_id = form.biz_typ_id
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		LEFT JOIN invty_doc as doc ON doc.invty_encd = sub.invty_encd
+		LEFT JOIN whs_doc as whs ON whs.whs_encd = sub.whs_encd
+		WHERE form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.bllg_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.bllg_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.sell_inv_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+	
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="invTyp != null and invTyp != ''">
+			AND form.inv_typ = #{invTyp}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>	
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>	
+	  </select>
+	   <update id="updateSellInvMasFormVouch" parameterType="java.util.List">
+	  	update sell_comn_inv
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_make_vouch =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_inv_num = #{item.formNum} then #{item.isNtMakeVouch}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_inv_num = #{item.formNum} then #{item.makVouchPers}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_inv_num = #{item.formNum} then #{item.makVouchTm}
+				</foreach>
+			</trim>
+				
+		</trim>
+		where sell_inv_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	  </update>
+	  
+	  
+	  <!-- 生成凭证-选单-未生成凭证列表-出入库调整单 -->
+	  <select id="selectOutIntoWhsAdjSnglNoVoucherGeneratedList" parameterType="Map" resultMap="BaseResultMap">
+	  	SELECT
+			form.*,sub.*,typ.form_typ_name
+		FROM
+			out_into_whs_adj_sngl AS form
+		INNER JOIN out_into_whs_adj_sngl_sub_tab AS sub ON form.form_num = sub.form_num
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		WHERE
+			form.is_nt_book_entry = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_tm &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_tm &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.form_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="custId != null and custId != ''">
+			AND form.cust_id = #{custId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		<if test="provrId != null and provrId !=''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>	
+		<if test="isSelect != null and isSelect != ''">
+			GROUP BY form.form_num
+			LIMIT #{index},#{num}
+		</if>
+		
+	  </select>
+	  <select id="countOutIntoWhsAdjSnglNoVoucherGeneratedList" parameterType="Map" resultType="int">
+	  	SELECT
+			count(DISTINCT(form.form_num))
+		FROM
+			out_into_whs_adj_sngl AS form
+		INNER JOIN out_into_whs_adj_sngl_sub_tab AS sub ON form.form_num = sub.form_num
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		WHERE
+			form.is_nt_book_entry = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_tm &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_tm &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.form_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="custId != null and custId != ''">
+			AND form.cust_id = #{custId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if> 
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		<if test="provrId != null and provrId !=''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>	
+	  </select>
+	  <update id="updateIntoWhsAdjFormVouch" parameterType="java.util.List">
+	  	update form_back_flush 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_make_vouch =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when form_num = #{item.formNum} then #{item.isNtMakeVouch}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_inv_num = #{item.formNum} then #{item.makVouchPers}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when sell_inv_num = #{item.formNum} then #{item.makVouchTm}
+				</foreach>
+			</trim>
+		</trim>
+		where form_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	  </update>
+	  
+	  <!-- 生成凭证-选单-未生成凭证列表-红字蓝字回冲单 -->
+	  <select id="selectFormBackFlushNoVoucherGeneratedList" parameterType="Map" resultMap="BaseResultMap">
+	  	SELECT
+			form.*,sub.*, typ.form_typ_name
+		FROM
+			form_back_flush AS form
+		INNER JOIN form_back_flush_sub AS sub ON form.form_num = sub.form_num
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		WHERE form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.form_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="custId != null and custId != ''">
+			AND form.cust_id = #{custId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		<if test="provrId != null and provrId !=''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="isRedBack != null and isRedBack !=''">
+			AND form.is_red_back = #{isRedBack}
+		</if>
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="isSelect != null and isSelect != ''">
+			GROUP BY form.form_num
+			LIMIT #{index},#{num}
+		</if>
+		
+	  </select>
+	  <select id="countFormBackFlushNoVoucherGeneratedList" parameterType="Map" resultType="int">
+	  	SELECT
+			count(DISTINCT(form.form_num))
+		FROM
+			form_back_flush AS form
+		INNER JOIN form_back_flush_sub AS sub ON form.form_num = sub.form_num 
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		WHERE form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.form_num IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="custId != null and custId != ''">
+			AND form.cust_id = #{custId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		<if test="provrId != null and provrId !=''">
+			AND form.provr_id = #{provrId}
+		</if>
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+	  </select>
+	  <update id="updateFormBackFlushFormVouch" parameterType="java.util.List">
+	  	update form_back_flush 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_make_vouch =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when form_num = #{item.formNum} then #{item.isNtMakeVouch}
+				</foreach>
+			</trim>
+				
+		</trim>
+		where form_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	  </update>
+	  <!-- 生成凭证-选单-未生成凭证列表-退货单 -->
+	  <select id="selectRtnGoodsNoVoucherGeneratedList" parameterType="Map" resultMap="BaseResultMap">
+	  	SELECT
+			form.*, sub.*, typ.form_typ_name
+		FROM
+			rtn_goods AS form
+		INNER JOIN rtn_goods_sub AS sub ON form.rtn_goods_id = sub.rtn_goods_id
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		WHERE
+			form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.rtn_goods_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.rtn_goods_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.rtn_goods_id IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+		<if test="isSelect != null and isSelect != ''">
+			GROUP BY form.rtn_goods_id
+		    LIMIT #{index},#{num}
+		</if>
+		
+	  </select>
+	  <select id="countRtnGoodsNoVoucherGeneratedList" parameterType="Map" resultType="int">
+	  	SELECT
+			count(DISTINCT(form.rtn_goods_id))
+		FROM
+			rtn_goods AS form
+		INNER JOIN rtn_goods_sub AS sub ON form.rtn_goods_id = sub.rtn_goods_id
+		LEFT JOIN form_typ_tabs AS typ ON typ.form_typ_encd = form.form_typ_encd
+		WHERE
+			form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.rtn_goods_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.rtn_goods_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.rtn_goods_id IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+	
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+	  </select>
+	  <update id="updateRtnGoodsFormVouch" parameterType="java.util.List">
+	  	update rtn_goods 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_make_vouch =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when rtn_goods_id = #{item.formNum} then #{item.isNtMakeVouch}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when rtn_goods_id = #{item.formNum} then #{item.makVouchPers}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when rtn_goods_id = #{item.formNum} then #{item.makVouchTm}
+				</foreach>
+			</trim>
+		</trim>
+		where rtn_goods_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	  </update>
+	  
+	  <!-- 生成凭证-选单-未生成凭证列表-委托代销发货单/退货单 -->
+	  <select id="selectEntrsAgnDelvNoVoucherGeneratedList" parameterType="Map" resultMap="BaseResultMap">
+	  	SELECT
+			form.*, sub.*
+		FROM
+			entrs_agn_delv AS form
+		INNER JOIN entrs_agn_delv_sub AS sub ON form.delv_sngl_id = sub.delv_sngl_id
+		WHERE
+			form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.delv_sngl_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.delv_sngl_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.delv_sngl_id IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="isNtRtnGood != null">
+			AND form.is_nt_rtn_good = #{isNtRtnGood}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+		<if test="isSelect != null and isSelect != ''">
+			GROUP BY form.delv_sngl_id
+			LIMIT #{index},#{num}
+		</if>
+		
+	  </select>
+	  <select id="countEntrsAgnDelvNoVoucherGeneratedList" parameterType="Map" resultType="int">
+	  	SELECT
+			count(DISTINCT(form.delv_sngl_id))
+		FROM
+			entrs_agn_delv AS form
+		INNER JOIN entrs_agn_delv_sub AS sub ON form.delv_sngl_id = sub.delv_sngl_id
+		WHERE
+			form.is_nt_chk = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.delv_sngl_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.delv_sngl_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0 ">
+			AND form.delv_sngl_id IN
+			<foreach collection="formNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sub.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="whsCodeList != null and whsCodeList.size() > 0 ">
+			AND sub.whs_encd IN
+			<foreach collection="whsCodeList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="isNtRtnGood != null">
+			AND form.is_nt_rtn_good = #{isNtRtnGood}
+		</if>
+		<if test="formTypeList != null and formTypeList.size() > 0 ">
+			AND form.form_typ_encd IN
+			<foreach collection="formTypeList" item="formType" open="(" close=")" separator=",">
+				#{formType}
+			</foreach>
+		</if>
+		<if test="custId != null and custId !=''">
+			AND form.cust_id = #{custId}
+		</if>	
+		<if test="recvSendCateId != null and recvSendCateId !=''">
+			AND form.recv_send_cate_id = #{recvSendCateId}
+		</if>
+		<if test="deptId != null and deptId !=''">
+			AND form.dept_id = #{deptId}
+		</if>
+	  </select>
+	  <update id="updateEntrsAgnDelvFormVouch" parameterType="java.util.List">  	
+	  	update entrs_agn_delv 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_make_vouch =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when delv_sngl_id = #{item.formNum} then #{item.isNtMakeVouch}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when delv_sngl_id = #{item.formNum} then #{item.makVouchPers}
+				</foreach>
+			</trim>
+			<trim prefix="mak_vouch_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when delv_sngl_id = #{item.formNum} then #{item.makVouchTm}
+				</foreach>
+			</trim>
+		</trim>
+		where delv_sngl_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	 
+	  </update>
+	  <!-- 流水帐查询-->
+	  <select id="selectStreamALLList"  parameterType="Map" resultMap="BaseResultMap" >
+	  	SELECT
+			iw.into_whs_sngl_id as form_num ,iw.into_whs_dt as form_dt,iw.purs_typ_id,iw.out_into_whs_typ_id,iw.recv_send_cate_id,iw.acc_num,
+			iw.form_typ_encd,iw.dept_id,iw.user_name,iw.is_nt_book_entry,iw.book_entry_pers,iw.book_entry_tm,iws.invty_encd,iws.whs_encd,
+			iws.bat_num,iws.bx_qty,iws.bao_zhi_qi,iws.no_tax_amt,iws.no_tax_uprc,iws.qty,mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_encd,
+			 wd.whs_nm,ind.invty_nm,ind.spc_model,ind.invty_cls_encd,ind.invty_cd,ind.invty_nm,cls.invty_cls_nm,typ.out_into_whs_typ_nm,
+			 rsc.recv_send_cate_nm,pd.provr_nm,"" as cust_nm,ftyp.form_typ_name,"" as sell_typ_nm,"" as sell_typ_id,"" as biz_typ_id,"" as biz_typ_nm,
+			 pt.purs_typ_nm,iws.ordr_num,iw.is_nt_bllg,iw.is_nt_stl,iw.memo,""as sell_ordr_ind,iw.setup_pers,iw.setup_tm,
+			iw.dept_id,dd.dept_name,iw.is_nt_chk,iw.chkr,iw.chk_tm,iws.tax_amt,iws.cntn_tax_uprc,iws.prc_tax_sum,iws.tax_rate,iws.intl_bat,
+			iws.prdc_dt,iws.invldtn_dt,iws.to_ordr_num,iws.un_bllg_qty,iws.un_bllg_uprc,iws.un_bllg_amt,iws.proj_encd,pj.proj_nm,
+			iws.into_whs_sngl_id as form_nums,"" as cust_id
+		FROM
+			into_whs AS iw
+		INNER JOIN into_whs_sub AS iws  ON iw.into_whs_sngl_id = iws.into_whs_sngl_id
+		LEFT JOIN purs_type AS pt ON iw.purs_typ_id = pt.purs_typ_id
+		LEFT JOIN mis_user mu ON iw.acc_num = mu.acc_num
+		LEFT JOIN provr_doc pd ON iw.provr_id = pd.provr_id
+		LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+		LEFT JOIN whs_doc wd ON iws.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+		LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+		LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd
+		LEFT JOIN out_into_whs_typ as typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+		LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd 
+		LEFT JOIN proj_cls AS pj ON pj.proj_encd = iws.proj_encd 
+		where iw.is_nt_chk = 1
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT( iw.into_whs_dt , '%Y%m' ) = DATE_FORMAT( #{loginTime} , '%Y%m' )
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND iws.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND iws.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="whsEncdList != null and whsEncdList.size() > 0 ">
+			AND iws.whs_encd IN 
+			<foreach collection="whsEncdList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND iw.into_whs_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND iw.into_whs_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND iw.into_whs_sngl_id = #{formNum}
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+				AND iw.out_into_whs_typ_id IN
+				<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+					#{formCode}
+				</foreach>
+			</if>
+		<if test="formNumList != null and formNumList.size() > 0">
+			AND iw.into_whs_sngl_id IN 
+		       <foreach collection="formNumList" index="index" item="item" open="(" separator="," close=")">
+                #{item.formNum}
+           	  </foreach>
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd !=''">
+		<!-- AND ind.invty_cls_encd = #{invtyClsEncd} -->
+		    AND ind.invty_cls_encd like '${invtyClsEncd}%'
+		</if>
+		
+		UNION ALL 
+		
+		SELECT 
+		    iw.out_whs_id,iw.out_whs_dt,"",iw.out_into_whs_typ_id,iw.recv_send_cate_id,iw.acc_num,iw.form_typ_encd,iw.dept_id,
+			iw.user_name,iw.is_nt_book_entry,iw.book_entry_pers,iw.book_entry_tm,iws.invty_encd,iws.whs_encd,iws.bat_num,iws.bx_qty,iws.bao_zhi_qi,
+			iws.no_tax_amt,iws.no_tax_uprc,iws.qty,mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_encd,wd.whs_nm,ind.invty_nm,ind.spc_model,
+		    ind.invty_cls_encd,ind.invty_cd,ind.invty_nm,cls.invty_cls_nm,typ.out_into_whs_typ_nm,rsc.recv_send_cate_nm,"",cd.cust_nm,ftyp.form_typ_name,
+		    st.sell_typ_nm,iw.sell_typ_id,iw.biz_typ_id as biz_typ_id,bt.biz_typ_nm as biz_typ_nm,"",iws.ordr_num,iw.is_nt_bllg,iw.is_nt_stl,iw.memo,""as sell_ordr_ind,iw.setup_pers,iw.setup_tm,
+		    iw.dept_id,dd.dept_name,iw.is_nt_chk,iw.chkr,iw.chk_tm,iws.tax_amt,iws.cntn_tax_uprc,iws.prc_tax_sum,iws.tax_rate,iws.intl_bat,
+		    iws.prdc_dt,iws.invldtn_dt,iws.to_ordr_num,"","","",iws.proj_encd,pj.proj_nm,iws.out_whs_id as form_nums,iw.cust_id
+		FROM sell_out_whs AS iw 
+		INNER JOIN sell_out_whs_sub AS iws  ON iw.out_whs_id = iws.out_whs_id
+		LEFT JOIN sell_type AS st ON iw.sell_typ_id = st.sell_typ_id
+		LEFT JOIN mis_user mu ON iw.acc_num = mu.acc_num
+		LEFT JOIN cust_doc cd ON iw.cust_id = cd.cust_id
+		LEFT JOIN biz_type bt ON bt.biz_typ_id = iw.biz_typ_id
+		LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+		LEFT JOIN whs_doc wd ON iws.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+		LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+		LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd 
+		LEFT JOIN out_into_whs_typ as typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+		LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd
+		LEFT JOIN proj_cls AS pj ON pj.proj_encd = iws.proj_encd 
+		where iw.is_nt_chk = 1
+		 <if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(iw.out_whs_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		 </if>
+		 <if test="formCodeList != null and formCodeList.contains('10') ">
+			AND iw.out_into_whs_typ_id = 10
+		 </if>
+	 	 <if test="whsEncd != null and whsEncd != ''">
+			AND iws.whs_encd = #{whsEncd}
+		 </if>
+		 
+		 <if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		 <if test="invIdList != null and invIdList.size() > 0 ">
+			AND iws.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		 </if>
+		 <if test="whsEncdList != null and whsEncdList.size() > 0 ">
+			AND iws.whs_encd IN 
+			<foreach collection="whsEncdList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		 <if test="formSDt != null and formSDt != ''">
+			AND iw.out_whs_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND iw.out_whs_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND iw.out_whs_id = #{formNum}
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+				AND iw.out_into_whs_typ_id IN
+				<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+					#{formCode}
+				</foreach>
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0">
+			AND iw.out_whs_id IN 
+		       <foreach collection="formNumList" index="index" item="item" open="(" separator="," close=")">
+                #{item.formNum}
+           	  </foreach>
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd !=''">
+			AND ind.invty_cls_encd like '${invtyClsEncd}%'
+		</if>
+		UNION ALL 
+		
+		SELECT 
+			 iw.form_num,iw.form_dt,"",iw.out_into_whs_typ_id,"","",iw.form_typ_encd,"",
+		    iw.operator,iw.is_nt_book_entry,iw.book_entry_pers,iw.book_entry_tm,iws.invty_encd,iw.whs_encd,
+		    iws.bat_num,iws.bx_qty,iws.bao_zhi_qi,iws.un_tax_amt,iws.un_tax_uprc,iws.qty,mcd.measr_corp_id,
+		    mcd.measr_corp_nm,wd.whs_encd,wd.whs_nm,ind.invty_nm,ind.spc_model,ind.invty_cls_encd,ind.invty_cd,
+		    ind.invty_nm,cls.invty_cls_nm,typ.out_into_whs_typ_nm,"","","",ftyp.form_typ_name,"","","","","",
+		    iws.ordr_num,"","",iw.memo,""as sell_ordr_ind,iw.setup_pers,iw.setup_tm,
+		    "","",iw.is_nt_chk,iw.chkr,iw.chk_tm,iws.cntn_tax_amt,iws.cntn_tax_uprc,"",iws.tax_rate,iws.intl_bat,
+		   iws.prdc_dt,iws.invldtn_dt,"","","","",iws.proj_encd,pj.proj_nm,iws.form_num as form_nums,""
+		FROM oth_out_into_whs AS iw
+		INNER JOIN oth_out_into_whs_sub_tab AS iws ON iw.form_num = iws.form_num
+		LEFT JOIN whs_doc wd ON iw.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+		LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd
+		LEFT JOIN out_into_whs_typ as typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+		LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd 
+	    LEFT JOIN proj_cls AS pj ON pj.proj_encd = iws.proj_encd
+		where iw.is_nt_chk = 1
+		
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(iw.form_dt, '%Y%m') =
+			DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND iw.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND iws.invty_encd IN
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND iw.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND iw.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND iw.form_num = #{formNum}
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+				AND iw.out_into_whs_typ_id IN
+				<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+					#{formCode}
+				</foreach>
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd !=''">
+			AND ind.invty_cls_encd like '${invtyClsEncd}%'
+		</if>
+		<if test="formNumList != null and formNumList.size() > 0">
+			AND iw.form_num IN 
+		       <foreach collection="formNumList" index="index" item="item" open="(" separator="," close=")">
+                #{item.formNum}
+           	  </foreach>
+		</if>
+		<if test="isPage != null and isPage != ''">
+			LIMIT #{index},#{num}
+		</if>
+	  	
+	  	</select>
+	 	<select id="selectStreamALLCount" parameterType="Map" resultType="Integer">
+	 	 SELECT
+			COUNT(*)
+	  	 FROM(
+	  	
+	  		 SELECT
+				iw.into_whs_sngl_id
+			FROM
+				into_whs AS iw
+			INNER JOIN into_whs_sub AS iws ON iw.into_whs_sngl_id = iws.into_whs_sngl_id
+			LEFT JOIN purs_type AS pt ON iw.purs_typ_id = pt.purs_typ_id
+			LEFT JOIN mis_user mu ON iw.acc_num = mu.acc_num
+			LEFT JOIN provr_doc pd ON iw.provr_id = pd.provr_id
+			LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+			LEFT JOIN whs_doc wd ON iws.whs_encd = wd.whs_encd
+			LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+			LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+			LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+			LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd
+			LEFT JOIN out_into_whs_typ as typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+			where iw.is_nt_chk = 1
+			<if test="loginTime != null and loginTime != ''">
+				AND DATE_FORMAT( iw.into_whs_dt , '%Y%m' ) = DATE_FORMAT( #{loginTime} , '%Y%m' )
+			</if>
+			<if test="formCodeList != null and formCodeList.size() > 0 ">
+				AND iw.out_into_whs_typ_id IN
+				<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+					#{formCode}
+				</foreach>
+			</if>
+			<if test="whsEncd != null and whsEncd != ''">
+				AND iws.whs_encd = #{whsEncd}
+			</if>
+			<if test="isNtBookOk != null and isNtBookOk != ''">
+				AND iw.is_nt_book_entry = #{isNtBookOk}
+			</if>
+			<if test="invIdList != null and invIdList.size() > 0 ">
+				AND iws.invty_encd IN 
+				<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+					#{invId}
+				</foreach>
+			</if>
+			<if test="whsEncdList != null and whsEncdList.size() > 0 ">
+				AND iws.whs_encd IN 
+				<foreach collection="whsEncdList" item="whsEncd" open="(" close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="formSDt != null and formSDt != ''">
+				AND iw.into_whs_dt &gt;= #{formSDt}
+			</if>
+			<if test="formEDt != null and formEDt != ''">
+				AND iw.into_whs_dt &lt;= #{formEDt}
+			</if>
+			<if test="formNum != null and formNum != ''">
+				AND iw.into_whs_sngl_id = #{formNum}
+			</if>
+			<if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+				AND iw.out_into_whs_typ_id = #{outIntoWhsTypId}
+			</if>
+			<if test="invtyClsEncd != null and invtyClsEncd !=''">
+				AND ind.invty_cls_encd like '${invtyClsEncd}%'
+			</if>
+			UNION ALL 
+			
+			SELECT 
+			  iw.out_whs_id
+			FROM sell_out_whs AS iw 
+			INNER JOIN sell_out_whs_sub AS iws  ON iw.out_whs_id = iws.out_whs_id
+			LEFT JOIN sell_type AS st ON iw.sell_typ_id = st.sell_typ_id
+			LEFT JOIN mis_user mu ON iw.acc_num = mu.acc_num
+			LEFT JOIN cust_doc cd ON iw.cust_id = cd.cust_id
+			LEFT JOIN biz_type bt ON bt.biz_typ_id = iw.biz_typ_id
+			LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+			LEFT JOIN whs_doc wd ON iws.whs_encd = wd.whs_encd
+			LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+			LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+			LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+			LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd 
+			LEFT JOIN out_into_whs_typ as typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+			where iw.is_nt_chk = 1
+			 <if test="loginTime != null and loginTime != ''">
+				AND DATE_FORMAT(iw.out_whs_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+			 </if>
+			 <if test="formCodeList != null and formCodeList.size() > 0 ">
+				AND iw.out_into_whs_typ_id IN
+				<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+					#{formCode}
+				</foreach>
+			 </if>
+		 	 <if test="whsEncd != null and whsEncd != ''">
+				AND iws.whs_encd = #{whsEncd}
+			 </if>
+			 
+			 <if test="isNtBookOk != null and isNtBookOk != ''">
+				AND iw.is_nt_book_entry = #{isNtBookOk}
+			</if>
+			 <if test="invIdList != null and invIdList.size() > 0 ">
+				AND iws.invty_encd IN 
+				<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+					#{invId}
+				</foreach>
+			 </if>
+			 <if test="whsEncdList != null and whsEncdList.size() > 0 ">
+				AND iws.whs_encd IN 
+				<foreach collection="whsEncdList" item="whsEncd" open="(" close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			 <if test="formSDt != null and formSDt != ''">
+				AND iw.out_whs_dt &gt;= #{formSDt}
+			</if>
+			<if test="formEDt != null and formEDt != ''">
+				AND iw.out_whs_dt &lt;= #{formEDt}
+			</if>
+			<if test="formNum != null and formNum != ''">
+				AND iw.out_whs_id = #{formNum}
+			</if>
+			<if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+				AND iw.out_into_whs_typ_id = #{outIntoWhsTypId}
+			</if>
+			<if test="invtyClsEncd != null and invtyClsEncd !=''">
+				AND ind.invty_cls_encd like '${invtyClsEncd}%'
+			</if>
+			
+			UNION ALL 
+			
+			SELECT 
+				iw.form_num
+			FROM oth_out_into_whs AS iw
+			INNER JOIN oth_out_into_whs_sub_tab AS iws ON iw.form_num = iws.form_num
+			LEFT JOIN whs_doc wd ON iw.whs_encd = wd.whs_encd
+			LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+			LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+			LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd
+			LEFT JOIN out_into_whs_typ as typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+			LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd 
+			where iw.is_nt_chk = 1
+			
+			<if test="loginTime != null and loginTime != ''">
+				AND DATE_FORMAT(iw.form_dt, '%Y%m') =
+				DATE_FORMAT(#{loginTime}, '%Y%m')
+			</if>
+			<if test="formCodeList != null and formCodeList.size() > 0 ">
+				AND iw.out_into_whs_typ_id IN
+				<foreach collection="formCodeList" item="formCode" open="("
+					close=")" separator=",">
+					#{formCode}
+				</foreach>
+			</if>
+			<if test="whsEncd != null and whsEncd != ''">
+				AND iw.whs_encd = #{whsEncd}
+			</if>
+			<if test="isNtBookOk != null and isNtBookOk != ''">
+				AND iw.is_nt_book_entry = #{isNtBookOk}
+			</if>
+			<if test="invIdList != null and invIdList.size() > 0 ">
+				AND iws.invty_encd IN
+				<foreach collection="invIdList" item="invId" open="("
+					close=")" separator=",">
+					#{invId}
+				</foreach>
+			</if>
+			<if test="formSDt != null and formSDt != ''">
+				AND iw.form_dt &gt;= #{formSDt}
+			</if>
+			<if test="formEDt != null and formEDt != ''">
+				AND iw.form_dt &lt;= #{formEDt}
+			</if>
+			<if test="formNum != null and formNum != ''">
+				AND iw.form_num = #{formNum}
+			</if>
+			<if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+				AND iw.out_into_whs_typ_id = #{outIntoWhsTypId}
+			</if>
+			<if test="invtyClsEncd != null and invtyClsEncd !=''">
+				AND ind.invty_cls_encd like '${invtyClsEncd}%'
+			</if>
+	  	) a
+ 	 </select>
+	 <select id="selectToBookForm" parameterType="Map" resultMap="BaseResultMap">
+	 	SELECT
+		 iw.into_whs_sngl_id as form_num ,iw.into_whs_dt as form_dt,iw.purs_typ_id,iw.out_into_whs_typ_id,iw.recv_send_cate_id,iw.acc_num,
+		 iw.form_typ_encd,iw.dept_id,iw.user_name,iw.is_nt_book_entry,iw.book_entry_pers,iw.book_entry_tm,iws.invty_encd,iws.whs_encd,
+		 iws.bat_num,iws.bx_qty,iws.bao_zhi_qi,iws.no_tax_amt,iws.no_tax_uprc,iws.qty,mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_encd,
+		 wd.whs_nm,ind.invty_nm,ind.spc_model,ind.invty_cls_encd,ind.invty_cd,ind.invty_nm,cls.invty_cls_nm,typ.out_into_whs_typ_nm,
+		 rsc.recv_send_cate_nm,pd.provr_nm,"" as cust_nm,ftyp.form_typ_name,"" as sell_typ_nm,"" as sell_typ_id,"" as biz_typ_id,"" as biz_typ_nm,
+		 pt.purs_typ_nm	
+		FROM
+			into_whs AS iw
+		INNER JOIN into_whs_sub AS iws  ON iw.into_whs_sngl_id = iws.into_whs_sngl_id
+		LEFT JOIN purs_type AS pt ON iw.purs_typ_id = pt.purs_typ_id
+		LEFT JOIN mis_user mu ON iw.acc_num = mu.acc_num
+		LEFT JOIN provr_doc pd ON iw.provr_id = pd.provr_id
+		LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+		LEFT JOIN whs_doc wd ON iws.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+		LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+		LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd
+		LEFT JOIN out_into_whs_typ as typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+		LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd 
+		where iw.is_nt_chk = 1
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT( iw.into_whs_dt , '%Y%m' ) = DATE_FORMAT( #{loginTime} , '%Y%m' )
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND iw.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND iws.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND iws.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="whsEncdList != null and whsEncdList.size() > 0 ">
+			AND iws.whs_encd IN 
+			<foreach collection="whsEncdList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND iw.into_whs_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND iw.into_whs_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND iw.into_whs_sngl_id = #{formNum}
+		</if>
+		<if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+			AND iw.out_into_whs_typ_id = #{outIntoWhsTypId}
+		</if>
+		UNION ALL 
+		
+		SELECT 
+		    iw.out_whs_id,iw.out_whs_dt,"",iw.out_into_whs_typ_id,iw.recv_send_cate_id,iw.acc_num,iw.form_typ_encd,iw.dept_id,
+			iw.user_name,iw.is_nt_book_entry,iw.book_entry_pers,iw.book_entry_tm,iws.invty_encd,iws.whs_encd,iws.bat_num,iws.bx_qty,iws.bao_zhi_qi,
+			iws.no_tax_amt,iws.no_tax_uprc,iws.qty,mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_encd,wd.whs_nm,ind.invty_nm,ind.spc_model,
+		    ind.invty_cls_encd,ind.invty_cd,ind.invty_nm,cls.invty_cls_nm,typ.out_into_whs_typ_nm,rsc.recv_send_cate_nm,"",cd.cust_nm,ftyp.form_typ_name,
+		    st.sell_typ_nm,iw.sell_typ_id,iw.biz_typ_id as biz_typ_id,bt.biz_typ_nm as biz_typ_nm,""
+		FROM sell_out_whs AS iw 
+		INNER JOIN sell_out_whs_sub AS iws  ON iw.out_whs_id = iws.out_whs_id
+		LEFT JOIN sell_type AS st ON iw.sell_typ_id = st.sell_typ_id
+		LEFT JOIN mis_user mu ON iw.acc_num = mu.acc_num
+		LEFT JOIN cust_doc cd ON iw.cust_id = cd.cust_id
+		LEFT JOIN biz_type bt ON bt.biz_typ_id = iw.biz_typ_id
+		LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+		LEFT JOIN whs_doc wd ON iws.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+		LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+		LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd 
+		LEFT JOIN out_into_whs_typ as typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+		LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd 
+		where iw.is_nt_chk = 1
+		 <if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(iw.out_whs_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		 </if>
+		 <if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND iw.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="(" close=")" separator=",">
+				#{formCode}
+			</foreach>
+		 </if>
+	 	 <if test="whsEncd != null and whsEncd != ''">
+			AND iws.whs_encd = #{whsEncd}
+		 </if>
+		 
+		 <if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		 <if test="invIdList != null and invIdList.size() > 0 ">
+			AND iws.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		 </if>
+		 <if test="whsEncdList != null and whsEncdList.size() > 0 ">
+			AND iws.whs_encd IN 
+			<foreach collection="whsEncdList" item="whsEncd" open="(" close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		 <if test="formSDt != null and formSDt != ''">
+			AND iw.out_whs_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND iw.out_whs_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND iw.out_whs_id = #{formNum}
+		</if>
+		<if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+			AND iw.out_into_whs_typ_id = #{outIntoWhsTypId}
+		</if>
+		
+		UNION ALL 
+		
+		SELECT 
+			iw.form_num,iw.form_dt,"",iw.out_into_whs_typ_id,"","",iw.form_typ_encd,"",
+		    iw.operator,iw.is_nt_book_entry,iw.book_entry_pers,iw.book_entry_tm,iws.invty_encd,iw.whs_encd,iws.bat_num,iws.bx_qty,iws.bao_zhi_qi,
+			iws.un_tax_amt,iws.un_tax_uprc,iws.qty,mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_encd,wd.whs_nm,ind.invty_nm,ind.spc_model,
+		    ind.invty_cls_encd,ind.invty_cd,ind.invty_nm,cls.invty_cls_nm,typ.out_into_whs_typ_nm,"","","",ftyp.form_typ_name,"","","","",""
+		FROM oth_out_into_whs AS iw
+		INNER JOIN oth_out_into_whs_sub_tab AS iws ON iw.form_num = iws.form_num
+		LEFT JOIN whs_doc wd ON iw.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+		LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd
+		LEFT JOIN out_into_whs_typ as typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+		LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd 
+		where iw.is_nt_chk = 1
+		
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(iw.form_dt, '%Y%m') =
+			DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND iw.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="("
+				close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND iw.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND iws.invty_encd IN
+			<foreach collection="invIdList" item="invId" open="("
+				close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND iw.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND iw.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND iw.form_num = #{formNum}
+		</if>
+		<if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+			AND iw.out_into_whs_typ_id = #{outIntoWhsTypId}
+		</if>
+		
+	  	LIMIT #{index},#{num}
+	 
+	 </select>
+	 
+	  <!-- 修改记账状态 -->
+    <update id="updateOutInWhsBookEntry" parameterType="java.util.List">
+        update oth_out_into_whs
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_book_entry =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.isNtBookOk != null ">
+                        when form_num = #{item.formNum} then #{item.isNtBookOk}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="book_entry_pers =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.bookOkAcc != null">
+                        when form_num = #{item.formNum} then #{item.bookOkAcc}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="book_entry_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.bookOkDt != null">
+                        when form_num = #{item.formNum} then #{item.bookOkDt}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.formNum}
+        </foreach>
+    </update>
+	
+	<update id="updateSellOutWhsBookEntryList" parameterType="java.util.List">
+		update sell_out_whs
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_book_entry =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.isNtBookOk != null ">
+						when out_whs_id =#{item.formNum} then #{item.isNtBookOk}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.bookOkAcc != null">
+						when out_whs_id = #{item.formNum} then #{item.bookOkAcc}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.bookOkDt != null">
+						when out_whs_id = #{item.formNum} then #{item.bookOkDt}
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		where out_whs_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	</update>
+	
+	<update id="updateIntoWhsBookEntryList" parameterType="java.util.List">
+		update into_whs
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_book_entry =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.isNtBookOk != null ">
+						when into_whs_sngl_id = #{item.formNum} then #{item.isNtBookOk}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.bookOkAcc != null">
+						when into_whs_sngl_id = #{item.formNum} then #{item.bookOkAcc}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.bookOkDt != null">
+						when into_whs_sngl_id = #{item.formNum} then #{item.bookOkDt}
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		where into_whs_sngl_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	</update>
+	
+	
+	<select id="updateInUprc" parameterType="Map" statementType="CALLABLE"  resultType="java.math.BigDecimal">
+		{call form_book_in(#{formNum,mode=IN,jdbcType=VARCHAR},#{loginTime,mode=IN,jdbcType=VARCHAR},#{whsEncd,mode=IN,jdbcType=VARCHAR},
+		#{invtyEncd,mode=IN,jdbcType=VARCHAR},#{batNum,mode=IN,jdbcType=VARCHAR},#{uprc,mode=OUT,jdbcType=DECIMAL})}
+	</select>
+	
+	<select id="updateOutUprc" parameterType="Map" statementType="CALLABLE"  resultType="java.math.BigDecimal">
+		{call form_book_out(#{year,mode=IN,jdbcType=INTEGER},#{month,mode=IN,jdbcType=INTEGER},
+		#{loginTime,mode=IN,jdbcType=VARCHAR},#{whsEncd,mode=IN,jdbcType=VARCHAR},
+		#{invtyEncd,mode=IN,jdbcType=VARCHAR},#{batNum,mode=IN,jdbcType=VARCHAR},#{uprc,mode=OUT,jdbcType=DECIMAL})}
+	</select>
+	<select id="selectA" resultType="FormBookEntrySub">
+		
+	SELECT SUM(send_qty) as qty,invty_encd,whs_encd,bat_num  FROM invty_mth_term_bgn_tab GROUP BY invty_encd,whs_encd,bat_num ;
+	</select>
+	<select id="selectB" resultType="FormBookEntrySub">
+		SELECT SUM(send_qty) as qty,invty_encd,whs_encd,bat_num FROM invty_detail a
+		INNER JOIN invty_details  b ON a.detail_id = b.detail_id
+		WHERE b.recv_send_cate_id IN (2,4,6,7,11,10)
+		GROUP BY invty_encd,whs_encd,bat_num;
+
+		
+	</select>
+</mapper>

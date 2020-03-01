@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.FormBackFlushSubDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.account.entity.FormBackFlushSub">
+    <id column="ordr_num"  property="ordrNum" />
+    <result column="back_num"  property="backNum" />
+    <result column="form_num"  property="formNum" />
+    <result column="invty_encd"  property="invtyEncd" />
+    <result column="invty_nm"  property="invtyNm" />
+    <result column="invty_cd"  property="invtyCd" />
+    <result column="spc_model"  property="spcModel" />
+    <result column="measr_corp_id"  property="measrCorpId" />
+    <result column="measr_corp_nm"  property="measrCorpNm" />
+    <result column="bx_rule"  property="bxRule" />
+    <result column="invty_cls_encd"  property="invtyClsEncd" />
+    <result column="invty_cls_nm"  property="invtyClsNm" />
+    <result column="whs_encd"  property="whsEncd" />
+    <result column="whs_nm"  property="whsNm" />
+    <result column="no_tax_uprc"  property="noTaxUprc" />
+    <result column="no_tax_amt"  property="noTaxAmt" />
+    <result column="tax_amt"  property="taxAmt" />
+    <result column="cntn_tax_uprc"  property="cntnTaxUprc" />
+    <result column="prc_tax_sum"  property="prcTaxSum" />
+    <result column="tax_rate"  property="taxRate" />
+    <result column="qty"  property="qty" />
+    <result column="bx_qty"  property="bxQty" />
+    <result column="bat_num"  property="batNum" />
+    <result column="intl_bat"  property="intlBat" />
+    <result column="prdc_dt" jdbcType="TIMESTAMP" property="prdcDt" />
+    <result column="invldtn_dt" jdbcType="TIMESTAMP" property="invldtnDt" />
+    <result column="bao_zhi_qi"  property="baoZhiQi" />
+    <result column="sub_credit_id"  property="subCreditId" />
+    <result column="sub_credit_type"  property="subCreditType" />
+    <result column="sub_credit_nm"  property="subCreditNm" />
+    <result column="sub_credit_money"  property="subCreditMoney" />
+    <result column="sub_credit_debit_money"  property="subCreditDebitMoney" />
+    <result column="sub_credit_num"  property="subCreditNum" />
+    <result column="sub_credit_debit_num"  property="subCreditDebitNum" />
+    <result column="sub_credit_path"  property="subCreditPath" />
+    <result column="sub_debit_id"  property="subDebitId" />
+    <result column="sub_debit_type"  property="subDebitType" />
+    <result column="sub_debit_nm"  property="subDebitNm" />
+    <result column="sub_debit_money"  property="subDebitMoney" />
+    <result column="sub_debit_credit_money"  property="subDebitCreditMoney" />
+    <result column="sub_debit_num"  property="subDebitNum" />
+    <result column="sub_debit_credit_num"  property="subDebitCreditNum" />
+    <result column="sub_debit_path"  property="subDebitPath" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ordr_num, back_num, form_num, invty_encd, invty_nm, invty_cd, spc_model, measr_corp_id, 
+    measr_corp_nm, bx_rule, invty_cls_encd, invty_cls_nm, whs_encd, whs_nm, no_tax_uprc, 
+    no_tax_amt, tax_amt, cntn_tax_uprc, prc_tax_sum, tax_rate, qty, bx_qty, bat_num, 
+    intl_bat, prdc_dt, invldtn_dt, bao_zhi_qi, sub_credit_id, sub_credit_type, sub_credit_nm, 
+    sub_credit_money, sub_credit_debit_money, sub_credit_num, sub_credit_debit_num, sub_credit_path, 
+    sub_debit_id, sub_debit_type, sub_debit_nm, sub_debit_money, sub_debit_credit_money, 
+    sub_debit_num, sub_debit_credit_num, sub_debit_path
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from form_back_flush_sub
+    where ordr_num = #{ordrNum}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from form_back_flush_sub
+    where ordr_num = #{ordrNum}
+  </delete>
+  <insert id="insertRedFormBackFlushSubList" parameterType="com.px.mis.account.entity.FormBackFlushSub">
+    insert into form_back_flush_sub (back_num, form_num,invty_encd, invty_nm, invty_cd, 
+     spc_model, measr_corp_id, measr_corp_nm,bx_rule, invty_cls_encd, invty_cls_nm,whs_encd, whs_nm, no_tax_uprc, 
+      no_tax_amt, tax_amt, cntn_tax_uprc,prc_tax_sum, tax_rate, qty,bx_qty, bat_num, intl_bat, 
+      prdc_dt, invldtn_dt, bao_zhi_qi,sub_credit_id, sub_credit_type, sub_credit_nm,sub_credit_money, sub_credit_debit_money, sub_credit_num, 
+      sub_credit_debit_num, sub_credit_path, sub_debit_id,sub_debit_type, sub_debit_nm, sub_debit_money, 
+      sub_debit_credit_money, sub_debit_num, sub_debit_credit_num,sub_debit_path,un_bllg_qty,un_bllg_uprc,un_bllg_amt)
+    values 
+     <foreach collection="list" item="item" index="index" separator="," close=";">
+	  (#{item.backNum}, #{item.formNum},#{item.invtyEncd}, #{item.invtyNm}, #{item.invtyCd}, 
+      #{item.spcModel}, #{item.measrCorpId}, #{item.measrCorpNm},#{item.bxRule}, #{item.invtyClsEncd}, #{item.invtyClsNm}, 
+      #{item.whsEncd}, #{item.whsNm}, #{item.noTaxUprc},#{item.noTaxAmt}, #{item.taxAmt}, #{item.cntnTaxUprc}, 
+      #{item.prcTaxSum}, #{item.taxRate}, #{item.qty},#{item.bxQty}, #{item.batNum}, #{item.intlBat}, 
+      #{item.prdcDt}, #{item.invldtnDt}, #{item.baoZhiQi},#{item.subCreditId}, #{item.subCreditType}, #{item.subCreditNm}, 
+      #{item.subCreditMoney}, #{item.subCreditDebitMoney}, #{item.subCreditNum},#{item.subCreditDebitNum}, #{item.subCreditPath}, #{item.subDebitId}, 
+      #{item.subDebitType}, #{item.subDebitNm}, #{item.subDebitMoney},#{item.subDebitCreditMoney}, #{item.subDebitNum}, #{item.subDebitCreditNum}, 
+      #{item.subDebitPath},#{item.unBllgQty}, #{item.unBllgUprc},#{item.unBllgAmt})
+      </foreach>
+  </insert>
+
+</mapper>

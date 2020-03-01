@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrderDealSettings">
+
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.OrderDealSettings">
+  	SELECT setting_id, order_share, tb_order_serv, auto_merge, control_num, verify_batch, service_note, batch_picking, order_id_create
+  	FROM order_deal_settings 
+  	WHERE setting_id = #{setting_id}
+  </select>
+  
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.OrderDealSettings">
+  	UPDATE order_deal_settings 
+  	SET setting_id=#{settingId}, order_share=#{orderShare}, tb_order_serv=#{tbOrderServ}, auto_merge=#{autoMerge}, control_num=#{controlNum}, 
+  	verify_batch=#{verifyBatch}, service_note=#{serviceNote}, batch_picking=#{batchPicking}, order_id_create=#{orderIdCreate}
+  </update>
+
+</mapper>

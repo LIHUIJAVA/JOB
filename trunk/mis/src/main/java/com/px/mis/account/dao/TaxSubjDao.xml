@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.TaxSubjDao">
+	<!-- 分页查询所有 -->
+	<select id="selectTaxSubjList" parameterType="Map" resultType="com.px.mis.account.entity.TaxSubj">
+	 SELECT a.auto_id autoId,a.provr_cls_encd provrClsEncd,a.purs_subj_encd pursSubjEncd,
+	 		a.purs_tax_encd pursTaxEncd,b.provr_cls_nm provrClsNm,
+	 		c.subj_nm pursSubjNm,d.subj_nm pursTaxNm
+	 FROM  tax_subj a LEFT JOIN  provr_cls b
+	 ON a.provr_cls_encd = b.provr_cls_id
+	 LEFT JOIN acct_itm_doc c
+	 ON a.purs_subj_encd = c.subj_id
+	 LEFT JOIN acct_itm_doc d
+	 ON a.purs_tax_encd = d.subj_id
+	 ORDER BY a.auto_id
+	 <if test="index != null and  num != null">
+	 LIMIT #{index},#{num}
+	 </if>
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectTaxSubjById" parameterType="Integer" resultType="com.px.mis.account.entity.TaxSubj">
+	 SELECT a.auto_id autoId,a.provr_cls_encd provrClsEncd,a.purs_subj_encd pursSubjEncd,
+	 		a.purs_tax_encd pursTaxEncd,b.provr_cls_nm provrClsNm,
+	 		c.subj_nm pursSubjNm,d.subj_nm pursTaxNm
+	 FROM  tax_subj a LEFT JOIN  provr_cls b
+	 ON a.provr_cls_encd = b.provr_cls_id
+	 LEFT JOIN acct_itm_doc c
+	 ON a.purs_subj_encd = c.subj_id
+	 LEFT JOIN acct_itm_doc d
+	 ON a.purs_tax_encd = d.subj_id
+	 WHERE a.auto_id=#{autoId}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectTaxSubjCount" resultType="Integer">
+		SELECT count(auto_id)
+		FROM tax_subj
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertTaxSubj" parameterType="com.px.mis.account.entity.TaxSubj">
+		INSERT INTO tax_subj(provr_cls_encd,purs_subj_encd,purs_tax_encd)
+		VALUES(#{provrClsEncd},#{pursSubjEncd},#{pursTaxEncd})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteTaxSubjById" parameterType="java.util.List">
+	 DELETE FROM tax_subj
+	 WHERE auto_id in	
+	 <foreach item="autoId" collection="list" open="("
+			close=")" separator=",">
+			#{autoId}
+	</foreach>
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateTaxSubjById" parameterType="com.px.mis.account.entity.TaxSubj">
+	 UPDATE tax_subj
+    <set>
+      <if test="autoId != null">
+        auto_id = #{autoId,jdbcType=BIGINT},
+      </if>
+      <if test="provrClsEncd != null">
+        provr_cls_encd = #{provrClsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="pursSubjEncd != null">
+        purs_subj_encd = #{pursSubjEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="pursTaxEncd != null">
+        purs_tax_encd = #{pursTaxEncd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE auto_id = #{autoId,jdbcType=BIGINT}
+	</update>
+</mapper>

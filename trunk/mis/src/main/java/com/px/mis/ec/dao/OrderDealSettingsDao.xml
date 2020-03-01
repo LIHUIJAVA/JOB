@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.OrderDealSettingsDao">
+
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.OrderDealSettings">
+  	SELECT setting_id, order_share, tb_order_serv, auto_merge, control_num, verify_batch, service_note, batch_picking, order_id_create
+  	FROM order_deal_settings 
+  	WHERE setting_id = #{setting_id}
+  </select>
+  
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.OrderDealSettings">
+  	UPDATE order_deal_settings 
+  	SET setting_id=#{settingId}, order_share=#{orderShare}, tb_order_serv=#{tbOrderServ}, auto_merge=#{autoMerge}, control_num=#{controlNum}, 
+  	verify_batch=#{verifyBatch}, service_note=#{serviceNote}, batch_picking=#{batchPicking}, order_id_create=#{orderIdCreate}
+  </update>
+  
+  <select id="selectByInvtyCodeAndPlatCode" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PlatSpecialWhs">
+  	SELECT st_id,plat_code,invty_code,whs_code
+	FROM plat_special_whs
+	WHERE plat_code = #{platCode}
+	AND invty_code = #{invtyCode}
+  </select>
+  <select id="selectByInvtyCodeAndCityCode" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PlatWhs">
+  	SELECT stock_id,plat_code,city_code,whs_code
+	FROM plat_whs
+	WHERE plat_code = #{platCode}
+	AND city_code = #{cityCode}
+  </select>
+  <select id="selectCityCode" parameterType="java.lang.String" resultType="com.px.mis.whs.entity.City">
+  	SELECT * FROM city WHERE (abbreviation = #{city} or alias = #{city}) and code_level = 1 and superior_code = (
+	SELECT code_id FROM city WHERE (code_name = #{province} or alias = #{province}) and code_level=0);
+  </select>
+  <!-- 特殊存货 -->
+  <select id="selectPlatWhsSpecialListByMap" parameterType="Map" resultType="com.px.mis.ec.entity.PlatSpecialWhs">
+  	SELECT p.*,w.whs_nm,i.invty_nm,e.ec_name FROM plat_special_whs as p 
+	LEFT JOIN whs_doc w ON w.whs_encd = p.whs_code
+	LEFT JOIN invty_doc i ON i.invty_encd = p.invty_code
+	LEFT JOIN ec_platform e ON e.ec_id = p.plat_code
+	where 1=1
+	
+	<if test="whsEncd !=null and whsEncd != '' ">		
+		AND p.whs_code = #{whsEncd}
+	</if>
+	<if test="platEncd !=null and platEncd != '' ">		
+		AND p.plat_code = #{platEncd}
+	</if>
+	<if test="invtyEncd !=null and invtyEncd != '' ">		
+		AND p.invty_code = #{invtyEncd}
+	</if>
+  	
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectPlatWhsSpecialListCountByMap" parameterType="Map" resultType="int">
+  	SELECT count(*) FROM plat_special_whs as p 
+	LEFT JOIN whs_doc w ON w.whs_encd = p.whs_code
+	LEFT JOIN invty_doc i ON i.invty_encd = p.invty_code
+	LEFT JOIN ec_platform e ON e.ec_id = p.plat_code
+	where 1=1 
+	
+	<if test="whsEncd !=null and whsEncd != ''">		
+		AND p.whs_code = #{whsEncd}
+	</if>
+	<if test="platEncd !=null and platEncd != ''">		
+		AND p.plat_code = #{platEncd}
+	</if>
+	<if test="invtyEncd !=null and invtyEncd != ''">		
+		AND p.invty_code = #{invtyEncd}
+	</if>
+  	
+  </select>
+  
+  <insert id="addPlatWhsSpecial" parameterType="com.px.mis.ec.entity.PlatSpecialWhs">
+  	insert into plat_special_whs (plat_code, invty_code,whs_code)
+    values (#{platCode}, #{invtyCode}, #{whsCode})
+  </insert>
+  
+  <delete id="deleteById" parameterType="list">
+    delete from plat_special_whs
+    where st_id in
+    <foreach item="stId" collection="list" open="(" close=")" separator=",">
+	     #{stId}
+	</foreach>
+  </delete>
+   <update id="updatePlatWhsSpecialById" parameterType="com.px.mis.ec.entity.PlatSpecialWhs">
+    update plat_special_whs
+    <set>
+      <if test="platCode != null">
+        plat_code = #{platCode},
+      </if>
+      <if test="invtyCode != null">
+        invty_code = #{invtyCode},
+      </if>
+      <if test="whsCode != null">
+        whs_code = #{whsCode},
+      </if>
+    </set>
+    where st_id = #{stId}
+  </update>
+  <select id="selectPlatWhsSpecialById"  parameterType="int" resultType="com.px.mis.ec.entity.PlatSpecialWhs">
+  	select * from plat_special_whs where st_id = #{stId}
+  </select>
+</mapper>

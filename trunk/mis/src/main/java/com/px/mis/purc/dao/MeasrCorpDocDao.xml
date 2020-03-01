@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.MeasrCorpDocDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.purc.entity.MeasrCorpDoc">
+    <id column="measr_corp_id" jdbcType="VARCHAR" property="measrCorpId" />
+    <result column="measr_corp_nm" jdbcType="VARCHAR" property="measrCorpNm" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+  </resultMap>
+  <!-- 按照编号查询计量单位档案 -->
+  <sql id="Base_Column_List">
+    measr_corp_id, measr_corp_nm, memo
+  </sql>
+  <select id="selectMeasrCorpDocByMeasrCorpId" parameterType="String" resultType="MeasrCorpDoc">
+    select 
+    <include refid="Base_Column_List" />
+    from measr_corp_doc
+    where measr_corp_id = #{measrCorpId}
+  </select>
+  <!-- 查询全部计量单位 -->
+  <select id="selectMeasrCorpDocList" parameterType="Map"  resultType="MeasrCorpDoc">
+    select 
+    <include refid="Base_Column_List" />
+    from measr_corp_doc
+    LIMIT #{index},#{num}
+  </select>
+  <select id="selectMeasrCorpDocCount" parameterType="Map"  resultType="Integer">
+	SELECT count(*)
+  	from measr_corp_doc
+  </select>
+  
+  <!--  删除计量单位档案 -->
+  <delete id="deleteMeasrCorpDocByMeasrCorpId" parameterType="String">
+    delete from measr_corp_doc
+    where measr_corp_id = #{measrCorpId}
+  </delete>
+  
+  <!--  批量删除计量单位档案 -->
+  <delete id="deleteMeasrCorpDocList" parameterType="java.util.List">
+    delete from measr_corp_doc where measr_corp_id in
+    <foreach item="measrCorpId" collection="list" open="(" close=")" separator=",">
+        #{measrCorpId}
+    </foreach>
+  </delete>
+  
+  <!-- 新增计量 单位档案 -->
+  <insert id="insertMeasrCorpDoc" parameterType="MeasrCorpDoc">
+    insert into measr_corp_doc (measr_corp_id, measr_corp_nm, memo
+      )
+    values (#{measrCorpId}, #{measrCorpNm}, #{memo}
+      )
+  </insert>
+  
+ <!--  修改计量单位档案 -->
+    <update id="updateMeasrCorpDocByMeasrCorpId" parameterType="MeasrCorpDoc">
+    update measr_corp_doc
+    <set>
+      <if test="measrCorpNm != null">
+        measr_corp_nm = #{measrCorpNm},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+    where measr_corp_id = #{measrCorpId}
+  </update>
+  
+    <!-- 查询全部计量单位 -->
+  <select id="printingMeasrCorpDocList"   resultType="MeasrCorpDoc">
+    select 
+    <include refid="Base_Column_List" />
+    from measr_corp_doc
+  </select>
+ 
+</mapper>

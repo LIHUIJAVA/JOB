@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.SellInvMasTabDao">
+	
+	<!-- 销售发票手动封装数据 -->
+	  <resultMap type="com.px.mis.account.entity.SellInvMasTab" id="myResult" autoMapping="true">
+	  	<id column="sellInvNum" property="sellInvNum"/>
+		<result column="bllgDt" property="bllgDt"/>
+		<collection property="sellSubList" ofType="com.px.mis.account.entity.SellInvSubTab" autoMapping="true">
+			<id column="ordrNum" property="ordrNum"/>
+			<result column="sellInvNum" property="sellInvNum"/>
+		</collection>
+	  </resultMap>
+	<!-- 带条件的分页查询所有 -->
+	<select id="selectSellInvMasTabList" parameterType="Map" resultMap="myResult">
+	 SELECT a.sell_inv_num sellInvNum,a.bllg_dt bllgDt,a.inv_typ invTyp,a.tab_head_tax_rate tabHeadTaxRate,a.biz_typ_id bizTypId,
+	 		a.sell_typ_id sellTypId,a.recv_send_cate_id recvSendCateId,a.cust_id custId,a.dept_id deptId,a.acc_num accNum,mu.user_name userName,
+	 		a.setup_pers setupPers,a.setup_tm setupTm,a.mdfr mdfr,a.modi_tm modiTm,a.is_nt_chk isNtChk,
+	 		a.chkr chkr,a.chk_tm chkTm,a.is_nt_book_entry isNtBookEntry,a.book_entry_pers bookEntryPers,a.book_entry_tm bookEntryTm,
+	 		a.subj_encd subjEncd,a.contcr contcr,a.bank bank,a.acct_num acctNum,a.vouch_num vouchNum,
+	 		a.mak_doc_tm makDocTm,a.mak_doc_pers makDocPers,a.sell_sngl_num sellSnglNum,a.memo memo,
+	 		a.form_typ_encd formTypEncd,a.to_form_typ_encd toFormTypEncd,
+	 		b.ordr_num ordrNum,b.sell_inv_num sellInvNum,b.invty_encd invtyEncd,b.whs_encd whsEncd,b.qty qty,
+	 		b.measr_corp_id measrCorpId,b.no_tax_uprc noTaxUprc,b.no_tax_amt noTaxAmt,b.cntn_tax_uprc cntnTaxUprc,b.prc_tax_sum prcTaxSum,
+	 		b.tax_amt taxAmt,b.tax_rate taxRate,b.bat_num batNum,b.Is_complimentary isComplimentary,b.delv_sngl_num delvSnglNum,
+	 		b.invty_fst_lvl_cls invtyFstLvlCls,b.memo memo,
+	 		c.sell_typ_nm sellTypNm,d.biz_typ_nm bizTypNm,f.dept_name deptNm,g.cust_nm custNm,
+	 		h.whs_nm whsNm,i.invty_nm invtyNm,i.spc_model spcModel,j.measr_corp_nm measrCorpNm
+	 FROM sell_inv_mas_tab a
+	 LEFT JOIN sell_inv_sub_tab b ON a.sell_inv_num = b.sell_inv_num
+	 LEFT JOIN sell_type c ON a.sell_typ_id = c.sell_typ_id
+	 LEFT JOIN biz_type d ON a.biz_typ_id = d.biz_typ_id
+	 LEFT JOIN mis_user mu on a.acc_num=mu.acc_num
+	 LEFT JOIN dept_doc f ON a.dept_id = f.dept_id
+	 LEFT JOIN cust_doc g ON a.cust_id = g.cust_id
+	 LEFT JOIN whs_doc h ON b.whs_encd = h.whs_encd
+	 LEFT JOIN invty_doc i ON b.invty_encd = i.invty_encd
+	 LEFT JOIN measr_corp_doc j ON b.measr_corp_id = j.measr_corp_id
+	 <where>
+  		<if test="sellInvNum != null and sellInvNum != ''">
+           	AND a.sell_inv_num=#{sellInvNum}
+        </if>
+        <if test="startBllgDt != null and startBllgDt != ''">
+            AND a.bllg_dt<![CDATA[>=]]>#{startBllgDt}
+        </if>
+        <if test="endBllgDt != null and endBllgDt != ''">
+            AND a.bllg_dt<![CDATA[<=]]>#{endBllgDt}
+        </if>
+        <if test="custId != null and custId != ''">
+            AND a.cust_id = #{custId}
+        </if>
+        <if test="custNm != null and custNm != ''">
+            AND g.cust_nm = #{custNm}
+        </if>
+        <if test="invTyp != null and invTyp != ''">
+            AND a.inv_typ=#{invTyp}
+        </if>
+        <if test="bizTypId != null and bizTypId != ''">
+            AND a.biz_typ_id=#{bizTypId}
+        </if>
+        <if test="bizTypNm != null and bizTypNm != ''">
+            AND d.biz_typ_nm=#{bizTypNm}
+        </if>
+        <if test="isNtChk != null and isNtChk != ''">
+            AND a.is_nt_chk=#{isNtChk}
+        </if>
+  	</where>
+  	 GROUP BY a.sell_inv_num
+	 ORDER BY a.sell_inv_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectSellInvMasTabBySellInvNum" parameterType="String" resultMap="myResult">
+	 SELECT a.sell_inv_num sellInvNum,a.bllg_dt bllgDt,a.inv_typ invTyp,a.tab_head_tax_rate tabHeadTaxRate,a.biz_typ_id bizTypId,
+	 		a.sell_typ_id sellTypId,a.recv_send_cate_id recvSendCateId,a.cust_id custId,a.dept_id deptId,a.acc_num accNum,mu.user_name userName,
+	 		a.setup_pers setupPers,a.setup_tm setupTm,a.mdfr mdfr,a.modi_tm modiTm,a.is_nt_chk isNtChk,
+	 		a.chkr chkr,a.chk_tm chkTm,a.is_nt_book_entry isNtBookEntry,a.book_entry_pers bookEntryPers,a.book_entry_tm bookEntryTm,
+	 		a.subj_encd subjEncd,a.contcr contcr,a.bank bank,a.acct_num acctNum,a.vouch_num vouchNum,
+	 		a.mak_doc_tm makDocTm,a.mak_doc_pers makDocPers,a.sell_sngl_num sellSnglNum,a.memo memo,
+	 		a.form_typ_encd formTypEncd,a.to_form_typ_encd toFormTypEncd,
+	 		b.ordr_num ordrNum,b.sell_inv_num sellInvNum,b.invty_encd invtyEncd,b.whs_encd whsEncd,b.qty qty,
+	 		b.measr_corp_id measrCorpId,b.no_tax_uprc noTaxUprc,b.no_tax_amt noTaxAmt,b.cntn_tax_uprc cntnTaxUprc,b.prc_tax_sum prcTaxSum,
+	 		b.tax_amt taxAmt,b.tax_rate taxRate,b.bat_num batNum,b.Is_complimentary isComplimentary,b.delv_sngl_num delvSnglNum,
+	 		b.invty_fst_lvl_cls invtyFstLvlCls,b.memo memo,
+	 		c.sell_typ_nm sellTypNm,d.biz_typ_nm bizTypNm,f.dept_name deptNm,g.cust_nm custNm,
+	 		h.whs_nm whsNm,i.invty_nm invtyNm,i.spc_model spcModel,j.measr_corp_nm measrCorpNm
+	 FROM sell_inv_mas_tab a
+	 LEFT JOIN sell_inv_sub_tab b ON a.sell_inv_num = b.sell_inv_num
+	 LEFT JOIN sell_type c ON a.sell_typ_id = c.sell_typ_id
+	 LEFT JOIN biz_type d ON a.biz_typ_id = d.biz_typ_id
+	 LEFT JOIN mis_user mu on a.acc_num=mu.acc_num
+	 LEFT JOIN dept_doc f ON a.dept_id = f.dept_id
+	 LEFT JOIN cust_doc g ON a.cust_id = g.cust_id
+	 LEFT JOIN whs_doc h ON b.whs_encd = h.whs_encd
+	 LEFT JOIN invty_doc i ON b.invty_encd = i.invty_encd
+	 LEFT JOIN measr_corp_doc j ON b.measr_corp_id = j.measr_corp_id
+	 WHERE a.sell_inv_num=#{sellInvNum}
+	</select>
+	
+	<!-- 带条件的查询总行数 -->
+	<select id="selectSellInvMasTabCount" resultType="int">
+		SELECT count(distinct(a.sell_inv_num))
+		FROM sell_inv_mas_tab a
+	 LEFT JOIN sell_inv_sub_tab b ON a.sell_inv_num = b.sell_inv_num
+	 LEFT JOIN sell_type c ON a.sell_typ_id = c.sell_typ_id
+	 LEFT JOIN biz_type d ON a.biz_typ_id = d.biz_typ_id
+	 LEFT JOIN mis_user mu on a.acc_num=mu.acc_num
+	 LEFT JOIN dept_doc f ON a.dept_id = f.dept_id
+	 LEFT JOIN cust_doc g ON a.cust_id = g.cust_id
+	 LEFT JOIN whs_doc h ON b.whs_encd = h.whs_encd
+	 LEFT JOIN invty_doc i ON b.invty_encd = i.invty_encd
+	 LEFT JOIN measr_corp_doc j ON b.measr_corp_id = j.measr_corp_id
+		 <where>
+	  		<if test="sellInvNum != null and sellInvNum != ''">
+	           	AND a.sell_inv_num=#{sellInvNum}
+	        </if>
+	        <if test="startBllgDt != null and startBllgDt != ''">
+	            AND a.bllg_dt<![CDATA[>=]]>#{startBllgDt}
+	        </if>
+	        <if test="endBllgDt != null and endBllgDt != ''">
+	            AND a.bllg_dt<![CDATA[<=]]>#{endBllgDt}
+	        </if>
+	        <if test="custId != null and custId != ''">
+	            AND a.cust_id = #{custId}
+	        </if>
+	        <if test="custNm != null and custNm != ''">
+	            AND g.cust_nm = #{custNm}
+	        </if>
+	        <if test="invTyp != null and invTyp != ''">
+	            AND a.inv_typ=#{invTyp}
+	        </if>
+	        <if test="bizTypId != null and bizTypId != ''">
+	            AND a.biz_typ_id=#{bizTypId}
+	        </if>
+	        <if test="bizTypNm != null and bizTypNm != ''">
+	            AND d.biz_typ_nm=#{bizTypNm}
+	        </if>
+	        <if test="isNtChk != null and isNtChk != ''">
+	            AND a.is_nt_chk=#{isNtChk}
+	        </if>
+	  	</where>
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertSellInvMasTab" parameterType="com.px.mis.account.entity.SellInvMasTab">
+		INSERT INTO sell_inv_mas_tab(sell_inv_num,bllg_dt,inv_typ,tab_head_tax_rate,
+		biz_typ_id,sell_typ_id,recv_send_cate_id,cust_id,dept_id,acc_num,setup_pers,
+		setup_tm,is_nt_chk,is_nt_book_entry,subj_encd,contcr,bank,acct_num,vouch_num,
+		sell_sngl_num,memo,form_typ_encd,to_form_typ_encd)
+		VALUES(#{sellInvNum},#{bllgDt},#{invTyp},#{tabHeadTaxRate},#{bizTypId},
+				#{sellTypId},#{recvSendCateId},#{custId},#{deptId},#{accNum},
+				#{setupPers},now(),0,0,#{subjEncd},#{contcr},#{bank},#{acctNum},
+				#{vouchNum},#{sellSnglNum},#{memo},#{formTypEncd},#{toFormTypEncd})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteSellInvMasTabBySellInvNum" parameterType="String">
+	 DELETE FROM sell_inv_mas_tab
+	 WHERE sell_inv_num=#{sellInvNum} 
+	</delete>
+	
+	  <!-- 批量删除 -->
+	  <delete id="deleteSellInvMasTabList" parameterType="java.util.List">
+		delete simt,sist 
+		FROM sell_inv_mas_tab as simt LEFT JOIN sell_inv_sub_tab as sist on simt.sell_inv_num = sist.sell_inv_num 
+	    where simt.sell_inv_num in
+		<foreach item="sellInvNum" collection="list" open="(" close=")" separator=",">
+		     #{sellInvNum}
+		</foreach>
+	  </delete>
+	  
+	  
+	
+	<!-- 根据主键更新 -->
+	<update id="updateSellInvMasTabBySellInvNum" parameterType="com.px.mis.account.entity.SellInvMasTab">
+	 UPDATE sell_inv_mas_tab
+    <set>
+      <if test="sellInvNum != null">
+        sell_inv_num = #{sellInvNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bllgDt != null">
+        bllg_dt = #{bllgDt,jdbcType=DATE},
+      </if>
+      <if test="invTyp != null">
+        inv_typ = #{invTyp,jdbcType=VARCHAR},
+      </if>
+      <if test="tabHeadTaxRate != null">
+        tab_head_tax_rate = #{tabHeadTaxRate,jdbcType=VARCHAR},
+      </if>
+      <if test="bizTypId != null">
+        biz_typ_id = #{bizTypId,jdbcType=VARCHAR},
+      </if>
+      <if test="sellTypId != null">
+        sell_typ_id = #{sellTypId,jdbcType=VARCHAR},
+      </if>
+      <if test="recvSendCateId != null">
+        recv_send_cate_id = #{recvSendCateId,jdbcType=VARCHAR},
+      </if>
+      <if test="custId != null">
+        cust_id = #{custId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="accNum != null">
+        acc_num = #{accNum,jdbcType=VARCHAR},
+      </if>
+      <if test="setupPers != null">
+        setup_pers = #{setupPers,jdbcType=VARCHAR},
+      </if>
+      <if test="setupTm != null">
+        setup_tm = #{setupTm,jdbcType=DATE},
+      </if>
+      <if test="mdfr != null">
+        mdfr = #{mdfr,jdbcType=VARCHAR},
+      </if>
+      <if test="modiTm != null">
+        modi_tm = #{modiTm,jdbcType=DATE},
+      </if>
+      <if test="isNtChk != null">
+        is_nt_chk = #{isNtChk,jdbcType=INTEGER},
+      </if>
+      <if test="chkr != null">
+        chkr = #{chkr,jdbcType=VARCHAR},
+      </if>
+      <if test="chkTm != null">
+        chk_tm = #{chkTm,jdbcType=DATE},
+      </if>
+      <if test="isNtBookEntry != null">
+        is_nt_book_entry = #{isNtBookEntry,jdbcType=INTEGER},
+      </if>
+      <if test="bookEntryPers != null">
+        book_entry_pers = #{bookEntryPers,jdbcType=VARCHAR},
+      </if>
+      <if test="bookEntryTm != null">
+        book_entry_tm = #{bookEntryTm,jdbcType=DATE},
+      </if>
+      <if test="subjEncd != null">
+        subj_encd = #{subjEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="contcr != null">
+        contcr = #{contcr,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null">
+        bank = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="acctNum != null">
+        acct_num = #{acctNum,jdbcType=VARCHAR},
+      </if>
+      <if test="vouchNum != null">
+        vouch_num = #{vouchNum,jdbcType=VARCHAR},
+      </if>
+      <if test="makDocTm != null">
+        mak_doc_tm = #{makDocTm,jdbcType=DATE},
+      </if>
+      <if test="makDocPers != null">
+        mak_doc_pers = #{makDocPers,jdbcType=VARCHAR},
+      </if>
+      <if test="sellSnglNum != null">
+        sell_sngl_num = #{sellSnglNum,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      
+    </set>
+    WHERE sell_inv_num = #{sellInvNum,jdbcType=VARCHAR}
+	</update>
+	
+	<!--  查询审核状态 -->
+	<select id="selectSellInvMasTabIsNtChk" parameterType="String" resultType="Integer">
+	    select is_nt_chk from sell_inv_mas_tab where sell_inv_num=#{sellInvNum}
+	</select>
+	
+	<select id="countSellNoTaxAmt" resultType="java.math.BigDecimal">
+		SELECT
+			SUM(b.no_tax_amt)
+		FROM
+			sell_inv_mas_tab AS a
+		INNER JOIN sell_inv_sub_tab AS b ON a.sell_inv_num = b.sell_inv_num
+		<if test="formNum != null and formNum != ''">
+			AND a.sell_sngl_num = #{formNum}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND b.invty_encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND b.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND b.bat_num = #{batNum}
+		</if>
+		
+	</select>
+	
+	<!-- 单个修改审核状态 -->
+	  <update id="updateSellInvMasTabIsNtChk" parameterType="com.px.mis.account.entity.SellInvMasTab">
+	    update sell_inv_mas_tab 
+	    <set>
+		     <if test="isNtChk != null">
+		        is_nt_chk = #{isNtChk},
+		     </if>
+		     <if test="chkr != null">
+		       chkr = #{chkr},
+		     </if>
+		     <if test="chkTm != null">
+		       chk_tm = now(),
+		     </if>
+	    </set>
+	    where sell_inv_num=#{sellInvNum}
+	  </update>
+	
+  <!--  查询记账状态 -->
+  <select id="selectSellInvMasTabIsNtBookEntry" parameterType="String" resultType="Integer">
+	  select is_nt_book_entry from sell_inv_mas_tab where sell_inv_num=#{sellInvNum}
+  </select>
+	
+	  <!-- 销售专用发票中的销售单号 -->
+  <select id="selectSellSnglNumBySellInvMasTab" parameterType="String" resultType="String">
+     select sell_sngl_num from sell_inv_mas_tab where sell_inv_num=#{sellInvNum}
+  </select>
+  
+    <!-- 导入时添加 -->
+	<insert id="insertSellSellInvMasTabUpload" parameterType="com.px.mis.account.entity.SellInvMasTab">
+		INSERT INTO sell_inv_mas_tab(sell_inv_num,bllg_dt,inv_typ,tab_head_tax_rate,
+		biz_typ_id,sell_typ_id,recv_send_cate_id,cust_id,dept_id,acc_num,setup_pers,
+		setup_tm,mdfr,modi_tm,is_nt_chk,chkr,chk_tm,is_nt_book_entry,book_entry_pers,
+		book_entry_tm,subj_encd,contcr,bank,acct_num,vouch_num,
+		sell_sngl_num,memo,form_typ_encd,to_form_typ_encd)
+		VALUES(#{sellInvNum},#{bllgDt},#{invTyp},#{tabHeadTaxRate},#{bizTypId},
+				#{sellTypId},#{recvSendCateId},#{custId},#{deptId},#{accNum},
+				#{setupPers},#{setupTm},#{mdfr},#{modiTm},#{isNtChk},#{chkr},#{chkTm},
+				#{isNtBookEntry},#{bookEntryPers},#{bookEntryTm},#{subjEncd},
+				#{contcr},#{bank},#{acctNum},#{vouchNum},#{sellSnglNum},#{memo},
+				#{formTypEncd},#{toFormTypEncd})
+	</insert>
+	
+    <!-- 带条件的分页查询所有 -->
+	<select id="printingSellInvMasTabList" parameterType="Map" resultMap="myResult">
+	 SELECT a.sell_inv_num sellInvNum,a.bllg_dt bllgDt,a.inv_typ invTyp,a.tab_head_tax_rate tabHeadTaxRate,a.biz_typ_id bizTypId,
+	 		a.sell_typ_id sellTypId,a.recv_send_cate_id recvSendCateId,a.cust_id custId,a.dept_id deptId,a.acc_num accNum,mu.user_name userName,
+	 		a.setup_pers setupPers,a.setup_tm setupTm,a.mdfr mdfr,a.modi_tm modiTm,a.is_nt_chk isNtChk,
+	 		a.chkr chkr,a.chk_tm chkTm,a.is_nt_book_entry isNtBookEntry,a.book_entry_pers bookEntryPers,a.book_entry_tm bookEntryTm,
+	 		a.subj_encd subjEncd,a.contcr contcr,a.bank bank,a.acct_num acctNum,a.vouch_num vouchNum,
+	 		a.mak_doc_tm makDocTm,a.mak_doc_pers makDocPers,a.sell_sngl_num sellSnglNum,a.memo memo,
+	 		a.form_typ_encd formTypEncd,a.to_form_typ_encd toFormTypEncd,
+	 		b.ordr_num ordrNum,b.sell_inv_num sellInvNum,b.invty_encd invtyEncd,b.whs_encd whsEncd,b.qty qty,
+	 		b.measr_corp_id measrCorpId,b.no_tax_uprc noTaxUprc,b.no_tax_amt noTaxAmt,b.cntn_tax_uprc cntnTaxUprc,b.prc_tax_sum prcTaxSum,
+	 		b.tax_amt taxAmt,b.tax_rate taxRate,b.bat_num batNum,b.Is_complimentary isComplimentary,b.delv_sngl_num delvSnglNum,
+	 		b.invty_fst_lvl_cls invtyFstLvlCls,b.memo memo,
+	 		c.sell_typ_nm sellTypNm,d.biz_typ_nm bizTypNm,f.dept_name deptNm,g.cust_nm custNm,
+	 		h.whs_nm whsNm,i.invty_nm invtyNm,i.spc_model spcModel,j.measr_corp_nm measrCorpNm
+	 FROM sell_inv_mas_tab a
+	 LEFT JOIN sell_inv_sub_tab b ON a.sell_inv_num = b.sell_inv_num
+	 LEFT JOIN sell_type c ON a.sell_typ_id = c.sell_typ_id
+	 LEFT JOIN biz_type d ON a.biz_typ_id = d.biz_typ_id
+	 LEFT JOIN mis_user mu on a.acc_num=mu.acc_num
+	 LEFT JOIN dept_doc f ON a.dept_id = f.dept_id
+	 LEFT JOIN cust_doc g ON a.cust_id = g.cust_id
+	 LEFT JOIN whs_doc h ON b.whs_encd = h.whs_encd
+	 LEFT JOIN invty_doc i ON b.invty_encd = i.invty_encd
+	 LEFT JOIN measr_corp_doc j ON b.measr_corp_id = j.measr_corp_id
+	 <where>
+  		<if test="sellInvNum != null and sellInvNum != ''">
+           	AND a.sell_inv_num=#{sellInvNum}
+        </if>
+        <if test="startBllgDt != null and startBllgDt != ''">
+            AND a.bllg_dt<![CDATA[>=]]>#{startBllgDt}
+        </if>
+        <if test="endBllgDt != null and endBllgDt != ''">
+            AND a.bllg_dt<![CDATA[<=]]>#{endBllgDt}
+        </if>
+        <if test="custId != null and custId != ''">
+            AND a.cust_id = #{custId}
+        </if>
+        <if test="custNm != null and custNm != ''">
+            AND g.cust_nm = #{custNm}
+        </if>
+        <if test="invTyp != null and invTyp != ''">
+            AND a.inv_typ=#{invTyp}
+        </if>
+        <if test="bizTypId != null and bizTypId != ''">
+            AND a.biz_typ_id=#{bizTypId}
+        </if>
+        <if test="bizTypNm != null and bizTypNm != ''">
+            AND d.biz_typ_nm=#{bizTypNm}
+        </if>
+        <if test="isNtChk != null and isNtChk != ''">
+            AND a.is_nt_chk=#{isNtChk}
+        </if>
+  	</where>
+	 ORDER BY a.bllg_dt
+	</select>
+</mapper>

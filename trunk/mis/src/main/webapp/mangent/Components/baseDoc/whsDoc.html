@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta charset="UTF-8" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>仓库档案</title>
+
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/drag.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style>
+		#edit {
+			height: 550px;
+		    width: 880px;
+		    cursor: move;
+		    position: absolute;
+		    top: 20%;
+		    left: 25%;
+		    background-color: #ccccc;
+		    border: 1px solid #CCCCCC;
+		    border-radius: 4px;
+		    -webkit-box-shadow: 10px 10px 25px #ccc;
+		    -moz-box-shadow: 10px 10px 25px #ccc;
+		    box-shadow: 10px 10px 25px #ccc;
+		    display: none;
+		    z-index: 9999;
+		}
+		
+		button.saveOrder {
+			margin-left:370px;
+			margin-top: 25px!important;
+		}
+		
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+		
+		b {
+			color: red;
+		}
+		
+		#mengban1 {
+			height: 200%!important;
+		}
+		
+		select {
+			width: 110px
+		}
+		.col-md-4 {
+			width: 33.33333%!important;
+		}
+		#edit .order-title {
+			width: 100%!important;
+		}
+		.bm {
+			width: 316px!important;
+			float: right;
+			/*right: 29px;*/
+		}
+		#edit form div div {
+			margin: 11px 63px!important;
+			/*float: left*/
+		}
+		#purchaseOrder .zhezhao, #mengban.zhezhao {
+		    height: 10100%!important;
+		}
+		#loader {
+		    top: 500%!important;
+		}
+		.calendar.min {
+			z-index: 999999;
+		}
+	</style>
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/whsDoc.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+
+	<body>
+		<!--<div id="wwrap">-->
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<button class="print">打印</button>
+						<button class="importExcel">导入</button>
+						<button class="exportExcel">导出</button>
+						<button class="addOrder">增加</button>
+						<button class="delOrder">删行</button>
+						<button class="find">查询</button>
+						<span>
+							<form id="uploadForm" enctype="multipart/form-data">
+								<input type="file" name="FileUpload" id="FileUpload">
+							</form>
+						</span>
+					</div>
+				</div>
+
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-4">
+								<span>仓库编码</span>
+								<input type="text" class="whsEncd" name="whsEncd" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>仓库名称</span>
+								<input type="text" class="whsNm1" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>部门编码</span>
+								<input type="text" class="deptEncd" name="deptEncd" value="" />
+							</div>
+						</div>
+					</form>
+				</div>
+			
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqGridPager"></div>
+			<div id="edit">
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-4">
+								<span>仓库编码<b>*</b></span>
+								<input type="text" class="whsEncdDoc" name="whsEncdDoc" id="whsEncdDoc" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>仓库名称<b>*</b></span>
+								<input class="whsNmDoc" type="text" id="whsNmDoc" name="whsNmDoc" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>仓库地址<b>*</b></span>
+								<input type="text" class="whsAddr" id="whsAddr" name="whsAddr" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>总仓编码<b>*</b></span>
+								<input type="text" class="realWhs" id="realWhs" name="realWhs" />
+								<img class="zc_biaoge" style="height:20px;width:20px" src="../../assets/img/biaoge.png" alt="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>电话<b>*</b></span>
+								<input type="text" oninput="if(value.length>11)value=value.slice(0,11)" class="tel" id="tel" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>创建人</span>
+								<input type="text" readonly="readonly" class="setupPers" id="setupPers" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>对应条形码</span>
+								<input type="text" class="crspdBarcd" id="crspdBarCd" name="crspdBarCd" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>停用日期</span>
+								<!--<input type="text" class="stpUseDt" calendar="YY-MM-DD" id="stpUseDt" />-->
+								<input type="text" class="stpUseDt" name="stpUseDt" value="" id="stpUseDt" calendar="YYYY-MM-DD"/>
+							</div>
+							<div class="supplier col-md-4">
+								<span>负责人<b>*</b></span>
+								<input style="display: none;" type="text" id="user" class="inputText encds" name="accNum" value="" />
+								<input type="text" id="userName" class="inputText princ" value="" readonly="readonly" />
+								<img class="biaoge" style="height:20px;width:20px" src="../../assets/img/biaoge.png" alt="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>备注</span>
+								<input type="text" class="memo" id="memo" />
+							</div>
+							<div class="supplier col-md-4 bm">
+								<span>部门编码<b>*</b></span>
+								<input type="text" id="deptId" class="deptId encds" name="deptId" value="" />
+								<input type="text" id="deptName" class="deptName names" name="deptName" value="" readonly="readonly" />
+								<img class="bm_biaoge" style="height:20px;width:20px" src="../../assets/img/biaoge.png" alt="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>仓库属性</span>
+								<select class="whsAttr" name="whsAttr" style="width:110px;position:absolute;z-index:222;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option id="whsAttr" value="请选择">请选择</option>
+								</select>
+							</div>
+							<div class="supplier col-md-4">
+								<span>销售可用量控制方式</span>
+								<select class="sellAvalQtyCtrlMode" name="sellAvalQtyCtrlMode" style="position:absolute;z-index:333;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option id="sellAvalQtyCtrlMode" value="请选择">请选择</option>
+								</select>
+							</div>
+							<div class="supplier col-md-4">
+								<span>是否进行货位管理</span>
+								<select class="isNtPrgrGdsBitMgmt" name="isNtPrgrGdsBitMgmt" style="position:absolute;z-index:333;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option value="请选择">请选择</option>
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div class="supplier col-md-4">
+								<span>库存可用量控制方式</span>
+								<select class="invtyAvalQtyCtrlMode" name="invtyAvalQtyCtrlMode" style="position:absolute;z-index:333;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option id="invtyAvalQtyCtrlMode" value="请选择">请选择</option>
+								</select>
+							</div>
+							<div class="supplier col-md-4">
+								<span>是否门店</span>
+								<select class="isNtShop" name="isNtShop" style="position:absolute;z-index:333;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option value="请选择">请选择</option>
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div class="supplier col-md-4">
+								<span>计价方式</span>
+								<select class="valtnMode" name="valtnMode" style="position:absolute;z-index:333;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option id="valtnMode" value="请选择">请选择</option>
+								</select>
+							</div>
+							<div class="supplier col-md-4">
+								<span>是否虚拟仓</span>
+								<select class="dumyWhs" name="dumyWhs" style="position:absolute;z-index:333;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option value="请选择">请选择</option>
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div class="supplier col-md-4">
+								<span>省或直辖市</span>
+								<select class="prov" name="province" id="province" style="position:absolute;z-index:333;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option id="prov" value="请选择">请选择</option>
+								</select>
+							</div>
+							<div class="supplier col-md-4">
+								<span>市</span>
+								<select class="cty" name="city" id="city" style="position:absolute;z-index:333;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option id="cty" value="请选择">请选择</option>
+								</select>
+							</div>
+							<div class="supplier col-md-4">
+								<span>县</span>
+								<select class="cnty" name="town" id="town" style="position:absolute;z-index:1;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+									<option id="cnty" value="请选择">请选择</option>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="purchaseTit1">
+					<div class="buttons">
+						<button type="button" class="saveOrder">保存</button>
+						<button type="button" class="cancel">取消</button>
+					</div>
+				</div>
+			</div>
+	</body>
+
+</html>

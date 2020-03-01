@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.DownloadStateDao">
+
+    <insert id="insert" parameterType="String">
+        INSERT INTO download_state (store_id) VALUES (#{storeId})
+    </insert>
+<!--    <insert id="insert" parameterType="com.px.mis.ec.entity.DownloadState">-->
+<!--    INSERT INTO download_state (store_id,state)-->
+<!--    VALUES(#{storeId},#{state})-->
+<!--  </insert>-->
+
+    <!--
+      <update id="update" parameterType="com.px.mis.ec.entity.DownloadState">
+          UPDATE download_state
+          SET state=#{state}
+          WHERE store_id=#{storeId}
+      </update>
+    -->
+
+    <select id="selectById" parameterType="String" resultType="com.px.mis.ec.entity.DownloadState">
+    SELECT id,store_id,state_time from download_state where store_id=#{storeId}
+    </select>
+
+    <delete id="delete" parameterType="String">
+    delete from download_state where store_id=#{storeId}
+    </delete>
+
+</mapper>

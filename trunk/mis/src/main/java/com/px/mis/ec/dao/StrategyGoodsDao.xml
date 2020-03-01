@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.StrategyGoodsDao">
+	<insert id="insert" parameterType="com.px.mis.ec.entity.StrategyGoods">
+		insert into strategy_goods(strategy_id,va_type,va)
+		values
+		<foreach collection="list" item="item" index="index" separator="," close=";">
+		(#{item.strategyId},#{item.vaType},#{item.va})
+		</foreach>
+	</insert>
+	<select id="detaillist" parameterType="int" resultType="com.px.mis.ec.entity.StrategyGoods">
+	select * from strategy_goods where strategy_id=#{strategyId}
+	</select>
+</mapper>

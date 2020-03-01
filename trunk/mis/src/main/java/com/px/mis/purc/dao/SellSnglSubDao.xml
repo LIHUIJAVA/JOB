@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.SellSnglSubDao">
+	<!-- 查询销售单信息 -->
+	<sql id="Base_Column_List">
+		ordr_num, sss.whs_encd, sss.invty_encd,
+		sell_sngl_id, expct_delv_dt, qty, bx_qty,
+		cntn_tax_uprc, prc_tax_sum, no_tax_uprc,
+		no_tax_amt, tax_amt, tax_rate,
+		bat_num,intl_bat, prdc_dt, invldtn_dt, sss.bao_zhi_qi,
+		is_nt_rtn_goods, is_complimentary, sss.memo,
+		rtnbl_qty,hadrtn_qty,proj_encd,proj_nm,discnt_ratio,un_bllg_qty,
+		mcd.measr_corp_nm,wd.whs_nm,
+		ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+		ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.crspd_bar_cd
+	</sql>
+	<select id="selectSellSnglSubBySellSnglId"
+		parameterType="String" resultType="SellSnglSub">
+		select
+		<include refid="Base_Column_List" />
+		from sell_sngl_sub as sss LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+						          LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+						          LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+		where sell_sngl_id=#{sellSnglId}
+	</select>
+	
+	<!-- 删除销售子单信息 -->
+	<delete id="deleteSellSnglSubBySellSnglId"
+		parameterType="String">
+		delete from sell_sngl_sub where sell_sngl_id = #{sellSnglId}
+	</delete>
+	<!-- 新增销售子单信息 -->
+	<insert id="insertSellSnglSub" parameterType="SellSnglSub">
+		insert into sell_sngl_sub (ordr_num, whs_encd, invty_encd,
+		sell_sngl_id, expct_delv_dt, qty, bx_qty,
+		cntn_tax_uprc, prc_tax_sum, no_tax_uprc,
+		no_tax_amt, tax_amt, tax_rate,
+		bat_num, intl_bat, prdc_dt, invldtn_dt, bao_zhi_qi,
+		is_nt_rtn_goods, is_complimentary, memo,rtnbl_qty,
+		hadrtn_qty,proj_encd,proj_nm,discnt_ratio,un_bllg_qty
+		)
+		values
+		<!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾 -->
+		<foreach collection="list" item="item" index="index"
+			separator="," close=";">
+			(#{item.ordrNum}, #{item.whsEncd}, #{item.invtyEncd},
+			#{item.sellSnglId}, #{item.expctDelvDt}, #{item.qty}, #{item.bxQty},
+			#{item.cntnTaxUprc}, #{item.prcTaxSum}, #{item.noTaxUprc},
+			#{item.noTaxAmt}, #{item.taxAmt}, #{item.taxRate}, #{item.batNum},
+			#{item.intlBat}, #{item.prdcDt}, #{item.invldtnDt}, #{item.baoZhiQi},
+			0, #{item.isComplimentary}, #{item.memo}, #{item.rtnblQty},
+			0,#{item.projEncd},#{item.projNm},#{item.discntRatio},#{item.unBllgQty})
+		</foreach>
+	</insert>
+		<!-- 删除时候备份一份到废弃表 -->
+	<insert id="insertSellSnglSubDl" parameterType="list">
+		insert into sell_sngl_sub_dl
+		select * from sell_sngl_sub where sell_sngl_id in
+		<foreach item="sell_sngl_id" collection="list" open="(" separator="," close=")">
+		#{sell_sngl_id}
+		</foreach>
+	</insert>
+	<select id="selectSellSnglSubQty" parameterType="SellSnglSub"
+		resultType="BigDecimal">
+		select
+		qty
+		from sell_sngl_sub
+		where whs_encd=#{whsEncd} and invty_encd=#{invtyEncd} and bat_num=#{BatNum}
+	</select>
+	
+	<!-- 根据批号、仓库、存货查询销售单子表信息 -->
+	<select id="selectSellSnglSubByInvWhsBat" parameterType="Map"
+		resultType="SellSnglSub">
+		select *
+		from sell_sngl_sub 
+		<where>
+			<if test="whsEncd != null and whsEncd != ''">
+				AND whs_encd=#{whsEncd}
+		    </if>
+		    <if test="invtyEncd != null and invtyEncd != ''">
+				AND invty_encd=#{invtyEncd}
+		    </if>
+		    <if test="batNum != null and batNum != ''">
+				AND bat_num=#{batNum}
+		    </if>
+		    <if test="qty != null and qty != ''">
+				AND qty=#{qty}
+		    </if>
+		    <if test="sellOrdrId != null and sellOrdrId != ''">
+				AND sell_sngl_id=#{sellOrdrId}
+		    </if>
+		</where>
+	</select>
+	<insert id="insertSellSnglSubUpload" parameterType="SellSnglSub">
+		insert into sell_sngl_sub (ordr_num, whs_encd, invty_encd,
+		sell_sngl_id, expct_delv_dt, qty, bx_qty,
+		cntn_tax_uprc, prc_tax_sum, no_tax_uprc,
+		no_tax_amt, tax_amt, tax_rate,
+		bat_num, intl_bat, prdc_dt, invldtn_dt, bao_zhi_qi,
+		is_nt_rtn_goods, is_complimentary, memo,rtnbl_qty,
+		hadrtn_qty,proj_encd,proj_nm,discnt_ratio,un_bllg_qty
+		)
+		values
+		<!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾 -->
+		<foreach collection="list" item="item" index="index"
+			separator="," close=";">
+			(#{item.ordrNum}, #{item.whsEncd}, #{item.invtyEncd},
+			#{item.sellSnglId},
+			<if test="item.expctDelvDt == '' ">
+				null
+			</if>
+			<if test="item.expctDelvDt != '' ">
+				#{item.expctDelvDt}
+			</if>
+			, #{item.qty}, #{item.bxQty},
+			#{item.cntnTaxUprc}, #{item.prcTaxSum}, #{item.noTaxUprc},
+			#{item.noTaxAmt}, #{item.taxAmt}, #{item.taxRate}, #{item.batNum},
+			#{item.intlBat},
+			<if test="item.prdcDt == '' ">
+				null
+			</if>
+			<if test="item.prdcDt != '' ">
+				#{item.prdcDt}
+			</if>
+			,
+
+			<if test="item.invldtnDt == '' ">
+				null
+			</if>
+			<if test="item.invldtnDt != '' ">
+				#{item.invldtnDt}
+			</if>
+			, #{item.baoZhiQi},
+			0, #{item.isComplimentary}, #{item.memo}, #{item.rtnblQty},
+			#{item.hadrtnQty},#{item.projEncd},#{item.projNm},#{item.discntRatio},#{item.unBllgQty})
+		</foreach>
+	</insert>
+
+	<!-- 销售发票参照时查询销售单子表信息 -->
+	<select id="selectSellSnglSubBySelSnIdAndOrdrNum"
+		parameterType="Map" resultType="SellSnglSub">
+		select
+		<include refid="Base_Column_List" />
+		from sell_sngl_sub as sss LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+						          LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+						          LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        <where>
+			<if test="ordrNum != null and ordrNum!= ''">
+				AND ordr_num =#{ordrNum}
+		    </if>
+		</where>
+	</select>
+	
+	<!-- 销售发票参照时根据销售单号批量查询子表信息 -->
+	<select id="selectSellSnglSubBySellSnglIdAndUnBllgQty"
+		parameterType="String" resultType="SellSnglSub">
+		select
+		<include refid="Base_Column_List" />
+		from sell_sngl_sub as sss LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+						          LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+						          LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+						          
+        where sell_sngl_id=#{sellSnglId} and un_bllg_qty>0
+	</select>
+		<!-- 修改销售单未开票数量 -->
+	<update id="updateSellSnglUnBllgQtyByOrdrNum" parameterType="Map">
+      update sell_sngl_sub
+      <set>
+         un_bllg_qty = un_bllg_qty-#{unBllgQty}
+      </set>
+      where ordr_num=#{ordrNum}
+    </update>
+    <!-- 查询未开票数量 -->
+    <select id="selectSellSnglUnBllgQtyByOrdrNum" parameterType="Map" resultType="BigDecimal">
+      select  un_bllg_qty from sell_sngl_sub where ordr_num = #{ordrNum}
+    </select>
+    
+    <!-- 退货单参照时根据销售单时批量查询子表信息 -->
+	<select id="selectSellSnglSubByRtnblQty"
+		parameterType="java.util.List" resultType="SellSnglSub">
+		select
+		<include refid="Base_Column_List" />
+		from sell_sngl_sub as sss LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+						          LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+						          LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+						          
+        where sell_sngl_id in 
+        <foreach item="sellSnglId" collection="list" open="(" close=")" separator=",">
+		     #{sellSnglId}
+		</foreach>
+        and rtnbl_qty>0
+	</select>
+		<!-- 修改销售单未退货数量 -->
+	<update id="updateSellSnglRtnblQtyByOrdrNum" parameterType="Map">
+      update sell_sngl_sub
+      <set>
+         rtnbl_qty = rtnbl_qty-#{rtnblQty}
+      </set>
+      where ordr_num=#{ordrNum}
+    </update>
+    <!-- 查询未退货数量 -->
+    <select id="selectRtnblQtyByOrdrNum" parameterType="Map" resultType="BigDecimal">
+      select  rtnbl_qty from sell_sngl_sub where ordr_num = #{ordrNum} and sell_sngl_id= #{sellSnglId}
+    </select>
+</mapper>

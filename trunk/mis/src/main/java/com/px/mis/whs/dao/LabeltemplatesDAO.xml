@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.LabeltemplatesDAO">
+    <resultMap id="BaseResultMap"
+               type="com.px.mis.whs.entity.LabelTemplates">
+        <id column="idx" jdbcType="BIGINT" property="idx"/>
+        <result column="template_id" jdbcType="VARCHAR"
+                property="templateId"/>
+        <result column="template_name" jdbcType="VARCHAR"
+                property="templateName"/>
+        <result column="opid" jdbcType="VARCHAR" property="opid"/>
+        <result column="opname" jdbcType="VARCHAR" property="opname"/>
+        <result column="opdate" jdbcType="TIMESTAMP" property="opdate"/>
+        <result column="reamrk" jdbcType="VARCHAR" property="reamrk"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        idx, template_id, template_name, opid, opname, opdate,
+		reamrk
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from labeltemplates
+        where idx = #{idx,jdbcType=BIGINT}
+    </select>
+    <select id="selectByTemplateId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from labeltemplates
+        <where>
+            <if test="labelTemplates.reamrk != null and labelTemplates.reamrk != ''">
+                <bind name="labelTemplates.reamrk" value="'%'+ labelTemplates.reamrk +'%'"/>
+                AND labeltemplates.reamrk like #{labelTemplates.reamrk}
+            </if>
+            <if test="labelTemplates.templateId != null and labelTemplates.templateId != '' ">
+                <bind name="labelTemplates.templateId" value="'%'+ labelTemplates.templateId +'%'"/>
+                and template_id like
+                #{labelTemplates.templateId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplates.templateName != null and labelTemplates.templateName != ''">
+                <bind name="labelTemplates.templateName" value="'%'+ labelTemplates.templateName +'%'"/>
+                and template_name LIKE
+                #{labelTemplates.templateName,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplates.opid != null and labelTemplates.opid != ''">
+                <bind name="labelTemplates.opid" value="'%'+ labelTemplates.opid +'%'"/>
+                and opid LIKE #{labelTemplates.opid,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplates.opname != null and labelTemplates.opname != ''">
+                <bind name="labelTemplates.opname" value="'%'+ labelTemplates.opname +'%'"/>
+                and opname LIKE #{labelTemplates.opname,jdbcType=VARCHAR}
+            </if>
+        </where>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectByTemplateCount" resultType="Integer">
+        select
+        Count(idx)
+        from labeltemplates
+        <where>
+            <if test="labelTemplates.reamrk != null and labelTemplates.reamrk != ''">
+                <bind name="labelTemplates.reamrk" value="'%'+ labelTemplates.reamrk +'%'"/>
+                AND labeltemplates.reamrk like #{labelTemplates.reamrk}
+            </if>
+            <if test="labelTemplates.templateId != null and labelTemplates.templateId != '' ">
+                <bind name="labelTemplates.templateId" value="'%'+ labelTemplates.templateId +'%'"/>
+                and template_id like
+                #{labelTemplates.templateId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplates.templateName != null and labelTemplates.templateName != ''">
+                <bind name="labelTemplates.templateName" value="'%'+ labelTemplates.templateName +'%'"/>
+                and template_name LIKE
+                #{labelTemplates.templateName,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplates.opid != null and labelTemplates.opid != ''">
+                <bind name="labelTemplates.opid" value="'%'+ labelTemplates.opid +'%'"/>
+                and opid LIKE #{labelTemplates.opid,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplates.opname != null and labelTemplates.opname != ''">
+                <bind name="labelTemplates.opname" value="'%'+ labelTemplates.opname +'%'"/>
+                and opname LIKE #{labelTemplates.opname,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.util.List">
+        delete from labeltemplates
+        where idx in
+        <foreach item="idx" collection="list" open="(" close=")"
+                 separator=",">
+            #{idx}
+        </foreach>
+    </delete>
+    <insert id="insert" keyColumn="idx" keyProperty="idx"
+            parameterType="com.px.mis.whs.entity.LabelTemplates"
+            useGeneratedKeys="true">
+        insert into labeltemplates (template_id,
+                                    template_name, opid,
+                                    opname, opdate, reamrk)
+        values (#{templateId,jdbcType=VARCHAR}, #{templateName,jdbcType=VARCHAR},
+                #{opid,jdbcType=VARCHAR},
+                #{opname,jdbcType=VARCHAR}, now(),
+                #{reamrk,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="idx" keyProperty="idx"
+            parameterType="com.px.mis.whs.entity.LabelTemplates"
+            useGeneratedKeys="true">
+        insert into labeltemplates
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="templateId != null">
+                template_id,
+            </if>
+            <if test="templateName != null">
+                template_name,
+            </if>
+            <if test="opid != null">
+                opid,
+            </if>
+            <if test="opname != null">
+                opname,
+            </if>
+            opdate,
+            <if test="reamrk != null">
+                reamrk,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="templateId != null">
+                #{templateId,jdbcType=VARCHAR},
+            </if>
+            <if test="templateName != null">
+                #{templateName,jdbcType=VARCHAR},
+            </if>
+            <if test="opid != null">
+                #{opid,jdbcType=VARCHAR},
+            </if>
+            <if test="opname != null">
+                #{opname,jdbcType=VARCHAR},
+            </if>
+            now(),
+            <if test="reamrk != null">
+                #{reamrk,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.px.mis.whs.entity.LabelTemplates">
+        update labeltemplates
+        <set>
+            <if test="templateId != null">
+                template_id = #{templateId,jdbcType=VARCHAR},
+            </if>
+            <if test="templateName != null">
+                template_name = #{templateName,jdbcType=VARCHAR},
+            </if>
+            <if test="opid != null">
+                opid = #{opid,jdbcType=VARCHAR},
+            </if>
+            <if test="opname != null">
+                opname = #{opname,jdbcType=VARCHAR},
+            </if>
+            opdate = now(),
+            reamrk = #{reamrk,jdbcType=VARCHAR}
+        </set>
+        where idx = #{idx,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.px.mis.whs.entity.LabelTemplates">
+        update labeltemplates
+        set template_id   =
+                #{templateId,jdbcType=VARCHAR},
+            template_name =
+                #{templateName,jdbcType=VARCHAR},
+            opid          = #{opid,jdbcType=VARCHAR},
+            opname        = #{opname,jdbcType=VARCHAR},
+            opdate        = now(),
+            reamrk        =
+                #{reamrk,jdbcType=VARCHAR}
+        where idx = #{idx,jdbcType=BIGINT}
+    </update>
+</mapper>

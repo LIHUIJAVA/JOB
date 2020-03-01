@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.LogRecordDao">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.LogRecord">
+	INSERT INTO log_record (operat_id, operat_name, operat_time, operat_type, operat_order, operat_content, memo)
+    VALUES(#{operatId}, #{operatName}, #{operatTime}, #{operatType}, #{operatOrder}, #{operatContent}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="int" resultType="com.px.mis.ec.entity.LogRecord">
+  	SELECT log_id, operat_id, operat_name, operat_time, operat_type, operat_order, operat_content, memo
+  	FROM log_record 
+  	WHERE log_id = #{logId}
+  </select>
+  
+  <delete id="delete" parameterType="int">
+  	DELETE FROM  log_record
+  	WHERE log_id = #{logId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.LogRecord">
+  	UPDATE log_record 
+  	SET operat_id=#{operatId}, operat_name=#{operatName}, operat_time=#{operatTime}, operat_type=#{operatType}, 
+  	operat_order=#{operatOrder}, operat_content=#{operatContent}, memo=#{memo}
+  	WHERE log_id = #{logId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.LogRecord">
+	SELECT log_id, operat_id, operat_name, operat_time, operat_type, operat_order, operat_content, memo
+  	FROM log_record 
+  	<where>
+        <if test="operatId != null and operatId != ''">
+            AND operat_id = #{operatId}
+        </if>
+        <if test="operatType != null and operatType != ''">
+            AND operat_type = #{operatType}
+        </if>
+        <if test="operatOrder != null and operatOrder != ''">
+            AND operat_order = #{operatOrder}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			AND operat_time BETWEEN #{startDate} AND #{endDate}
+		</if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  
+  <select id="exportList" parameterType="Map" resultType="Map">
+	SELECT
+	log_id as 日志编号,
+	operat_id as 操作员编号,
+	operat_name as 操作员,
+	operat_time as 操作时间,
+	operat_order as 操作订单编码,
+	operat_content as 操作内容,
+	memo as 备注,
+	log_type.type_name AS 操作类型
+FROM
+	log_record
+JOIN log_type ON log_record.operat_type = log_type.id
+  	<where>
+        <if test="operatId != null and operatId != ''">
+            AND operat_id = #{operatId}
+        </if>
+        <if test="operatType != null and operatType != ''">
+            AND operat_type = #{operatType}
+        </if>
+        <if test="operatOrder != null and operatOrder != ''">
+            AND operat_order = #{operatOrder}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			AND operat_time BETWEEN #{startDate} AND #{endDate}
+		</if>
+  	</where>
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(log_id)
+  	FROM log_record 
+  	<where>
+        <if test="operatId != null and operatId != ''">
+            AND operat_id = #{operatId}
+        </if>
+        <if test="operatType != null and operatType != ''">
+            AND operat_type = #{operatType}
+        </if>
+        <if test="operatOrder != null and operatOrder != ''">
+            AND operat_order = #{operatOrder}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+			AND operat_time BETWEEN #{startDate} AND #{endDate}
+		</if>
+  	</where>
+  </select>
+  <select id="logRecordList" resultType="com.px.mis.ec.entity.LogRecord">
+ 	select  record.*,type.type_name as typeName from log_record record,log_type type  
+	where record.operat_type=type.id and record.operat_order=#{ecOrderId}
+	order by record.operat_time 
+  </select>
+  
+  <select id="logTypeList" resultType="com.px.mis.ec.entity.LogType">
+  select * from log_type
+  </select>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.RefundOrdersDao">
+  
+  <insert id="insertList" parameterType="com.px.mis.ec.entity.RefundOrders">
+	INSERT INTO refund_orders (ref_id, good_id, good_name, good_sku, can_ref_num, can_ref_money, ref_money, ref_num, batch_no, 
+	ref_whs, memo,ec_good_id,prdc_dt,invldtn_dt,baozhiqi,is_gift)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.refId}, #{item.goodId}, #{item.goodName}, #{item.goodSku}, #{item.canRefNum}, #{item.canRefMoney}, #{item.refMoney}, 
+      #{item.refNum}, #{item.batchNo}, #{item.refWhs}, #{item.memo},#{item.ecGoodId},
+       <if test="item.prdcDt == ''">
+            null,
+        </if>
+        <if test="item.prdcDt != ''">
+            #{item.prdcDt},
+        </if> 
+      
+      
+       <if test="item.invldtnDt == ''">
+            null,
+        </if>
+        <if test="item.invldtnDt != ''">
+           #{item.prdcDt},
+        </if> 
+      #{item.baozhiqi},#{item.isGift})
+    </foreach>
+  </insert>
+  
+  <select id="selectList" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.RefundOrders">
+	<!-- SELECT no, ref_id, good_id, good_name, good_sku, can_ref_num, can_ref_money, ref_money, ref_num, batch_no, 
+	ref_whs, memo,ec_good_id,prdc_dt,invldtn_dt,baozhiqi,is_gift
+	FROM  refund_orders
+  	WHERE ref_id=#{refId}
+ -->  
+ SELECT re.*,inv.invty_nm as goodName
+	FROM  refund_orders re,invty_doc inv
+where re.good_id = inv.invty_encd and ref_id=#{refId}
+ 
+ </select>
+  
+   <select id="selectListGroupByInvidAndBatch" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.RefundOrders">
+	SELECT ref_id, good_id, good_name, good_sku,sum(can_ref_num) as canRefNum,sum(can_ref_money) as canRefMoney,sum(ref_money) as refMoney,sum(ref_num) as refNum, batch_no, 
+	ref_whs, memo,ec_good_id,prdc_dt,invldtn_dt,baozhiqi
+	FROM  refund_orders 
+	where ref_id=#{refId}
+	group by ref_id,good_id,good_name,good_sku,batch_no,ref_whs,ec_good_id,prdc_dt,invldtn_dt,baozhiqi
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  refund_orders
+  	WHERE ref_id = #{refId}
+  </delete>
+  
+</mapper>

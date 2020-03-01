@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.PayApplFormSubDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.purc.entity.PayApplFormSub">
+    <id column="ordr_num" jdbcType="BIGINT" property="ordrNum" />
+    <result column="pay_appl_id" jdbcType="VARCHAR" property="payApplId" />
+    <result column="expct_pay_dt" jdbcType="VARCHAR" property="expctPayDt" />
+    <result column="qty" jdbcType="DECIMAL" property="qty" />
+    <result column="src_form_num" jdbcType="VARCHAR" property="srcFormNum" />
+    <result column="orgnl_sngl_curr_appl_amt" jdbcType="DECIMAL" property="orgnlSnglCurrApplAmt" />
+    <result column="amt" jdbcType="DECIMAL" property="amt" />
+    <result column="form_ordr_num" jdbcType="VARCHAR" property="formOrdrNum" />
+    <result column="actl_pay_tm" jdbcType="VARCHAR" property="actlPayTm" />
+    <result column="line_clos_pers" jdbcType="VARCHAR" property="lineClosPers" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ordr_num, pay_appl_id, expct_pay_dt, qty, src_form_num, orgnl_sngl_curr_appl_amt, 
+    amt, form_ordr_num, actl_pay_tm, line_clos_pers,to_ordr_num
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from pay_appl_form_sub
+    where ordr_num = #{ordrNum}
+  </select>
+  <select id="selectByPrimaryList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from pay_appl_form_sub
+    where pay_appl_id = #{payApplId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from pay_appl_form_sub
+    where pay_appl_id = #{payApplId}
+  </delete>
+  <insert id="insertPayApplFormSubList" keyColumn="ordr_num" keyProperty="ordrNum" parameterType="com.px.mis.purc.entity.PayApplFormSub" useGeneratedKeys="true">
+    insert into pay_appl_form_sub (pay_appl_id, expct_pay_dt, qty, 
+      src_form_num, orgnl_sngl_curr_appl_amt, amt, 
+      form_ordr_num, actl_pay_tm, line_clos_pers,to_ordr_num
+      )
+    values
+    <foreach item="item" index="index" collection="list" separator=",">
+     (#{item.payApplId}, #{item.expctPayDt}, #{item.qty}, 
+      #{item.srcFormNum}, #{item.orgnlSnglCurrApplAmt}, #{item.amt}, 
+      #{item.formOrdrNum}, #{item.actlPayTm}, #{item.lineClosPers}, #{item.toOrdrNum}
+      )
+      </foreach>
+      
+  </insert>
+  
+  	<!--删除之前，插入备份 -->
+	<insert id="insertPayApplFormSubDl"
+		parameterType="list">
+		insert into pay_appl_form_sub_dl
+		select * from pay_appl_form_sub where
+		pay_appl_id in
+		<foreach collection="list" item="pay_appl_id" open="("
+			separator="," close=")">
+			#{pay_appl_id}
+		</foreach>
+	</insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.px.mis.purc.entity.PayApplFormSub">
+    update pay_appl_form_sub
+    <set>
+      <if test="payApplId != null">
+        pay_appl_id = #{payApplId},
+      </if>
+      <if test="expctPayDt != null">
+        expct_pay_dt = #{expctPayDt},
+      </if>
+      <if test="qty != null">
+        qty = #{qty},
+      </if>
+      <if test="srcFormNum != null">
+        src_form_num = #{srcFormNum},
+      </if>
+      <if test="orgnlSnglCurrApplAmt != null">
+        orgnl_sngl_curr_appl_amt = #{orgnlSnglCurrApplAmt},
+      </if>
+      <if test="amt != null">
+        amt = #{amt},
+      </if>
+      <if test="formOrdrNum != null">
+        form_ordr_num = #{formOrdrNum},
+      </if>
+      <if test="actlPayTm != null">
+        actl_pay_tm = #{actlPayTm},
+      </if>
+      <if test="lineClosPers != null">
+        line_clos_pers = #{lineClosPers},
+      </if>
+    </set>
+    where ordr_num = #{ordrNum}
+  </update>
+</mapper>

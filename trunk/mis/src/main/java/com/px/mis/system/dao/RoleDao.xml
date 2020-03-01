@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.system.dao.RoleDao">
+  <insert id="insert" parameterType="com.px.mis.system.entity.Role">
+	INSERT INTO role (id,name,level,dep_id,dep_name)
+    VALUES(#{id}, #{name}, #{level}, #{depId}, #{depName})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.system.entity.Role">
+  	SELECT id, name, level, dep_id as depId, dep_name as depName
+  	FROM role 
+  	WHERE id = #{id}
+  </select>
+  
+  <delete id="delete" parameterType="java.util.List">
+  	DELETE FROM  role
+  	WHERE id in
+  			<foreach item="id" collection="list" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+  </delete>
+  
+  <update id="update" parameterType="java.util.List">
+  	UPDATE role 
+  			<trim prefix="set" suffixOverrides=",">
+				<trim prefix="name =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.name != null and item.name !=''">
+						when id = #{item.id} then #{item.name}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="level =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.level != null and item.level !=''">
+						when id = #{item.id} then #{item.level}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="dep_id =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.depId != null and item.depId !=''">
+						when id = #{item.id} then #{item.depId}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="dep_name =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.depName != null and item.depName !=''">
+						when id = #{item.id} then #{item.depName}
+					</if>
+				</foreach>
+			</trim>
+			
+  		</trim>
+  	
+  	
+  	WHERE id in
+  	
+  	<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.id}
+		</foreach>
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.system.entity.Role">
+	SELECT id, name, level, dep_id as depId, dep_name as depName
+  	FROM role 
+  	<where>
+  		<if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND name=#{name}
+        </if>
+        <if test="level != null and level != ''">
+            AND level=#{level}
+        </if>
+        <if test="depId != null and depId != ''">
+            AND dep_id=#{depId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(id)
+  	FROM role 
+  	<where>
+  		<if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND name=#{name}
+        </if>
+        <if test="level != null and level != ''">
+            AND level=#{level}
+        </if>
+        <if test="depId != null and depId != ''">
+            AND dep_id=#{depId}
+        </if>
+  	</where>
+  </select>
+  
+   <select id="selectAll" resultType="com.px.mis.system.entity.Role">
+	SELECT id, name, level, dep_id, dep_name
+  	FROM role 
+  </select>
+  
+</mapper>

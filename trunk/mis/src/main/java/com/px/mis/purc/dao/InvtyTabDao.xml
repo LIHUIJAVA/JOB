@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.InvtyTabDao">
+  
+  <!-- 采购入库信息新增到库存表中  在库存表中单个新增数据 -->
+  <insert id="insertInvtyTabToIntoWhs" parameterType="IntoWhsSub">
+    insert into invty_tab (whs_encd, invty_encd, bat_num, 
+      prdc_dt, bao_zhi_qi, invldtn_dt, cntn_tax_uprc,
+      un_tax_uprc, tax_rate, now_stok,aval_qty, cntn_tax_amt,
+      un_tax_amt, gds_bit_encd)
+    values 
+    (#{whsEncd}, #{invtyEncd}, #{batNum}, #{prdcDt}, #{baoZhiQi}, 
+      #{invldtnDt},(#{noTaxAmt}/#{qty})*(#{taxRate}/100+1), #{noTaxAmt}/#{qty},#{taxRate},    
+      #{qty},#{qty}, #{noTaxAmt}*(#{taxRate}/100+1), #{noTaxAmt}, #{gdsBitEncd})    
+  </insert>
+  
+  <!--采购入库时修改库存表数据 单个现存量相加，金额相加  -->
+  <update id="updateInvtyTabJiaToIntoWhs" parameterType="IntoWhsSub">
+       update invty_tab 
+       <set>
+         now_stok=now_stok+#{qty},un_tax_amt=un_tax_amt+#{noTaxAmt},un_tax_uprc=(un_tax_amt)/(now_stok),
+         cntn_tax_uprc=(un_tax_uprc)*(#{taxRate}/100+1),cntn_tax_amt=(un_tax_amt)*(#{taxRate}/100+1),
+         <if test="prdcDt != null">
+            prdc_dt=#{prdcDt},
+         </if>
+         <if test="baoZhiQi != null">
+            bao_zhi_qi=#{baoZhiQi},
+         </if>
+         <if test="invldtnDt != null">
+           invldtn_dt=#{invldtnDt}
+         </if>
+       </set>
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  <!--采购入库时修改库存表数据 单个现存量相减，金额相减  -->
+  <update id="updateInvtyTabJianToIntoWhs" parameterType="IntoWhsSub">
+       update invty_tab 
+       <set>
+         now_stok=now_stok-#{qty},un_tax_amt=un_tax_amt-#{noTaxAmt},un_tax_uprc=(un_tax_amt)/(now_stok),
+         cntn_tax_uprc=(un_tax_uprc)*(#{taxRate}/100+1),cntn_tax_amt=(un_tax_amt)*(#{taxRate}/100+1),
+         <if test="prdcDt != null">
+            prdc_dt=#{prdcDt},
+         </if>
+         <if test="baoZhiQi != null">
+            bao_zhi_qi=#{baoZhiQi},
+         </if>
+         <if test="invldtnDt != null">
+            invldtn_dt=#{invldtnDt}
+         </if>
+       </set>  
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  
+    <!--采购退货时修改库存表数据 单个现存量、可用量相加，金额相加  -->
+  <update id="updateInvtyTabJiaToIntoWhsReturn" parameterType="IntoWhsSub">
+       update invty_tab 
+       <set>
+         now_stok=now_stok+#{qty},aval_qty=aval_qty+#{qty},un_tax_amt=un_tax_amt+#{noTaxAmt},un_tax_uprc=(un_tax_amt)/(now_stok),
+         cntn_tax_uprc=(un_tax_uprc)*(#{taxRate}/100+1),cntn_tax_amt=(un_tax_amt)*(#{taxRate}/100+1),
+         <if test="prdcDt != null">
+            prdc_dt=#{prdcDt},
+         </if>
+         <if test="baoZhiQi != null">
+            bao_zhi_qi=#{baoZhiQi},
+         </if>
+         <if test="invldtnDt != null">
+            invldtn_dt=#{invldtnDt}
+         </if>
+       </set>
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  <!--采购退货时修改库存表数据 单个现存量、可用量相减，金额相减  -->
+  <update id="updateInvtyTabJianToIntoWhsReturn" parameterType="IntoWhsSub">
+       update invty_tab 
+       <set>
+         now_stok=now_stok-#{qty},aval_qty=aval_qty-#{qty},un_tax_amt=un_tax_amt-#{noTaxAmt},un_tax_uprc=(un_tax_amt)/(now_stok),
+         cntn_tax_uprc=(un_tax_uprc)*(#{taxRate}/100+1),cntn_tax_amt=(un_tax_amt)*(#{taxRate}/100+1)
+       </set>  
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  
+  <!-- 普通退货单信息新增到库存表中  在库存表中单个新增数据 -->
+  <insert id="insertInvtyTabToRtnGoods" parameterType="RtnGoodsSub">
+    insert into invty_tab (whs_encd, invty_encd, bat_num, prdc_dt, bao_zhi_qi, invldtn_dt, aval_qty,tax_rate)
+    values(#{whsEncd}, #{invtyEncd}, #{batNum}, #{prdcDt}, #{baoZhiQi}, #{invldtnDt}, #{qty}, #{taxRate})   
+  </insert>
+    <!-- 委托代销退货单信息新增到库存表中  在库存表中单个新增数据 -->
+  <insert id="insertInvtyTabToEnAgDelSub" parameterType="EntrsAgnDelvSub">
+    insert into invty_tab (whs_encd, invty_encd, bat_num, prdc_dt, bao_zhi_qi, invldtn_dt, aval_qty,tax_rate)
+    values(#{whsEncd}, #{invtyEncd}, #{batNum}, #{prdcDt}, #{baoZhiQi}, #{invldtnDt}, #{qty}, #{taxRate})   
+  </insert>
+  
+  <!--销售出库时修改库存表数据 单个现存量相加，金额相加  -->
+  <update id="updateInvtyTabJiaToSellOutWhs" parameterType="SellOutWhsSub">
+       update invty_tab 
+       <set>
+         now_stok=now_stok+#{qty},un_tax_amt=un_tax_amt+#{noTaxAmt},
+         cntn_tax_amt=(un_tax_amt)*(#{taxRate}/100+1)
+       </set>  
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  <!--销售出库时修改库存表数据 单个现存量相减，金额相减  -->
+  <update id="updateInvtyTabJianToSellOutWhs" parameterType="SellOutWhsSub">
+       update invty_tab 
+       <set>
+         now_stok=now_stok-#{qty},un_tax_amt=un_tax_amt-#{noTaxAmt},
+         cntn_tax_amt=(un_tax_amt)*(#{taxRate}/100+1)
+       </set>  
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  
+  <!-- 到货单审核时信息新增到库存表中  在库存表中单个新增数据 -->
+  <insert id="insertInvtyTabByToGdsSngl" parameterType="ToGdsSnglSub">
+    insert into invty_tab (whs_encd, invty_encd, bat_num, prdc_dt, bao_zhi_qi, invldtn_dt, aval_qty,tax_rate)
+    values(#{whsEncd}, #{invtyEncd}, #{batNum}, #{prdcDt}, #{baoZhiQi}, #{invldtnDt}, #{qty},#{taxRate})   
+  </insert>
+  
+    <!-- 红字销售出库单审核时信息新增到库存表中  在库存表中单个新增数据 -->
+  <insert id="insertInvtyTabBySellOutWhsSub" parameterType="SellOutWhsSub">
+    insert into invty_tab (whs_encd, invty_encd, bat_num, 
+      prdc_dt, bao_zhi_qi, invldtn_dt, cntn_tax_uprc,
+      un_tax_uprc, tax_rate, now_stok, cntn_tax_amt,
+      un_tax_amt, gds_bit_encd)
+    values 
+    (#{whsEncd}, #{invtyEncd}, #{batNum}, #{prdcDt}, #{baoZhiQi}, 
+      #{invldtnDt},(#{noTaxAmt}/#{qty})*(#{taxRate}/100+1), #{noTaxAmt}/#{qty},#{taxRate},    
+      #{qty}, #{noTaxAmt}*(#{taxRate}/100+1), #{noTaxAmt}, #{gdsBitEncd})      
+  </insert>
+  
+  <!-- 删除库存表中入库信息 -->
+  <delete id="deleteInvtyTabByTerm" parameterType="InvtyTab">
+    delete from invty_tab where invty_encd = #{invtyEncd} and whs_encd = #{whsEncd} and bat_num = #{batNum}
+  </delete>
+  
+  <!--   查询库存表中是否有数据 -->
+  <select id="selectInvtyTabByTerm" parameterType="IntoWhsSub" resultType="InvtyTab">
+    select * from invty_tab where whs_encd = #{whsEncd}
+					         and invty_encd = #{invtyEncd}
+					         and bat_num = #{batNum} 
+					         FOR UPDATE
+  </select>
+  
+  <!--   查询库存表中是否有数据 -->
+  <select id="selectInvtyTabsByTerm" parameterType="InvtyTab" resultType="InvtyTab">
+    select * from invty_tab where whs_encd = #{whsEncd}
+					         and invty_encd = #{invtyEncd}
+					         and bat_num = #{batNum}  FOR UPDATE
+  </select>
+  
+
+  
+  <!--修改库存表数据 单个现存量相加  -->
+  <update id="updateInvtyTabNowStokJia" parameterType="InvtyTab">
+       update invty_tab 
+       <set>
+         now_stok=now_stok+#{nowStok}
+       </set>  
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  <!--修改库存表数据 单个现存量相减  -->
+  <update id="updateInvtyTabNowStokJian" parameterType="InvtyTab">
+       update invty_tab 
+       <set>
+         now_stok=now_stok-#{nowStok}
+       </set>  
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  <!--修改库存表数据 单个可用量相加  -->
+  <update id="updateInvtyTabAvalQtyJia" parameterType="InvtyTab">
+       update invty_tab 
+       <set>
+         aval_qty=aval_qty+#{avalQty}
+       </set>  
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  <!--修改库存表数据 单个可用量相减  -->
+  <update id="updateInvtyTabAvalQtyJian" parameterType="InvtyTab">
+       update invty_tab 
+       <set>
+         aval_qty=aval_qty-#{avalQty}
+       </set>  
+       where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum}
+  </update>
+  
+  
+  <!-- 采购入库信息新增到库存表中 在库存表中批量新增数据 -->
+  <insert id="insertInvtyTabList" parameterType="java.util.List">
+    insert into invty_tab (whs_encd, invty_encd, bat_num, 
+      prdc_dt, bao_zhi_qi, invldtn_dt, cntn_tax_uprc, 
+      un_tax_uprc, tax_rate, cntn_tax_amt, un_tax_amt, gds_bit_encd)
+    values 
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator=",">
+    (#{item.whsEncd}, #{item.invtyEncd}, #{item.batNum}, #{item.prdcDt}, 
+      #{item.baoZhiQi}, #{item.invldtnDt}, #{item.cntnTaxUprc}, #{item.noTaxUprc},
+      #{item.taxRate}, #{item.prcTaxSum}, #{item.noTaxAmt},  #{item.gdsBitEncd})
+     </foreach>
+  </insert>
+  <insert id="insertInvtyTab" parameterType="java.util.List">
+  	insert into invty_tab_copy ( whs_encd, invty_encd, 
+      bat_num, now_stok, aval_qty, 
+      prdc_dt, bao_zhi_qi, invldtn_dt, 
+      cntn_tax_uprc, un_tax_uprc, book_entry_uprc, 
+      tax_rate, cntn_tax_amt, un_tax_amt, 
+      regn_encd, gds_bit_encd)
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+	    (#{item.whsEncd}, #{item.invtyEncd}, #{item.batNum}, #{item.nowStok}, 
+	    #{item.avalQty}, #{item.prdcDt}, #{item.baoZhiQi}, #{item.invldtnDt}, 
+	    #{item.cntnTaxUprc}, #{item.unTaxUprc}, #{item.bookEntryUprc}, #{item.taxRate}, 
+	    #{item.cntnTaxAmt}, #{item.unTaxAmt},  #{item.regnEncd}, #{item.gdsBitEncd})
+     </foreach>
+
+  </insert>
+  
+   <!--  现存量减少(减法) -->
+  <update id="updateInvtyTabList" parameterType="java.util.List">
+       update invty_tab set 
+      <trim prefix="set" suffixOverrides=",">
+           <trim prefix="now_stok =case" suffix="end,">
+               <foreach collection="list" item="item" index="index">
+                    <if test="item.nowStok != null and item.nowStok !=''">
+                    when 
+                       whs_encd = #{item.whsEncd}
+					   and   
+					   invty_encd = #{item.invtyEncd}
+					   and
+					   bat_num = #{item.batNum}  
+                    then now_stok-#{item.nowStok}
+                    </if>
+               </foreach>
+           </trim>         
+       </trim>
+     where 
+       <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           whs_encd = #{item.whsEncd}
+		   and   
+		   invty_encd = #{item.invtyEncd}
+		   and
+		   bat_num = #{item.batNum}        
+       </foreach>      
+  </update>
+<!--   现存量增加(加法) -->
+  <update id="updateInvtyTabJiaList" parameterType="java.util.List">
+       update invty_tab
+      <trim prefix="set" suffixOverrides=",">
+           <trim prefix="now_stok =case" suffix="end,">
+               <foreach collection="list" item="item" index="index">
+                    <if test="item.nowStok != null and item.nowStok !=''">
+                    when 
+                       whs_encd = #{item.whsEncd}
+					   and   
+					   invty_encd = #{item.invtyEncd}
+					   and
+					   bat_num = #{item.batNum}  
+                    then now_stok+#{item.nowStok}
+                    </if>
+               </foreach>
+           </trim>         
+       </trim>
+     where 
+       <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           whs_encd = #{item.whsEncd}
+		   and   
+		   invty_encd = #{item.invtyEncd}
+		   and
+		   bat_num = #{item.batNum}        
+       </foreach>      
+  </update>
+  <select id="selectInvtyTabTerm" resultType="InvtyTab">
+	  	SELECT
+			*
+		FROM
+			`invty_tab`
+		 WHERE
+			whs_encd = "3001"
+		AND invty_encd = "9734";
+			
+  </select>
+  
+   <update id="dealUpdate" parameterType="InvtyTab">
+    update invty_tab
+    set     
+      un_tax_amt = #{unTaxAmt}  
+    where ordr_num = #{ordrNum}
+  </update>
+  
+  
+  <select id="sumTerm" parameterType="InvtyTab" resultType="TermBgnBal">
+  		SELECT
+			whs_encd,invty_encd,bat_num,SUM(qty) as qty, SUM(tax_amt) as no_tax_amt
+		FROM
+			invty_tab_term i
+		WHERE 
+        DATE_FORMAT(term_dt , '%Y%m' ) = DATE_FORMAT("2020-01-01" ,'%Y%m' )
+	    AND whs_encd = #{whsEncd}
+		AND invty_encd = #{invtyEncd}
+		AND bat_num = #{batNum}
+		
+  </select>
+  
+  <select id="sumNowStockIn"   parameterType="Map" statementType="CALLABLE" resultType="BigDecimal">
+  	{call select_now_stock(#{whsEncd,mode=IN,jdbcType=VARCHAR},
+		#{invtyEncd,mode=IN,jdbcType=VARCHAR},#{batNum,mode=IN,jdbcType=VARCHAR},#{inQty,mode=OUT,jdbcType=DECIMAL})}
+  
+  		<!-- SELECT 
+		 whs_encd,invty_encd,bat_num,SUM(qty) qty, SUM(no_tax_amt) as no_tax_amt 
+		FROM ( 
+				
+				SELECT
+					whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(no_tax_amt) as no_tax_amt
+		
+				FROM
+				 into_whs AS iw
+				INNER JOIN into_whs_sub AS iws ON iw.into_whs_sngl_id = iws.into_whs_sngl_id
+				WHERE
+				 iw.is_nt_chk = 1
+				AND DATE_FORMAT( iw.into_whs_dt , '%Y%m' ) = DATE_FORMAT("2020-01-01" ,'%Y%m' )
+				AND whs_encd = #{whsEncd}
+				AND invty_encd = #{invtyEncd}
+				AND bat_num = #{batNum}
+			UNION ALL
+		
+				SELECT
+					whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(un_tax_amt) as no_tax_amt
+				FROM
+					oth_out_into_whs oth 
+				INNER JOIN oth_out_into_whs_sub_tab oths ON oths.form_num = oth.form_num
+				WHERE DATE_FORMAT(oth.form_dt, '%Y%m') = DATE_FORMAT("2020-01-01", '%Y%m')		
+				AND oth.is_nt_chk = 1
+				AND oth.out_into_whs_typ_id IN (1, 3, 5, 8, 12)	
+				AND whs_encd = #{whsEncd}
+				AND invty_encd = #{invtyEncd}
+				AND bat_num = #{batNum}
+		) a -->
+   </select>
+   <select id="sumNowStockOut" parameterType="InvtyTab" resultType="TermBgnBal">
+  		
+	SELECT 
+	   whs_encd,invty_encd,bat_num,SUM(qty) qty, SUM(no_tax_amt) as no_tax_amt 
+	FROM (
+			  
+		    SELECT
+				whs_encd,invty_encd,bat_num,SUM(qty) qty, SUM(no_tax_amt) as no_tax_amt
+			FROM
+				sell_out_whs sel
+			INNER JOIN sell_out_whs_sub sub ON sel.out_whs_id = sub.out_whs_id
+			WHERE DATE_FORMAT(out_whs_dt, '%Y%m') = DATE_FORMAT("2020-01-01", '%Y%m')
+			AND sel.is_nt_chk = 1
+			AND whs_encd = #{whsEncd}
+			AND invty_encd = #{invtyEncd}
+			AND bat_num = #{batNum}
+	     
+	        UNION ALL
+	
+	      
+			SELECT
+				whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(un_tax_amt) as no_tax_amt
+			FROM
+				oth_out_into_whs oth 
+	        INNER JOIN oth_out_into_whs_sub_tab oths ON oths.form_num = oth.form_num
+			WHERE DATE_FORMAT(oth.form_dt, '%Y%m') = DATE_FORMAT("2020-01-01", '%Y%m')
+			AND oth.is_nt_chk = 1
+	        AND oth.out_into_whs_typ_id IN (2, 4, 6, 9,11)
+	        AND whs_encd = #{whsEncd}
+		    AND invty_encd = #{invtyEncd}
+		    AND bat_num = #{batNum}
+	     
+	) a
+  </select>
+  <select id="sumAvalStockIn" parameterType="Map" statementType="CALLABLE" resultType="BigDecimal">
+  	{call select_aval_qty_stock(#{whsEncd,mode=IN,jdbcType=VARCHAR},
+		#{invtyEncd,mode=IN,jdbcType=VARCHAR},#{batNum,mode=IN,jdbcType=VARCHAR},#{avalQty,mode=OUT,jdbcType=DECIMAL})}
+		
+  <!-- 	SELECT 	
+	  whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(no_tax_amt) as no_tax_amt 
+	FROM (
+			SELECT
+				whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(no_tax_amt) as no_tax_amt
+			FROM
+			into_whs AS iw
+			INNER JOIN into_whs_sub AS iws ON iw.into_whs_sngl_id = iws.into_whs_sngl_id
+			WHERE iw.is_nt_chk = 1
+			AND DATE_FORMAT( iw.into_whs_dt , '%Y%m' ) = DATE_FORMAT("2020-01-01" ,'%Y%m' )
+		    AND whs_encd = #{whsEncd}
+		    AND invty_encd = #{invtyEncd}
+		    AND bat_num = #{batNum}
+	
+			UNION ALL
+	
+	    	SELECT
+				whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(un_tax_amt) as no_tax_amt
+			FROM
+				oth_out_into_whs oth 
+			INNER JOIN oth_out_into_whs_sub_tab oths ON oths.form_num = oth.form_num
+			WHERE DATE_FORMAT(oth.form_dt, '%Y%m') = DATE_FORMAT("2020-01-01", '%Y%m')		
+			AND oth.is_nt_chk = 1
+			AND oth.out_into_whs_typ_id = "12"	
+			AND whs_encd = #{whsEncd}
+		    AND invty_encd = #{invtyEncd}
+		    AND bat_num = #{batNum}
+	
+			UNION ALL
+	
+	    	SELECT 
+			 tran_in_whs_encd as whs_encd,invty_id as invty_encd,bat_num,SUM(cannib_qty) as qty,SUM(un_tax_amt) as no_tax_amt
+	    	FROM cannib_sngl  cs 
+	    	INNER JOIN cannib_sngl_sub_tab sub ON sub.form_num = cs.form_num
+			WHERE DATE_FORMAT(form_dt, '%Y%m') = DATE_FORMAT("2020-01-01", '%Y%m')
+			AND is_nt_chk = 1
+	    	AND tran_in_whs_encd =#{whsEncd}
+	    	AND sub.invty_id =  #{invtyEncd}
+			AND sub.bat_num = #{batNum}
+				 
+	) a; -->
+  	
+  </select>
+  <select id="sumAvalStockOut" parameterType="Map"  statementType="CALLABLE" resultType="BigDecimal">
+   {call select_aval_amt_stock(#{whsEncd,mode=IN,jdbcType=VARCHAR},
+		#{invtyEncd,mode=IN,jdbcType=VARCHAR},#{batNum,mode=IN,jdbcType=VARCHAR},#{amt,mode=OUT,jdbcType=DECIMAL})}
+  
+  		<!-- SELECT 	
+	  whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(no_tax_amt) as no_tax_amt 
+	FROM (
+				SELECT 
+					whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(no_tax_amt) as no_tax_amt
+				FROM sell_sngl sel 
+				INNER JOIN sell_sngl_sub sub ON sel.sell_sngl_id = sub.sell_sngl_id
+			  WHERE DATE_FORMAT(sel.sell_sngl_dt, '%Y%m') = DATE_FORMAT("2020-01-01", '%Y%m')
+			  AND sel.is_nt_chk = 1
+				AND whs_encd = #{whsEncd}
+			  AND invty_encd = #{invtyEncd}
+		    AND bat_num = #{batNum}
+			
+	     
+
+      UNION ALL
+
+			SELECT
+				whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(un_tax_amt) as no_tax_amt
+			FROM
+				oth_out_into_whs oth 
+			INNER JOIN oth_out_into_whs_sub_tab oths ON oths.form_num = oth.form_num
+			WHERE DATE_FORMAT(oth.form_dt, '%Y%m') = DATE_FORMAT("2020-01-01", '%Y%m')		
+			AND oth.is_nt_chk = 1
+			AND oth.out_into_whs_typ_id = "11"	
+			AND whs_encd = #{whsEncd}
+		  AND invty_encd = #{invtyEncd}
+		   AND bat_num = #{batNum}
+	
+			UNION ALL
+			
+		    SELECT 
+				 tran_out_whs_encd as whs_encd,invty_id as invty_encd,bat_num,SUM(cannib_qty) as qty,SUM(un_tax_amt) as no_tax_amt
+		    FROM cannib_sngl  cs INNER JOIN cannib_sngl_sub_tab sub ON sub.form_num = cs.form_num
+				WHERE DATE_FORMAT(form_dt, '%Y%m') = DATE_FORMAT("2020-01-01", '%Y%m')
+				AND is_nt_chk = 1
+		    AND tran_out_whs_encd = #{whsEncd}
+		    AND sub.invty_id = #{invtyEncd}
+			AND sub.bat_num = #{batNum} 
+       UNION ALL
+
+				SELECT  
+					 whs_encd,invty_encd,bat_num,SUM(qty) as qty,SUM(no_tax_amt) as no_tax_amt 
+				FROM rtn_goods rg 
+				INNER JOIN rtn_goods_sub sub ON rg.rtn_goods_id = sub.rtn_goods_id
+			   WHERE DATE_FORMAT(rg.rtn_goods_dt, '%Y%m') = DATE_FORMAT("2020-01-01", '%Y%m')
+				AND rg.is_nt_chk = "1"
+				AND whs_encd = #{whsEncd}
+			  AND invty_encd = #{invtyEncd}
+	      AND bat_num = #{batNum}
+	) a; -->
+  </select>
+  
+  
+</mapper>

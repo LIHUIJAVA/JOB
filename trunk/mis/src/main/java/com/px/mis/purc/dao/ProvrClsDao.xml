@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.ProvrClsDao">
+  <!-- 查询供应商分类 -->
+  <sql id="Base_Column_List">
+    provr_cls_id, provr_cls_nm, ico, level, pid, memo
+  </sql>
+ <!--按照id 查询存货分类 --> 
+  <select id="selectProvrClsByProvrClsId"  resultType="ProvrCls">
+    select 
+    <include refid="Base_Column_List" />
+    from provr_cls  where provr_cls_id=#{provrClsId}
+  </select>
+   <!-- 全查供应商分类 -->
+  <select id="selectProvrCls" resultType="ProvrCls">
+    select 
+    <include refid="Base_Column_List" />
+    from provr_cls
+  </select>
+  
+  <!-- 删除供应商分类 -->
+  <delete id="deleteProvrClsByProvrClsId" parameterType="String">
+    delete from provr_cls where provr_cls_id = #{provrClsId}
+  </delete>
+<!--   新增供应商分类 -->
+  <insert id="insertProvrCls" parameterType="ProvrCls">
+    insert into provr_cls (provr_cls_id, provr_cls_nm, ico, level, pid, memo)
+    values (#{provrClsId}, #{provrClsNm}, #{ico}, #{level}, #{pid}, #{memo})
+  </insert>
+ <!--  修改供应商分类 -->
+   <update id="updateProvrClsByProvrClsId" parameterType="ProvrCls">
+    update provr_cls
+    <set>
+      <if test="provrClsNm != null">
+        provr_cls_nm = #{provrClsNm},
+      </if>
+      <if test="level != null">
+        level = #{level},
+      </if>
+      <if test="ico != null">
+        ico = #{ico},
+      </if>
+      <if test="pid != null">
+        pid = #{pid},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+    where provr_cls_id = #{provrClsId}
+  </update>
+  
+ 
+</mapper>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<link rel="stylesheet" href="../../assets/css/baseDoc/qvanXfenpei.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/system/userPrivilege.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<meta charset="UTF-8">
+		<title>权限分配</title>
+	</head>
+	<style>
+		.seleNo2,.seleYes2{
+			overflow: scroll;
+		}
+	</style>
+	<body>
+		<div class="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="confirm">变更</button>
+				</div>
+			</div>
+			<!--<hr />-->
+		</div>
+		<wrap>
+			<aside>
+				<!--左列树-->
+				<div id="tree"></div>
+			</aside>
+			<article>
+				<div class="seleYes">
+					<span style="display: block;">已有权限</span>
+					<input type="checkbox" id="allCheck" value="1" /><span>全选</span>
+					<div class="seleYes2">
+					</div>
+				</div>
+				<div class="seleNo">
+					<span style="display: block;">可添权限</span><input type="checkbox" id="allCheck1" value="1" /><span>全选</span>
+					<div class="seleNo2">
+					</div>
+				</div>
+			</article>
+		</wrap>
+	</body>
+
+</html>

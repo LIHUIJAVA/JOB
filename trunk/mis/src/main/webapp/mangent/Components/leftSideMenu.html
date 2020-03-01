@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+	<script type="text/javascript" src="./assets/js/common/location.js"></script>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>左侧菜单</title>
+
+		<style>
+			.father {
+				display: none
+			}
+			
+			#skin-select li .loadMore {
+				position: relative;
+				width: 16px;
+				/*animation: jump 2s infinite;*/
+				cursor: pointer;
+				padding-top: 2%;
+				padding-bottom: 4%;
+			}
+			
+			.rotate {
+				transform: rotate(180deg);
+			}
+			
+			@keyframes jump {
+				0% {
+					top: 0px;
+					opacity: 0.7;
+				}
+				50% {
+					top: -7px;
+					opacity: 0.2;
+				}
+				100% {
+					top: 0px;
+					opacity: 0.7;
+				}
+			}
+			
+			.bigTitle {
+				display: none;
+			}
+			
+			h4 {
+				position: relative;
+				width: 16px;
+				cursor: pointer;
+			}
+			
+			h4 img {
+				width: 100%;
+			}
+			
+			@media screen and (max-width:1400px) {
+				.dark {
+					padding: 35% 5% 5% 5%;
+					box-sizing: border-box;
+				}
+			}
+			
+			@media screen and (min-width:1400px) {
+				.dark {
+					padding: 25% 5% 5% 5%;
+					box-sizing: border-box;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- SIDE MENU -->
+		<div id="skin-select">
+			<div class="dark">
+				<form action="javascript:;">
+					<span>
+						<!--<img src="assets/img/search-dark.png" alt="" />-->
+                    	<input  type="text" name="search" value="" class="search rounded id_search" placeholder="Search Menu..." autofocus="">
+               		</span>
+				</form>
+			</div>
+			<div class="skin-part">
+				<div id="tree-wrap">
+					<div class="side-bar" id="menuLeftNestHtml"></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/html" id="menuLeftNestHtmlTpl">
+			{{each result as value i}}
+			<ul class="topnav menu-left-nest">
+				<li style="text-align: left;">
+					<a href="javascript:;" data-url="{{value.url}}" style="border-left: 0px solid !important; display: inline-block; float: none;" class="title-menu-left">
+						<span class="titleTips" style="display: inline-block; float: none;">
+							{{value.name}}
+						</span> {{if value.children.length !== 0}}
+						<div class="loadMore pull-right" data-click="1"><img src="{{value.ico}}" width="100%" height="100%"></div>
+						{{/if}}
+					</a>
+				</li>
+				{{include 'submenuHtmlTpl' value}}
+			</ul>
+			{{/each}}
+		</script>
+
+		<script type="text/html" id="submenuHtmlTpl">
+			{{each children as val i}} {{if false}}
+			<li style="text-align: left;">
+				<a class="tooltip-tip  tooltipster-disable" href="javascript:;" data-url="{{val.url}}" title="{{val.name}}">
+					<!--<i class="{{val.icon}}"></i>-->
+					<span style="display: inline-block; float: none;">{{val.name}}</span>
+				</a>
+				{{if val.children.length !== 0}}
+				<ul style="display: none;">
+					{{include 'sunMenus' val}}
+				</ul>
+				{{/if}}
+			</li>
+			{{else}}
+			<li style="text-align: left;" class="bigTitle">
+				<a class="tooltip-tip  tooltipster-disable" href="javascript:;" data-url="{{val.url}}" title="{{val.name}}">
+					<!--<i class="{{val.icon}}"></i>-->
+					<span style="display: inline-block; float: none;">{{val.name}}</span>
+				</a>
+				{{if val.children.length !== 0}}
+				<ul style="display: none;">
+					{{include 'sunMenus' val}}
+				</ul>
+				{{/if}}
+			</li>
+			{{/if}} {{/each}}
+		</script>
+
+		<script type="text/html" id="sunMenus">
+			{{each children as vals i}}
+			<li style="text-align: left; display: block;">
+				<a class="tooltip-tip2 ajax-load tooltipster-disable" href="javascript:;" data-url="{{vals.url}}" title="{{vals.name}}">
+					<!--<i class="{{vals.icon}}"></i>-->
+					<span style="display: inline-block; float: none;">{{vals.name}}</span>
+				</a>
+			</li>
+			{{/each}}
+		</script>
+	</body>
+	<script>
+		function render(tplId, data, target) {
+			var html = template(tplId, data);
+			$(target).html(html);
+		}
+		$(function() {
+			let username = window.localStorage.getItem('username')
+
+			var data2 = {
+				"reqBody": {
+					"userId": username
+				}
+			};
+			var postD2 = JSON.stringify(data2);
+			$.ajax({
+				type: "post",
+				url: url + "/mis/system/menu/menuTree",
+				dataType: "json",
+				contentType: 'application/json; charset=utf-8',
+				async: false,
+				data: postD2,
+				success: function(data) {
+					var navList = {};
+					navList.result = data.respBody.list;
+					render("menuLeftNestHtmlTpl", navList, "#menuLeftNestHtml");
+				}
+			});
+		});
+
+		$(".tooltip-tip,.tooltip-tip2").on("click", function() {
+			var _this = $(this);
+			var oUrl = _this.attr("data-url"); //获取点击元素的功能页面名称
+			var title = this.title;
+
+			if(oUrl) {
+
+				if($('#tt').tabs('exists', title)) {
+					$('#tt').tabs('select', title);
+				} else {
+					var content = '<iframe scrolling="auto" frameborder="0" src="' + oUrl + '" style="width:100%;height:800px;"></iframe>';
+					$('#tt').tabs('add', {
+						title: title,
+						content: content,
+						closable: true,
+						selected: true
+					});
+				}
+
+			} else {
+				return false;
+			}
+		});
+
+		// 侧边栏收缩内容事件
+		$('.loadMore').on('click', function() {
+			$(this).toggleClass('rotate'); //点击图标切换上下不同的方向
+			if($(this).is(".rotate")) {
+				$(this).parents(".menu-left-nest").find("li.bigTitle").stop(true, false).slideDown(500, function() {});
+			} else {
+				$(this).parents(".menu-left-nest").find("li.bigTitle").stop(true, false).slideUp(500, function() {});
+			}
+		});
+	</script>
+	<script type="text/javascript" src="assets/js/common/main.js"></script>
+
+</html>

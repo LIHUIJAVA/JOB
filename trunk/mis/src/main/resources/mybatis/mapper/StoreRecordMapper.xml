@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="StoreRecord">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.StoreRecord">
+	INSERT INTO store_record (store_id, store_name, ec_id, ec_name, no_audit_id, no_audit_name, sales_type, brok_id, brok_name,
+    deliver_mode, safe_inv, clearing_form, resp_dep, resp_person, seller_id, alipay_no, mobile,
+    phone, linkman, email, business, default_ref_whs, memo)
+    VALUES(#{storeId}, #{storeName}, #{ecId}, #{ecName}, #{noAuditId}, #{noAuditName}, #{salesType}, #{brokId}, #{brokName},
+    #{deliverMode}, #{safeInv}, #{clearingForm}, #{respDep}, #{respPerson}, #{sellerId}, #{alipayNo}, #{mobile},
+    #{phone}, #{linkman}, #{email}, #{business}, #{defaultRefWhs}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.StoreRecord">
+  	SELECT store_id, store_name, ec_id, ec_name, no_audit_id, no_audit_name, sales_type, brok_id, brok_name,
+    deliver_mode, safe_inv, clearing_form, resp_dep, resp_person, seller_id, alipay_no, mobile,
+    phone, linkman, email, business, default_ref_whs, memo
+  	FROM store_record 
+  	WHERE store_id = #{storeId}
+  </select>
+  
+  <select id="selectAll" resultType="com.px.mis.ec.entity.StoreRecord">
+  	SELECT store_id, store_name, ec_id, ec_name, no_audit_id, no_audit_name, sales_type, brok_id, brok_name,
+    deliver_mode, safe_inv, clearing_form, resp_dep, resp_person, seller_id, alipay_no, mobile,
+    phone, linkman, email, business, default_ref_whs, memo
+  	FROM store_record 
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  store_record
+  	WHERE store_id = #{storeId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.StoreRecord">
+  	UPDATE store_record 
+  	SET store_id=#{storeId}, store_name=#{storeName}, ec_id=#{ecId}, ec_name=#{ecName}, no_audit_id=#{noAuditId}, no_audit_name=#{noAuditName},
+  	sales_type=#{salesType}, brok_id=#{brokId}, brok_name=#{brokName}, deliver_mode=#{deliverMode}, safe_inv=#{safeInv}, clearing_form=#{clearingForm},
+  	resp_dep=#{respDep}, resp_person=#{respPerson}, seller_id=#{sellerId}, alipay_no=#{alipayNo}, mobile=#{mobile}, phone=#{phone}, linkman=#{linkman},
+	email=#{email}, business=#{business}, default_ref_whs=#{defaultRefWhs}, memo=#{memo}
+  	WHERE store_id = #{storeId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.StoreRecord">
+	SELECT store_id, store_name, ec_id, ec_name, no_audit_id, no_audit_name, sales_type, brok_id, brok_name,
+    deliver_mode, safe_inv, clearing_form, resp_dep, resp_person, seller_id, alipay_no, mobile,
+    phone, linkman, email, business, default_ref_whs, memo
+  	FROM store_record 
+  	<where>
+  		<if test="storeId != null and storeId != ''">
+            AND store_id = #{storeId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(store_id)
+  	FROM store_record 
+  	  	<where>
+  		<if test="storeId != null and storeId != ''">
+            AND store_id = #{storeId}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

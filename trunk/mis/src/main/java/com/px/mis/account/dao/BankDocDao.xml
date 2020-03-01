@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.BankDocDao">
+	
+	<!-- 分页查询所有 -->
+	<select id="selectBankDocList" parameterType="Map" resultType="com.px.mis.account.entity.BankDoc">
+	SELECT bank_encd BankEncd,bank_nm BankNm,
+	indv_acct_isfixlen indvAcctIsFixlen,indv_acct_numlen indvAcctNumLen,
+	auto_outindv_numlen autoOutIndvNumLen,corp_encd corpEncd,
+	comp_acct_isfixlen compAcctIsFixLen,comp_acct_numlen compAcctNumLen,
+	bank_id bankId,isSysData isSysData,pubufts pubufts
+	FROM bank_doc
+	<if test="index !=null and num != null ">
+		LIMIT #{index},#{num}
+	</if>
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectBankDocByOrdrNum" parameterType="String" resultType="com.px.mis.account.entity.BankDoc">
+	 SELECT  bank_encd BankEncd,bank_nm BankNm,
+			 indv_acct_isfixlen indvAcctIsFixlen,indv_acct_numlen indvAcctNumLen,
+			 auto_outindv_numlen autoOutIndvNumLen,corp_encd corpEncd,
+			 comp_acct_isfixlen compAcctIsFixLen,comp_acct_numlen compAcctNumLen,
+			 bank_id bankId,isSysData isSysData,pubufts pubufts
+	 FROM bank_doc
+	 WHERE bank_encd=#{bankEncd}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectBankDocCount" resultType="int">
+		SELECT count(bank_encd)
+		FROM bank_doc
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertBankDoc" parameterType="com.px.mis.account.entity.BankDoc">
+		INSERT INTO bank_doc(bank_encd,bank_nm,indv_acct_isfixlen,indv_acct_numlen,
+			 auto_outindv_numlen,corp_encd,comp_acct_isfixlen,comp_acct_numlen,
+			 bank_id,isSysData,pubufts)
+		VALUES(#{bankEncd},#{bankNm},#{indvAcctIsFixlen},
+				#{indvAcctNumLen},#{autoOutIndvNumLen},#{corpEncd},#{compAcctIsFixLen},
+				#{compAcctNumLen},#{bankId},#{isSysData},now())
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteBankDocByOrdrNum" parameterType="int">
+		 DELETE FROM bank_doc
+		 WHERE bank_encd in 
+		 <foreach item="bankEncd" collection="list" open="("
+				close=")" separator=",">
+				#{bankEncd}
+		</foreach>
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateBankDocByOrdrNum" parameterType="com.px.mis.account.entity.BankDoc">
+	 UPDATE bank_doc
+	    <set>
+	      <if test="bankEncd != null">
+	        bank_encd = #{bankEncd,jdbcType=VARCHAR},
+	      </if>
+	      <if test="bankNm != null">
+	        bank_nm = #{bankNm,jdbcType=VARCHAR},
+	      </if>
+	      <if test="indvAcctIsFixlen != null">
+	        indv_acct_isfixlen = #{indvAcctIsFixlen,jdbcType=INTEGER},
+	      </if>
+	      <if test="indvAcctNumLen != null">
+	        indv_acct_numlen = #{indvAcctNumLen,jdbcType=INTEGER},
+	      </if>
+	      <if test="autoOutIndvNumLen != null">
+	        auto_outindv_numlen = #{autoOutIndvNumLen,jdbcType=INTEGER},
+	      </if>
+	      <if test="corpEncd != null">
+	        corp_encd = #{corpEncd,jdbcType=VARCHAR},
+	      </if>
+	      <if test="compAcctIsFixLen != null">
+	        comp_acct_isfixlen = #{compAcctIsFixLen,jdbcType=INTEGER},
+	      </if>
+	      <if test="compAcctNumLen != null">
+	        comp_acct_numlen = #{compAcctNumLen,jdbcType=INTEGER},
+	      </if>
+	      <if test="bankId != null">
+	        bank_id = #{bankId,jdbcType=INTEGER},
+	      </if>
+	      <if test="isSysData != null">
+	        isSysData = #{isSysData,jdbcType=INTEGER},
+	      </if>
+	      <if test="pubufts != null">
+	        pubufts = #{pubufts,jdbcType=DATE},
+	      </if>
+	    </set>
+	   WHERE bank_encd = #{bankEncd,jdbcType=VARCHAR}
+	</update>
+</mapper>

@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>韵达面单打印</title>
+		<link rel="stylesheet" href="../../assets/css/print/print.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/jquery-barcode.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/art-template.js"></script>
+		<style type="text/css">
+			.search1 {
+				display: inline-block;
+			}
+			
+			.print_dy .back {
+				margin-left: 20px;
+				margin-bottom: 10px;
+			}
+			
+			.other-ele {
+				display: inline-block;
+			}
+			
+			@media print {
+				@page {
+					size: A4 portrait;
+					/*// A4大小 纵向*/
+				}
+				.other-ele {
+					/*// 打印时将不需要的元素隐藏*/
+					display: none;
+				}
+				.pdf-title {
+					/*// 只在打印时候显示的元素*/
+					display: block;
+				}
+				.panel-sm {
+					/*// 打印时候改变某些元素的样式*/
+					margin: 0;
+					border: 1px solid #bce8f1;
+				}
+			}
+			.qty {
+				margin-right: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="purchaseTit other-ele">
+			<div class="buttons other-ele">
+				<!--<button class="other-ele search1">生成面单</button>-->
+				<button class="other-ele print_dy">打印面单</button>
+			</div>
+		</div>
+		<div id="content"></div>
+
+		<script id="test" type="text/html">
+
+			{{each data as item i}}
+			<!--<div>-->
+				<table border="1" cellspacing="0" cellpadding="0" class="tab1" style="border-collapse: collapse;">
+					<tr>
+						<td colspan="3">
+							<span class="bz fr">标准快递</span>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" style="text-align: center;">
+							<span class="danhao">
+								<span class="big">{{item.bigShotCode}}</span><span>-</span>&nbsp;&nbsp;<span class="second">{{item.secondSectionCode}}</span><span>-</span><span class="third">{{item.thirdSectionCode}}</span>
+							</span>
+						</td>
+					</tr>
+					<tr>
+						<th class="first">集</th>
+						<th class="th1">
+							<span class="fl nanchang">{{item.gatherCenterName}}</span><span class="fr fen">1/10</span>
+						</th>
+						<th class="two th2">{{item.createDate.substr(0, 10)}}</th>
+					</tr>
+					<tr>
+						<td class="first">收件</td>
+						<td colspan="2">
+							<div class="clearfix">
+								<span class="fl wgw shou">{{item.recName}}</span><span class="fr fone fone_shou">{{item.recMobile}}</span>
+							</div>
+							<div class="city recAddress">{{item.recAddress}}</div>
+						</td>
+					</tr>
+					<tr class="tr">
+						<td colspan="3">
+							<table class="tab2" border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse;border-width:0px; border-style:hidden;" width="100%">
+								<tr class="tr1">
+									<td class="first1">寄件</td>
+									<td colspan="2">
+										<div class="clearfix">
+											<span class="fl wgw jjr">{{item.shiperName}}</span><span class="fr fone fone_j">{{item.shiperPhone}}</span>
+										</div>
+										<div class="city2">{{item.shipAddress}}</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" style="text-align: center;">
+							<span class="txm c pdf-title barcodeTarget" id="barcodeTarget{{i}}">{{item.expressCode}}</span>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<table class="tab2" border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse;border-width:0px; border-style:hidden;" width="100%">
+								<td class="col158width">
+									<span class="liu">您的签收（代签）代表您已验收此包裹（货物），并已确认货物无破损、减少，包装完好、无划痕，商品信息无误等。</span>
+								</td>
+								<td class="col230width">
+									<div class="sjr">签收人：<span></span></div>
+									<div class="time">时间：<span></span><span class="ys fr">已验视</span></div>
+								</td>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<span class="barcodeTarget fr" id="barcodeTargets{{i}}">{{item.expressCode}}</span>
+						</td>
+					</tr>
+					<tr>
+						<td class="first">收件</td>
+						<td colspan="2">
+							<div class="clearfix">
+								<span class="wgw1 shou fl">{{item.recName}}</span><span class="fone1 fone_shou fr">{{item.recMobile}}</span>
+
+							</div>
+							<div class="city1 recAddress">{{item.recAddress}}</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="first">寄件</td>
+						<td colspan="2">
+							<div class="clearfix">
+								<span class="wgw1 jjr fl">{{item.shiperName}}</span><span class="fone1 fone_j fr">{{item.shiperPhone}}</span>
+							</div>
+							<div class="city1">{{item.shipAddress}}</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<div class="pin">
+								{{each item.sellSnglSubMap j}}
+								<div>
+									<span>{{j.invtyNm}}</span><span class="fr qty">{{j.qty}}</span>
+								</div>
+								{{/each}}
+							</div>
+						</td>
+					</tr>
+				</table>
+			<!--</div>-->
+			{{/each}}
+
+		</script>
+		<script>
+//			$(".search1").on("click", function() {
+//				$(".search1").removeClass("gray")
+//				$(".search1").attr("disabled",false)
+				var sum = localStorage.getItem("sum")
+				var grs = localStorage.getItem("grs")
+				console.log(sum,grs)
+				var savedata = {
+					reqHead,
+					"reqBody": {
+						"ordrNum":sum
+					}
+				};
+				var saveData = JSON.stringify(savedata);
+				console.log(saveData)
+				if(grs.length != 0) {
+					$("#serial_tab").show()
+					$("#serial_tab").css("opacity",1)
+					$("#purchaseOrder").hide()
+					$.ajax({
+						type: "post",
+						contentType: 'application/json; charset=utf-8',
+						url: url + '/mis/ec/logisticsTab/selectPrint',
+						async: false,
+						data: saveData,
+						dataType: 'json',
+						success: function(data) {
+							console.log(data)
+							var list = data.respBody.list
+							console.log(list)
+							document.getElementById('content').innerHTML = template('test', {data: list});
+							for(var i = 0;i<list.length;i++) {
+								$("#barcodeTarget" + i).barcode(list[i].expressCode, "code128", {
+									barWidth: 2,
+									barHeight: 45
+								});
+				
+								$("#barcodeTargets" + i).barcode(list[i].expressCode, "code128", {
+									barWidth: 2,
+									barHeight: 35
+								});
+							}
+						},
+						error:function(error) {
+							console.log(error)
+						}
+					})
+				}
+//			})
+
+			
+			function CloseAfterPrint() {
+				if(tata = document.execCommand("print")) {
+					prints()
+				}
+			}
+			
+			$(document).on('click', '.print_dy', function() {
+				if(confirm("请确认无误后选择打印")) {
+					CloseAfterPrint();
+//			function DoSomeThing() {
+				}
+			})
+			
+//			$(function () {
+//				$(".print_dy").addClass("gray")
+//				$(".print_dy").attr("disabled",true)
+//			})
+//			
+//			$(document).on('click', '.search1', function() {
+//				$(".print_dy").removeClass("gray")
+//				$(".print_dy").attr("disabled",false)
+//				$(".search1").addClass("gray")
+//				$(".search1").attr("disabled",true)
+//			})
+			
+			
+			function prints() {
+				var sum = localStorage.getItem("sum")
+				var savedata = {
+					reqHead,
+					"reqBody": {
+						"logisticsNum":sum
+					}
+				};
+				var saveData = JSON.stringify(savedata);
+				console.log(saveData)
+				$.ajax({
+					type: "post",
+					contentType: 'application/json; charset=utf-8',
+					url: url + '/mis/ec/logisticsTab/print',
+					async: true,
+					data: saveData,
+					dataType: 'json',
+					success: function(data) {
+						console.log(data)
+						localStorage.removeItem("sum")
+						localStorage.removeItem("grs")
+						window.close()
+			//			alert()
+					}
+				})
+			}
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,19 @@
+body{
+	position: relative;
+}
+.row div {
+	height: 40px;
+}
+
+.purchaseOrder .giftCode {
+	width: 500px;
+	height: 500px;
+	display: none;
+	position: absolute;
+	/*background: red;*/
+	z-index:999 ;
+	top: 50%;
+	left: 50%;
+	margin-top: -250px;
+	margin-left: -250px;
+}

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.PresentRangeListDao">
+	<!-- 赠品范围列表 分页查询所有 -->
+	<select id="selectPresentRangesd" parameterType="Map"
+		resultType="com.px.mis.ec.entity.PresentRange">
+		SELECT present_range_encd,present_range_name
+		FROM present_range
+		<where>
+			<if test="presentRangeEncd != null and presentRangeEncd != '' ">
+				and present_range_encd = #{presentRangeEncd}
+			</if>
+			<if test="presentRangeName != null and presentRangeName != '' ">
+				<bind name="presentRangeName" value="'%'+ presentRangeName +'%'"/>
+				AND present_range_name like #{presentRangeName}
+			</if>
+		</where>
+		LIMIT #{index},#{num}
+	</select>
+
+	<!-- 查询单个 -->
+	<select id="selectPresentRangeById" parameterType="string"
+		resultType="com.px.mis.ec.entity.PresentRange">
+		SELECT present_range_encd,present_range_name
+		FROM
+		present_range
+		WHERE present_range_encd=#{presentRangeEncd}
+	</select>
+
+	<!-- <select id="selectPresentRangeListByPresentRangeEncd" parameterType="String" 
+		resultType="com.px.mis.ec.entity.PresentRange"> SELECT present_range_encd,present_range_name 
+		FROM present_range WHERE present_range_encd=#{presentRangeEncd} </select> -->
+
+	<!-- <select id="selectPresentRangeListByProPlansNo" parameterType="Long" 
+		resultType="com.px.mis.ec.entity.PresentRange"> SELECT present_range_encd,present_range_name 
+		FROM present_range WHERE present_range_encd=#{presentRangeEncd} </select> -->
+
+	<!-- 查询总行数 -->
+	<select id="selectPresentRangeCount" parameterType="Map"
+		resultType="int">
+		SELECT
+		count(present_range_encd)
+		FROM present_range
+		<where>
+			<if test="presentRangeEncd != null and presentRangeEncd != '' ">
+				and present_range_encd = #{present_range_encd}
+			</if>
+			<if test="presentRangeName != null and presentRangeName != '' ">
+				<bind name="presentRangeName" value="'%'+ presentRangeName +'%'"/>
+				AND present_range_name like #{presentRangeName}
+			</if>
+		</where>
+	</select>
+
+	<!-- 添加 -->
+	<insert id="insertPresentRange"
+		parameterType="com.px.mis.ec.entity.PresentRange">
+		INSERT INTO
+		present_range(present_range_encd,present_range_name)
+		VALUES(#{presentRangeEncd},#{presentRangeName})
+	</insert>
+
+	<!-- 根据主键删除 -->
+	<delete id="deletePresentRangeById" parameterType="string">
+		DELETE FROM
+		present_range
+		WHERE present_range_encd=#{presentRangeEncd}
+	</delete>
+
+	<!-- 根据主键更新 -->
+	<update id="updatePresentRangeById"
+		parameterType="com.px.mis.ec.entity.PresentRange">
+		UPDATE present_range
+		<set>
+			<if test="presentRangeEncd != null and presentRangeEncd != '' ">
+				present_range_name =
+				#{presentRangeName,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE present_range_encd = #{presentRangeEncd}
+	</update>
+
+
+	<resultMap id="BaseResultMap"
+		type="com.px.mis.ec.entity.PresentRangeList">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="present_range_encd" jdbcType="VARCHAR"
+			property="presentRangeEncd" />
+		<result column="present_encd" jdbcType="VARCHAR"
+			property="presentEncd" />
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		id, present_range_encd, present_encd
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from present_range_list
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="selectByPresentRangeList"
+		parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PresentRangeList">
+		SELECT
+			id,
+			present_range_encd,
+			present_encd,
+			invty_doc.invty_nm as presentNm
+		FROM
+			present_range_list
+			LEFT JOIN invty_doc ON present_range_list.present_encd = invty_doc.invty_encd 
+		WHERE
+			present_range_encd = #{presentRangeEncd}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		present_range_list
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteByPresentRangeList"
+		parameterType="java.lang.String">
+		delete from
+		present_range_list
+		where present_range_encd =
+		#{presentRangeEncd}
+	</delete>
+	<insert id="insert" keyColumn="id" keyProperty="id"
+		parameterType="com.px.mis.ec.entity.PresentRangeList"
+		useGeneratedKeys="true">
+		insert into
+		present_range_list (present_range_encd,
+		present_encd)
+		values
+		(#{presentRangeEncd,jdbcType=VARCHAR},
+		#{presentEncd,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertPresentRangeList" keyColumn="id" keyProperty="id"
+		parameterType="com.px.mis.ec.entity.PresentRangeList"
+		useGeneratedKeys="true">
+		insert into
+		present_range_list (present_range_encd, present_encd)
+		values
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(#{item.presentRangeEncd,jdbcType=VARCHAR},
+			#{item.presentEncd,jdbcType=VARCHAR})
+		</foreach>
+
+	</insert>
+	<!-- <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.px.mis.ec.entity.PresentRangeList" 
+		useGeneratedKeys="true"> insert into present_range_list <trim prefix="(" 
+		suffix=")" suffixOverrides=","> <if test="presentRangeEncd != null"> present_range_encd, 
+		</if> <if test="presentEncd != null"> present_encd, </if> </trim> <trim prefix="values 
+		(" suffix=")" suffixOverrides=","> <if test="presentRangeEncd != null"> #{presentRangeEncd,jdbcType=VARCHAR}, 
+		</if> <if test="presentEncd != null"> #{presentEncd,jdbcType=VARCHAR}, </if> 
+		</trim> </insert> -->
+	<!-- <update id="updateByPrimaryKeySelective" parameterType="com.px.mis.ec.entity.PresentRangeList"> 
+		update present_range_list <set> <if test="presentRangeEncd != null"> present_range_encd 
+		= #{presentRangeEncd,jdbcType=VARCHAR}, </if> <if test="presentEncd != null"> 
+		present_encd = #{presentEncd,jdbcType=VARCHAR}, </if> </set> where id = #{id,jdbcType=BIGINT} 
+		</update> -->
+	<update id="updateByPrimaryKey"
+		parameterType="com.px.mis.ec.entity.PresentRangeList">
+		update present_range_list
+		set present_range_encd =
+		#{presentRangeEncd,jdbcType=VARCHAR},
+		present_encd =
+		#{presentEncd,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

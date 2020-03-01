@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>未审核单据</title>
+
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/system/ntChkNoList.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+
+	</head>
+
+	<body>
+		<div class="box">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button id="find">查询</button>
+					<button class="exportExcel">导出</button>
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>单据号 </span>
+							<input type="text" class="formNum" name="formNum" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>单据类型编码 </span>
+							<input type="text" class="formTypeEncd" name="formTypeEncd" value="" />
+						</div>
+						<!--<div class="supplier col-md-4">
+							<span>单据类型名称 </span>
+							<input type="text" class="formTypeNm" name="formTypeNm" value="" />
+						</div>-->
+						<div class="salesman col-md-4">
+							<span>创建人</span><input type="text" id="user" class="inputText encds" name="accNum" value="" />
+							<input type="text" id="userName" class="inputText names" value="" readonly="readonly" />
+							<span><img class="biao_userId" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>单据日期 </span>
+							<input type="text" class="formDt1 date1" name="formDt1" value="" readonly="readonly" calendar="YYYY-MM-DD" />到<input type="text" class="formDt2 date2" name="formDt2" value="" readonly="readonly" calendar="YYYY-MM-DD" />
+						</div>
+					</div>
+					<div id="fuze" style="display: none"></div>
+				</form>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqGridPager"></div>
+
+	</body>
+
+</html>

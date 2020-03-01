@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>项目分类</title>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/ProjClsList.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<!--<script type="text/javascript" src="../../assets/js/mis/baseDoc/whsDocList.js"></script>-->
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<style>
+			
+			#mengban {
+				z-index: 2;
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%!important;
+				opacity: 0.2;
+				background-color: #000000;
+			}
+			select {
+				outline: none;
+				appearance: none;
+				-moz-appearance: none;
+				-webkit-appearance: none;
+				width: 220px;
+				border: 0;
+				border-bottom: 1px solid #B8C7CE
+			}
+			
+			select:-ms-expand {
+				display: none;
+			}
+			#insertProjCls_jqgrids {
+				width: 100%!important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--商品档案-->
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="pro_sure">确定</button>
+					<button class="pro_cancel">取消</button>
+					<button class="search_pro">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>项目编码</span>
+							<input type="text" id="projEncd1" name="projEncd1" value=""/>
+						</div>
+						<div class="supplier col-md-4">
+							<span>项目名称 </span>
+							<input type="text" id="projNm1" name="projNm1" value="" />
+						</div>
+					</div>
+				</form>
+			</div>
+			
+			<table id="insertProjCls_jqgrids"></table>
+			<div id="insertProjCls_jqGridPager"></div>
+		</div>
+	</body>
+
+</html>

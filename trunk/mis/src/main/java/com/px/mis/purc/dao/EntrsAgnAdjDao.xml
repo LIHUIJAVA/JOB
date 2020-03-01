@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.EntrsAgnAdjDao">
+  <!--   删除委托代销调整单 -->
+  <delete id="deleteEntrsAgnAdjByAdjSnglId" parameterType="String">
+    delete eaa,eaas from entrs_agn_adj as eaa LEFT JOIN entrs_agn_adj_sub as eaas on eaa.adj_sngl_id=eaas.adj_sngl_id
+    where eaa.adj_sngl_id = #{adjSnglId}
+  </delete>
+  <!--   新增委托代销调整单 -->
+  <insert id="insertEntrsAgnAdj" parameterType="EntrsAgnAdj">
+    insert into entrs_agn_adj (adj_sngl_id, adj_sngl_dt, sell_typ_id, 
+      biz_typ_id, recv_send_cate_id, cust_id, 
+      acc_num, user_name,  
+      setup_pers, setup_tm, is_nt_book_entry, 
+      is_nt_chk, delv_addr_id, delv_addr_nm, 
+      delv_sngl_id, sell_inv_id, sell_inv_mas_tab_ind, 
+      is_nt_sell_use, is_nt_out_whs_bllg, is_nt_need_bllg,
+      memo,stl_sngl_id,now())
+    values (#{adjSnglId}, #{adjSnglDt}, #{sellTypId}, 
+      #{bizTypId}, #{recvSendCateId}, #{custId}, 
+      #{accNum}, #{userName},  
+      #{setupPers}, now(), 0, 
+      0, #{delvAddrId}, #{delvAddrNm}, 
+      #{delvSnglId}, #{sellInvId}, #{sellInvMasTabInd}, 
+      0, 0, 0, #{memo},#{stlSnglId},#{delvSnglDt})
+  </insert>
+ <!--   修改委托代销调整单 -->
+  <update id="updateEntrsAgnAdjByAdjSnglId" parameterType="EntrsAgnAdj">
+    update entrs_agn_adj
+    <set>
+      <if test="adjSnglDt != null">
+        adj_sngl_dt = now(),
+      </if>
+      <if test="sellTypId != null">
+        sell_typ_id = #{sellTypId},
+      </if>
+      <if test="bizTypId != null">
+        biz_typ_id = #{bizTypId},
+      </if>
+      <if test="recvSendCateId != null">
+        recv_send_cate_id = #{recvSendCateId},
+      </if>
+      <if test="custId != null">
+        cust_id = #{custId},
+      </if>
+      <if test="accNum != null">
+        acc_num = #{accNum},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName},
+      </if>
+      <if test="mdfr != null">
+        mdfr = #{mdfr},
+      </if>
+      <if test="modiTm != null">
+        modi_tm = #{modiTm},
+      </if>
+      <if test="delvAddrId != null">
+        delv_addr_id = #{delvAddrId},
+      </if>
+      <if test="delvAddrNm != null">
+        delv_addr_nm = #{delvAddrNm},
+      </if>
+      <if test="sellInvId != null">
+        sell_inv_id = #{sellInvId},
+      </if>
+      <if test="sellInvMasTabInd != null">
+        sell_inv_mas_tab_ind = #{sellInvMasTabInd},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+    where adj_sngl_id = #{adjSnglId}
+  </update>
+  <!--   查询委托代销调整单 -->
+  <sql id="Base_Column_List">
+    eaa.*,eaas.*,eaas.memo as memos,st.sell_typ_nm,bt.biz_typ_nm,
+    mu.user_name,mu.dep_name,cd.cust_nm,mcd.measr_corp_nm,wd.whs_nm,
+    ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+    ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.crspd_bar_cd
+  </sql>
+<!--   按照编号查询委托代销调整单信息 -->
+  <select id="selectEntrsAgnAdjByAdjSnglId" parameterType="String" resultMap="entrsAgnAdjMap">
+    select 
+    <include refid="Base_Column_List" />
+    from entrs_agn_adj as eaa LEFT JOIN entrs_agn_adj_sub as eaas on eaa.adj_sngl_id=eaas.adj_sngl_id
+	                          LEFT JOIN sell_type as st ON eaa.sell_typ_id = st.sell_typ_id 
+	                  		  LEFT JOIN mis_user mu on eaa.acc_num=mu.acc_num 
+                      		  LEFT JOIN cust_doc cd on eaa.cust_id=cd.cust_id
+                      		  LEFT JOIN biz_type bt on bt.biz_typ_id=eaa.biz_typ_id
+                      		 <!--  LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=eaa.recv_send_cate_id rsc.recv_send_cate_nm,-->
+                   	  	      LEFT JOIN whs_doc wd on eaas.whs_encd=wd.whs_encd
+                   	  		  LEFT JOIN invty_doc ind on eaas.invty_encd=ind.invty_encd
+                   	  		  LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    where eaa.adj_sngl_id = #{adjSnglId}
+  </select>
+  
+  <!--   根据id查询委托代销结调整单信息，主要用于验证委托代销调整单主表是否唯一 -->
+  <select id="selectEntrsAgnAdjById" parameterType="String" resultType="EntrsAgnAdj">
+    select * from entrs_agn_adj  where adj_sngl_id = #{adjSnglId}
+  </select>
+  <!--   分页查询委托代销调整单信息 -->
+   <select id="selectEntrsAgnAdjList" parameterType="Map" resultMap="entrsAgnAdjMap">
+	SELECT <include refid="Base_Column_List" />  
+	FROM entrs_agn_adj as eaa LEFT JOIN entrs_agn_adj_sub as eaas on eaa.adj_sngl_id=eaas.adj_sngl_id
+	                          LEFT JOIN sell_type as st ON eaa.sell_typ_id = st.sell_typ_id 
+	                  		  LEFT JOIN mis_user mu on eaa.acc_num=mu.acc_num 
+                      		  LEFT JOIN cust_doc cd on eaa.cust_id=cd.cust_id
+                      		  LEFT JOIN biz_type bt on bt.biz_typ_id=eaa.biz_typ_id
+                      		  <!-- LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=eaa.recv_send_cate_id -->
+                   	  	      LEFT JOIN whs_doc wd on eaas.whs_encd=wd.whs_encd
+                   	  		  LEFT JOIN invty_doc ind on eaas.invty_encd=ind.invty_encd
+                   	  		  LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+  	<where>
+  		<if test="adjSnglId != null and adjSnglId != ''">
+            AND eaa.adj_sngl_id=#{adjSnglId}
+        </if>
+        <if test="adjSnglDt1 != null and adjSnglDt1 != ''">
+            AND eaa.adj_sngl_dt &gt;= #{adjSnglDt1}
+        </if>
+        <if test="adjSnglDt2 != null and adjSnglDt2 != ''">
+            AND eaa.adj_sngl_dt &lt;= #{adjSnglDt2}
+        </if>
+        <if test="isNtChk != null and isNtChk != ''">
+            AND eaa.is_nt_chk=#{isNtChk}
+        </if>
+        <if test="custId != null and custId != ''">
+            AND eaa.cust_id=#{custId}
+        </if>
+        <if test="custId!= null and whsEncd != ''">
+            AND eaa.whs_Encd=#{whsEncd}
+        </if>
+        <if test="invtyEncd!= null and invtyEncd != ''">
+            AND eaas.invty_Encd=#{invtyEncd}
+        </if>
+        <if test="whsEncd!= null and whsEncd != ''">
+            AND eaa.whs_Encd=#{whsEncd}
+        </if>
+  	</where>
+  	ORDER BY eaa.adj_sngl_id DESC
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectEntrsAgnAdjCount" parameterType="Map" resultType="Integer">
+	SELECT count(distinct(eaa.adj_sngl_id))
+  	FROM entrs_agn_adj as eaa LEFT JOIN entrs_agn_adj_sub as eaas on eaa.adj_sngl_id=eaas.adj_sngl_id
+  	                          LEFT JOIN sell_type as st ON eaa.sell_typ_id = st.sell_typ_id 
+	                  		  LEFT JOIN mis_user mu on eaa.acc_num=mu.acc_num 
+                      		  LEFT JOIN cust_doc cd on eaa.cust_id=cd.cust_id
+                      		  LEFT JOIN biz_type bt on bt.biz_typ_id=eaa.biz_typ_id
+                      		  <!-- LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=eaa.recv_send_cate_id -->
+                   	  	      LEFT JOIN whs_doc wd on eaas.whs_encd=wd.whs_encd
+                   	  		  LEFT JOIN invty_doc ind on eaas.invty_encd=ind.invty_encd
+                   	  		  LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+  	<where>
+  		<if test="adjSnglId != null and adjSnglId != ''">
+            AND eaa.adj_sngl_id=#{adjSnglId}
+        </if>
+        <if test="adjSnglDt1 != null and adjSnglDt1 != ''">
+            AND eaa.adj_sngl_dt &gt;= #{adjSnglDt1}
+        </if>
+        <if test="adjSnglDt2 != null and adjSnglDt2 != ''">
+            AND eaa.adj_sngl_dt &lt;= #{adjSnglDt2}
+        </if>
+        <if test="isNtChk != null and isNtChk != ''">
+            AND eaa.is_nt_chk=#{isNtChk}
+        </if>
+        <if test="custId != null and custId != ''">
+            AND eaa.cust_id=#{custId}
+        </if>
+        <if test="invtyEncd!= null and invtyEncd != ''">
+            AND eaas.invty_Encd=#{invtyEncd}
+        </if>
+  	</where>
+  </select>
+  <resultMap type="EntrsAgnAdj" id="entrsAgnAdjMap" autoMapping="true">
+		<id property="adjSnglId" column="adj_sngl_id" />
+	    <collection property="entrsAgnAdjSub" ofType="EntrsAgnAdjSub" autoMapping="true"><!-- 采购订单子表 -->
+		    <id property="ordrNum" column="ordr_num" /> 
+		    <result property="memo" column="memos" /> 
+	    </collection>
+  </resultMap>
+  
+  <!-- 委托代销调整单列表中批量删除 -->
+  <delete id="deleteEntrsAgnAdjList" parameterType="java.util.List">
+	delete eaa,eaas 
+	FROM entrs_agn_adj as eaa LEFT JOIN entrs_agn_adj_sub as eaas on eaa.adj_sngl_id=eaas.adj_sngl_id
+    where eaa.adj_sngl_id in
+	<foreach item="adjSnglId" collection="list" open="(" close=")" separator=",">
+	     #{adjSnglId}
+	</foreach>
+  </delete>
+  
+   <!-- 审核时更新审核状态 -->
+  <update id="updateEntrsAgnAdjIsNtChk" parameterType="java.util.List">
+    update entrs_agn_adj 
+    <trim prefix="set" suffixOverrides=",">
+         <trim prefix="is_nt_chk =case" suffix="end,">
+             <foreach collection="list" item="item" index="index">                    
+                  when adj_sngl_id = #{item.adjSnglId} then #{item.isNtChk}
+             </foreach>
+         </trim>
+         <trim prefix="chkr =case" suffix="end,">
+             <foreach collection="list" item="item" index="index">
+                  <if test="item.chkr != null and item.chkr!=''">
+                  when adj_sngl_id = #{item.adjSnglId} then #{item.chkr}
+                  </if>
+             </foreach>
+        </trim>
+        <trim prefix="chk_tm =case" suffix="end,">
+             <foreach collection="list" item="item" index="index">                  
+                  when adj_sngl_id = #{item.adjSnglId} then now()
+             </foreach>
+        </trim>
+     </trim>
+     where adj_sngl_id in
+    <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+        #{item.adjSnglId}
+    </foreach>
+  </update> 
+  
+   <!--  打印及输入输出时查询委托代销调整单信息 -->
+   <select id="printingEntrsAgnAdjList" parameterType="Map" resultMap="entrsAgnAdjMap">
+	SELECT <include refid="Base_Column_List" />  
+	FROM entrs_agn_adj as eaa LEFT JOIN entrs_agn_adj_sub as eaas on eaa.adj_sngl_id=eaas.adj_sngl_id
+	                          LEFT JOIN sell_type as st ON eaa.sell_typ_id = st.sell_typ_id 
+	                  		  LEFT JOIN mis_user mu on eaa.acc_num=mu.acc_num 
+                      		  LEFT JOIN cust_doc cd on eaa.cust_id=cd.cust_id
+                      		  LEFT JOIN biz_type bt on bt.biz_typ_id=eaa.biz_typ_id
+                      		  <!-- LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=eaa.recv_send_cate_id -->
+                   	  	      LEFT JOIN whs_doc wd on eaas.whs_encd=wd.whs_encd
+                   	  		  LEFT JOIN invty_doc ind on eaas.invty_encd=ind.invty_encd
+                   	  		  LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+  	<where>
+  		<if test="adjSnglId != null and adjSnglId != ''">
+            AND eaa.adj_sngl_id=#{adjSnglId}
+        </if>
+        <if test="adjSnglDt1 != null and adjSnglDt1 != ''">
+            AND eaa.adj_sngl_dt &gt;= #{adjSnglDt1}
+        </if>
+        <if test="adjSnglDt2 != null and adjSnglDt2 != ''">
+            AND eaa.adj_sngl_dt &lt;= #{adjSnglDt2}
+        </if>
+         <if test="delvSnglDt1 != null and delvSnglDt1 != ''">
+            AND eaa.delv_sngl_dt &gt;= #{delvSnglDt1}
+        </if>
+        <if test="delvSnglDt2 != null and delvSnglDt2 != ''">
+            AND eaa.delv_sngl_dt &lt;= #{delvSnglDt2}
+        </if>
+        <if test="delvSnglId != null and delvSnglId != ''">
+            AND eaa.delv_sngl_id=#{delvSnglId}
+        </if>
+        <if test="isNtChk != null and isNtChk != ''">
+            AND eaa.is_nt_chk=#{isNtChk}
+        </if>
+        <if test="custId != null and custId != ''">
+            AND eaa.cust_id=#{custId}
+        </if>
+        <if test="invtyEncd!= null and invtyEncd != ''">
+            AND eaas.invty_Encd=#{invtyEncd}
+        </if>
+  	</where>
+  </select>
+  
+  <!-- 根据委托代销发货单号查询委托代销调整单是否存在 -->
+  <select id="selectAdjSnglIdByDelvSnglId"  resultMap="entrsAgnAdjMap" parameterType="String">
+      select * from entrs_agn_adj as eaa inner JOIN entrs_agn_adj_sub as eaas on eaa.adj_sngl_id=eaas.adj_sngl_id
+      where eaa.delv_sngl_id=#{delvSnglId}
+  </select>
+</mapper>

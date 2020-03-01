@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.AuditStrategyDao">
+	<insert id="insert" keyProperty="id" useGeneratedKeys="true" keyColumn="id" parameterType="com.px.mis.ec.entity.AuditStrategy">
+	insert into audit_strategy(name,audit_way,buyer_note_null,seller_note_null,buyer_note,seller_note,include_sku)
+	values(#{name},#{auditWay},#{buyerNoteNull},#{sellerNoteNull},#{buyerNote},#{sellerNote},#{includeSku})
+	</insert>
+	<delete id="deletezi" parameterType="com.px.mis.ec.entity.AuditStrategy">
+	delete from strategy_goods where strategy_id=#{id};
+	</delete>
+	<delete id="deletezhu" parameterType="com.px.mis.ec.entity.AuditStrategy">
+	delete from audit_strategy where id=#{id};
+	</delete>
+	<update id="update" parameterType="com.px.mis.ec.entity.AuditStrategy">
+	update audit_strategy set name=#{name},audit_way=#{auditWay},buyer_note_null=#{buyerNoteNull},seller_note_null=#{sellerNoteNull},
+	buyer_note=#{buyerNote},seller_note=#{sellerNote},include_sku=#{includeSku}
+	where id=#{id}
+	</update>
+	<select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.AuditStrategy">
+	SELECT id,name,audit_way,buyer_note_null,seller_note_null,buyer_note,seller_note,include_sku 
+  	FROM Audit_strategy 
+  	<where>
+  		<if test="name != null and name != ''">
+            AND name like "%"#{name}"%" 
+        </if>
+  	</where>
+  	LIMIT ${index},${num}
+  </select>
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(id) 
+  	FROM Audit_strategy 
+  	<where>
+  		<if test="name != null and name != ''">
+            AND name like "%"#{name}"%" 
+        </if>
+  	</where>
+  </select>
+  <select id="findById" parameterType="int"  resultMap="AuditStrategyMap">
+  	select a.*,b.id as bid,b.strategy_id,b.va,b.va_type from audit_strategy a  left join strategy_goods b on a.id=b.strategy_id where a.id=#{id}
+  </select>
+  <resultMap type="AuditStrategy" id="AuditStrategyMap" autoMapping="true">
+		<id property="id" column="id" />
+	    <collection property="strategyGoodsList" ofType="StrategyGoods" autoMapping="true">
+		    <id property="id" column="bid" /> 
+	    </collection>
+  </resultMap>
+  <select id="checkUsedByStore" parameterType="int" resultType="int">
+  select count(store_id) from store_record where no_audit_id=#{id}
+  </select>
+</mapper>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.ProvrDocDao">
+ <!--  删除供应商档案 -->
+  <delete id="deleteProvrDocByProvrId" parameterType="String">
+    delete from provr_doc where provr_id = #{provrId}
+  </delete>
+ <!--   批量删除供应商档案 -->
+  <delete id="deleteProvrDocList" parameterType="java.util.List">
+	delete from provr_doc where provr_id in
+	<foreach item="provrId" collection="list" open="(" close=")" separator=",">
+	     #{provrId}
+	</foreach>
+  </delete>
+ <!--  添加供应商档案 -->
+  <insert id="insertProvrDoc" parameterType="ProvrDoc">
+    insert into provr_doc(provr_id,provr_nm,provr_sht_nm,provr_cls_id,
+    dev_dt,provr_totl_corp,belg_zone,belg_cls,contcr,opn_bnk,
+    rgst_cap,bkat_num,bank_encd,lpr,tax_num,addr,tel,
+    zip_cd,tax_rate,is_nt_purs,is_outsource,is_nt_serv,setup_pers,
+    setup_dt,memo)
+    values (#{provrId}, #{provrNm}, #{provrShtNm}, 
+      #{provrClsId}, #{devDt}, #{provrTotlCorp}, 
+      #{belgZone}, #{belgCls}, #{contcr}, 
+      #{opnBnk}, #{rgstCap}, #{bkatNum}, 
+      #{bankEncd}, #{lpr}, #{taxNum}, 
+      #{addr}, #{tel}, #{zipCd}, #{taxRate}, 
+      #{isNtPurs}, #{isOutsource}, #{isNtServ}, 
+      #{setupPers}, now(),  #{memo})
+  </insert>
+  
+  <update id="updateProvrDocByProvrId" parameterType="ProvrDoc">
+    update provr_doc
+    <set>
+      <if test="provrNm != null">
+        provr_nm = #{provrNm},
+      </if>
+      <if test="provrShtNm != null">
+        provr_sht_nm = #{provrShtNm},
+      </if>
+      <if test="provrClsId != null">
+        provr_cls_id = #{provrClsId},
+      </if>
+      <if test="devDt != null and devDt != ''">
+        dev_dt = #{devDt},
+      </if>
+      <if test="provrTotlCorp != null">
+        provr_totl_corp = #{provrTotlCorp},
+      </if>
+      <if test="belgZone != null">
+        belg_zone = #{belgZone},
+      </if>
+      <if test="belgCls != null">
+        belg_cls = #{belgCls},
+      </if>
+      <if test="contcr != null">
+        contcr = #{contcr},
+      </if>
+      <if test="opnBnk != null">
+        opn_bnk = #{opnBnk},
+      </if>
+      <if test="rgstCap != null">
+        rgst_cap = #{rgstCap},
+      </if>
+      <if test="bkatNum != null">
+        bkat_num = #{bkatNum},
+      </if>
+      <if test="bankEncd != null">
+        bank_encd = #{bankEncd},
+      </if>
+      <if test="lpr != null">
+        lpr = #{lpr},
+      </if>
+      <if test="taxNum != null">
+        tax_num = #{taxNum},
+      </if>
+      <if test="addr != null">
+        addr = #{addr},
+      </if>
+      <if test="tel != null">
+        tel = #{tel},
+      </if>
+      <if test="zipCd != null">
+        zip_cd = #{zipCd},
+      </if>
+      <if test="taxRate != null">
+        tax_rate = #{taxRate},
+      </if>
+      <if test="isNtPurs != null">
+        is_nt_purs = #{isNtPurs},
+      </if>
+      <if test="isOutsource != null">
+        is_outsource = #{isOutsource},
+      </if>
+      <if test="isNtServ != null">
+        is_nt_serv = #{isNtServ},
+      </if>
+     <!--  <if test="setupPers != null">
+        setup_pers = #{setupPers},
+      </if>
+      <if test="setupDt != null">
+        setup_dt = #{setupDt},
+      </if> -->
+      <if test="mdfr != null">
+        mdfr = #{mdfr},
+      </if>
+      <if test="modiDt != null">
+        modi_dt = now(),
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+    where provr_id = #{provrId}
+  </update>
+ 
+  <!-- 查询供应商档案根据供应商编号 -->
+  <select id="selectProvrDocByProvrId" parameterType="String" resultMap="provrDocMap">
+    select *
+   <!--  <include refid="Base_Column_List" /> -->
+    from provr_doc pd INNER JOIN provr_cls pc on pd.provr_cls_id=pc.provr_cls_id
+    where provr_id = #{provrId}
+  </select>
+    <!-- 查询供应商编号 -->
+  <select id="selectProvrId" parameterType="String" resultType="String">
+    select provr_id from provr_doc where provr_id = #{provrId}
+  </select>
+  <!-- 按照供应商分类编码查询供应商档案 -->
+  <!-- <select id="selectProvrDocByProvrClsId" parameterType="String" resultMap="provrDocMap">
+    select *
+    from provr_doc pd INNER JOIN provr_cls pc on pd.provr_cls_id=pc.provr_cls_id
+    where provr_cls_id=#{provrClsId}
+  </select> -->
+  <sql id="Base_Column_List">
+    provr_id, provr_nm, provr_sht_nm, provr_cls_id, dev_dt, provr_totl_corp, belg_zone, 
+    belg_cls, contcr, opn_bnk, rgst_cap, bkat_num, bank_encd, lpr, tax_num, addr, tel, 
+    zip_cd, tax_rate, is_nt_purs, is_outsource, is_nt_serv, setup_pers, setup_dt, mdfr, 
+    modi_dt, memo
+  </sql>
+  
+  <!-- 查询供应商档案的全部信息 -->
+  <select id="selectProvrDocList" parameterType="Map" resultMap="provrDocMap">
+    select *
+    from provr_doc pd INNER JOIN provr_cls pc on pd.provr_cls_id=pc.provr_cls_id
+    <where>
+     	<if test="provrIdList!= null and provrIdList.size() > 0">
+			AND pd.provr_id in
+			<foreach item="provrId" collection="provrIdList" open="("
+				 close=")" separator=",">
+				 #{provrId}
+		    </foreach>
+		</if>
+        <if test="provrNm != null and provrNm != ''">
+            AND pd.provr_nm like "%"#{provrNm}"%" 
+        </if>
+        <if test="provrClsNm != null and provrClsNm != ''">
+            AND pc.provr_cls_nm like "%"#{provrClsNm}"%"  
+        </if>
+        <if test="provrClsId != null and provrClsId != ''">
+            AND SUBSTRING(pc.provr_cls_id,1,LENGTH(#{provrClsId}))=#{provrClsId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num} 
+   </select>
+<select id="selectProvrDocListByItv" parameterType="Map" resultMap="provrDocMap">
+SELECT
+	* 
+FROM
+	( SELECT 0.1+RIGHT(provr_id,3) AS oFlag, pd.* FROM provr_doc pd INNER JOIN provr_cls pc on pd.provr_cls_id=pc.provr_cls_id where  provr_id like CONCAT(LEFT(#{start},2),'%') ORDER BY oFlag ASC ) b 
+    <where>
+	oFlag &gt;= 0.1+RIGHT(#{start},3) AND oFlag &lt;= 0.1+RIGHT(#{end},3)
+     	<if test="provrIdList!= null and provrIdList.size() > 0">
+			AND pd.provr_id in
+			<foreach item="provrId" collection="provrIdList" open="("
+				 close=")" separator=",">
+				 #{provrId}
+		    </foreach>
+		</if>
+        <if test="provrNm != null and provrNm != ''">
+            AND pd.provr_nm like "%"#{provrNm}"%" 
+        </if>
+        <if test="provrClsNm != null and provrClsNm != ''">
+            AND pc.provr_cls_nm like "%"#{provrClsNm}"%"  
+        </if>
+        <if test="provrClsId != null and provrClsId != ''">
+            AND SUBSTRING(pc.provr_cls_id,1,LENGTH(#{provrClsId}))=#{provrClsId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num} 
+   </select>
+   <select id="selectProvrDocCount" parameterType="Map" resultType="Integer">
+	SELECT count(*)
+  	from provr_doc pd INNER JOIN provr_cls pc on pd.provr_cls_id=pc.provr_cls_id
+  	 <where>
+  		<if test="provrIdList!= null and provrIdList.size() > 0">
+			AND pd.provr_id in
+			<foreach item="provrId" collection="provrIdList" open="("
+				 close=")" separator=",">
+				 #{provrId}
+		    </foreach>
+		</if>
+        <if test="provrNm != null and provrNm != ''">
+            AND pd.provr_nm like "%"#{provrNm}"%" 
+        </if>
+        <if test="provrClsNm != null and provrClsNm != ''">
+            AND pc.provr_cls_nm like "%"#{provrClsNm}"%"  
+        </if>
+        <if test="provrClsId != null and provrClsId != ''">
+            AND SUBSTRING(pc.provr_cls_id,1,LENGTH(#{provrClsId}))=#{provrClsId}
+        </if>
+  	</where>
+  </select>
+  
+  <resultMap type="ProvrCLs" id="provrDocMap" autoMapping="true">
+		<id property="provrClsId" column="provr_cls_id" />
+		<collection property="provrDoc" ofType="ProvrDoc" autoMapping="true">
+			<id property="provrId" column="provr_id" />
+		</collection>
+  </resultMap>
+  
+    <!-- 打印输入输出供应商档案 -->
+  <select id="printingProvrDocList" parameterType="Map" resultMap="provrDocMap">
+    select *
+    from provr_doc pd INNER JOIN provr_cls pc on pd.provr_cls_id=pc.provr_cls_id
+    <where>
+  		<if test="provrIdList!= null and provrIdList.size() > 0">
+			AND pd.provr_id in
+			<foreach item="provrId" collection="provrIdList" open="("
+				 close=")" separator=",">
+				 #{provrId}
+		    </foreach>
+		</if>
+        <if test="provrNm != null and provrNm != ''">
+            AND pd.provr_nm like "%"#{provrNm}"%" 
+        </if>
+        <if test="provrClsNm != null and provrClsNm != ''">
+            AND pc.provr_cls_nm like "%"#{provrClsNm}"%"  
+        </if>
+        <if test="provrClsId != null and provrClsId != ''">
+            AND SUBSTRING(pc.provr_cls_id,1,LENGTH(#{provrClsId}))=#{provrClsId}
+        </if>
+  	</where>
+   </select>
+   
+    <!--  导入时添加供应商档案 -->
+  <insert id="insertProvrDocUpload" parameterType="ProvrDoc">
+    insert into provr_doc(provr_id,provr_nm,provr_sht_nm,provr_cls_id,
+    dev_dt,provr_totl_corp,belg_zone,belg_cls,contcr,opn_bnk,
+    rgst_cap,bkat_num,bank_encd,lpr,tax_num,addr,tel,
+    zip_cd,tax_rate,is_nt_purs,is_outsource,is_nt_serv,setup_pers,
+    setup_dt,mdfr,modi_dt,memo)
+    values (#{provrId}, #{provrNm}, #{provrShtNm}, 
+      #{provrClsId}, #{devDt}, #{provrTotlCorp}, 
+      #{belgZone}, #{belgCls}, #{contcr}, 
+      #{opnBnk}, #{rgstCap}, #{bkatNum}, 
+      #{bankEncd}, #{lpr}, #{taxNum}, 
+      #{addr}, #{tel}, #{zipCd}, #{taxRate}, 
+      #{isNtPurs}, #{isOutsource}, #{isNtServ}, 
+      #{setupPers}, #{setupDt},#{mdfr}, 
+      #{modiDt}, #{memo})
+  </insert>
+   
+</mapper>

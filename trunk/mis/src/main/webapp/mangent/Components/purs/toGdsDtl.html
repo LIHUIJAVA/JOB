@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>到货明细表</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/purs/toGdsDtl.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/common/drag.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+	</head>
+	<body>
+		<div id="purchaseOrder" class="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button type="button" class="search">查询</button>
+					<button class="more">更多查询条件</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="businessType col-md-3">
+						<span>存货编码</span><input type="text" id="invtyEncd" class="invtyEncd encds" name="invtyEncd" value="" />
+						<input type="text" id="invtyNm" class="invtyNm names" name="invtyNm" value="" readonly="readonly" />
+						<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="businessType col-md-3">
+						<span>仓库编码</span><input type="text" id="whsEncd" class="whsEncd encds" name="whsEncd" value="" />
+						<input type="text" id="whsNm" class="whsNm1 names" name="whsNm" value="" readonly="readonly" />
+						<span><img class="biao_whsEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					
+					<div class="purchaseType col-md-4">
+						<span>存货分类编码</span><input type="text" id="invtyCls" class="provrId1 encds" name="invtyClsEncd" value="" />
+						<input type="text" id="invtyClsNm" class="invtyClsNm names" name="invtyClsNm" value="" readonly="readonly" />
+						<span><img class="invtyClsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>供应商编码<b>*</b></span><input type="text" id="provrId" class="provrId encds" name="provrId" value="" />
+						<input type="text" id="provrNm" class="provrNm names" name="provrNm" value="" readonly="readonly" />
+						<span><img class="biao_provrId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderDates col-md-6">
+						<span>订单日期</span>
+						<input type="text" class="toGdsSnglDt1 date date1" name="toGdsSnglDt1" value="" readonly="readonly" calendar="YYYY-MM-DD" />到<input type="text" class="toGdsSnglDt2 date date2" name="toGdsSnglDt2" value="" readonly="readonly" calendar="YYYY-MM-DD" />
+					</div>
+					<div id="provrId1" style="display: none;"></div>
+					<div id="provrNm1" style="display: none;"></div>
+					<input type="text" id="fuze" style="display: none;" />
+					<input type="text" id="departmentEncd" style="display: none;" />
+				</form>
+			</div>
+			<table id="jqGrids"></table>
+			<div id="jqGridPager"></div>
+		</div>
+		<div id="big_wrap"></div>
+		<!--查询条件-->
+		<div id="box">
+			<div id="insertClsList" class="search_more" style="display: ;">
+				<div class="purchaseOrder">
+					<div class="purchaseTit">
+						<div class="buttons">
+							<button class="sure_more">确定</button>
+							<button class="cancel_more">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="order-title" style="width:550px">
+				<form class="row" id="formSave">
+					<div class="businessType col-md-4">
+						<span>存货代码</span><input type="text" class="invtyCd" name="invtyCd" value="" />
+					</div>
+					<div class="businessType col-md-4">
+						<span>存货编码</span><input type="text" class="invtyEncd encds" name="invtyEncd1" value="" />
+						<input type="text" class="invtyNm names" name="invtyNm1" value="" readonly="readonly" />
+						<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>存货分类编码</span><input type="text" class="invtyClsEncd" name="invtyClsEncd1" value="" />
+						<span><img class="invtyClsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="businessType col-md-3">
+						<span>仓库编码</span><input type="text" class="whsEncd encds" name="whsEncd1" value="" />
+						<input type="text" class="whsNm names" name="whsNm1" value="" readonly="readonly" />
+						<span><img class="biao_whsEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>供应商编码</span><input type="text" class="provrId1 encds" name="provrId1" value="" />
+						<input type="text" class="provrNm names" name="provrNm1" value="" readonly="readonly" />
+						<span><img class="biao_provrId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="salesman col-md-4">
+						<span>业务员 <b>*</b><input type="text" id="user" class="inputText encds" name="accNum" value=""/>
+						<input type="text" id="userName" class="inputText names" value="" readonly="readonly" />
+						<span><img class="biao_userId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="department col-md-4">
+						<span>部门</span><input type="text" id="deptId" class="deptId encds" name="deptId" value="" />
+						<input type="text" id="deptName" class="deptName names" name="deptName" value="" readonly="readonly" />
+						<span><img class="biao_deptId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>批次</span>
+						<input type="text" id="batNum" name="batNum" value="" />
+						<span><img class="biao_batNum" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderDates col-md-8">
+						<span>订单日期</span>
+						<input type="text" class="toGdsSnglDt3 date1" name="toGdsSnglDt3" value="" readonly="readonly" calendar="YYYY-MM-DD" />到 <input type="text" class="toGdsSnglDt4 date2" readonly="readonly" name="toGdsSnglDt4" value="" calendar="YYYY-MM-DD" />
+					</div>
+
+					<div class="businessType col-md-4">
+						<span>供应商订单号</span><input type="text" class="provrOrdrNum" name="provrOrdrNum" value="" />
+					</div>
+					<div class="businessType col-md-4">
+						<span>采购订单号</span><input type="text" id="pursOrdrId" class="pursOrdrId" name="pursOrdrId" value="" />
+					</div>
+					<div class="businessType col-md-4">
+						<span>国际批次</span><input type="text" class="intlBat" name="intlBat" value="" />
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+
+</html>

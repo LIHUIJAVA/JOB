@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.PursStlSubTabDao">
+  <!-- 添加 -->
+  <insert id="insertPursStlSubTab" parameterType="com.px.mis.account.entity.PursStlSubTab">
+  	INSERT INTO purs_stl_sub_tab(
+  	incrs_id,stl_sngl_id,invty_encd,whs_encd,qty,bx_qty,tax_rate,
+  	no_tax_uprc,no_tax_amt,tax_amt,cntn_tax_uprc,prc_tax_sum,
+  	bao_zhi_qi,intl_bat,bat_num,prdc_dt,invldtn_dt,memo
+  	)
+  	values 
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.incrsId},#{item.stlSnglId},#{item.invtyEncd}, #{item.whsEncd}, 
+      #{item.qty},#{item.bxQty}, #{item.taxRate}, 
+      #{item.noTaxUprc}, #{item.noTaxAmt}, #{item.taxAmt}, 
+      #{item.cntnTaxUprc}, #{item.prcTaxSum}, #{item.baoZhiQi}, 
+      #{item.intlBat}, #{item.batNum}, #{item.prdcDt}, 
+      #{item.invldtnDt},#{item.memo}
+      )
+    </foreach>
+  </insert>
+   <!-- 根据外键删除 -->
+  <delete id="deletePursStlSubTabByStlSnglId" parameterType="java.lang.String">
+  	DELETE FROM purs_stl_sub_tab WHERE stl_sngl_id=#{stlSnglId}
+  </delete>
+</mapper>

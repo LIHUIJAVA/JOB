@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.PickSnglMapper">
+    <resultMap id="BaseResultMap" type="PickSnglTab"
+               autoMapping="true">
+        <id column="pick_sngl_num" property="pickSnglNum"/>
+        <result column="pick_sngl_tm" property="pickSnglTm"/>
+        <collection property="pList" ofType="PickSnglSubTab"
+                    autoMapping="true">
+            <id column="order_num" property="orderNum"/>
+            <result column="pick_sngl_num" property="pickSnglNum"/>
+        </collection>
+    </resultMap>
+    <resultMap id="pickSngl" type="PickSnglTab"
+               autoMapping="true">
+        <id column="pick_sngl_num" property="pickSnglNum"/>
+        <result column="pick_sngl_tm" property="pickSnglTm"/>
+    </resultMap>
+    <resultMap id="aa" type="com.px.mis.purc.entity.SellSngl"
+               autoMapping="true">
+        <id column="sell_sngl_id" property="sellSnglId"/>
+        <result column="sell_sngl_dt" property="sellSnglDt"/>
+    </resultMap>
+
+    <!-- 修改销售订单的是否拣货标识 -->
+    <update id="updateSellSngl" parameterType="java.util.List">
+        update sell_sngl
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_pick =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when
+                    sell_sngl_id = #{item} then #{ispick}
+                </foreach>
+            </trim>
+        </trim>
+        where sell_sngl_id in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+    <!-- 修改销售订单的拣货单号 -->
+    <update id="updateSellSnglWhs" parameterType="java.util.List">
+        update sell_sngl_sub
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="picke_encd =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when
+                    sell_sngl_id = #{item} then #{number}
+                </foreach>
+            </trim>
+        </trim>
+        where sell_sngl_id in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+    <select id="selectSellSngl" parameterType="java.util.List"
+            resultType="int">
+        select COUNT(*) from sell_sngl
+        WHERE sell_sngl.is_pick = #{ispick} and
+        sell_sngl.sell_sngl_id in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+    <update id="updateSellSnglZero">
+        update sell_sngl
+        <set>
+            is_pick=0
+        </set>
+        where
+        sell_sngl_id= #{sellSnglId}
+    </update>
+    <!-- 查询销售单信息 -->
+    <select id="selectSellById" resultMap="aa">
+        select
+        sSngl.*,
+        sSub.whs_encd,sSub.invty_encd,sSub.qty,sSub.bat_num,
+        sSub.prdc_dt,sSub.invldtn_dt,
+        iDoc.invty_encd,iDoc.invty_nm,iDoc.spc_model,
+        iDoc.crspd_bar_cd,iDoc.measr_corp_id,
+        measrDoc.measr_corp_id,measrDoc.measr_corp_nm,
+        sType.sell_typ_id,sType.sell_typ_nm,
+        bType.biz_typ_id,bType.biz_typ_nm,
+        wDoc.whs_encd,wDoc.whs_nm,
+        mBit.invty_encd,mBit.gds_bit_encd
+        from
+        sell_sngl as sSngl,
+        sell_sngl_sub
+        as sSub,
+        invty_doc as iDoc,
+        measr_corp_doc as measrDoc,
+        mov_bit_tab as
+        mBit,
+        whs_doc as wDoc,
+        sell_type as sType,
+        biz_type as bType
+        <where>
+            sSngl.sell_sngl_id=sSub.sell_sngl_id
+            AND
+            sSngl.sell_typ_id=sType.sell_typ_id
+            AND
+            sSngl.biz_typ_id=bType.biz_typ_id
+            AND
+            sSub.invty_encd=iDoc.invty_encd
+            AND
+            iDoc.measr_corp_id=measrDoc.measr_corp_id
+            AND
+            sSub.invty_encd=mBit.invty_encd
+            AND
+            sSub.whs_encd=wDoc.whs_encd
+            AND
+            sSngl.is_pick=0
+            AND sSngl.sell_sngl_id in
+            <foreach collection="sellId" item="sellSnglId" open="("
+                     close=")" separator=",">
+                #{sellSnglId}
+            </foreach>
+        </where>
+    </select>
+    <select id="selectDistinctId" resultMap="aa">
+        select
+        distinct sSngl.sell_sngl_id
+        from
+        sell_sngl as sSngl,
+        sell_sngl_sub
+        as sSub,
+        invty_doc as iDoc,
+        measr_corp_doc as measrDoc,
+        mov_bit_tab as
+        mBit,
+        whs_doc as wDoc,
+        sell_type as sType,
+        biz_type as bType
+        <where>
+            sSngl.sell_sngl_id=sSub.sell_sngl_id
+            AND
+            sSngl.sell_typ_id=sType.sell_typ_id
+            AND
+            sSngl.biz_typ_id=bType.biz_typ_id
+            AND
+            sSub.invty_encd=iDoc.invty_encd
+            AND
+            iDoc.measr_corp_id=measrDoc.measr_corp_id
+            AND
+            sSub.invty_encd=mBit.invty_encd
+            AND
+            sSub.whs_encd=wDoc.whs_encd
+            AND
+            sSngl.is_pick=0
+            AND sSngl.sell_sngl_id in
+            <foreach collection="sellId" item="sellSnglId" open="("
+                     close=")" separator=",">
+                #{sellSnglId}
+            </foreach>
+        </where>
+    </select>
+    <!-- 查询拣货单号是否存在 -->
+    <select id="selectPick" resultType="PickSnglTab">
+        select *
+        from pick_sngl_tab
+        where pick_sngl_num = #{pickSnglNum}
+    </select>
+    <!-- 添加拣货单主表 -->
+    <insert id="insertPickSngl" parameterType="PickSnglTab">
+        insert into pick_sngl_tab (pick_sngl_num, pick_sngl_tm,
+                                   is_finsh_pick, finsh_pick_tm, merge, split, pick_pers,
+                                   setup_pers, setup_tm)
+        values (#{pickSnglNum}, #{pickSnglTm}, 0, #{finshPickTm},
+                0, 0, #{pickPers}, #{setupPers}, now() )
+    </insert>
+    <!-- 添加拣货单子表 -->
+    <insert id="insertPickSnglSubTab" parameterType="java.util.List">
+        insert into pick_sngl_sub_tab(
+        pick_sngl_num,
+        biz_typ_id,
+        whs_encd,
+        whs_nm,
+        invty_encd,
+        invty_nm,
+        spc_model,
+        measr_corp_nm,
+        crspd_bar_cd,
+        bat_num,
+        prdc_dt,
+        invldtn_dt,
+        gds_bit_encd,
+        sell_typ_nm,
+        biz_typ_nm,
+        qty,
+        recv_send_cate_nm,
+        sell_typ_id,
+        measr_corp_id,
+        recv_send_cate_id,
+        gds_bit_nm,
+        regn_encd,
+        regn_nm,
+        bao_zhi_qi,
+        is_finsh_pick)
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.pickSnglNum},
+            #{item.bizTypId},
+            #{item.whsEncd},
+            #{item.whsNm},
+            #{item.invtyEncd},
+            #{item.invtyNm},
+            #{item.spcModel},
+            #{item.measrCorpNm},
+            #{item.crspdBarCd},
+            #{item.batNum},
+            #{item.prdcDt},
+            #{item.invldtnDt},
+            #{item.gdsBitEncd},
+            #{item.sellTypNm},
+            #{item.bizTypNm},
+            #{item.qty},
+            #{item.recvSendCateNm},
+            #{item.sellTypId},
+            #{item.measrCorpId},
+            #{item.recvSendCateId},
+            #{item.gdsBitNm},
+            #{item.regnEncd},
+            #{item.regnNm},
+            #{item.baoZhiQi},0
+            )
+        </foreach>
+    </insert>
+    <!-- 拣货单主列表显示 -->
+    <select id="selectAllPickSngl" parameterType="Map"
+            resultMap="pickSngl">
+        select
+        pTab.*
+        From
+        pick_sngl_tab as pTab
+        <where>
+            <if test="isFinshPick  != null and isFinshPick != '' ">
+                and pTab.is_finsh_pick=#{isFinshPick}
+            </if>
+            <if test="setupTm1 != null and setupTm1 != ''">
+                AND pTab.setup_tm &gt;= #{setupTm1}
+            </if>
+            <if test="setupTm2 != null and setupTm2 != ''">
+                AND pTab.setup_tm &lt;= #{setupTm2}
+            </if>
+            <if test="pickPers != null and pickPers != ''">
+                AND pTab.pick_pers= #{pickPers}
+            </if>
+            <if test="setupPers != null and setupPers != ''">
+                AND pTab.setup_pers= #{setupPers}
+            </if>
+            <if test="pickSnglNum != null and pickSnglNum != ''">
+                AND pTab.pick_sngl_num= #{pickSnglNum}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        LIMIT
+        #{index},#{num}
+    </select>
+    <select id="selectAllPickCount" parameterType="Map"
+            resultType="Integer">
+        SELECT count(*)
+        From
+        pick_sngl_tab as pTab
+        <where>
+            <if test="isFinshPick  != null and isFinshPick != '' ">
+                and pTab.is_finsh_pick=#{isFinshPick}
+            </if>
+            <if test="setupTm1 != null and setupTm1 != ''">
+                AND pTab.setup_tm &gt;= #{setupTm1}
+            </if>
+            <if test="setupTm2 != null and setupTm2 != ''">
+                AND pTab.setup_tm &lt;= #{setupTm2}
+            </if>
+            <if test="pickPers != null and pickPers != ''">
+                AND pTab.pick_pers= #{pickPers}
+            </if>
+            <if test="setupPers != null and setupPers != ''">
+                AND pTab.setup_pers= #{setupPers}
+            </if>
+            <if test="pickSnglNum != null and pickSnglNum != ''">
+                AND pTab.pick_sngl_num= #{pickSnglNum}
+            </if>
+        </where>
+    </select>
+    <!-- 通过主表主键查询子表信息 -->
+    <select id="selectPSubTabById" resultType="PickSnglSubTab">
+        SELECT
+        *
+        FROM
+        pick_sngl_sub_tab
+        <!-- LEFT JOIN measr_corp_doc ON ( pick_sngl_sub_tab.measr_corp_id = measr_corp_doc.measr_corp_id
+            ) LEFT JOIN gds_bit ON ( pick_sngl_sub_tab.gds_bit_encd = gds_bit.gds_bit_encd
+            ) -->
+        <where>
+            <if test="pickSnglNum != null and pickSnglNum != ''">
+                AND pick_sngl_num = #{pickSnglNum}
+            </if>
+        </where>
+    </select>
+
+    <!-- 拣货单主-子列表显示 -->
+    <select id="selectList" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+        pTab.*, pSubTab.*
+        FROM
+        pick_sngl_tab AS pTab
+        LEFT JOIN
+        pick_sngl_sub_tab AS pSubTab ON pTab.pick_sngl_num =
+        pSubTab.pick_sngl_num
+        LEFT JOIN measr_corp_doc ON (
+        pSubTab.measr_corp_id = measr_corp_doc.measr_corp_id
+        )
+        LEFT JOIN gds_bit
+        ON (
+        pSubTab.gds_bit_encd = gds_bit.gds_bit_encd
+        )
+        <where>
+            <if test="pickSnglNum != null and pickSnglNum != ''">
+                AND pTab.pick_sngl_num = #{pickSnglNum}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        <if test="index != null and  num != null ">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+        SELECT count(distinct pTab.pick_sngl_num)
+        From
+        pick_sngl_tab as pTab
+        LEFT JOIN pick_sngl_sub_tab AS
+        pSubTab ON pTab.pick_sngl_num =
+        pSubTab.pick_sngl_num
+        <where>
+            <if test="pickSnglNum != null and pickSnglNum != ''">
+                AND pTab.pick_sngl_num = #{pickSnglNum}
+            </if>
+        </where>
+    </select>
+    <!-- 合并拣货单 -->
+    <select id="selectPSubTab" parameterType="Map"
+            resultType="PickSnglSubTab">
+        select
+        *,invty_encd,SUM(qty),gds_bit_encd,invldtn_dt
+        from
+        pick_sngl_sub_tab
+        <where>
+            1=1
+            <if test="whsEncd != null and whsEncd != ''">
+                AND whs_encd=#{whsEncd}
+            </if>
+            <if test="pickSnglNum != null and pickSnglNum != ''">
+                AND pick_sngl_num = #{pickSnglNum}
+            </if>
+            group by invty_encd,gds_bit_encd
+            order by invldtn_dt
+        </where>
+    </select>
+    <insert id="insertmergePick" parameterType="java.util.List">
+        insert into merge_pick_sngl(pick_sngl_num,whs_encd,whs_nm,
+        invty_encd,invty_nm,bar_cd,bat_num,
+        prdc_dt,invldtn_dt,gds_bit_encd,qty
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.pickSnglNum},#{item.whsEncd},#{item.whsNm},
+            #{item.invtyEncd},#{item.invtyNm},#{item.barCd},
+            #{item.batNum},#{item.prdcDt},#{item.invldtnDt},
+            #{item.gdsBitEncd},#{item.qty}
+            )
+        </foreach>
+    </insert>
+    <update id="updatePTab">
+        update pick_sngl_tab
+        set merge=1
+        where pick_sngl_num
+                  = #{pickSnglNum}
+    </update>
+
+    <!-- 删除拣货合并单 -->
+    <delete id="deleteMerPickSngl">
+        delete
+        from merge_pick_sngl
+        where pick_sngl_num = #{pickSnglNum}
+    </delete>
+    <delete id="deletePickSnglTab">
+        delete
+        from pick_sngl_sub_tab
+        where pick_sngl_num = #{pickSnglNum}
+          AND whs_encd = #{whsEncd}
+          AND invty_encd = #{invtyEncd}
+          AND bat_num = #{batNum}
+    </delete>
+    <delete id="deletePickSngl">
+        DELETE pick_sngl_tab,
+        pick_sngl_sub_tab
+        FROM
+        pick_sngl_tab
+        LEFT JOIN
+        pick_sngl_sub_tab ON pick_sngl_tab.pick_sngl_num =
+        pick_sngl_sub_tab.pick_sngl_num
+        WHERE
+        pick_sngl_tab.pick_sngl_num =
+        #{pickSnglNum}
+        <!-- in <foreach collection="list"  item="item" separator=","
+            open="(" close=")"> #{item} </foreach> -->
+
+    </delete>
+    <select id="selectSellId" resultType="PickSnglSubTab">
+        select sell_sngl_id
+        from pick_sngl_sub_tab
+        where pick_sngl_num = #{pickSnglNum}
+          AND whs_encd = #{whsEncd}
+          AND invty_encd = #{invtyEncd}
+          AND bat_num = #{batNum}
+    </select>
+    <select id="selectPSubTabByIdCount" resultType="Integer">
+        select
+        count(*)
+        from
+        pick_sngl_sub_tab
+        <where>
+            <if test="pickSnglNum != null and pickSnglNum != ''">
+                AND pick_sngl_num = #{pickSnglNum}
+            </if>
+        </where>
+    </select>
+    <!-- PDA 显示所有拣货单列表 -->
+    <select id="selectAllMerge" resultMap="BaseResultMap">
+
+        SELECT
+        *
+        <!-- 	pick_sngl_sub_tab.order_num ,
+            pick_sngl_sub_tab.whs_encd ,
+            pick_sngl_sub_tab.whs_nm ,
+            pick_sngl_sub_tab.pick_sngl_num ,
+            pick_sngl_sub_tab.invty_encd ,
+            pick_sngl_sub_tab.invty_nm ,
+            pick_sngl_sub_tab.crspd_bar_cd ,
+            pick_sngl_sub_tab.bat_num ,
+            pick_sngl_sub_tab.prdc_dt ,
+            pick_sngl_sub_tab.invldtn_dt ,
+            pick_sngl_sub_tab.gds_bit_encd ,
+            pick_sngl_sub_tab.qty ,
+            pick_sngl_sub_tab.operator ,
+            pick_sngl_sub_tab.operator_id ,
+            pick_sngl_sub_tab.is_finsh_pick ,
+            pick_sngl_sub_tab.finsh_pick_tm
+         -->
+        FROM
+        pick_sngl_tab
+        JOIN pick_sngl_sub_tab ON pick_sngl_sub_tab.pick_sngl_num = pick_sngl_tab.pick_sngl_num
+        LEFT JOIN invty_doc ON invty_doc.invty_encd = pick_sngl_sub_tab.invty_encd
+        <!-- select * from merge_pick_sngl -->
+        where
+        pick_sngl_tab.is_finsh_pick=0
+        <if test="list != null">
+            AND whs_encd in
+            <foreach collection="list" item="item"
+                     separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+
+    <select id="selectAllById" resultType="MergePickSngl">
+        select *
+        from merge_pick_sngl
+        <where>
+            1=1
+            <if test="pickSnglNum != null and pickSnglNum != ''">
+                AND pick_sngl_num = #{pickSnglNum}
+            </if>
+        </where>
+    </select>
+
+    <!-- PDA 回传接口 -->
+    <update id="updatePTabPda" parameterType="PickSnglTab">
+        update pick_sngl_tab
+        <set>
+            <if test="pickPers != null and pickPers != ''">
+                pick_pers = #{pickPers},
+            </if>
+            <if test="pickPersId != null and pickPersId != ''">
+                pick_pers_id = #{pickPersId},
+            </if>
+            is_finsh_pick = 1,
+            finsh_pick_tm = now()
+        </set>
+        where pick_sngl_num = #{pickSnglNum}
+        and is_finsh_pick = 0
+    </update>
+    <update id="updateJHTabPda" parameterType="MergePickSngl">
+        update merge_pick_sngl
+        <set>
+            <if test="operator != null and operator != ''">
+                operator = #{operator},
+            </if>
+            <if test="operatorId != null and operatorId != ''">
+                operator_id = #{operatorId},
+            </if>
+            is_finsh_pick = 1,
+            finsh_pick_tm = now()
+        </set>
+        where pick_sngl_num = #{pickSnglNum}
+    </update>
+
+    <delete id="deleteMergePick">
+        delete
+        from merge_pick_sngl
+        where pick_sngl_num =
+              #{pickSnglNum}
+    </delete>
+
+    <!-- zds 根据销售单号删除拣货单 -->
+    <delete id="deletePickSnglTabBySellSnglId">
+        DELETE pi, pis
+        FROM pick_sngl_tab as pi
+                 LEFT JOIN
+             pick_sngl_sub_tab as pis ON
+                 pi.pick_sngl_num = pis.pick_sngl_num
+        WHERE pis.sell_sngl_id = #{sellSnglId}
+    </delete>
+    <resultMap id="SellWhs"
+               type="SellSnglWhs" autoMapping="true">
+        <id column="sell_sngl_id" property="sellSnglId"/>
+        <collection property="sellSnglSub" ofType="SellSnglSub"
+                    autoMapping="true">
+            <id column="ordr_um" property="ordrNum"/>
+        </collection>
+    </resultMap>
+    <select id="selectSellWhsIsPick" resultMap="SellWhs">
+        <!-- 		SELECT
+                *
+                FROM
+                sell_sngl AS sSngl
+                JOIN sell_sngl_sub AS sSub ON
+                sSngl.sell_sngl_id
+                =
+                sSub.sell_sngl_id
+                 -->
+
+
+        SELECT
+        ss.*,sss.*,sss.memo as memos,st.sell_typ_nm,bt.biz_typ_nm,dd.dept_name,
+        mu.user_name,mu.dep_name,cd.cust_nm,mcd.measr_corp_nm,wd.whs_nm,
+        ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+        ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.crspd_bar_cd,
+        ind.shd_tax_labour,ind.is_nt_discnt
+
+        FROM sell_sngl as ss JOIN sell_sngl_sub as sss on ss.sell_sngl_id=sss.sell_sngl_id
+
+        AND ss.is_pick = 0
+        AND ss.is_nt_chk = 1
+        AND ss.biz_typ_id = "2"
+        AND ss.deliver_self = "1"
+        LEFT JOIN sell_type as st ON ss.sell_typ_id = st.sell_typ_id
+        LEFT JOIN mis_user mu on ss.acc_num=mu.acc_num
+        LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+        LEFT JOIN biz_type bt on bt.biz_typ_id=ss.biz_typ_id
+        LEFT JOIN dept_doc dd on ss.dept_id=dd.dept_id
+        LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+        LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+        LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        <where>
+            <if test="whsEncd !=null  and whsEncd !='' ">
+                sss.whs_encd =#{whsEncd}
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != ''">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                AND ind.invty_cls_encd  like #{invtyClsEncd}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        LIMIT #{index},#{num}
+    </select>
+    <select id="selectSellWhsIsPickCount" resultType="Integer">
+<!--         SELECT
+        count(*)
+        FROM
+        sell_sngl AS sSngl
+         JOIN sell_sngl_sub AS sSub ON
+        sSngl.sell_sngl_id
+        =
+        sSub.sell_sngl_id
+        AND sSngl.is_pick = 0
+        AND sSngl.is_nt_chk = 1
+        AND sSngl.biz_typ_id = "2"
+        AND deliver_self = "1" -->
+                SELECT
+        count(*)
+
+        FROM sell_sngl as ss JOIN sell_sngl_sub as sss on ss.sell_sngl_id=sss.sell_sngl_id
+
+        AND ss.is_pick = 0
+        AND ss.is_nt_chk = 1
+        AND ss.biz_typ_id = "2"
+        AND ss.deliver_self = "1"
+        LEFT JOIN sell_type as st ON ss.sell_typ_id = st.sell_typ_id
+        LEFT JOIN mis_user mu on ss.acc_num=mu.acc_num
+        LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+        LEFT JOIN biz_type bt on bt.biz_typ_id=ss.biz_typ_id
+        LEFT JOIN dept_doc dd on ss.dept_id=dd.dept_id
+        LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+        LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+        LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        <where>
+            <if test="whsEncd !=null  and whsEncd !='' ">
+                sss.whs_encd =#{whsEncd}
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != ''">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                AND ind.invty_cls_encd  like #{invtyClsEncd}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDistinctWhs" resultType="PickSnglSubTab"
+            parameterType="java.util.List">
+        SELECT
+        biz_type.biz_typ_id,
+        a.sell_typ_id,
+        a.qty,
+        a.prdc_dt,
+        a.invldtn_dt,
+        invty_doc.spc_model,
+        invty_doc.crspd_bar_cd,
+        a.whs_encd,
+        whs_doc.whs_nm,
+        a.invty_encd,
+        invty_doc.invty_Nm,
+        a.bat_num,
+        measr_corp_doc.measr_corp_id,
+        measr_corp_doc.measr_corp_nm,
+        sell_type.sell_typ_nm,
+        biz_type.biz_typ_nm,
+        a.recv_send_cate_id,
+        recv_send_cate.recv_send_cate_nm,
+        gds_bit.gds_bit_encd,
+        gds_bit.gds_bit_nm,
+        regn.regn_encd,
+        regn.regn_nm,
+        a.bao_zhi_qi
+        FROM
+        (
+        SELECT
+        sum( sell_sngl_sub.qty ) qty,
+        sell_sngl_sub.whs_encd,
+        sell_sngl_sub.bat_num,
+        sell_sngl_sub.invty_encd,
+        sell_sngl_sub.prdc_dt,
+        sell_sngl_sub.bao_zhi_qi,
+        sell_sngl_sub.invldtn_dt,
+        sell_sngl.sell_typ_id,
+        sell_sngl.recv_send_cate_id,
+        biz_typ_id
+        FROM
+        sell_sngl
+        JOIN sell_sngl_sub ON sell_sngl.sell_sngl_id = sell_sngl_sub.sell_sngl_id
+        WHERE
+        sell_sngl.sell_sngl_id IN
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        GROUP BY
+        sell_sngl_sub.whs_encd,
+        sell_sngl_sub.invty_encd,
+        sell_sngl_sub.bat_num
+        ) a
+        LEFT JOIN whs_doc ON a.whs_encd = whs_doc.whs_encd
+        LEFT JOIN invty_doc ON a.invty_encd = invty_doc.invty_encd
+        LEFT JOIN measr_corp_doc ON invty_doc.measr_corp_id = measr_corp_doc.measr_corp_id
+        LEFT JOIN sell_type ON a.sell_typ_id = sell_type.sell_typ_id
+        LEFT JOIN biz_type ON a.biz_typ_id = biz_type.biz_typ_id
+        LEFT JOIN recv_send_cate ON a.recv_send_cate_id = recv_send_cate.recv_send_cate_id
+        LEFT JOIN mov_bit_tab ON mov_bit_tab.qty > 0
+        AND a.whs_encd = mov_bit_tab.whs_encd
+        AND a.invty_encd = mov_bit_tab.invty_encd
+        AND a.bat_num = mov_bit_tab.bat_num
+        LEFT JOIN gds_bit ON gds_bit.gds_bit_encd = mov_bit_tab.gds_bit_encd
+        LEFT JOIN regn ON regn.regn_encd = gds_bit.regn_encd
+
+        GROUP BY
+        a.whs_encd,
+        a.invty_encd,
+        a.bat_num
+
+    </select>
+
+
+    <select id="selectSellSnglTab" resultType="String">
+        SELECT DISTINCT sell_sngl_sub.sell_sngl_id
+        FROM sell_sngl_sub
+        WHERE sell_sngl_sub.picke_encd = #{pickeEncd}
+
+    </select>
+
+    <update id="updateTabPda" parameterType="MergePickSngl">
+        update pick_sngl_sub_tab
+        <set>
+            <if test="operator != null and operator != ''">
+                operator = #{operator},
+            </if>
+            <if test="operatorId != null and operatorId != ''">
+                operator_id = #{operatorId},
+            </if>
+            is_finsh_pick = 1,
+            finsh_pick_tm = now()
+        </set>
+        where order_num = #{pickNum}
+    </update>
+
+    <select id="selectPickSnglSubTabCount" resultType="Integer">
+        select count(*)
+        from pick_sngl_sub_tab
+
+        where pick_sngl_num = #{pickSnglNum}
+          and is_finsh_pick = 0
+
+    </select>
+
+
+    <select id="selectPickSnglOutTabList"
+            resultType="com.px.mis.purc.entity.SellOutWhsSub">
+        SELECT sell_out_whs_sub.*
+        FROM sell_out_whs
+                 LEFT JOIN
+             sell_out_whs_sub ON sell_out_whs.out_whs_id =
+                                 sell_out_whs_sub.out_whs_id
+        WHERE sell_out_whs.sell_ordr_ind IN (SELECT DISTINCT sell_sngl_sub.sell_sngl_id
+                                             FROM pick_sngl_tab
+                                                      LEFT JOIN
+                                                  sell_sngl_sub ON pick_sngl_tab.pick_sngl_num =
+                                                                   sell_sngl_sub.picke_encd
+                                             WHERE pick_sngl_tab.pick_sngl_num =
+                                                   #{pickSnglNum}
+        )
+
+    </select>
+
+
+    <insert id="insertPickSnglDl"
+            parameterType="java.util.List">
+        INSERT INTO pick_sngl_tab_dl SELECT
+        *
+        FROM
+        pick_sngl_tab
+        WHERE pick_sngl_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+    <insert id="insertPickSnglSubTabDl"
+            parameterType="java.util.List">
+        INSERT INTO pick_sngl_sub_tab_dl SELECT
+        *
+        FROM
+        pick_sngl_sub_tab
+        WHERE pick_sngl_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.LabelsteupDAO">
+    <resultMap id="BaseResultMap"
+               type="com.px.mis.whs.entity.LabelSteup">
+        <id column="idx" jdbcType="BIGINT" property="idx"/>
+        <result column="template_id" jdbcType="VARCHAR"
+                property="templateId"/>
+        <result column="label_id" jdbcType="VARCHAR" property="labelId"/>
+        <result column="label_name" jdbcType="VARCHAR"
+                property="labelName"/>
+        <result column="label_type_value" jdbcType="INTEGER"
+                property="labelTypeValue"/>
+        <result column="barcode_type_value" jdbcType="INTEGER"
+                property="barcodeTypeValue"/>
+        <result column="label_size" jdbcType="INTEGER"
+                property="labelSize"/>
+        <result column="position_x" jdbcType="INTEGER"
+                property="positionX"/>
+        <result column="position_y" jdbcType="INTEGER"
+                property="positionY"/>
+        <result column="position_z" jdbcType="INTEGER"
+                property="positionZ"/>
+        <result column="barcode_high" jdbcType="INTEGER"
+                property="barcodeHigh"/>
+        <result column="barcode_wide" jdbcType="INTEGER"
+                property="barcodeWide"/>
+        <result column="rotation" jdbcType="INTEGER"
+                property="rotation"/>
+        <result column="isfixed" jdbcType="INTEGER" property="isfixed"/>
+        <result column="printfieldname" jdbcType="VARCHAR"
+                property="printfieldname"/>
+        <result column="printcontent" jdbcType="VARCHAR"
+                property="printcontent"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        idx, template_id, label_id, label_name, label_type_value,
+		barcode_type_value, label_size,
+		position_x, position_y, position_z,
+		barcode_high, barcode_wide, rotation,
+		isfixed,
+		printfieldname,
+		printcontent, remark
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from labelsteup
+        where idx = #{idx,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.util.List">
+        delete from
+        labelsteup
+        where idx in
+        <foreach item="idx" collection="list" open="(" close=")"
+                 separator=",">
+            #{idx}
+        </foreach>
+    </delete>
+    <insert id="insert" keyColumn="idx" keyProperty="idx"
+            parameterType="com.px.mis.whs.entity.LabelSteup"
+            useGeneratedKeys="true">
+        insert into labelsteup (template_id, label_id,
+                                label_name,
+                                label_type_value, barcode_type_value, label_size,
+                                position_x, position_y, position_z,
+                                barcode_high, barcode_wide,
+                                rotation,
+                                isfixed, printfieldname, printcontent,
+                                remark)
+        values (#{templateId,jdbcType=VARCHAR}, #{labelId,jdbcType=VARCHAR},
+                #{labelName,jdbcType=VARCHAR},
+                #{labelTypeValue,jdbcType=INTEGER},
+                #{barcodeTypeValue,jdbcType=INTEGER}, #{labelSize,jdbcType=INTEGER},
+                #{positionX,jdbcType=INTEGER}, #{positionY,jdbcType=INTEGER},
+                #{positionZ,jdbcType=INTEGER},
+                #{barcodeHigh,jdbcType=INTEGER},
+                #{barcodeWide,jdbcType=INTEGER}, #{rotation,jdbcType=INTEGER},
+                #{isfixed,jdbcType=INTEGER}, #{printfieldname,jdbcType=VARCHAR},
+                #{printcontent,jdbcType=VARCHAR},
+                #{remark,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="idx" keyProperty="idx"
+            parameterType="com.px.mis.whs.entity.LabelSteup"
+            useGeneratedKeys="true">
+        insert into labelsteup
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="templateId != null">
+                template_id,
+            </if>
+            <if test="labelId != null">
+                label_id,
+            </if>
+            <if test="labelName != null">
+                label_name,
+            </if>
+            <if test="labelTypeValue != null">
+                label_type_value,
+            </if>
+            <if test="barcodeTypeValue != null">
+                barcode_type_value,
+            </if>
+            <if test="labelSize != null">
+                label_size,
+            </if>
+            <if test="positionX != null">
+                position_x,
+            </if>
+            <if test="positionY != null">
+                position_y,
+            </if>
+            <if test="positionZ != null">
+                position_z,
+            </if>
+            <if test="barcodeHigh != null">
+                barcode_high,
+            </if>
+            <if test="barcodeWide != null">
+                barcode_wide,
+            </if>
+            <if test="rotation != null">
+                rotation,
+            </if>
+            <if test="isfixed != null">
+                isfixed,
+            </if>
+            <if test="printfieldname != null">
+                printfieldname,
+            </if>
+            <if test="printcontent != null">
+                printcontent,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="templateId != null">
+                #{templateId,jdbcType=VARCHAR},
+            </if>
+            <if test="labelId != null">
+                #{labelId,jdbcType=VARCHAR},
+            </if>
+            <if test="labelName != null">
+                #{labelName,jdbcType=VARCHAR},
+            </if>
+            <if test="labelTypeValue != null">
+                #{labelTypeValue,jdbcType=INTEGER},
+            </if>
+            <if test="barcodeTypeValue != null">
+                #{barcodeTypeValue,jdbcType=INTEGER},
+            </if>
+            <if test="labelSize != null">
+                #{labelSize,jdbcType=INTEGER},
+            </if>
+            <if test="positionX != null">
+                #{positionX,jdbcType=INTEGER},
+            </if>
+            <if test="positionY != null">
+                #{positionY,jdbcType=INTEGER},
+            </if>
+            <if test="positionZ != null">
+                #{positionZ,jdbcType=INTEGER},
+            </if>
+            <if test="barcodeHigh != null">
+                #{barcodeHigh,jdbcType=INTEGER},
+            </if>
+            <if test="barcodeWide != null">
+                #{barcodeWide,jdbcType=INTEGER},
+            </if>
+            <if test="rotation != null">
+                #{rotation,jdbcType=INTEGER},
+            </if>
+            <if test="isfixed != null">
+                #{isfixed,jdbcType=INTEGER},
+            </if>
+            <if test="printfieldname != null">
+                #{printfieldname,jdbcType=VARCHAR},
+            </if>
+            <if test="printcontent != null">
+                #{printcontent,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.px.mis.whs.entity.LabelSteup">
+        update labelsteup
+        <set>
+            <!-- <if test="templateId != null">
+                template_id = #{templateId,jdbcType=VARCHAR},
+            </if>
+            <if test="labelId != null">
+                label_id = #{labelId,jdbcType=VARCHAR},
+            </if> -->
+            <if test="labelName != null">
+                label_name = #{labelName,jdbcType=VARCHAR},
+            </if>
+            <if test="labelTypeValue != null">
+                label_type_value = #{labelTypeValue,jdbcType=INTEGER},
+            </if>
+            <if test="barcodeTypeValue != null">
+                barcode_type_value =
+                #{barcodeTypeValue,jdbcType=INTEGER},
+            </if>
+            <if test="labelSize != null">
+                label_size = #{labelSize,jdbcType=INTEGER},
+            </if>
+            <if test="positionX != null">
+                position_x = #{positionX,jdbcType=INTEGER},
+            </if>
+            <if test="positionY != null">
+                position_y = #{positionY,jdbcType=INTEGER},
+            </if>
+            <if test="positionZ != null">
+                position_z = #{positionZ,jdbcType=INTEGER},
+            </if>
+            <if test="barcodeHigh != null">
+                barcode_high = #{barcodeHigh,jdbcType=INTEGER},
+            </if>
+            <if test="barcodeWide != null">
+                barcode_wide = #{barcodeWide,jdbcType=INTEGER},
+            </if>
+            <if test="rotation != null">
+                rotation = #{rotation,jdbcType=INTEGER},
+            </if>
+            <if test="isfixed != null">
+                isfixed = #{isfixed,jdbcType=INTEGER},
+            </if>
+            <if test="printfieldname != null">
+                printfieldname = #{printfieldname,jdbcType=VARCHAR},
+            </if>
+            <if test="printcontent != null">
+                printcontent = #{printcontent,jdbcType=VARCHAR},
+            </if>
+            remark = #{remark,jdbcType=VARCHAR}
+        </set>
+        where idx = #{idx,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.px.mis.whs.entity.LabelSteup">
+        update labelsteup
+        set template_id        =
+                #{templateId,jdbcType=VARCHAR},
+            label_id           = #{labelId,jdbcType=VARCHAR},
+            label_name         = #{labelName,jdbcType=VARCHAR},
+            label_type_value   =
+                #{labelTypeValue,jdbcType=INTEGER},
+            barcode_type_value =
+                #{barcodeTypeValue,jdbcType=INTEGER},
+            label_size         =
+                #{labelSize,jdbcType=INTEGER},
+            position_x         =
+                #{positionX,jdbcType=INTEGER},
+            position_y         =
+                #{positionY,jdbcType=INTEGER},
+            position_z         =
+                #{positionZ,jdbcType=INTEGER},
+            barcode_high       =
+                #{barcodeHigh,jdbcType=INTEGER},
+            barcode_wide       =
+                #{barcodeWide,jdbcType=INTEGER},
+            rotation           =
+                #{rotation,jdbcType=INTEGER},
+            isfixed            = #{isfixed,jdbcType=INTEGER},
+            printfieldname     = #{printfieldname,jdbcType=VARCHAR},
+            printcontent       =
+                #{printcontent,jdbcType=VARCHAR},
+            remark             = #{remark,jdbcType=VARCHAR}
+        where idx = #{idx,jdbcType=BIGINT}
+    </update>
+
+    <select id="selectByPrimaryQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from labelsteup
+        <where>
+            <if test="reamrk != null and reamrk != ''">
+                <bind name="reamrk" value="'%'+ reamrk +'%'"/>
+                AND labelsteup.reamrk like #{reamrk}
+            </if>
+            <if test="templateId != null and templateId != '' ">
+                <bind name="templateId" value="'%'+ templateId +'%'"/>
+                and template_id like #{templateId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelId != null and labelId != '' ">
+                <bind name="labelId" value="'%'+ labelId +'%'"/>
+                and label_id like #{labelId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelName != null  and labelName != '' ">
+                <bind name="labelName" value="'%'+ labelName +'%'"/>
+                and label_name like #{labelName,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTypeValue != null  and labelTypeValue != '' ">
+                <bind name="labelTypeValue" value="'%'+ labelTypeValue +'%'"/>
+                and label_type_value like
+                #{labelTypeValue,jdbcType=INTEGER}
+            </if>
+            <if test="barcodeTypeValue != null  and barcodeTypeValue != '' ">
+                <bind name="barcodeTypeValue" value="'%'+ barcodeTypeValue +'%'"/>
+                and barcode_type_value like
+                #{barcodeTypeValue,jdbcType=INTEGER}
+            </if>
+            <if test="labelSize != null  and labelSize != '' ">
+                <bind name="labelSize" value="'%'+ labelSize +'%'"/>
+                and label_size like #{labelSize,jdbcType=INTEGER}
+            </if>
+            <if test="positionX != null and positionX != '' ">
+                <bind name="positionX" value="'%'+ positionX +'%'"/>
+                and position_x like #{positionX,jdbcType=INTEGER}
+            </if>
+            <if test="positionY != null  and positionY != '' ">
+                <bind name="positionY" value="'%'+ positionY +'%'"/>
+                and position_y like #{positionY,jdbcType=INTEGER}
+            </if>
+            <if test="positionZ != null  and positionZ != '' ">
+                <bind name="positionZ" value="'%'+ positionZ +'%'"/>
+                and position_z like #{positionZ,jdbcType=INTEGER}
+            </if>
+            <if test="barcodeHigh != null  and barcodeHigh != '' ">
+                <bind name="barcodeHigh" value="'%'+ barcodeHigh +'%'"/>
+                and barcode_high like
+                #{barcodeHigh,jdbcType=INTEGER}
+            </if>
+            <if test="barcodeWide != null  and barcodeWide != '' ">
+                <bind name="barcodeWide" value="'%'+ barcodeWide +'%'"/>
+                and barcode_wide like
+                #{barcodeWide,jdbcType=INTEGER}
+            </if>
+            <if test="rotation != null and rotation != '' ">
+                <bind name="rotation" value="'%'+ rotation +'%'"/>
+                and rotation like #{rotation,jdbcType=INTEGER}
+            </if>
+            <if test="isfixed != null and isfixed != '' ">
+                <bind name="isfixed" value="'%'+ isfixed +'%'"/>
+                and isfixed like #{isfixed,jdbcType=INTEGER}
+            </if>
+            <if test="printfieldname != null and printfieldname != '' ">
+                <bind name="printfieldname" value="'%'+ printfieldname +'%'"/>
+                and printfieldname like
+                #{printfieldname,jdbcType=VARCHAR}
+            </if>
+            <if test="printcontent != null   and printcontent != '' ">
+                <bind name="printcontent" value="'%'+ printcontent +'%'"/>
+                and printcontent like
+                #{printcontent,jdbcType=VARCHAR}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectByTemplateCount"
+            resultType="java.lang.Integer">
+        select
+        Count(idx)
+        from labelsteup
+        <where>
+            <if test="reamrk != null and reamrk != ''">
+                <bind name="reamrk" value="'%'+ reamrk +'%'"/>
+                AND labelsteup.reamrk like #{reamrk}
+            </if>
+            <if test="templateId != null and templateId != '' ">
+                <bind name="templateId" value="'%'+ templateId +'%'"/>
+                and template_id like #{templateId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelId != null and labelId != '' ">
+                <bind name="labelId" value="'%'+ labelId +'%'"/>
+                and label_id like #{labelId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelName != null  and labelName != '' ">
+                <bind name="labelName" value="'%'+ labelName +'%'"/>
+                and label_name like #{labelName,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTypeValue != null  and labelTypeValue != '' ">
+                <bind name="labelTypeValue" value="'%'+ labelTypeValue +'%'"/>
+                and label_type_value like
+                #{labelTypeValue,jdbcType=INTEGER}
+            </if>
+            <if test="barcodeTypeValue != null  and barcodeTypeValue != '' ">
+                <bind name="barcodeTypeValue" value="'%'+ barcodeTypeValue +'%'"/>
+                and barcode_type_value like
+                #{barcodeTypeValue,jdbcType=INTEGER}
+            </if>
+            <if test="labelSize != null  and labelSize != '' ">
+                <bind name="labelSize" value="'%'+ labelSize +'%'"/>
+                and label_size like #{labelSize,jdbcType=INTEGER}
+            </if>
+            <if test="positionX != null and positionX != '' ">
+                <bind name="positionX" value="'%'+ positionX +'%'"/>
+                and position_x like #{positionX,jdbcType=INTEGER}
+            </if>
+            <if test="positionY != null  and positionY != '' ">
+                <bind name="positionY" value="'%'+ positionY +'%'"/>
+                and position_y like #{positionY,jdbcType=INTEGER}
+            </if>
+            <if test="positionZ != null  and positionZ != '' ">
+                <bind name="positionZ" value="'%'+ positionZ +'%'"/>
+                and position_z like #{positionZ,jdbcType=INTEGER}
+            </if>
+            <if test="barcodeHigh != null  and barcodeHigh != '' ">
+                <bind name="barcodeHigh" value="'%'+ barcodeHigh +'%'"/>
+                and barcode_high like
+                #{barcodeHigh,jdbcType=INTEGER}
+            </if>
+            <if test="barcodeWide != null  and barcodeWide != '' ">
+                <bind name="barcodeWide" value="'%'+ barcodeWide +'%'"/>
+                and barcode_wide like
+                #{barcodeWide,jdbcType=INTEGER}
+            </if>
+            <if test="rotation != null and rotation != '' ">
+                <bind name="rotation" value="'%'+ rotation +'%'"/>
+                and rotation like #{rotation,jdbcType=INTEGER}
+            </if>
+            <if test="isfixed != null and isfixed != '' ">
+                <bind name="isfixed" value="'%'+ isfixed +'%'"/>
+                and isfixed like #{isfixed,jdbcType=INTEGER}
+            </if>
+            <if test="printfieldname != null and printfieldname != '' ">
+                <bind name="printfieldname" value="'%'+ printfieldname +'%'"/>
+                and printfieldname like
+                #{printfieldname,jdbcType=VARCHAR}
+            </if>
+            <if test="printcontent != null   and printcontent != '' ">
+                <bind name="printcontent" value="'%'+ printcontent +'%'"/>
+                and printcontent like
+                #{printcontent,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>

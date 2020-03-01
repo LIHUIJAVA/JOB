@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>产品结构</title>
+		
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/whs/prod_stru.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<!--<script type="text/javascript" src="../../assets/js/common/paste.js"></script>-->
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/insertInvtyList.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<style>
+			#insert_jqgrids {
+				width: 100%!important;
+			}
+			
+			form {
+				display: inline-block;
+				font-size: 14px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">产品结构</h1>-->
+				<div class="buttons">
+					<!--<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>-->
+					<button class="addOrder">增加</button>
+					<button class="editOrder">修改</button>
+					<button class="saveOrder">保存</button>
+					<button class="delOrder">删除</button>
+					<button class="upOrder">放弃</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+					<!--<button class="search">整单联查</button>-->
+					<!--<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>-->
+				</div>
+				<div id="mengban"></div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="orderNumbers col-md-4">
+						<span>母件<b>*</b></span>
+						<input type="text" id="momEncd" class="encds" name="momEncd" value="" />
+						<input type="text" id="momNm" class="names" name="momNm" value="" />
+						<span><img class="biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>母件规格</span><input type="text" class="inputText" id="momSpc" name="momSpc" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>计量单位</span><input type="text" class="inputText" id="measrCorp" name="measrCorp" value="" readonly="readonly" />
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>版本说明</span><input type="text" class="inputText" id="edComnt" name="edComnt" value=""/>
+					</div>
+					<div class="remarks col-md-4">
+						<span>备注</span><input type="text" class="inputText" id="memo" name="memo" value="" />
+					</div>
+					<div class="orderDates col-md-4" style="display: none;">
+						<span>序号</span><input type="text" class="inputText" id="ordrNum" name="ordrNum" value="" readonly="readonly"/>
+					</div>
+					<div id="fuze" style="display: none;"></div>
+					<div id="departmentEncd" style="display: none;"></div>
+
+				</form>
+
+			</div>
+			<table id="jqgrids"></table>
+			<!--<table id="jqGrids"></table>-->
+			<div id="prod_jqgridPager"></div>
+		</div>
+		
+		<div id="insertList" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<button class="find">查询</button>
+						<button class="addWhs">确定</button>
+						<button class="cancel">取消</button>
+					</div>
+				</div>
+
+				<div class="purchaseTit">
+					<h1 class="title">存货档案列表</h1>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-3">
+								<span>存货编码</span>
+								<input type="text" class="invtyEncd1" name="invtyEncd1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货名称</span>
+								<input type="text" class="invtyNm1" name="invtyNm1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货分类编码</span>
+								<input type="text" class="invtyClsEncd1" name="invtyClsEncd1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货分类名称</span>
+								<input type="text" class="invtyClsNm1" name="invtyClsNm1" value="" />
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<aside>
+					<!--左列树-->
+					<div id="tree"></div>
+				</aside>
+
+				<div id="wrap">
+					<table id="insert_jqgrids"></table>
+					<div id="insert_jqGridPager"></div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.VouchCateDocSubTabDao">
+  <!-- 根据外键删除 -->
+  <delete id="deleteVouchCateDocSubTabByVouchCateWor" parameterType="java.lang.String">
+  		DELETE FROM vouch_cate_doc_sub_tab
+  		WHERE vouch_cate_wor=#{vouchCateWor}
+  </delete>
+  <!-- 添加 -->
+  <insert id="insertVouchCateSubTabDoc" parameterType="com.px.mis.account.entity.VouchCateDocSubTab">
+  	INSERT INTO vouch_cate_doc_sub_tab
+  	VALUES(null,#{vouchCateWor},#{lmtSubjId})
+  </insert>
+  <!-- 根据主键更新 -->
+  <update id="updateVouchCateDocSubTabById" parameterType="com.px.mis.account.entity.VouchCateDocSubTab">
+  	UPDATE vouch_cate_doc_sub_tab
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="vouchCateWor != null">
+        vouch_cate_wor = #{vouchCateWor,jdbcType=VARCHAR},
+      </if>
+      <if test="lmtSubjId != null">
+        lmt_subj_id = #{lmtSubjId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+  </update>
+</mapper>

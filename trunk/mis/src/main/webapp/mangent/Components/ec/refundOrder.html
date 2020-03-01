@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>电商退款单</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<!--<script type="text/javascript" src="../../assets/js/mis/ec/allReturnOrder.js"></script>-->
+		<script type="text/javascript" src="../../assets/js/mis/ec/refundOrderConsult.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/laydate/laydate.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/whsDocList.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<style>
+			select{
+				outline: none;
+				appearance:none;
+				-moz-appearance:none;
+				-webkit-appearance:none;
+				width:220px;
+				border:0;
+				border-bottom:1px solid #B8C7CE
+			}
+			select:-ms-expand { display: none; }
+			#mengban {
+				z-index: 1!important;
+				/*position: absolute;*/
+				bottom: 0;
+				left: 0;
+				/*top: 0;*/
+				height: 92%!important;
+				/*opacity: 0;*/
+				/*background-color: red;*/
+				/*opacity: 0!important;*/
+				/*display: block!important;*/
+			}
+			.down {
+				width: 400px;
+				height: 300px;
+				border: 1px solid #CCCCCC;
+				background-color: #cccc;
+				/*background-color: red;*/
+				position: absolute;
+				top: 130px;
+				left: 40%;
+				z-index: 3;
+				display: none;
+			}
+			.inp {
+				margin-top: 50px;
+			}
+			#mu_jqGrids, #zi_jqGrids {
+				width: 100%!important;
+			}
+			#purchaseOrder .order-title div {
+				width: 33.33333333%!important;
+			}
+		</style>
+	</head>
+<script>
+	document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/ec/refundOrder.js?" + new Date().getTime() + "'></scr" + "ipt>");
+</script>
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">电商退款单</h1>-->
+				<div class="buttons">
+					<!--<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>-->
+					<button class="addOrder1">增加</button>
+					<button class="editOrder">修改</button>
+					<button class="saveOrder">保存</button>
+					<button class="delOrder">删除</button>
+					<button class="upOrder">重置</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+					<!--<button class="aaaa">设置整单退货数量和金额与是否退货</button>-->
+				</div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="purchaseType col-md-4">
+						<span>退款单编码</span><input type="text" class="inputText" name="refId" value=""  readonly="readonly" />
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>订单编码</span><input type="text" class="inputText" name="orderId" value=""  readonly="readonly" />
+					</div>
+					<!--<div class="purchaseType col-md-4">
+						<span>电商平台编码</span><input type="text" class="ecId" name="ecId" value="" readonly="readonly" />
+					</div>-->
+					<div class="orderDates col-md-4">
+						<span>电商订单编码</span><input type="text" class="inputText" name="ecOrderId" value="" readonly="readonly"/>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>店铺编码</span><input type="text" class="inputText" name="storeId" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>店铺名称</span><input type="text" class="inputText" name="storeName" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>电商退款单号</span><input type="text" class="inputText" name="ecRefId" value=""  />
+					</div>
+					<div class="orderDates col-md-4">
+						<span>申请时间</span>
+						<!--<input type="text" class="inputText" name="applyDate" value="" readonly="readonly"  calendar="YYYY-MM-DD" />-->
+						<input placeholder="请输入日期" class="applyDate f_date" name="applyDate" id="start" style="width:200px; margin-right:10px;">
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>买家会员号</span><input type="text" class="inputText" name="buyerId" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>是否退货<b>*</b></span>
+						<select name="isRefund" id="isRefund" disabled>
+							<option value="0">否</option>
+							<option value="1">是</option>
+						</select>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>整单退货数量</span><input type="text" class="inputText" name="allRefNum" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>整单退货金额</span><input type="text" class="inputText" name="allRefMoney" value="" readonly="readonly"/>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>退款原因</span><input type="text" class="inputText" name="refReason" value=""  />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>下载时间</span><input type="text" class="downTime" name="downTime" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>创建人</span><input type="text" class="operator" name="operator" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>创建时间</span><input type="text" class="operatorTime" name="operatorTime" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>退款说明</span><input type="text" class="inputText" name="refExplain" value=""  />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>快递单号</span><input type="text" class="expressCode" name="expressCode" value=""  />
+					</div>
+					<div class="orderNumbers col-md-4" style="display: none;">
+						<span>退款状态</span>
+						<select name="refStatus" id="refStatus" disabled>
+							<option value="0" selected>否</option>
+							<option value="1">是</option>
+						</select>
+					</div>
+					<div class="orderDates col-md-4">
+						<span>处理日期 </span><input type="text" class="inputText" name="treDate" value="" readonly="readonly"  calendar="YYYY-MM-DD" />
+					</div>
+					<div class="department col-md-4">
+						<span>表头备注</span><input type="text" id="department" class="inputText" name="memo" value=""  />
+					</div>
+				</form>
+			</div>
+			<table id="return_jqgrids"></table>
+			<div id="return_jqgridPager"></div>
+		</div>
+		
+		
+		<!--参照-->
+		<div id="purs_list"style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<h1 class="title">电商订单参照</h1>
+					<div class="buttons">
+						<button class="sure">确定</button>
+						<button class="cancels">取消</button>
+					</div>
+				</div>
+				<table id="mu_jqGrids"></table><!--到货单列表jqgrid列表-->
+				<div id="mu_jqGridPager"></div><!--表格下部-->
+				<table id="zi_jqGrids"></table><!--到货单列表jqgrid列表-->
+				<div id="zi_jqGridPager"></div><!--表格下部-->
+			</div>
+		</div>
+		
+		
+		
+		<div class="down" style="opacity: 0;">
+			<div class="purchaseTit">
+				<!--<h1 class="title">全部订单</h1>-->
+				<div class="buttons">
+					<button class="trues">确定</button>
+					<button class="falses">取消</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="supplier col-md-4 inp">
+						<span>订单号</span>
+						<input type="text" class="ecOrderId" name="ecOrderId1" value="" />
+					</div>
+				</form>
+			</div>		
+		</div>
+		
+		
+			<!--仓库档案-->
+		<div id="whsDocList" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<div class="addWhs">确定</div>
+						<div class="cancel">取消</div>
+						<div class="whs_find">查询</div>
+					</div>
+				</div>
+
+				<div class="purchaseTit">
+					<h1 class="title">仓库档案</h1>
+				</div>
+
+				<table id="whs_jqgrids"></table>
+				<div id="whs_jqGridPager"></div>
+			</div>
+		</div>
+	</body>
+	<script>
+		var start = {
+			elem: '#start',
+			format: 'YYYY-MM-DD hh:mm:ss',
+			min: laydate.now(-90), //设定最小日期为当前日期
+			max: '2099-06-16', //最大日期
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+				end.min = datas; //开始日选好后，重置结束日的最小日期
+				end.start = datas //将结束日的初始值设定为开始日
+			}
+		};
+		var end = {
+			elem: '#end',
+			format: 'YYYY-MM-DD hh:mm:ss',
+			min: laydate.now(),
+			max: '2099-06-16',
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+				start.max = datas; //结束日选好后，充值开始日的最大日期
+			}
+		};
+		laydate(start);
+		laydate(end);
+
+		$('.nav-tabs li').click(function() {　　
+			$(this).addClass('active').siblings().removeClass('active');　　
+			var _id = $(this).attr('data-id');　　
+			$('.tabs-contents').find('#' + _id).addClass('active').siblings().removeClass('active');
+		});
+		
+	</script>
+</html>

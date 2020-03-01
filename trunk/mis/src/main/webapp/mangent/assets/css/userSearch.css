@@ -1,0 +1,163 @@
+/*body,html{
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	list-style: none;
+	text-align: center;
+}
+.box{
+	padding: 20px ;
+	border:1px solid darkgrey;
+}
+.order{
+	width: 100%;
+	height: 40px;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 40px;
+	border:1px solid darkgrey;
+	
+}
+.info-input > input{
+	border: none;
+	outline:none ;
+	
+}
+.info-title{
+	width: 100%;
+	height: 40px;
+	border:1px solid darkgrey;
+	line-height: 40px;
+	
+}*/
+
+#jqGrid_rn,
+#jqGrid_cb,
+#jqGrid_Quantity,
+.ui-jqgrid-resize .ui-jqgrid-resize-ltr {
+	border: 0;
+}
+
+#jqgh_jqGrid_cb {
+	margin-right: 1px;
+}
+
+.jqgrow,
+.ui-jqgrid-labels {
+	line-height: 27px;
+}
+
+.ui-th-column,
+.ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+	overflow: hidden;
+	white-space: nowrap;
+	text-align: center;
+}
+
+.order-title {
+	margin-bottom: 20px;
+	margin-top: 10px;
+}
+
+.order-title .col-lg-3 {
+	display: inline-block;
+	height: auto;
+	padding-left: 14px;
+}
+
+.order-title div span {
+	padding: 10px 10px 10px 0px;
+	box-sizing: border-box;
+}
+
+.order-title div span b {
+	color: red;
+	padding-left: 6px;
+	box-sizing: border-box;
+}
+
+input {
+	border: 0;
+	outline: none;
+	border-bottom: 1px solid #ccc;
+	padding: 0 40px 0 10px;
+}
+
+.purchaseTit {
+	font-size: 24px;
+	/*text-align: center;*.row
+	 *//
+	margin-top: 20px;
+}
+
+.purchaseTit .title {
+	text-align: center;
+}
+
+.purchaseTit .buttons button {
+	font-size: 14px;
+	text-align: center;
+	margin-right: 10px;
+	border-radius: 5px;
+	background-color: #272631;
+	color: #FFFFFF;
+	border: none;
+	padding: 3px 10px;
+}
+
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight {
+	border: 1px solid #ccc;
+	/*background: #ccc;
+	color: #777620;*/
+}
+
+.title {
+	font-size: 20px;
+}
+
+#btnTest {
+	position: absolute;
+    z-index: 1000;
+    left: 100px;
+    margin-top: 10px;
+    background-color: #333333;
+    width: 60px;
+    text-align: center;
+	border-radius: 10px;
+	color: #FFFFFF;
+	outline: none; 
+}
+
+@media screen and (min-width:1200px) {
+	.order-title .col-lg-3 {
+		padding: 10px 10px 0 0;
+		box-sizing: border-box;
+	}
+}
+
+/*.row {
+	padding-left: -27px!important;
+}*/
+
+.ui-jqgrid a.ui-sghref{
+    text-decoration: none;
+    color: #010101;
+    display: table;
+    position: relative;
+    height: 100%;
+    width: 90%;
+    text-align: center;
+}
+
+tr.jqgrow.ui-row-ltr.ui-widget-content:nth-child(odd){
+	background: #eeeeee;
+}
+
+tr.jqgrow.ui-row-ltr.ui-widget-content:nth-child(even){
+	background: #ffffff;
+}
+

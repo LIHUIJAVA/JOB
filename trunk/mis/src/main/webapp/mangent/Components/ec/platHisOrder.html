@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>电商历史订单</title>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/ec/platHisOrder.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+	</head>
+
+	<style>
+		.ui-state-highlight {
+			color: red !important;
+		}
+		
+		.editable.inline-edit-cell.ui-widget-content.ui-corner-all {
+			width: 100% !important;
+		}
+		
+		#jqgrids_rn {
+			width: 16px!important;
+		}
+	</style>
+
+	<body>
+		<div class="box">
+			<div class="purchaseTit">
+				<!--<h1 class="title">电商历史订单</h1>-->
+				<div class="buttons">
+					<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>
+					<!--<button class="addOrder">增行</button>-->
+					<button class="delOrder">删行</button>
+					<button class="saveOrder">保存</button>
+					<button class="update">更新</button>
+					<button id="find">条件查询</button>
+					<button class="print">打印</button>
+					<button id="jSearch">联查</button>
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>订单编码</span>
+							<input type="text" class="orderId" name="orderId1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>店铺编码</span>
+							<input type="text" class="storeId" name="storeId1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否审核</span>
+							<input type="text" class="storeName" name="isAudit1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>买家会员号</span>
+							<input type="text" class="storeName" name="buyerId1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>收货人名</span>
+							<input type="text" class="storeName" name="recName1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>收货电话</span>
+							<input type="text" class="storeName" name="recMobile1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>电商单号</span>
+							<input type="text" class="storeName" name="ecOrderId1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否开票</span>
+							<input type="text" class="storeName" name="isInvoice1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>卖家备注旗帜</span>
+							<input type="text" class="storeName" name="onteFlag1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否发货</span>
+							<input type="text" class="storeName" name="isShip1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>订单状态</span>
+							<input type="text" class="storeName" name="orderStatus1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>退货状态</span>
+							<input type="text" class="storeName" name="returnStatus1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否含赠品</span>
+							<input type="text" class="storeName" name="hasGift1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>日期</span>
+							<input type="text" class="storeName date1" name="startDate1" value="" />到<input type="text" class="storeName date2" name="endDate1" value="" />
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<table id="jqgrids" style="width: 100%;"></table>
+			<div id="jqGridPager"></div>
+
+	</body>
+
+</html>
+<script type="text/javascript">
+	$("table").delegate("tr", "mouseover", function() {
+		//		$(this).addClass("mouseover")
+		$(this).css("background-color", "#FC3");
+	});
+	$("table").delegate("tr", "mouseout", function() {
+		//		$(this).removeClass("mouseover");
+		$(this).css("background-color", "");
+	});
+	$("table").delegate("tr", "click", function() {
+		$(this).css("background-color", "#FFE48D");
+	});
+</script>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>付款申请单</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+	</head>
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/purs/payRequest.js?" + new Date().getTime() + "'></scr" + "ipt>");
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/purs/purOrder.js?" + new Date().getTime() + "'></scr" + "ipt>");
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/system/baseDocAll.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<style>
+		#jqGrids_list {
+			width: 100%!important;
+		}
+		
+		body {
+			overflow-x: hidden;
+		}
+		#gbox_deteil_list{
+			margin-top:10px
+		}
+		.ui-jqgrid-ftable.ui-common-table {
+			width:100%!important
+		}
+	</style>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">到货单</h1>-->
+				<div class="buttons">
+					<!--<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>-->
+					<button class="refer">参照</button>
+					<button class="editOrder">修改</button>
+					<button class="saveOrder">保存</button>
+					<button class="delOrder">删除</button>
+					<button class="upOrder">放弃</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+					<!--<button class="ctrlc_v">粘贴</button>-->
+					<!--<button class="search">整单联查</button>-->
+				</div>
+				<!--<div id="mengban"></div>-->
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave" autocomplete="off">
+					<div class="purchaseType col-md-4">
+						<span>单据类型</span><input type="text" id="formTypEncd" class="inputText" name="formTypEncd" value="" readonly="readonly" />
+					</div>
+					<div class="orderDates col-md-4">
+						<span>单据日期 <b>*</b></span><input type="text" class="inputText" name="payApplDt" value="" readonly="readonly"/>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>单据编码 <b>*</b></span><input type="text" class="inputText" name="payApplId" value="" readonly="readonly" />
+					</div>
+					<div class="salesman col-md-4">
+						<span>业务员 <b>*</b></span><input type="text" id="user" class="inputText encds" name="accNum" value=""/>
+						<input type="text" id="userName" class="inputText names" value="" readonly="readonly" />
+						<span><img class="biao_userId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="supplier col-md-4">
+						<span>供应商编码<b>*</b></span><input type="text" id="provrId" class="provrId encds" name="provrId" value="" />
+						<input type="text" id="provrNm" class="provrNm names" name="provrNm" value="" readonly="readonly" />
+						<span><img class="biao_provrId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="department col-md-4">
+						<span>部门</span><input type="text" id="deptId" class="deptId encds" name="deptId" value="" />
+						<input type="text" id="deptName" class="deptName names" name="deptName" value="" readonly="readonly" />
+						<span><img class="biao_deptId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>供应商订单号</span><input type="text" class="inputText" name="supplierNumber" value="" />
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>结算科目</span><input type="text" class="stlSubj" name="stlSubj" value="" />
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>结算方式</span><input type="text" class="stlMode" name="stlMode" value="" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>预付款余额</span><input type="text" class="prepyMoneyBal" name="prepyMoneyBal" value="" />
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>应付款余额</span><input type="text" class="acctPyblBal" name="acctPyblBal" value="" />
+					</div>
+					<div class="remarks col-md-4">
+						<span>备注</span><input type="text" id="memo" class="inputText" name="remarks" value="" />
+					</div>
+				</form>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqgridPager"></div>
+		</div>
+		<!--采购订单列表-->
+		<div id="purs_list" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<!--<h1 class="title">采购订单列表</h1>-->
+					<div class="buttons">
+						<button class="sure_refer">确定</button>
+						<button class="cancel refer_cancel">取消</button>
+						<button class="searcher">查询</button>
+					</div>
+				</div>
+				<div class="order-title">
+					<form class="row " id="formSave" autocomplete="off">
+						<div class="businessType col-md-4 ">
+							<span>存货编码</span><input type="text" id="invtyEncd" class="invtyEncd encds" name="invtyEncd" value="" />
+							<input type="text" id="invtyNm" class="invtyNm names" name="invtyNm" value="" readonly="readonly" />
+							<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="orderNumbers col-md-4 ">
+							<span>订单编码</span><input type="text" class="pursOrdrId" value="" />
+						</div>
+						<div class="purchaseType col-md-4 ">
+							<span>供应商编码<b>*</b></span><input type="text" id="provrId1" class="provrId1 encds" name="provrId" value="" />
+							<input type="text" id="provrNm1" class="provrNm1 names" name="provrNm" value="" readonly="readonly" />
+							<span><img class="biao_provrId" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplierOrder col-md-4">
+							<span>供应商订单号</span><input type="text" class="supplierNumber" name="supplierNumber" value="" />
+							<input type="text" id='insertId' style="display:none" value="" />
+						</div>
+						<div class="salesman col-md-4">
+							<span>业务员</span><input type="text" id="fuze" class="inputText" name="salesman" value="" readonly="readonly" />
+							<span><img class="biao_userId" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="purchaseType col-md-4">
+							<span>存货分类编码</span><input type="text" id="invtyCls" class="provrId1 encds" name="invtyClsEncd" value="" />
+							<input type="text" id="invtyClsNm" class="invtyClsNm names" name="invtyClsNm" value="" readonly="readonly" />
+							<span><img class="invtyClsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="orderDates col-md-8 ">
+							<span>订单日期</span>
+							<input type="text" class="pursOrdrDt1 date1" readonly="readonly" name="pursOrdrDt1" value="" calendar="YYYY-MM-DD" />到<input type="text" class="pursOrdrDt2 date2" readonly="readonly" name="pursOrdrDt2" value="" calendar="YYYY-MM-DD" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<table id="jqGrids_list"></table>
+		<div id="jqGridPager_list"></div>
+		
+				
+		<table id="deteil_list"></table>
+		<div id="deteilPager_list"></div>
+		<input type="text" id="departmentEncd" style="display: none;/>
+	</body>
+
+</html>

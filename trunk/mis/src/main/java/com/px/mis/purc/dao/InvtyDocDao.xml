@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.InvtyDocDao">
+  
+  <!--新增存货档案 -->
+  <insert id="insertInvtyDoc" parameterType="InvtyDoc">
+    insert into invty_doc (invty_cls_encd, invty_encd, invty_nm, spc_model, invty_cd, provr_id, measr_corp_id, 
+    vol, weight, longs, wide, hght, bx_rule, bao_zhi_qi_ear_warn, bao_zhi_qi_dt, place_of_origin, 
+    rgst_brand, cret_num, make_lics_num, tray_size, quantity, valtn_mode, iptax_rate, 
+    optax_rate, highest_pur_price, lo_sell_prc, ltst_cost, ref_cost, ref_sell_prc, is_nt_sell, 
+    is_nt_purs, is_dom_sale, pto, is_qua_gua_per, allow_bom_main, allow_bom_minor, is_nt_bar_cd_mgmt, 
+    crspd_bar_cd, proj_doc_ind, setup_pers, setup_dt, memo,shd_tax_labour,is_nt_discnt)
+    values (#{invtyClsEncd}, #{invtyEncd}, #{invtyNm}, 
+      #{spcModel}, #{invtyCd}, #{provrId}, 
+      #{measrCorpId}, #{vol}, #{weight}, 
+      #{longs}, #{wide}, #{hght}, 
+      #{bxRule}, #{baoZhiQiEarWarn}, #{baoZhiQiDt}, 
+      #{placeOfOrigin}, #{rgstBrand}, #{cretNum}, 
+      #{makeLicsNum}, #{traySize}, #{quantity}, 
+      #{valtnMode}, #{iptaxRate}, #{optaxRate}, 
+      #{highestPurPrice}, #{loSellPrc}, #{ltstCost}, 
+      #{refCost}, #{refSellPrc}, #{isNtSell}, 
+      #{isNtPurs}, #{isDomSale}, #{pto}, 
+      #{isQuaGuaPer}, #{allowBomMain}, #{allowBomMinor}, 
+      #{isNtBarCdMgmt}, #{crspdBarCd}, #{projDocInd}, 
+      #{setupPers}, now(), #{memo},#{shdTaxLabour},#{isNtDiscnt})
+  </insert>
+  <!--修改存货档案 -->
+  <update id="updateInvtyDocByInvtyDocEncd" parameterType="InvtyDoc">
+    update invty_doc
+    <set>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd},
+      </if>
+      <if test="invtyNm != null">
+        invty_nm = #{invtyNm},
+      </if>
+      <if test="spcModel != null">
+        spc_model = #{spcModel},
+      </if>
+      <if test="invtyCd != null">
+        invty_cd = #{invtyCd},
+      </if>
+      <if test="provrId != null">
+        provr_id = #{provrId},
+      </if>
+      <if test="measrCorpId != null">
+        measr_corp_id = #{measrCorpId},
+      </if>
+      <if test="vol != null">
+        vol = #{vol},
+      </if>
+      <if test="weight != null">
+        weight = #{weight},
+      </if>
+      <if test="longs != null">
+        longs = #{longs},
+      </if>
+      <if test="wide != null">
+        wide = #{wide},
+      </if>
+      <if test="hght != null">
+        hght = #{hght},
+      </if>
+      <if test="bxRule != null">
+        bx_rule = #{bxRule},
+      </if>
+      <if test="baoZhiQiEarWarn != null">
+        bao_zhi_qi_ear_warn = #{baoZhiQiEarWarn},
+      </if>
+      <if test="baoZhiQiDt != null">
+        bao_zhi_qi_dt = #{baoZhiQiDt},
+      </if>
+      <if test="placeOfOrigin != null">
+        place_of_origin = #{placeOfOrigin},
+      </if>
+      <if test="rgstBrand != null">
+        rgst_brand = #{rgstBrand},
+      </if>
+      <if test="cretNum != null">
+        cret_num = #{cretNum},
+      </if>
+      <if test="makeLicsNum != null">
+        make_lics_num = #{makeLicsNum},
+      </if>
+      <if test="traySize != null">
+        tray_size = #{traySize},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity},
+      </if>
+      <if test="valtnMode != null">
+        valtn_mode = #{valtnMode},
+      </if>
+      <if test="iptaxRate != null">
+        iptax_rate = #{iptaxRate},
+      </if>
+      <if test="optaxRate != null">
+        optax_rate = #{optaxRate},
+      </if>
+      <if test="highestPurPrice != null">
+        highest_pur_price = #{highestPurPrice},
+      </if>
+      <if test="loSellPrc != null">
+        lo_sell_prc = #{loSellPrc},
+      </if>
+      <if test="ltstCost != null">
+        ltst_cost = #{ltstCost},
+      </if>
+      <if test="refCost != null">
+        ref_cost = #{refCost},
+      </if>
+      <if test="refSellPrc != null">
+        ref_sell_prc = #{refSellPrc},
+      </if>
+      <if test="isNtSell != null">
+        is_nt_sell = #{isNtSell},
+      </if>
+      <if test="isNtPurs != null">
+        is_nt_purs = #{isNtPurs},
+      </if>
+      <if test="isDomSale != null">
+        is_dom_sale = #{isDomSale},
+      </if>
+      <if test="pto != null">
+        pto = #{pto},
+      </if>
+      <if test="isQuaGuaPer != null">
+        is_qua_gua_per = #{isQuaGuaPer},
+      </if>
+      <if test="allowBomMain != null">
+        allow_bom_main = #{allowBomMain},
+      </if>
+      <if test="allowBomMinor != null">
+        allow_bom_minor = #{allowBomMinor},
+      </if>
+      <if test="isNtBarCdMgmt != null">
+        is_nt_bar_cd_mgmt = #{isNtBarCdMgmt},
+      </if>
+      <if test="crspdBarCd != null">
+        crspd_bar_cd = #{crspdBarCd},
+      </if>
+      <if test="projDocInd != null">
+        proj_doc_ind = #{projDocInd},
+      </if>
+      <!-- <if test="setupPers != null">
+        setup_pers = #{setupPers},
+      </if>
+      <if test="setupDt != null">
+        setup_dt = #{setupDt},
+      </if> -->
+      <if test="mdfr != null">
+        mdfr = #{mdfr},
+      </if>
+      <if test="modiDt != null">
+        modi_dt = now(),
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+      <if test="invtyClsEncd != null">
+        invty_cls_encd = #{invtyClsEncd},
+      </if>
+      <if test="shdTaxLabour != null">
+        shd_tax_labour = #{shdTaxLabour},
+      </if>
+      <if test="isNtDiscnt != null">
+        is_nt_discnt = #{isNtDiscnt},
+      </if>
+    </set>
+    where invty_encd = #{invtyEncd}
+  </update>
+  <!--   删除存货档案 -->
+  <delete id="deleteInvtyDocByInvtyDocEncd" parameterType="String">
+    delete from invty_doc
+    where invty_encd = #{invtyEncd}
+  </delete>
+  <!--   批量删除存货档案 -->
+  <delete id="deleteInvtyDocList" parameterType="java.util.List">
+	delete from invty_doc where invty_encd in
+	<foreach item="invtyEncd" collection="list" open="(" close=")" separator=",">
+	     #{invtyEncd}
+	</foreach>
+  </delete>
+  
+<!--   按照编号查询存货档案 -->
+  <select id="selectInvtyDocByInvtyDocEncd" parameterType="String" resultMap="invtyDocMap">
+    select *
+   <!--  <include refid="Base_Column_List" /> -->
+    from invty_doc ind INNER JOIN invty_cls inc on ind.invty_cls_encd=inc.invty_cls_encd
+                       INNER JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    where invty_encd = #{invtyEncd}
+  </select>
+  
+  <sql id="Base_Column_List">
+    invty_cls_encd, invty_encd, invty_nm, spc_model, invty_cd, provr_id, measr_corp_id, 
+    vol, weight, longs, wide, hght, bx_rule, bao_zhi_qi_ear_warn, bao_zhi_qi_dt, place_of_origin, 
+    rgst_brand, cret_num, make_lics_num, tray_size, quantity, valtn_mode, iptax_rate, 
+    optax_rate, highest_pur_price, lo_sell_prc, ltst_cost, ref_cost, ref_sell_prc, is_nt_sell, 
+    is_nt_purs, is_dom_sale, pto, is_qua_gua_per, allow_bom_main, allow_bom_minor, is_nt_bar_cd_mgmt, 
+    crspd_bar_cd, proj_doc_ind, setup_pers, setup_dt, mdfr, modi_dt, memo,shd_tax_labour,is_nt_discnt
+  </sql>
+
+<!-- 查询存货档案的全部信息 -->
+  <select id="selectInvtyDocList" parameterType="Map" resultMap="invtyDocMap">
+    select *
+    from invty_doc ind INNER JOIN invty_cls inc on ind.invty_cls_encd=inc.invty_cls_encd
+                       INNER JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    <where>
+        <if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+			AND invty_encd in
+			<foreach item="invtyEncd" collection="invtyEncdList" open="("
+				 close=")" separator=",">
+				 #{invtyEncd}
+		    </foreach>
+		</if>
+        <if test="invtyNm != null and invtyNm != ''">
+            AND invty_nm like "%"#{invtyNm}"%"
+        </if>
+        <if test="invtyClsNm != null and invtyClsNm != ''">
+            AND inc.invty_cls_nm like "%"#{invtyClsNm}"%"
+        </if>
+        <if test="invtyClsEncd!= null and invtyClsEncd!= ''">
+			AND SUBSTRING(ind.invty_cls_encd,1,LENGTH(#{invtyClsEncd}))=#{invtyClsEncd}
+		</if>
+  	</where>
+  	LIMIT #{index},#{num} 
+   </select>
+   <select id="selectInvtyDocCount" parameterType="Map" resultType="Integer">
+	SELECT count(*)
+  	from invty_doc ind INNER JOIN invty_cls inc on ind.invty_cls_encd=inc.invty_cls_encd
+  	                   INNER JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+  	 <where>
+  		<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+			AND invty_encd in
+			<foreach item="invtyEncd" collection="invtyEncdList" open="("
+				 close=")" separator=",">
+				 #{invtyEncd}
+		    </foreach>
+		</if>
+        <if test="invtyNm != null and invtyNm != ''">
+            AND invty_nm like "%"#{invtyNm}"%"
+        </if>
+        <if test="invtyClsNm != null and invtyClsNm != ''">
+            AND inc.invty_cls_nm like "%"#{invtyClsNm}"%"
+        </if>
+        <if test="invtyClsEncd!= null and invtyClsEncd!= ''">
+			AND SUBSTRING(ind.invty_cls_encd,1,LENGTH(#{invtyClsEncd}))=#{invtyClsEncd}
+		</if>
+  	</where>
+  </select>
+  
+  <resultMap type="invtyDoc" id="invtyDocMap" autoMapping="true">
+		<id property="invtyEncd" column="invty_encd" />
+		<association property="invtyCls" javaType="InvtyCls" autoMapping="true">
+		    <id property="invtyClsEncd" column="invty_cls_encd" />
+	    </association>
+	    <association property="measrCorpDoc" javaType="MeasrCorpDoc" autoMapping="true">
+		    <id property="measrCorpId" column="measr_corp_id" />
+	    </association>
+  </resultMap>
+  
+  <!-- 打印存货档案的全部信息 -->
+  <select id="printingInvtyDocList" parameterType="Map" resultMap="invtyDocMap">
+    select *
+    from invty_doc ind INNER JOIN invty_cls inc on ind.invty_cls_encd=inc.invty_cls_encd
+                       INNER JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+    <where>
+  		<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+			AND invty_encd in
+			<foreach item="invtyEncd" collection="invtyEncdList" open="("
+				 close=")" separator=",">
+				 #{invtyEncd}
+		    </foreach>
+		</if>
+        <if test="invtyNm != null and invtyNm != ''">
+            AND invty_nm like "%"#{invtyNm}"%"
+        </if>
+        <if test="invtyClsNm != null and invtyClsNm != ''">
+            AND inc.invty_cls_nm like "%"#{invtyClsNm}"%"
+        </if>
+        <if test="invtyClsEncd!= null and invtyClsEncd!= ''">
+			AND SUBSTRING(ind.invty_cls_encd,1,LENGTH(#{invtyClsEncd}))=#{invtyClsEncd}
+		</if>
+  	</where>
+   </select>
+   
+   <select id="selectInvtyEncd" parameterType="String" resultType="String">
+	 SELECT invty_encd from invty_doc where invty_encd=#{invtyEncd}
+    </select>
+    
+   <!--  根据存货查询参考成本 -->
+   <select id="selectRefCost" parameterType="String" resultType="BigDecimal">
+	 SELECT ref_cost from invty_doc where invty_encd=#{invtyEncd}
+   </select>
+   <select id="selectAllByInvtyEncd" parameterType="String" resultType="InvtyDoc">
+	 SELECT * from invty_doc where invty_encd=#{invtyEncd}
+   </select>
+   <select id="selectInvtyEncdLike" parameterType="Map" resultType="InvtyDoc">
+	 SELECT invty_encd,invty_nm,invty_cd,spc_model,crspd_bar_cd
+	  from invty_doc 
+   </select>
+    
+  
+</mapper>

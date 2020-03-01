@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtyGlDao">
+	<!-- 分页查询所有 -->
+	<select id="selectInvtyGlList" parameterType="Map" resultType="com.px.mis.account.entity.InvtyGl">
+	 SELECT a.ordr_num ordrNum,a.invty_encd invtyEncd,a.whs_encd whsEncd,a.dept_id deptId,
+			a.biz_mem_id bizMemId,a.incom_qty incomQty,a.delv_qty delvQty,a.stl_qty stlQty,
+			a.min_into_whs_uprc minIntoWhsUprc,a.max_into_whs_uprc maxIntoWhsUprc,
+	 		a.is_nt_chk isNtChk,a.chkr chkr,a.chk_dt chkDt,a.setup_pers setupPers,
+	 		a.setup_tm setupTm,a.mdfr mdfr,a.modi_tm modiTm,a.accti_prd acctiPrd,
+	 		a.is_nt_end_tm_deal isNtEndTmDeal,a.is_nt_manl_input isNtManlInput,a.memo memo,
+	 		b.invty_nm invtyNm,c.whs_nm whsNm,d.dept_name deptNm,e.emp_nm bizMemNm
+	 FROM invty_gl a
+	 LEFT JOIN invty_doc b
+	 ON a.invty_encd = b.invty_encd
+	 LEFT JOIN whs_doc c
+	 ON a.whs_encd = c.whs_encd
+	 LEFT JOIN dept_doc d
+	 ON a.dept_id = d.dept_id
+	 LEFT JOIN biz_mem_doc e
+	 ON a.biz_mem_id=e.emp_id
+	 ORDER BY a.ordr_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectInvtyGlByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.InvtyGl">
+	 SELECT a.ordr_num ordrNum,a.invty_encd invtyEncd,a.whs_encd whsEncd,a.dept_id deptId,
+			a.biz_mem_id bizMemId,a.incom_qty incomQty,a.delv_qty delvQty,a.stl_qty stlQty,
+			a.min_into_whs_uprc minIntoWhsUprc,a.max_into_whs_uprc maxIntoWhsUprc,
+	 		a.is_nt_chk isNtChk,a.chkr chkr,a.chk_dt chkDt,a.setup_pers setupPers,
+	 		a.setup_tm setupTm,a.mdfr mdfr,a.modi_tm modiTm,a.accti_prd acctiPrd,
+	 		a.is_nt_end_tm_deal isNtEndTmDeal,a.is_nt_manl_input isNtManlInput,a.memo memo,
+	 		b.invty_nm invtyNm,c.whs_nm whsNm,d.dept_name deptNm,e.emp_nm bizMemNm
+	 FROM invty_gl a
+	 LEFT JOIN invty_doc b
+	 ON a.invty_encd = b.invty_encd
+	 LEFT JOIN whs_doc c
+	 ON a.whs_encd = c.whs_encd
+	 LEFT JOIN dept_doc d
+	 ON a.dept_id = d.dept_id
+	 LEFT JOIN biz_mem_doc e
+	 ON a.biz_mem_id=e.emp_id
+	 WHERE a.ordr_num=#{ordrNum}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectInvtyGlCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM invty_gl
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertInvtyGl" parameterType="com.px.mis.account.entity.InvtyGl">
+		INSERT INTO invty_gl
+		VALUES(null,#{invtyEncd},#{whsEncd},#{deptId},
+			#{bizMemId},#{incomQty},#{delvQty},#{stlQty},
+			#{minIntoWhsUprc},#{maxIntoWhsUprc},#{isNtChk},#{chkr},
+			#{chkDt},#{setupPers},now(),#{mdfr},
+			#{modiTm},#{acctiPrd},#{isNtEndTmDeal},#{isNtManlInput},
+			#{memo})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteInvtyGlByOrdrNum" parameterType="int">
+	 DELETE FROM invty_gl
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateInvtyGlByOrdrNum" parameterType="com.px.mis.account.entity.InvtyGl">
+	 UPDATE invty_gl
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="whsEncd != null">
+        whs_encd = #{whsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizMemId != null">
+        biz_mem_id = #{bizMemId,jdbcType=VARCHAR},
+      </if>
+      <if test="incomQty != null">
+        incom_qty = #{incomQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delvQty != null">
+        delv_qty = #{delvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="stlQty != null">
+        stl_qty = #{stlQty,jdbcType=DECIMAL},
+      </if>
+      <if test="minIntoWhsUprc != null">
+        min_into_whs_uprc = #{minIntoWhsUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="maxIntoWhsUprc != null">
+        max_into_whs_uprc = #{maxIntoWhsUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="isNtChk != null">
+        is_nt_chk = #{isNtChk,jdbcType=INTEGER},
+      </if>
+      <if test="chkr != null">
+        chkr = #{chkr,jdbcType=VARCHAR},
+      </if>
+      <if test="chkDt != null">
+        chk_dt = #{chkDt,jdbcType=DATE},
+      </if>
+      <if test="setupPers != null">
+        setup_pers = #{setupPers,jdbcType=VARCHAR},
+      </if>
+      <if test="setupTm != null">
+        setup_tm = #{setupTm,jdbcType=DATE},
+      </if>
+      <if test="mdfr != null">
+        mdfr = #{mdfr,jdbcType=VARCHAR},
+      </if>
+      <if test="modiTm != null">
+        modi_tm = #{modiTm,jdbcType=DATE},
+      </if>
+      <if test="acctiPrd != null">
+        accti_prd = #{acctiPrd,jdbcType=VARCHAR},
+      </if>
+      <if test="isNtEndTmDeal != null">
+        is_nt_end_tm_deal = #{isNtEndTmDeal,jdbcType=INTEGER},
+      </if>
+      <if test="isNtManlInput != null">
+        is_nt_manl_input = #{isNtManlInput,jdbcType=INTEGER},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+     
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+</mapper>

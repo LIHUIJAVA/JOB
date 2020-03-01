@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProManagerSettings">
+
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ProManagerSettings">
+  	SELECT setting_id, down_pro, audit_pro, offline_online, act_time
+  	FROM pro_manager_settings 
+  	WHERE setting_id = #{setting_id}
+  </select>
+  
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.ProManagerSettings">
+  	UPDATE pro_manager_settings 
+  	SET setting_id=#{settingId}, down_pro=#{downPro}, audit_pro=#{auditPro}, offline_online=#{offlineOnline}, act_time=#{actTime}
+  </update>
+
+</mapper>

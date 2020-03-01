@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Brokerage">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.Brokerage">
+	INSERT INTO brokerage (brok_id,brok_name,memo)
+    VALUES(#{brokId}, #{brokName}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.Brokerage">
+  	SELECT brok_id, brok_name, memo
+  	FROM brokerage 
+  	WHERE brok_id = #{brokId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  brokerage
+  	WHERE brok_id = #{brokId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.Brokerage">
+  	UPDATE brokerage 
+  	SET brok_id=#{brokId}, brok_name=#{brokName}, memo=#{memo}
+  	WHERE brok_id = #{brokId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.Brokerage">
+	SELECT brok_id, brok_name, memo
+  	FROM brokerage 
+  	<where>
+  		<if test="brokId != null and brokId != ''">
+            AND brok_id = #{brokId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(*)
+  	FROM brokerage 
+  	<where>
+  		<if test="brokId != null and brokId != ''">
+            AND brok_id = #{brokId}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

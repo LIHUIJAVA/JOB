@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.StoreRecordDao">
+  <!-- 店铺档案 -->
+  <insert id="insert" parameterType="com.px.mis.ec.entity.StoreRecord">
+	INSERT INTO store_record (store_id, store_name, ec_id, ec_name, no_audit_id, no_audit_name, sales_type, brok_id, brok_name,
+    deliver_mode, safe_inv, clearing_form, resp_dep, resp_person, seller_id, alipay_no, mobile,
+    phone, linkman, email, business, default_ref_whs, memo,customer_id)
+    VALUES(#{storeId}, #{storeName}, #{ecId}, #{ecName}, #{noAuditId}, #{noAuditName}, #{salesType}, #{brokId}, #{brokName},
+    #{deliverMode}, #{safeInv}, #{clearingForm}, #{respDep}, #{respPerson}, #{sellerId}, #{alipayNo}, #{mobile},
+    #{phone}, #{linkman}, #{email}, #{business}, #{defaultRefWhs}, #{memo},#{customerId})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.StoreRecord">
+		SELECT store_record.store_id, store_record.store_name, store_record.ec_id,
+		store_record.ec_name, store_record.no_audit_id,store_record.ec_store_id,
+		store_record.no_audit_name, store_record.sales_type,
+		store_record.brok_id, store_record.brok_name,
+		store_record.deliver_mode, store_record.safe_inv,
+		store_record.clearing_form, store_record.resp_dep,
+		store_record.resp_person, store_record.seller_id,
+		store_record.alipay_no, store_record.mobile,
+		store_record.phone, store_record.linkman, store_record.email, store_record.business,
+		store_record.default_ref_whs,
+		store_record.customer_id,
+		cust_doc.cust_nm as customerName ,
+		dept_doc.dept_name as deptName,
+		mis_user.user_name as personName,
+ 		store_record.memo,mis_user.whs_name
+		FROM store_record 
+		LEFT JOIN mis_user
+		on(store_record.resp_person=mis_user.acc_num)
+    	LEFT JOIN cust_doc
+    	on cust_doc.cust_id = store_record.customer_id
+    	LEFT JOIN dept_doc
+		ON dept_doc.dept_id=store_record.resp_dep
+		WHERE store_id = #{storeId}
+  </select>
+  
+  <select id="selectAll" resultType="com.px.mis.ec.entity.StoreRecord">
+  SELECT store_record.store_id, store_record.store_name, store_record.ec_id,
+		store_record.ec_name, store_record.no_audit_id,
+		store_record.no_audit_name, store_record.sales_type,
+		store_record.brok_id, store_record.brok_name,
+		store_record.deliver_mode, store_record.safe_inv,
+		store_record.clearing_form, store_record.resp_dep,
+		store_record.resp_person, store_record.seller_id,
+		store_record.alipay_no, store_record.mobile,
+		store_record.phone, store_record.linkman, store_record.email, store_record.business,
+		store_record.default_ref_whs,
+		store_record.customer_id,
+		store_record.memo,mis_user.whs_name,mis_user.user_name
+		FROM store_record join mis_user
+		on(store_record.resp_person=mis_user.acc_num)
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	delete from store_record where store_id = #{storeId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.StoreRecord">
+  	UPDATE store_record 
+  	SET store_id=#{storeId}, store_name=#{storeName}, ec_id=#{ecId}, ec_name=#{ecName}, no_audit_id=#{noAuditId}, no_audit_name=#{noAuditName},
+  	sales_type=#{salesType}, brok_id=#{brokId}, brok_name=#{brokName}, deliver_mode=#{deliverMode}, safe_inv=#{safeInv}, clearing_form=#{clearingForm},
+  	resp_dep=#{respDep}, resp_person=#{respPerson}, seller_id=#{sellerId}, alipay_no=#{alipayNo}, mobile=#{mobile}, phone=#{phone}, linkman=#{linkman},
+	email=#{email}, business=#{business}, default_ref_whs=#{defaultRefWhs}, memo=#{memo},customer_id=#{customerId}
+  	WHERE store_id = #{storeId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.StoreRecord">
+	SELECT store_record.store_id, store_record.store_name, store_record.ec_id,
+		store_record.ec_name, store_record.no_audit_id,
+		store_record.no_audit_name, store_record.sales_type,
+		store_record.brok_id, store_record.brok_name,
+		store_record.deliver_mode, store_record.safe_inv,
+		store_record.clearing_form, store_record.resp_dep,
+		store_record.resp_person, store_record.seller_id,
+		store_record.alipay_no, store_record.mobile,
+		store_record.phone, store_record.linkman, store_record.email, store_record.business,
+		store_record.default_ref_whs,
+		store_record.customer_id,
+		cust_doc.cust_nm as customerName ,
+		dept_doc.dept_name as deptName,
+		mis_user.user_name as personName,
+ 		store_record.memo,mis_user.whs_name
+		FROM store_record 
+		LEFT JOIN mis_user
+		on(store_record.resp_person=mis_user.acc_num)
+    	LEFT JOIN cust_doc
+    	on cust_doc.cust_id = store_record.customer_id
+    	LEFT JOIN dept_doc
+		ON dept_doc.dept_id=store_record.resp_dep
+  	<where>
+  		<if test="storeId != null and storeId != ''">
+            AND store_id = #{storeId}
+        </if>
+        <if test="storeName != null and storeName != ''">
+            AND store_name like CONCAT('%',#{storeName}, '%')
+        </if>
+        <if test="ecId != null and ecId != ''">
+            AND ec_id = #{ecId}
+        </if>
+        <if test="ecName != null and ecName != ''">
+            AND ec_name = #{ecName}
+        </if>
+  	</where>
+  	order by store_id asc
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="exportList" parameterType="Map" resultType="com.px.mis.ec.entity.StoreRecord">
+	SELECT store_record.store_id, store_record.store_name, store_record.ec_id,
+		store_record.ec_name, store_record.no_audit_id,
+		store_record.no_audit_name, store_record.sales_type,
+		store_record.brok_id, store_record.brok_name,
+		store_record.deliver_mode, store_record.safe_inv,
+		store_record.clearing_form, store_record.resp_dep,
+		store_record.resp_person, store_record.seller_id,
+		store_record.alipay_no, store_record.mobile,
+		store_record.phone, store_record.linkman, store_record.email, store_record.business,
+		store_record.default_ref_whs,
+		store_record.customer_id,
+		cust_doc.cust_nm as customerName ,
+		dept_doc.dept_name as deptName,
+		mis_user.user_name as personName,
+ 		store_record.memo,mis_user.whs_name
+		FROM store_record 
+		LEFT JOIN mis_user
+		on(store_record.resp_person=mis_user.acc_num)
+    	LEFT JOIN cust_doc
+    	on cust_doc.cust_id = store_record.customer_id
+    	LEFT JOIN dept_doc
+		ON dept_doc.dept_id=store_record.resp_dep
+  	<where>
+  		<if test="storeId != null and storeId != ''">
+            AND store_id = #{storeId}
+        </if>
+        <if test="storeName != null and storeName != ''">
+           AND store_name like CONCAT('%',#{storeName}, '%')
+        </if>
+        <if test="ecId != null and ecId != ''">
+            AND ec_id = #{ecId}
+        </if>
+        <if test="ecName != null and ecName != ''">
+            AND ec_name = #{ecName}
+        </if>
+  	</where>
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(store_id)
+  	FROM store_record 
+  	left join mis_user
+		 on(store_record.resp_person=mis_user.acc_num)
+  	  	<where>
+  		<if test="storeId != null and storeId != ''">
+            AND store_id = #{storeId}
+        </if>
+        <if test="storeName != null and storeName != ''">
+            AND store_name like CONCAT('%',#{storeName}, '%')
+        </if>
+         <if test="ecId != null and ecId != ''">
+            AND ec_id = #{ecId}
+        </if>
+        <if test="ecName != null and ecName != ''">
+            AND ec_name = #{ecName}
+        </if>
+  	</where>
+  </select>
+  
+  <select id="selectBySkuAndEcGoodId" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.GoodRecord">
+		SELECT * 
+		FROM good_record join mis_user
+		on(store_record.resp_person=mis_user.acc_num)
+		<where>
+			<if test="goodSku != null and goodSku != ''">
+				AND good_sku = #{0}
+			</if>
+			<if test="ecGoodId != null and ecGoodId != ''">
+				AND ec_good_id = #{1}
+			</if>
+		</where>
+	</select>
+  
+</mapper>

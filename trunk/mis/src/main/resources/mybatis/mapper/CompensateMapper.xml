@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Compensate">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.Compensate">
+	INSERT IGNORE INTO compensate (compensate_id, compensate_keyid, vender_id, type, order_id, order_type, modified,
+	created, compensate_type, should_pay, compensate_amount, compensate_reason, check_status, erp_check_status, can_second_appeal,
+	is_audit, ec_id, store_id)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+    (#{item.compensateId}, #{item.compensateKeyid}, #{item.venderId}, #{item.type}, #{item.orderId}, #{item.orderType}, #{item.modified}, 
+    #{item.created}, #{item.compensateType}, #{item.shouldPay}, #{item.compensateAmount}, #{item.compensateReason}, #{item.checkStatus}, #{item.erpCheckStatus}, 
+    #{item.canSecondAppeal}, #{item.isAudit}, #{item.ecId}, #{item.storeId})
+    </foreach>
+  </insert>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.Compensate">
+  	UPDATE compensate 
+  	SET compensate_id=#{compensateId}, compensate_keyid=#{compensateKeyid}, vender_id=#{venderId}, type=#{type}, order_id=#{orderId},
+  	order_type=#{orderType}, modified=#{modified}, created=#{created}, compensate_type=#{compensateType}, should_pay=#{shouldPay},
+  	compensate_amount=#{compensateAmount}, compensate_reason=#{compensateReason}, check_status=#{checkStatus}, 
+  	erp_check_status=#{erpCheckStatus}, can_second_appeal=#{canSecondAppeal},
+  	is_audit=#{isAudit}, ec_id=#{ecId}, store_id=#{storeId}
+  	WHERE compensate_id=#{compensateId}
+  </update>
+  
+  <update id="audit" parameterType="String">
+  	UPDATE compensate 
+  	SET is_audit = CASE is_audit WHEN 0 THEN 1 END
+	WHERE compensate_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </update>
+  
+  <select id="selectByIds" resultType="com.px.mis.ec.entity.Compensate">
+	SELECT compensate_id, compensate_keyid, vender_id, type, order_id, order_type, modified,
+	created, compensate_type, should_pay, compensate_amount, compensate_reason, check_status, erp_check_status, can_second_appeal,
+	is_audit, ec_id, store_id
+  	FROM compensate 
+  	WHERE is_audit = 0 AND compensate_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </select>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.Compensate">
+	SELECT compensate_id, compensate_keyid, vender_id, type, order_id, order_type, modified,
+	created, compensate_type, should_pay, compensate_amount, compensate_reason, check_status, erp_check_status, can_second_appeal,
+	is_audit, ec_id, store_id
+  	FROM compensate 
+  	<where>
+  		<if test="applyId != null and applyId != ''">
+            AND apply_id = #{applyId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(compensate_id)
+  	FROM compensate 
+  	<where>
+  		<if test="applyId != null and applyId != ''">
+            AND apply_id = #{applyId}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

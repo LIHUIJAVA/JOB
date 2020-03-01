@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.RegnMapper">
+    <resultMap id="BaseResultMap" type="Regn" autoMapping="true">
+        <id column="regn_encd" property="regnEncd"/>
+        <result column="whs_encd" property="whsEncd"/>
+        <result column="regn_nm" property="regnNm"/>
+        <result column="longs" property="longs"/>
+        <result column="wide" property="wide"/>
+        <result column="site_qty" property="siteQty"/>
+        <result column="memo" property="memo"/>
+        <result column="setup_pers" property="setupPers"/>
+        <result column="setup_tm" property="setupTm"/>
+        <result column="mdfr" property="mdfr"/>
+        <result column="modi_tm" property="modiTm"/>
+    </resultMap>
+
+    <!-- //新增区域档案 -->
+    <insert id="insertRegn" parameterType="Regn">
+        insert into regn
+        (regn_encd, whs_encd, regn_nm,
+         longs, wide, site_qty,
+         memo, setup_pers,
+         setup_tm)
+        values (#{regnEncd}, #{whsEncd}, #{regnNm},
+                #{longs}, #{wide},
+                #{siteQty},
+                #{memo}, #{setupPers},
+                now())
+    </insert>
+    <!-- //修改区域档案 -->
+    <update id="updateRegn" parameterType="Regn">
+        update regn
+        <set>
+            <if test="regnNm != null">
+                regn_nm = #{regnNm},
+            </if>
+            <if test="longs != null">
+                longs = #{longs},
+            </if>
+            <if test="wide != null">
+                wide = #{wide},
+            </if>
+            <if test="siteQty != null">
+                site_qty = #{siteQty},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="mdfr != null">
+                mdfr = #{mdfr},
+            </if>
+            modi_tm = now()
+        </set>
+        where regn_encd = #{regnEncd}
+    </update>
+    <!-- //删除区域档案 -->
+    <delete id="deleteRegn" parameterType="java.lang.String">
+        delete
+        from regn
+        where regn_encd = #{regnEncd}
+    </delete>
+    <!-- 批删 -->
+    <delete id="deleteRegnList" parameterType="java.util.List">
+        delete
+        from regn
+        where regn_encd in
+        <foreach item="regnEncd" collection="list" open="(" close=")"
+                 separator=",">
+            #{regnEncd}
+        </foreach>
+    </delete>
+    <!-- 批量查询 -->
+    <select id="selectRegnAllList" resultType="Regn">
+        SELECT * from regn
+        WHERE regn_encd in
+        <foreach collection="regnEncd" item="regnEncd" open="("
+                 close=")" separator=",">
+            #{regnEncd}
+        </foreach>
+    </select>
+    <!-- //简单查 区域档案 -->
+    <sql id="Regn_List">
+        regn_encd as regnEncd, whs_encd as whsEncd, regn_nm as
+		regnNm,
+		longs, wide, site_qty as siteQty, memo,setup_pers as setupPers,
+		setup_tm as setupTm, mdfr, modi_tm as modiTm
+    </sql>
+    <select id="selectRegn" resultType="Regn">
+        SELECT regn.regn_encd,
+               regn.whs_encd,
+               regn.regn_nm,
+               regn.longs,
+               regn.wide,
+               regn.site_qty,
+               regn.memo,
+               regn.Setup_Pers,
+               regn.Setup_Tm,
+               regn.Mdfr,
+               regn.Modi_Tm,
+               whs_doc.whs_nm
+        FROM regn
+                 LEFT JOIN whs_doc ON regn.whs_encd = whs_doc.whs_encd
+        where regn.regn_encd = #{regnEncd}
+
+    </select>
+    <select id="selectRegnList" resultType="Regn">
+        SELECT regn.regn_encd,
+               regn.whs_encd,
+               regn.regn_nm,
+               regn.longs,
+               regn.wide,
+               regn.site_qty,
+               regn.memo,
+               regn.Setup_Pers,
+               regn.Setup_Tm,
+               regn.Mdfr,
+               regn.Modi_Tm,
+               whs_doc.whs_nm
+        FROM regn
+                 LEFT JOIN whs_doc ON regn.whs_encd = whs_doc.whs_encd
+        where regn.regn_encd = #{regnEncd}
+    </select>
+    <!-- 分页查 -->
+    <select id="selectList" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+        regn.regn_encd,
+        regn.whs_encd,
+        regn.regn_nm,
+        regn.longs,
+        regn.wide,
+        regn.site_qty,
+        regn.memo,
+        regn.Setup_Pers,
+        regn.Setup_Tm,
+        regn.Mdfr,
+        regn.Modi_Tm,
+        whs_doc.whs_nm
+        FROM
+        regn
+        LEFT JOIN whs_doc ON regn.whs_encd = whs_doc.whs_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND regn.memo like #{memo}
+            </if>
+            <if test=" regnEncd != null and  regnEncd!= ''">
+                <bind name="regnEncd" value="'%'+ regnEncd +'%'"/>
+                AND regn.regn_encd like #{regnEncd}
+            </if>
+            <if test=" regnNm != null and  regnNm!= ''">
+                <bind name="regnNm" value="'%'+ regnNm +'%'"/>
+                AND regn.regn_nm  like  #{regnNm}
+            </if>
+            <if test=" whsEncd != null and  whsEncd!= ''">
+                AND regn.whs_encd = #{whsEncd}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        LIMIT #{index},#{num}
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+        SELECT count(regn.regn_encd)
+        From regn
+        LEFT JOIN whs_doc ON regn.whs_encd = whs_doc.whs_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND regn.memo like #{memo}
+            </if>
+            <if test=" regnEncd != null and  regnEncd!= ''">
+                <bind name="regnEncd" value="'%'+ regnEncd +'%'"/>
+                AND regn.regn_encd like #{regnEncd}
+            </if>
+            <if test=" regnNm != null and  regnNm!= ''">
+                <bind name="regnNm" value="'%'+ regnNm +'%'"/>
+                AND regn.regn_nm  like  #{regnNm}
+            </if>
+            <if test=" whsEncd != null and  whsEncd!= ''">
+                AND regn.whs_encd = #{whsEncd}
+            </if>
+        </where>
+    </select>
+    <!-- 打印 -->
+    <select id="selectListDaYin" parameterType="Map"
+            resultType="Regn">
+        SELECT
+        regn.regn_encd,
+        regn.whs_encd,
+        regn.regn_nm,
+        regn.longs,
+        regn.wide,
+        regn.site_qty,
+        regn.memo,
+        regn.Setup_Pers,
+        regn.Setup_Tm,
+        regn.Mdfr,
+        regn.Modi_Tm,
+        whs_doc.whs_nm
+        FROM
+        regn
+        LEFT JOIN whs_doc ON regn.whs_encd = whs_doc.whs_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND regn.memo like #{memo}
+            </if>
+            <if test=" regnEncd != null and  regnEncd!= ''">
+                <bind name="regnEncd" value="'%'+ regnEncd +'%'"/>
+                AND regn.regn_encd like #{regnEncd}
+            </if>
+            <if test=" regnNm != null and  regnNm!= ''">
+                <bind name="regnNm" value="'%'+ regnNm +'%'"/>
+                AND regn.regn_nm like #{regnNm}
+            </if>
+            <if test=" whsEncd != null and  whsEncd!= ''">
+                AND regn.whs_encd = #{whsEncd}
+            </if>
+        </where>
+    </select>
+</mapper>

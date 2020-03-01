@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.DownloadSettingsDao">
+  <insert id="insert" parameterType="com.px.mis.ec.entity.DownloadSettings">
+    INSERT INTO download_settings (shop_id,shop_name,interval_time,recent_hours,next_time)
+    VALUES(#{shopId}, #{shopName}, #{intervalTime}, #{recentHours}, #{nextTime})
+  </insert>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.DownloadSettings">
+  	UPDATE download_settings
+  	SET shop_id=#{shopId}, shop_name=#{shopName}, interval_time=#{intervalTime}, recent_hours=#{recentHours},next_time=#{nextTime}
+  	WHERE id=#{id}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.DownloadSettings">
+	SELECT id,shop_id,shop_name,interval_time,recent_hours,next_time
+  	FROM download_settings 
+  	<where>
+  		<if test="shopId != null and shopId != ''">
+            AND shop_id=#{shopId}
+        </if>
+        <if test="shopName != null and shopName != ''">
+            AND shop_name=#{shopName}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(id)
+  	FROM download_settings
+  	<where>
+  		<if test="shopId!= null and shopId != ''">
+            AND shop_id=#{shopId}
+        </if>
+        <if test="shopName != null and shopName != ''">
+            AND shop_name=#{shopName}
+        </if>
+  	</where>
+  </select>
+  
+  <delete id="delete" parameterType="String">
+  delete from download_settings where shop_id=#{storeId}
+  </delete>
+  
+  <select id="selectById" parameterType="int" resultType="com.px.mis.ec.entity.DownloadSettings">
+  SELECT id,shop_id,shop_name,interval_time,recent_hours,next_time from download_settings 
+  where id=#{id}
+  </select>
+  
+</mapper>

@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.LogisticsTabDao">
+  <insert id="insert" parameterType="com.px.mis.ec.entity.LogisticsTab">
+	INSERT INTO logistics_tab
+	VALUES (null,#{expressCode},#{saleEncd},#{orderId},#{outWhsId},
+			#{ecOrderId},now(),#{goodNum},#{goodMoney},#{payMoney},
+			#{buyerNote},#{sellerNote},#{recAddress},#{recName},
+			#{recMobile},#{memo},#{bizTypId},#{sellTypId},
+			#{deliverWhs},#{recvSendCateId},#{gdFlowEncd},#{expressEncd},
+			#{adjustStatus},#{isPick},#{isShip},#{isBackPlatform},
+			#{packageDate},#{volume},#{weight},#{freight},#{deliverSelf},
+			#{bigShotCode},#{bigShotName},#{gatherCenterCode},#{gatherCenterName},
+			#{branchCode},#{branchName},#{secondSectionCode},#{thirdSectionCode},
+			#{shipDate},#{templateId},#{isPrint},#{printTime},#{storeId},#{platId})
+  </insert>
+  
+  <insert id="insertList" parameterType="com.px.mis.ec.entity.LogisticsTab">
+	INSERT INTO logistics_tab
+	VALUES 
+	<foreach collection="list" item="item" index="index" separator="," close=";">
+		(null,#{item.expressCode},#{item.saleEncd},#{item.orderId},#{item.outWhsId},
+			#{item.ecOrderId},now(),#{item.goodNum},#{item.goodMoney},#{item.payMoney},
+			#{item.buyerNote},#{item.sellerNote},#{item.recAddress},#{item.recName},
+			#{item.recMobile},#{item.memo},#{item.bizTypId},#{item.sellTypId},
+			#{item.deliverWhs},#{item.recvSendCateId},#{item.gdFlowEncd},#{item.expressEncd},
+			#{item.adjustStatus},#{item.isPick},#{item.isShip},#{item.isBackPlatform},
+			#{item.packageDate},#{item.volume},#{item.weight},#{item.freight},#{item.deliverSelf},
+			#{item.bigShotCode},#{item.bigShotName},#{item.gatherCenterCode},#{item.gatherCenterName},
+			#{item.branchCode},#{item.branchName},#{item.secondSectionCode},#{item.thirdSectionCode},#{item.shipDate},
+			#{item.templateId},#{item.isPrint},#{item.printTime},#{item.storeId},#{item.platId})
+	</foreach>
+  </insert>
+  
+  <select id="select" parameterType="int" resultType="com.px.mis.ec.entity.LogisticsTab">
+  	SELECT ordr_num,express_code,sale_encd,order_id,out_whs_id,
+		  	ec_order_id,create_date,good_num,good_money,pay_money,
+		  	buyer_note,seller_note,rec_address,rec_name,rec_mobile,
+		  	memo,biz_typ_id,sell_typ_id,deliver_whs,recv_send_cate_id,
+		  	gd_flow_encd,express_encd,adjust_status,is_pick,is_ship,
+		  	is_back_platform,package_date,volume,weight,freight,deliver_self,
+		  	big_shot_code,big_shot_name,gather_center_code,gather_center_name,branch_code,branch_name,
+		  	second_section_code,third_section_code,ship_date,template_id,is_print,print_time,store_id,plat_id  
+  	FROM logistics_tab 
+  	WHERE ordr_num = #{ordrNum}
+  </select>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.LogisticsTab">
+  	UPDATE logistics_tab 
+  	SET express_code=#{expressCode},sale_encd=#{saleEncd},order_id=#{orderId},out_whs_id=#{outWhsId},
+		  	ec_order_id=#{ecOrderId},create_date=#{createDate},good_num=#{goodNum},good_money=#{goodMoney},pay_money=#{payMoney},
+		  	buyer_note=#{buyerNote},seller_note=#{sellerNote},rec_address=#{recAddress},rec_name=#{recName},rec_mobile=#{recMobile},
+		  	memo=#{memo},biz_typ_id=#{bizTypId},sell_typ_id=#{sellTypId},deliver_whs=#{deliverWhs},recv_send_cate_id=#{recvSendCateId},
+		  	gd_flow_encd=#{gdFlowEncd},express_encd=#{expressEncd},adjust_status=#{adjustStatus},is_pick=#{isPick},is_ship=#{isShip},
+		  	is_back_platform=#{isBackPlatform},package_date=#{packageDate},volume=#{volume},weight=#{weight},freight=#{freight},deliver_self=#{deliverSelf},
+		  	big_shot_code=#{bigShotCode},big_shot_name=#{bigShotName},gather_center_code=#{gatherCenterCode},gather_center_name=#{gatherCenterName},
+		  	branch_code=#{branchCode},branch_name=#{branchName},
+		  	second_section_code=#{secondSectionCode},third_section_code=#{thirdSectionCode},ship_date=#{shipDate},template_id=#{templateId},
+		  	is_print=#{isPrint},print_time=#{printTime} 
+  	WHERE ordr_num = #{ordrNum}
+  </update>
+  
+  <update id="updateExpress" >
+  
+  UPDATE logistics_tab l1,
+	express_corp express 
+	SET l1.template_id = express.company_code , l1.express_encd=#{expressEncd},l1.express_code=null
+  	WHERE  express.express_encd=#{expressEncd} 
+  	and  l1.is_ship=0 
+  	and l1.order_id in
+      <foreach item="formNum" collection="list" open="(" close=")"
+             separator=",">
+          #{formNum}
+      </foreach>
+  </update>
+  
+  <update id="updatePickOK" parameterType="java.lang.Integer" >
+ update logistics_tab set is_pick = 1 where is_pick=0 and ordr_num=#{orderNum} and is_ship=0
+  </update>
+  
+  <update id="updatePickOff" parameterType="java.lang.Integer" >
+ update logistics_tab set is_pick = 0 where is_pick=1 and ordr_num=#{orderNum} and is_ship=0
+  </update>
+  
+  <update id="updateSellSnglPickOK" parameterType="java.lang.Integer" > 
+ update sell_sngl set is_pick = 1 where sell_sngl_id = #{sellSnglId}
+  </update>
+  
+  <update id="updateSellSnglPickOff" parameterType="java.lang.Integer" >  
+ update sell_sngl set is_pick = 0 where sell_sngl_id = #{sellSnglId}
+  </update>
+  
+  
+  <update id="updateExpressCode" parameterType="java.lang.String">
+  update logistics_tab set express_code=#{expressCode} where ordr_num=#{ordrNum}
+  </update>
+  
+  <delete id="delete" parameterType="int">
+  	DELETE 
+  	FROM logistics_tab 
+  	WHERE ordr_num=#{ordrNum}
+  </delete>
+  <delete id="deleteBySellSnglId" parameterType="String">
+  	DELETE 
+  	FROM logistics_tab 
+  	WHERE sale_encd=#{sellSnglId}
+  </delete>
+  
+  <select id="selectList" parameterType="Map" resultMap="sellSnglSubMap1">
+	<!-- SELECT  a.ordr_num,express_code,sale_encd,order_id,out_whs_id,
+		  	ec_order_id,create_date,good_num,good_money,pay_money,
+		  	buyer_note,seller_note,rec_address,rec_name,rec_mobile,
+		  	memo,biz_typ_id,sell_typ_id,deliver_whs,recv_send_cate_id,
+		  	gd_flow_encd,express_encd,adjust_status,is_pick,is_ship,
+		  	is_back_platform,package_date,volume,weight,freight,deliver_self,
+		  	big_shot_code,big_shot_name,gather_center_code,gather_center_name,branch_code,branch_name,
+		  	second_section_code,third_section_code   -->
+	select a.*,b.ordr_num as order_num1,d.invty_nm as invtyNm,
+	c.express_nm as  expressName,s.store_name as storeName,w.whs_nm as whsName,
+	count(a.ordr_num), b.invty_encd  invtyEncds
+	  FROM logistics_tab a
+	LEFT join sell_sngl_sub b 
+	on a.sale_encd=sell_sngl_id
+	LEFT join express_corp c 
+	on a.express_encd=c.express_encd 
+	LEFT join invty_doc d
+	on b.invty_encd=d.invty_encd
+	LEFT join store_record s
+	on a.store_id = s.store_id 
+	LEFT JOIN whs_doc w on w.whs_encd=a.deliver_whs   
+	<where>
+		<if test="expressCode !=null and expressCode!=''">
+			AND a.express_code=#{expressCode}
+		</if>
+		<if test="saleEncd !=null and saleEncd !=''">
+			AND a.sale_encd=#{saleEncd}
+		</if>
+		<if test="ecOrderId !=null and ecOrderId !=''">
+			AND a.ec_order_id=#{ecOrderId}
+		</if>
+		<if test="isBackPlatform != null and isBackPlatform !=''">
+			AND a.is_back_platform = #{isBackPlatform}
+		</if>
+		<if test="expressCodes != null   and  expressCodes != '' and  expressCodes == 1 ">
+			AND (a.express_code is  null  or a.express_code = '' )
+		</if>
+		<if test="expressCodes != null  and  expressCodes != ''  and  expressCodes == 0 ">
+			AND a.express_code is not null
+		</if>
+		<if test="createDate1 !=null and createDate1 !=''">
+			AND a.create_date <![CDATA[>=]]> #{createDate1}
+		</if>
+		<if test="createDate2 !=null and createDate2 !=''">
+			AND a.create_date <![CDATA[<=]]> #{createDate2}
+		</if>
+		<if test="printTimeBegin !=null and printTimeBegin !=''">
+			AND a.print_time <![CDATA[>=]]> #{printTimeBegin}
+		</if>
+		<if test="printTimeEnd !=null and printTimeEnd !=''">
+			AND a.print_time <![CDATA[<=]]> #{printTimeEnd}
+		</if>
+		<if test="recName !=null and recName !=''">
+			<bind name="recName" value="'%'+ recName +'%'"/>
+			AND a.rec_name like #{recName}
+		</if>
+		<if test="recMobile !=null and recMobile !=''">
+			<bind name="recMobile" value="'%'+ recMobile +'%'"/>
+			AND a.rec_mobile like #{recMobile}
+		</if>
+		<if test="deliverWhs !=null and deliverWhs !=''">
+			AND a.deliver_whs=#{deliverWhs}
+		</if>
+		<if test="whsId != null and whsId.size() >0 ">
+			AND a.deliver_whs in
+			<foreach collection="whsId" item="item"
+					 separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="storeId !=null and storeId !=''">
+			AND a.store_id =#{storeId}
+		</if>
+		<if test="expressEncd !=null and expressEncd !=''">
+			AND a.express_encd=#{expressEncd}
+		</if>
+		<if test="isPick !=null and isPick !=''">
+			AND a.is_pick=#{isPick}
+		</if>
+		<if test="isShip !=null and isShip !=''">
+			AND a.is_ship=#{isShip}
+		</if>
+		<if test="isPrint !=null and isPrint !=''">
+			AND a.is_print=#{isPrint}
+		</if>
+		AND a.deliver_self=1
+		<if test="invtyEncd !=null and invtyEncd !=''">
+			AND b.invty_encd=#{invtyEncd}
+		</if>
+		<if test="qty !=null and qty !=''">
+			AND b.qty=#{qty}
+		</if>
+		<if test="invtyEncd != null and invtyEncd!=''">
+			AND d.invty_encd=#{invtyEncd}
+		</if>
+		
+	</where>
+	group by a.ordr_num
+	<if test="invtyEncds !=null and invtyEncds != '' ">
+		HAVING count( a.ordr_num )  =1    and  invtyEncds =  #{invtyEncds}
+	</if>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <resultMap type="LogisticsTab" id="sellSnglSubMap1" autoMapping="true">
+		<id property="ordrNum" column="ordr_num" />
+	    <collection property="sellSnglSubMap" ofType="SellSnglSub" autoMapping="true">
+		    <id property="ordrNum" column="ordr_num1" /> 
+	    </collection>
+  </resultMap>
+  
+  <select id="selectByOrderId" parameterType="String" resultType="com.px.mis.ec.entity.LogisticsTab">
+	SELECT ordr_num,express_code,sale_encd,order_id,out_whs_id,
+		  	ec_order_id,create_date,good_num,good_money,pay_money,
+		  	buyer_note,seller_note,rec_address,rec_name,rec_mobile,
+		  	memo,biz_typ_id,sell_typ_id,deliver_whs,recv_send_cate_id,
+		  	gd_flow_encd,express_encd,adjust_status,is_pick,is_ship,
+		  	is_back_platform,package_date,volume,weight,freight,deliver_self,
+		  	big_shot_code,big_shot_name,gather_center_code,gather_center_name,branch_code,branch_name,
+		  	second_section_code,third_section_code,template_id
+	FROM logistics_tab 
+  	WHERE order_id=#{orderId}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="Integer">
+	SELECT
+        count( aaa.ordr_num11 )
+        FROM
+        (
+	SELECT count(a.ordr_num) ordr_num11, b.invty_encd  invtyEncds
+	FROM logistics_tab a 
+	LEFT join sell_sngl_sub b 
+	on a.sale_encd=sell_sngl_id
+	LEFT join express_corp c 
+	on a.express_encd=c.express_encd 
+	LEFT join invty_doc d
+	on b.invty_encd=d.invty_encd
+	LEFT join store_record s
+	on a.store_id = s.store_id 
+	<where>
+		<if test="expressCode !=null and expressCode!=''">
+			AND a.express_code=#{expressCode}
+		</if>
+		<if test="saleEncd !=null and saleEncd !=''">
+			AND a.sale_encd=#{saleEncd}
+		</if>
+		<if test="isBackPlatform != null and isBackPlatform !=''">
+			AND a.is_back_platform = #{isBackPlatform}
+		</if>
+		<if test="expressCodes != null  and  expressCodes != ''  and  expressCodes == 1 ">
+			AND (a.express_code is  null  or a.express_code = '' )
+		</if>
+		<if test="expressCodes != null and  expressCodes != '' and  expressCodes == 0 ">
+			AND a.express_code is not null
+		</if>
+		<if test="ecOrderId !=null and ecOrderId !=''">
+			AND a.ec_order_id=#{ecOrderId}
+		</if>
+		<if test="createDate1 !=null and createDate1 !=''">
+			AND a.create_date <![CDATA[>=]]> #{createDate1}
+		</if>
+		<if test="createDate2 !=null and createDate2 !=''">
+			AND a.create_date <![CDATA[<=]]> #{createDate2}
+		</if>
+		<if test="printTimeBegin !=null and printTimeBegin !=''">
+			AND a.print_time <![CDATA[>=]]> #{printTimeBegin}
+		</if>
+		<if test="printTimeEnd !=null and printTimeEnd !=''">
+			AND a.print_time <![CDATA[<=]]> #{printTimeEnd}
+		</if>
+		<if test="recName !=null and recName !=''">
+			AND a.rec_name=#{recName}
+		</if>
+		<if test="recMobile !=null and recMobile !=''">
+			AND a.rec_mobile=#{recMobile}
+		</if>
+		<if test="deliverWhs !=null and deliverWhs !=''">
+			AND a.deliver_whs=#{deliverWhs}
+		</if>
+		<if test="whsId != null and whsId.size() >0 ">
+			AND a.deliver_whs in
+			<foreach collection="whsId" item="item"
+					 separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="expressEncd !=null and expressEncd !=''">
+			AND a.express_encd=#{expressEncd}
+		</if>
+		<if test="isPick !=null and isPick !=''">
+			AND a.is_pick=#{isPick}
+		</if>
+		<if test="isShip !=null and isShip !=''">
+			AND a.is_ship=#{isShip}
+		</if>
+		<if test="isPrint !=null and isPrint !=''">
+			AND a.is_print=#{isPrint}
+		</if>
+		AND a.deliver_self=1
+		<if test="invtyEncd !=null and invtyEncd !=''">
+			AND b.invty_encd=#{invtyEncd}
+		</if>
+		<if test="qty !=null and qty !=''">
+			AND b.qty=#{qty}
+		</if>
+		<if test="storeId !=null and storeId !=''">
+			AND a.store_id =#{storeId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd!=''">
+			AND d.invty_encd=#{invtyEncd}
+		</if>
+		
+	</where>
+		GROUP BY
+        a.ordr_num
+	  <if test="invtyEncds !=null and invtyEncds != '' ">
+		  HAVING count( a.ordr_num )  =1    and  invtyEncds =  #{invtyEncds}
+	  </if>
+        ) aaa
+  </select>
+  
+  <select id="selectExpressNameByCode" resultType="com.px.mis.ec.entity.ExpressCodeAndName">
+  	select * from express_code_and_name where express_code=#{expressCode}
+  </select>
+  <select id="selectListPrint" parameterType="java.util.List" resultMap="sellSnglSubMap1">
+	<!-- SELECT  a.ordr_num,express_code,sale_encd,order_id,out_whs_id,
+		  	ec_order_id,create_date,good_num,good_money,pay_money,
+		  	buyer_note,seller_note,rec_address,rec_name,rec_mobile,
+		  	memo,biz_typ_id,sell_typ_id,deliver_whs,recv_send_cate_id,
+		  	gd_flow_encd,express_encd,adjust_status,is_pick,is_ship,
+		  	is_back_platform,package_date,volume,weight,freight,deliver_self,
+		  	big_shot_code,big_shot_name,gather_center_code,gather_center_name,branch_code,branch_name,
+		  	second_section_code,third_section_code   -->
+	select a.*,b.ordr_num as order_num1, b.*,d.invty_nm as invtyNm,c.*,
+	c.deliver as shiperName,c.deliver_phone as shiperPhone,c.province as shipProvince,
+	c.city as shipCity,c.country as shipCounty ,c.detailed_address as shipAddress
+	FROM logistics_tab a 
+	inner join sell_sngl_sub b 
+	on a.sale_encd=sell_sngl_id
+	inner join express_corp c 
+	on a.express_encd=c.express_encd 
+	inner join invty_doc d
+	on b.invty_encd=d.invty_encd
+	where a.ordr_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+  </select>
+  
+  <select id="selectOrderIdByExportCondition" parameterType="map" resultType="java.lang.String" >
+ SELECT
+	distinct(a.order_id)
+FROM
+	logistics_tab a
+	  LEFT JOIN plat_orders b ON a.order_id = b.order_id
+	  LEFT JOIN express_corp c ON a.express_encd = c.express_encd
+	  LEFT JOIN invty_doc d ON b.inv_id = d.invty_encd
+	  LEFT JOIN store_record s ON a.store_id = s.store_id
+	  LEFT JOIN whs_doc w ON w.whs_encd = a.deliver_whs
+	  LEFT JOIN plat_order p ON a.order_id = p.order_id
+  <where>
+		<if test="expressCode !=null and expressCode!=''">
+			AND a.express_code=#{expressCode}
+		</if>
+		<if test="saleEncd !=null and saleEncd !=''">
+			AND a.sale_encd=#{saleEncd}
+		</if>
+		<if test="ecOrderId !=null and ecOrderId !=''">
+			AND a.ec_order_id=#{ecOrderId}
+		</if>
+		<if test="createDate1 !=null and createDate1 !=''">
+			AND a.create_date <![CDATA[>=]]> #{createDate1}
+		</if>
+		<if test="createDate2 !=null and createDate2 !=''">
+			AND a.create_date <![CDATA[<=]]> #{createDate2}
+		</if>
+		<if test="printTimeBegin !=null and printTimeBegin !=''">
+			AND a.print_time <![CDATA[>=]]> #{printTimeBegin}
+		</if>
+		<if test="printTimeEnd !=null and printTimeEnd !=''">
+			AND a.print_time <![CDATA[<=]]> #{printTimeEnd}
+		</if>
+		<if test="recName !=null and recName !=''">
+			AND a.rec_name=#{recName}
+		</if>
+		<if test="recMobile !=null and recMobile !=''">
+			AND a.rec_mobile=#{recMobile}
+		</if>
+		<if test="deliverWhs !=null and deliverWhs !=''">
+			AND a.deliver_whs=#{deliverWhs}
+		</if>
+	  <if test="whsId != null and whsId.size() >0 ">
+		  AND a.deliver_whs in
+		  <foreach collection="whsId" item="item"
+				   separator="," open="(" close=")">
+			  #{item}
+		  </foreach>
+	  </if>
+		<if test="expressEncd !=null and expressEncd !=''">
+			AND a.express_encd=#{expressEncd}
+		</if>
+		<if test="isPick !=null and isPick !=''">
+			AND a.is_pick=#{isPick}
+		</if>
+		<if test="isShip !=null and isShip !=''">
+			AND a.is_ship=#{isShip}
+		</if>
+		<if test="isPrint !=null and isPrint !=''">
+			AND a.is_print=#{isPrint}
+		</if>
+		AND a.deliver_self=1
+		<if test="invtyEncd !=null and invtyEncd !=''">
+			AND b.inv_id=#{invtyEncd}
+		</if>
+		<if test="qty !=null and qty !=''">
+			AND b.inv_num=#{qty}
+		</if>
+		<if test="storeId !=null and storeId !=''">
+			AND a.store_id =#{storeId}
+		</if>
+		
+	
+	</where>
+  </select>
+  <select id="exportList" parameterType="java.util.List" resultType="Map">
+ SELECT
+	s.store_id as 店铺编码,
+	s.store_name as 店铺名称,
+	a.ordr_num as 物流号,
+	a.order_id as 订单号,
+	a.sale_encd as 销售单号,
+	a.out_whs_id as 出库单号,
+	a.ec_order_id as 平台订单号,
+	w.whs_encd as 仓库编码,
+	w.whs_nm as 仓库名称,
+	c.express_encd as 快递公司编码,
+	c.express_nm as 快递公司名称,
+	a.express_code as 快递单号,
+	b.inv_id AS 存货编码,
+	d.invty_nm AS 存货名称,
+	b.inv_num AS 数量,
+	a.is_ship as 是否发货,
+	a.is_print as 是否打印,
+	a.is_pick as 是否拣货,
+	a.is_back_platform as 是否回传,
+	a.create_date as 创建时间,
+	a.freight as 运费,
+	a.rec_name as 收货人,
+	a.rec_mobile as 联系电话,
+	p.province as 省,
+	p.city as 市,
+	p.county as 区,
+	a.rec_address as 详细地址,
+	a.ship_date as 发货时间,
+	a.buyer_note as 买家留言,
+	a.seller_note as 卖家备注
+FROM
+	logistics_tab a
+	  LEFT JOIN plat_orders b ON a.order_id = b.order_id
+	  LEFT JOIN express_corp c ON a.express_encd = c.express_encd
+	  LEFT JOIN invty_doc d ON b.inv_id = d.invty_encd
+	  LEFT JOIN store_record s ON a.store_id = s.store_id
+	  LEFT JOIN whs_doc w ON w.whs_encd = a.deliver_whs
+	  LEFT JOIN plat_order p ON a.order_id = p.order_id
+where
+		a.order_id in 
+		<foreach collection="orderIds" item="item"
+				   separator="," open="(" close=")">
+			  #{item}
+		  </foreach>
+		
+	
+	order by a.ordr_num asc
+  </select>
+</mapper>

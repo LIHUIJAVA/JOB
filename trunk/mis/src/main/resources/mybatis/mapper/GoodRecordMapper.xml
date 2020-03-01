@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="GoodRecord">
+
+	<insert id="insert" parameterType="com.px.mis.ec.entity.GoodRecord">
+		INSERT INTO good_record (good_id, store_id, ec_id, good_name, good_sku,
+		ec_good_id, ec_good_name, good_mode, upset_price, safe_inv,
+		sku_prop, online_status, operator, operat_time, is_sec_sale, memo)
+		VALUES(#{goodId}, #{storeId}, #{ecId}, #{goodName}, #{goodSku},
+		#{ecGoodId}, #{ecGoodName}, #{goodMode}, #{upsetPrice}, #{safeInv},
+		#{skuProp}, #{onlineStatus}, #{operator}, #{operatTime}, #{isSecSale},
+		#{memo})
+	</insert>
+
+	<!-- 批量保存 -->
+	<insert id="download" parameterType="com.px.mis.ec.entity.GoodRecord">
+		INSERT INTO good_record (ec_good_id, store_id, ec_id, ec_good_name, good_sku, good_id, good_name, good_mode, operator, operat_time)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.ecGoodId},#{item.storeId},#{item.ecId},#{item.ecGoodName},#{item.goodSku},#{item.goodId},
+			#{item.goodName},#{item.goodMode},#{item.operator},#{item.operatTime})
+		</foreach>
+		ON DUPLICATE KEY UPDATE
+		ec_good_id = VALUES (ec_good_id), store_id = VALUES (store_id), ec_id = VALUES (ec_id), ec_good_name = VALUES (ec_good_name),
+		good_sku = VALUES (good_sku), good_id = VALUES (good_id), good_name = VALUES (good_name), good_mode = VALUES (good_mode),
+		operator = VALUES (operator), operat_time = VALUES (operat_time)
+	</insert>
+
+	<select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.GoodRecord">
+		SELECT good_id, store_id, ec_id, good_name, good_sku, ec_good_id,
+		ec_good_name, good_mode, upset_price, safe_inv,
+		sku_prop, online_status, operator, operat_time, is_sec_sale, memo
+		FROM good_record
+		WHERE good_id = #{goodId}
+	</select>
+
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM good_record
+		WHERE good_id = #{goodId}
+	</delete>
+
+	<update id="update" parameterType="com.px.mis.ec.entity.GoodRecord">
+		UPDATE good_record
+		SET good_id=#{goodId}, store_id=#{storeId}, ec_id=#{ecId},
+		good_name=#{goodName}, good_sku=#{goodSku}, ec_good_id=#{ecGoodId},
+		ec_good_name=#{ecGoodName}, good_mode=#{goodMode},
+		upset_price=#{upsetPrice}, safe_inv=#{safeInv}, sku_prop=#{skuProp},
+		online_status=#{onlineStatus}, operator=#{operator},
+		operat_time=#{operatTime}, is_sec_sale=#{isSecSale}, memo=#{memo}
+		WHERE good_id = #{goodId}
+	</update>
+
+	<select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.GoodRecord">
+		SELECT good_id, store_id, ec_id, good_name, good_sku, ec_good_id,
+		ec_good_name, good_mode, upset_price, safe_inv,
+		sku_prop, online_status, operator, operat_time, is_sec_sale, memo
+		FROM good_record
+		<where>
+			<if test="goodId != null and goodId != ''">
+				AND good_id = #{goodId}
+			</if>
+		</where>
+		LIMIT #{index},#{num}
+	</select>
+
+	<select id="selectCount" parameterType="Map" resultType="int">
+		SELECT count(*)
+		FROM good_record
+		<where>
+			<if test="goodId != null and goodId != ''">
+				AND good_id = #{goodId}
+			</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,1138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.AmbDisambSnglMapper">
+    <resultMap id="ASngl" type="AmbDisambSngl" autoMapping="true">
+        <id column="form_num" property="formNum"/>
+        <result column="ordr_num" property="ordrNum"/>
+        <result column="mom_kit_encd" property="momKitEncd"/>
+        <result column="form_dt" property="formDt"/>
+        <result column="form_dt" property="formDt1"/>
+        <result column="form_dt" property="formDt2"/>
+        <result column="form_typ" property="formTyp"/>
+        <result column="fee" property="fee"/>
+        <result column="fee_comnt" property="feeComnt"/>
+        <result column="memo" property="memo"/>
+        <collection property="ambSnglubList"
+                    ofType="AmbDisambSnglubTab">
+            <result column="invty_docinvty_nm" property="invtyNm"/>
+            <result column="invty_docspc_model" property="spcModel"/>
+            <result column="invty_docinvty_cd" property="invtyCd"/>
+            <result column="invty_docbx_rule" property="bxRule"/>
+            <result column="invty_docbao_zhi_qi_dt" property="baoZhiQiDt"/>
+            <result column="invty_dociptax_rate" property="iptaxRate"/>
+            <result column="invty_docoptax_rate" property="optaxRate"/>
+            <result column="invty_dochighest_pur_price"
+                    property="highestPurPrice"/>
+            <result column="invty_doclo_sell_prc" property="loSellPrc"/>
+            <result column="invty_docref_cost" property="refCost"/>
+            <result column="invty_docref_sell_prc" property="refSellPrc"/>
+            <result column="invty_docltst_cost" property="ltstCost"/>
+            <result column="invty_doccrspd_bar_cd" property="crspdBarCd"/>
+
+
+            <result column="amb_disamb_sngl_sub_tabform_num"
+                    property="formNum"/>
+            <result column="amb_disamb_sngl_sub_tabsub_kit_encd"
+                    property="subKitEncd"/>
+            <result column="amb_disamb_sngl_sub_tabordr_num"
+                    property="ordrNum"/>
+            <result column="amb_disamb_sngl_sub_tabwhs_encd"
+                    property="whsEncd"/>
+            <result column="amb_disamb_sngl_sub_tabsub_qty"
+                    property="subQty"/>
+            <result column="amb_disamb_sngl_sub_tabmom_qty"
+                    property="momQty"/>
+            <result column="amb_disamb_sngl_sub_tabmom_sub_ratio"
+                    property="momSubRatio"/>
+            <result column="amb_disamb_sngl_sub_tabtax_rate"
+                    property="taxRate"/>
+            <result column="amb_disamb_sngl_sub_tabscntn_tax_uprc"
+                    property="scntnTaxUprc"/>
+            <result column="amb_disamb_sngl_sub_tabsun_tax_uprc"
+                    property="sunTaxUprc"/>
+            <result column="amb_disamb_sngl_sub_tabscntn_tax_amt"
+                    property="scntnTaxAmt"/>
+            <result column="amb_disamb_sngl_sub_tabsun_tax_amt"
+                    property="sunTaxAmt"/>
+            <result column="amb_disamb_sngl_sub_tabsbat_num"
+                    property="sbatNum"/>
+            <result column="amb_disamb_sngl_sub_tabsprdc_dt"
+                    property="sprdcDt"/>
+            <result column="amb_disamb_sngl_sub_tabbao_zhi_qi"
+                    property="baoZhiQi"/>
+            <result column="amb_disamb_sngl_sub_tabsinvldtn_dt"
+                    property="sinvldtnDt"/>
+            <result column="whs_docwhs_nm" property="whsNm"/>
+            <result column="measr_corp_docmeasr_corp_nm"
+                    property="measrCorpNm"/>
+            <result column="sbxQty"
+                    property="sbxQty"/>
+
+
+            <!-- <association property="invtyDoc" javaType="com.px.mis.purc.entity.InvtyDoc"
+                autoMapping="true"> <id property="invtyEncd" column="invty_encd" /> <result
+                property="invtyNm" column="invty_nm" /> <result property="invtyClsEncd" column="invty_cls_encd"
+                /> <result property="baoZhiQiEarWarn" column="bao_zhi_qi_ear_warn" /> <result
+                property="measrCorpNm" column="measr_corp_nm" /> </association> -->
+        </collection>
+    </resultMap>
+
+    <resultMap id="ambSnglTabList" type="AmbDisambSnglubTab"
+               autoMapping="true">
+        <id column="ordr_num" property="ordrNum"/>
+        <result column="form_num" property="formNum"/>
+        <result column="sub_kit_encd" property="subKitEncd"/>
+        <result column="whs_encd" property="whsEncd"/>
+        <result column="sub_qty" property="subQty"/>
+        <result column="mom_qty" property="momQty"/>
+        <!-- <association property="invtyDoc" javaType="com.px.mis.purc.entity.InvtyDoc"
+            autoMapping="true"> <id property="invtyEncd" column="invty_encd" /> <result
+            property="invtyNm" column="invty_nm" /> <result property="invtyClsEncd" column="invty_cls_encd"
+            /> <result property="baoZhiQiEarWarn" column="bao_zhi_qi_ear_warn" /> <result
+            property="measrCorpNm" column="measr_corp_nm" /> </association> -->
+    </resultMap>
+
+    <!-- 新增组装拆卸单 -->
+    <insert id="insertAmbDisambSngl" parameterType="AmbDisambSngl">
+        insert into amb_disamb_sngl (mom_kit_encd, form_num,
+                                     form_dt, form_typ, fee,
+                                     fee_comnt, memo, typ,
+                                     whs_encd, mom_qty, tax_rate,
+                                     mcntn_tax_uprc,
+                                     mun_tax_uprc, mcntn_tax_amt,
+                                     mun_tax_amt, mbat_num, mprdc_dt,
+                                     bao_zhi_qi, invldtn_dt, is_nt_wms,
+                                     is_nt_chk, is_nt_book_entry,
+                                     is_nt_cmplt,
+                                     is_nt_clos, print_cnt, setup_pers,
+                                     setup_tm, form_typ_encd, bx_qty,mtax_amt,mproj_encd)
+        values (#{momKitEncd}, #{formNum},
+                #{formDt}, #{formTyp}, #{fee},
+                #{feeComnt},
+                #{memo}, #{typ},
+                #{whsEncd}, #{momQty}, #{taxRate},
+                #{mcntnTaxUprc},
+                #{munTaxUprc}, #{mcntnTaxAmt},
+                #{munTaxAmt}, #{mbatNum}, #{mprdcDt},
+                #{baoZhiQi}, #{invldtnDt}, 0, 0, 0, 0,
+                0, #{printCnt}, #{setupPers},
+                now(), #{formTypEncd}, #{bxQty},#{mTaxAmt},#{mprojEncd})
+    </insert>
+    <insert id="insertAmbDisambSnglubTab"
+            parameterType="java.util.List">
+        insert into amb_disamb_sngl_sub_tab(sub_kit_encd, ordr_num,
+        whs_encd,
+        sub_qty, mom_qty,
+        mom_sub_ratio, tax_rate, scntn_tax_uprc,
+        sun_tax_uprc, scntn_tax_amt, sun_tax_amt,
+        sbat_num, sprdc_dt,
+        bao_zhi_qi,
+        sinvldtn_dt, form_num,sbx_qty,proj_encd,stax_amt
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.subKitEncd}, #{item.ordrNum},
+            #{item.whsEncd},
+            #{item.subQty}, #{item.momQty},
+            #{item.momSubRatio}, #{item.taxRate},
+            #{item.scntnTaxUprc},
+            #{item.sunTaxUprc}, #{item.scntnTaxAmt},
+            #{item.sunTaxAmt},
+            #{item.sbatNum}, #{item.sprdcDt}, #{item.baoZhiQi},
+            #{item.sinvldtnDt}, #{item.formNum},#{item.sbxQty},#{item.projEncd},#{item.sTaxAmt}
+            )
+        </foreach>
+    </insert>
+    <!-- 修改组装拆卸单 -->
+    <update id="updateAmbDisambSngl" parameterType="AmbDisambSngl">
+        update amb_disamb_sngl
+        <set>
+            <if test="mprojEncd != null">
+                mproj_encd = #{mprojEncd},
+            </if>
+            <if test="mTaxAmt != null">
+                mtax_amt = #{mTaxAmt},
+            </if>
+            <if test="ordrNum != null">
+                ordr_num = #{ordrNum},
+            </if>
+            <if test="momKitEncd != null">
+                mom_kit_encd = #{momKitEncd},
+            </if>
+            <if test="formDt != null">
+                form_dt = #{formDt},
+            </if>
+            <if test="formTyp != null">
+                form_typ = #{formTyp},
+            </if>
+            <if test="fee != null">
+                fee = #{fee},
+            </if>
+            <if test="feeComnt != null">
+                fee_comnt = #{feeComnt},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="typ != null">
+                typ = #{typ},
+            </if>
+            <if test="whsEncd != null">
+                whs_encd = #{whsEncd},
+            </if>
+            <if test="momQty != null">
+                mom_qty = #{momQty},
+            </if>
+            <if test="taxRate != null">
+                tax_rate = #{taxRate},
+            </if>
+            <if test="mcntnTaxUprc != null">
+                mcntn_tax_uprc = #{mcntnTaxUprc},
+            </if>
+            <if test="munTaxUprc != null">
+                mun_tax_uprc = #{munTaxUprc},
+            </if>
+            <if test="mcntnTaxAmt != null">
+                mcntn_tax_amt = #{mcntnTaxAmt},
+            </if>
+            <if test="munTaxAmt != null">
+                mun_tax_amt = #{munTaxAmt},
+            </if>
+            <if test="mbatNum != null">
+                mbat_num = #{mbatNum},
+            </if>
+            <if test="mprdcDt != null">
+                mprdc_dt = #{mprdcDt},
+            </if>
+            <if test="baoZhiQi != null">
+                bao_zhi_qi = #{baoZhiQi},
+            </if>
+            <if test="invldtnDt != null">
+                invldtn_dt = #{invldtnDt},
+            </if>
+            <if test="isNtWms != null">
+                is_nt_wms = #{isNtWms},
+            </if>
+            <if test="isNtChk != null">
+                is_nt_chk = #{isNtChk},
+            </if>
+            <if test="isNtBookEntry != null">
+                is_nt_book_entry = #{isNtBookEntry},
+            </if>
+            <if test="isNtCmplt != null">
+                is_nt_cmplt = #{isNtCmplt},
+            </if>
+            <if test="isNtClos != null">
+                is_nt_clos = #{isNtClos},
+            </if>
+            <if test="printCnt != null">
+                print_cnt = #{printCnt},
+            </if>
+            <if test="mdfr != null">
+                mdfr = #{mdfr},
+            </if>
+            <if test="bxQty != null and bxQty != ''">
+                bx_qty=#{bxQty},
+            </if>
+            modi_tm = now(),
+        </set>
+        where form_num = #{formNum}
+    </update>
+
+    <!-- 删除组装拆卸单 -->
+    <delete id="deleteAmbDisambSnglubTab"
+            parameterType="java.lang.String">
+        delete
+        from amb_disamb_sngl_sub_tab
+        where form_num =
+              #{formNum}
+    </delete>
+    <!-- 批量删除 -->
+    <delete id="deleteAllAmbDisambSngl"
+            parameterType="java.util.List">
+        delete ads,adsSubTab
+        from amb_disamb_sngl as ads
+        left join
+        amb_disamb_sngl_sub_tab as adsSubTab
+        ON ads.form_num =
+        adsSubTab.form_num
+        where ads.form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </delete>
+    <!-- 简单查 组装拆卸单 -->
+    <sql id="Amb_Disamb_Sngl_List">
+        ads.mom_kit_encd as momKitEncd,
+		ads.form_num as formNum,
+		ads.form_dt as formDt, ads.form_typ as formTyp,
+		ads.fee as fee,
+		ads.fee_comnt as feeComnt,ads.memo as memo, ads.typ as typ,
+		ads.whs_encd as whsEncd, ads.mom_qty as momQty, ads.tax_rate
+		astaxRate,
+		ads.mcntn_tax_uprc as mcntnTaxUprc, ads.mun_tax_uprc as
+		munTaxUprc,
+		ads.mcntn_tax_amt as mcntnTaxAmt, ads.mun_tax_amt as
+		munTaxAmt, ads.mbat_num as
+		mbatNum,
+		ads.mprdc_dt as mprdcDt,
+		ads.bao_zhi_qi as baoZhiQi, ads.invldtn_dt as invldtnDt,
+		ads.is_nt_wms
+		as isNtWms, ads.is_nt_chk as isNtChk,
+		ads.is_nt_book_entry as
+		isNtBookEntry,
+		ads.is_nt_cmplt as isNtCmplt,ads.is_nt_clos as isNtClos,
+		ads.print_cnt as printCnt, ads.setup_pers as setupPers, ads.setup_tm
+		as setupTm,
+		ads.mdfr, ads.modi_tm as modiTm, ads.chkr,
+		ads.chk_tm as
+		chkTm, ads.book_entry_pers as bookEntryPers,
+		ads.book_entry_tm as
+		bookEntryTm,whs_doc.whs_nm,ads.form_typ_encd formTypEncd,form_typ_tabs.form_typ_name formTypName
+    </sql>
+    <select id="selectAmbDisambSngl" resultType="AmbDisambSngl">
+        SELECT
+        ads.mom_kit_encd AS momKitEncd,
+        ads.form_num AS formNum,
+        ads.form_dt AS formDt,
+        ads.form_typ AS formTyp,
+        ads.fee AS fee,
+        ads.fee_comnt AS feeComnt,
+        ads.memo AS memo,
+        ads.typ AS typ,
+        ads.whs_encd AS whsEncd,
+        ads.mom_qty AS momQty,
+        ads.tax_rate AS taxRate,
+        ads.mcntn_tax_uprc AS mcntnTaxUprc,
+        ads.mun_tax_uprc AS munTaxUprc,
+        ads.mcntn_tax_amt AS mcntnTaxAmt,
+        ads.mun_tax_amt AS munTaxAmt,
+        ads.mbat_num AS mbatNum,
+        ads.mprdc_dt AS mprdcDt,
+        ads.bao_zhi_qi AS baoZhiQi,
+        ads.invldtn_dt AS invldtnDt,
+        ads.is_nt_wms AS isNtWms,
+        ads.is_nt_chk AS isNtChk,
+        ads.is_nt_book_entry AS isNtBookEntry,
+        ads.is_nt_cmplt AS isNtCmplt,
+        ads.is_nt_clos AS isNtClos,
+        ads.print_cnt AS printCnt,
+        ads.setup_pers AS setupPers,
+        ads.setup_tm AS setupTm,
+        ads.mdfr as mdfr,
+        ads.modi_tm AS modiTm,
+        ads.chkr chkr,
+        ads.chk_tm AS chkTm,
+        ads.book_entry_pers AS bookEntryPers,
+        ads.book_entry_tm AS bookEntryTm,
+        whs_doc.whs_nm whsNm,
+        ads.form_typ_encd formTypEncd,
+        form_typ_tabs.form_typ_name formTypName,
+        invty_doc.invty_nm invtyNm,
+        invty_doc.spc_model spcModel,
+        invty_doc.bx_rule bxRule,
+        measr_corp_doc.measr_corp_nm measrCorpNm ,
+        ads.bx_qty bxQty,
+        ads.mtax_amt mTaxAmt,
+        ads.mproj_encd mprojEncd,
+        proj_cls.proj_nm mprojNm
+
+        FROM
+        amb_disamb_sngl AS ads
+        LEFT JOIN whs_doc ON ( whs_doc.whs_encd = ads.whs_encd )
+        LEFT JOIN form_typ_tabs ON ( form_typ_tabs.form_typ_encd = ads.form_typ_encd )
+        LEFT JOIN invty_doc ON ads.mom_kit_encd = invty_doc.invty_encd
+        LEFT JOIN measr_corp_doc ON invty_doc.measr_corp_id = measr_corp_doc.measr_corp_id
+        LEFT JOIN proj_cls ON proj_cls.proj_encd = ads.mproj_encd
+        <where>
+            <if test="formNum != null and formNum != ''">
+                AND form_num = #{formNum}
+            </if>
+        </where>
+    </select>
+    <select id="selectAmbDisambSnglubTabList"
+            resultMap="ambSnglTabList">
+        SELECT
+        adsTab.*, iDoc.*, mDoc.measr_corp_nm,
+        whs_doc.whs_nm,proj_cls.proj_nm projNm
+
+        FROM
+        amb_disamb_sngl_sub_tab AS adsTab
+        LEFT JOIN invty_doc AS iDoc ON
+        adsTab.sub_kit_encd = iDoc.invty_encd
+        LEFT JOIN measr_corp_doc mDoc ON
+        (
+        iDoc.measr_corp_id = mDoc.measr_corp_id
+        AND iDoc.measr_corp_id =
+        mDoc.measr_corp_id
+        )
+        LEFT JOIN whs_doc ON adsTab.whs_encd =
+        whs_doc.whs_encd
+        LEFT JOIN proj_cls ON proj_cls.proj_encd = adsTab.proj_encd
+        <where>
+            <if test="formNum != null and formNum != ''">
+                AND form_num = #{formNum}
+            </if>
+        </where>
+    </select>
+    <!-- 批量查询 -->
+    <select id="selectAmbDisambSnglList" resultType="AmbDisambSngl">
+        SELECT *
+        from amb_disamb_sngl
+        WHERE form_num in
+        <foreach collection="formNum" item="formNum" open="("
+                 close=")" separator=",">
+            #{formNum}
+        </foreach>
+    </select>
+    <!-- 分页查 -->
+    <select id="selectList" parameterType="Map" resultType="AmbDisambSnglMap">
+        SELECT
+        amb_disamb_sngls.*,invty_docs.*,measr_corp_docs.measr_corp_nm,whs_docs.whs_nm,form_typ_tabs.form_typ_name
+        <!--  , amb_disamb_sngls.mom_qty/invty_docs.bx_rule  bxQty -->
+        ,measr_corp_doc.measr_corp_nm smeasr_corp_nm
+        ,whs_doc.whs_nm swhs_nm,
+        amb_disamb_sngl_sub_tab.ordr_num
+        ordr_num,
+        amb_disamb_sngl_sub_tab.form_num
+        form_num ,
+        amb_disamb_sngl_sub_tab.sub_kit_encd
+        sub_kit_encd ,
+        amb_disamb_sngl_sub_tab.whs_encd
+        swhs_encd,
+        amb_disamb_sngl_sub_tab.sub_qty
+        sub_qty,
+        <!--         amb_disamb_sngl_sub_tab.mom_qty
+                mom_qty, -->
+        amb_disamb_sngl_sub_tab.mom_sub_ratio
+        mom_sub_ratio,
+        amb_disamb_sngl_sub_tab.tax_rate
+        stax_rate,
+        amb_disamb_sngl_sub_tab.scntn_tax_uprc
+        scntn_tax_uprc,
+        amb_disamb_sngl_sub_tab.sun_tax_uprc
+        sun_tax_uprc,
+        amb_disamb_sngl_sub_tab.scntn_tax_amt
+        scntn_tax_amt,
+        amb_disamb_sngl_sub_tab.sun_tax_amt
+        sun_tax_amt,
+        amb_disamb_sngl_sub_tab.sbat_num
+        sbat_num,
+        amb_disamb_sngl_sub_tab.sprdc_dt
+        sprdc_dt,
+        amb_disamb_sngl_sub_tab.bao_zhi_qi
+        sbao_zhi_qi,
+        amb_disamb_sngl_sub_tab.sinvldtn_dt
+        ssinvldtn_dt,
+        invty_doc.invty_nm
+        sinvty_nm,
+        invty_doc.spc_model
+        sspc_model,
+        invty_doc.invty_cd sinvty_cd,
+        invty_doc.bx_rule
+        sbx_rule,
+        invty_doc.bao_zhi_qi_dt
+        sbao_zhi_qi_dt,
+        invty_doc.crspd_bar_cd scrspd_bar_cd,
+        amb_disamb_sngl_sub_tab.sbx_qty sbxQty
+        ,mproj_cls.proj_encd mprojEncd,
+        mproj_cls.proj_nm mprojNm,
+        proj_cls.proj_nm projNm,
+        proj_cls.proj_encd,
+        amb_disamb_sngls.mtax_Amt,
+        amb_disamb_sngl_sub_tab.stax_Amt
+
+        FROM
+        amb_disamb_sngl
+        amb_disamb_sngls
+        LEFT JOIN invty_doc invty_docs on
+        amb_disamb_sngls.mom_kit_encd =
+        invty_docs.invty_encd
+
+        LEFT JOIN
+        measr_corp_doc measr_corp_docs on invty_docs.measr_corp_id =
+        measr_corp_docs.measr_corp_id
+        LEFT JOIN whs_doc whs_docs ON
+        amb_disamb_sngls.whs_encd =
+        whs_docs.whs_encd
+        LEFT JOIN form_typ_tabs ON(
+        form_typ_tabs.form_typ_encd=amb_disamb_sngls.form_typ_encd
+        )
+        LEFT JOIN
+        amb_disamb_sngl_sub_tab ON (
+        amb_disamb_sngls.form_num =
+        amb_disamb_sngl_sub_tab.form_num
+        )
+        LEFT JOIN invty_doc on
+        amb_disamb_sngl_sub_tab.sub_kit_encd =
+        invty_doc.invty_encd
+
+        LEFT JOIN
+        measr_corp_doc on invty_doc.measr_corp_id =
+        measr_corp_doc.measr_corp_id
+        LEFT JOIN whs_doc ON (
+        amb_disamb_sngl_sub_tab.whs_encd = whs_doc.whs_encd
+        )
+        LEFT JOIN proj_cls mproj_cls ON mproj_cls.proj_encd = amb_disamb_sngls.mproj_encd
+        LEFT JOIN proj_cls ON proj_cls.proj_encd = amb_disamb_sngl_sub_tab.proj_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND amb_disamb_sngls.memo like #{memo}
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0">
+                AND amb_disamb_sngls.mom_kit_encd in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="batNum != null and batNum.size() >0">
+                AND amb_disamb_sngls.mbat_num in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="sbatNum != null and sbatNum.size() >0">
+                AND amb_disamb_sngl_sub_tab.sbat_num in
+                <foreach collection="sbatNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formNum != null and formNum.size() >0">
+                AND amb_disamb_sngls.form_num in
+                <foreach collection="formNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and  formTypEncd.size() >0">
+                AND amb_disamb_sngls.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND amb_disamb_sngls.whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                AND invty_docs.invty_cls_encd like #{invtyClsEncd}
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND amb_disamb_sngls.form_dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND amb_disamb_sngls.form_dt &lt;= #{formDt2}
+            </if>
+            <if test="whsEncd != null and whsEncd.size() >0 ">
+                AND amb_disamb_sngls.whs_encd in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="typ != null and typ.size() >0 ">
+                AND amb_disamb_sngls.typ in
+                <foreach collection="typ" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTyp != null and formTyp.size() >0 ">
+                AND amb_disamb_sngls.form_Typ in
+                <foreach collection="formTyp" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null and isNtChk != '' ">
+                AND amb_disamb_sngls.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="setupPers != null and setupPers != '' ">
+                AND amb_disamb_sngls.setup_pers = #{setupPers}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+
+        SELECT count( amb_disamb_sngls.form_num ) form_num
+        FROM
+        amb_disamb_sngl amb_disamb_sngls
+        LEFT JOIN invty_doc
+        invty_docs on amb_disamb_sngls.mom_kit_encd =
+        invty_docs.invty_encd
+
+        LEFT JOIN measr_corp_doc measr_corp_docs on invty_docs.measr_corp_id =
+        measr_corp_docs.measr_corp_id
+        LEFT JOIN whs_doc whs_docs ON
+        amb_disamb_sngls.whs_encd =
+        whs_docs.whs_encd
+        LEFT JOIN form_typ_tabs ON(
+        form_typ_tabs.form_typ_encd=amb_disamb_sngls.form_typ_encd
+        )
+
+        LEFT JOIN
+        amb_disamb_sngl_sub_tab ON (
+        amb_disamb_sngls.form_num =
+        amb_disamb_sngl_sub_tab.form_num
+        )
+        LEFT JOIN invty_doc on
+        amb_disamb_sngl_sub_tab.sub_kit_encd =
+        invty_doc.invty_encd
+
+        LEFT JOIN
+        measr_corp_doc on invty_doc.measr_corp_id =
+        measr_corp_doc.measr_corp_id
+        LEFT JOIN whs_doc ON (
+        amb_disamb_sngl_sub_tab.whs_encd = whs_doc.whs_encd
+        )
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND amb_disamb_sngls.memo like #{memo}
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0">
+                AND amb_disamb_sngls.mom_kit_encd in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                AND invty_docs.invty_cls_encd like #{invtyClsEncd}
+            </if>
+            <if test="batNum != null and batNum.size() >0">
+                AND amb_disamb_sngls.mbat_num in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="sbatNum != null and sbatNum.size() >0">
+                AND amb_disamb_sngl_sub_tab.sbat_num in
+                <foreach collection="sbatNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formNum != null and formNum.size() >0">
+                AND amb_disamb_sngls.form_num in
+                <foreach collection="formNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and  formTypEncd.size() >0">
+                AND amb_disamb_sngls.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND amb_disamb_sngls.form_dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND amb_disamb_sngls.form_dt &lt;= #{formDt2}
+            </if>
+            <if test="whsEncd != null and whsEncd.size() >0 ">
+                AND amb_disamb_sngls.whs_encd in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="typ != null and typ.size() >0 ">
+                AND amb_disamb_sngls.typ in
+                <foreach collection="typ" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTyp != null and formTyp.size() >0 ">
+                AND amb_disamb_sngls.form_Typ in
+                <foreach collection="formTyp" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND amb_disamb_sngls.whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null and isNtChk != '' ">
+                AND amb_disamb_sngls.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="setupPers != null and setupPers != '' ">
+                AND amb_disamb_sngls.setup_pers = #{setupPers}
+            </if>
+        </where>
+
+    </select>
+    <!-- 审核 -->
+    <update id="updateASnglChk" parameterType="java.util.List">
+        update amb_disamb_sngl
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then 1
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when form_num = #{item.formNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then #{item.chkTm}
+                </foreach>
+            </trim>
+        </trim>
+        where form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.formNum}
+        </foreach>
+        and is_nt_chk = 0
+    </update>
+    <!-- 弃审 -->
+    <update id="updateASnglNoChk" parameterType="java.util.List">
+        update amb_disamb_sngl
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then 0
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when form_num = #{item.formNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then now()
+                </foreach>
+            </trim>
+        </trim>
+        where form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.formNum}
+        </foreach>
+        and is_nt_chk = 1
+    </update>
+    <!-- 打印 -->
+    <select id="selectListDaYin" parameterType="Map"
+            resultMap="ASngl">
+        SELECT
+        amb_disamb_sngls.*,invty_docs.*,measr_corp_docs.measr_corp_nm,whs_docs.whs_nm
+        ,measr_corp_doc.measr_corp_nm measr_corp_docmeasr_corp_nm,
+        form_typ_tabs.form_typ_name,
+        amb_disamb_sngls.mom_qty/invty_docs.bx_rule bxQty
+        ,whs_doc.whs_nm whs_docwhs_nm,
+        amb_disamb_sngl_sub_tab.ordr_num
+        amb_disamb_sngl_sub_tabordr_num,
+        amb_disamb_sngl_sub_tab.form_num
+        amb_disamb_sngl_sub_tabform_num ,
+        amb_disamb_sngl_sub_tab.sub_kit_encd
+        amb_disamb_sngl_sub_tabsub_kit_encd ,
+        amb_disamb_sngl_sub_tab.whs_encd
+        amb_disamb_sngl_sub_tabwhs_encd,
+        amb_disamb_sngl_sub_tab.sub_qty
+        amb_disamb_sngl_sub_tabsub_qty,
+        amb_disamb_sngl_sub_tab.mom_qty
+        amb_disamb_sngl_sub_tabmom_qty,
+        amb_disamb_sngl_sub_tab.mom_sub_ratio
+        amb_disamb_sngl_sub_tabmom_sub_ratio,
+        amb_disamb_sngl_sub_tab.tax_rate
+        amb_disamb_sngl_sub_tabtax_rate,
+        amb_disamb_sngl_sub_tab.scntn_tax_uprc
+        amb_disamb_sngl_sub_tabscntn_tax_uprc,
+        amb_disamb_sngl_sub_tab.sun_tax_uprc
+        amb_disamb_sngl_sub_tabsun_tax_uprc,
+        amb_disamb_sngl_sub_tab.scntn_tax_amt
+        amb_disamb_sngl_sub_tabscntn_tax_amt,
+        amb_disamb_sngl_sub_tab.sun_tax_amt
+        amb_disamb_sngl_sub_tabsun_tax_amt,
+        amb_disamb_sngl_sub_tab.sbat_num
+        amb_disamb_sngl_sub_tabsbat_num,
+        amb_disamb_sngl_sub_tab.sprdc_dt
+        amb_disamb_sngl_sub_tabsprdc_dt,
+        amb_disamb_sngl_sub_tab.bao_zhi_qi
+        amb_disamb_sngl_sub_tabbao_zhi_qi,
+        amb_disamb_sngl_sub_tab.sinvldtn_dt
+        amb_disamb_sngl_sub_tabsinvldtn_dt,
+        invty_doc.invty_nm
+        invty_docinvty_nm,
+        invty_doc.spc_model
+        invty_docspc_model,
+        invty_doc.invty_cd invty_docinvty_cd,
+        invty_doc.bx_rule
+        invty_docbx_rule,
+        invty_doc.bao_zhi_qi_dt
+        invty_docbao_zhi_qi_dt,
+        invty_doc.iptax_rate invty_dociptax_rate,
+        invty_doc.optax_rate
+        invty_docoptax_rate,
+        invty_doc.highest_pur_price
+        invty_dochighest_pur_price,
+        invty_doc.lo_sell_prc invty_doclo_sell_prc,
+        invty_doc.ltst_cost invty_docltst_cost,
+        invty_doc.ref_cost
+        invty_docref_cost,
+        invty_doc.ref_sell_prc invty_docref_sell_prc,
+        invty_doc.crspd_bar_cd invty_doccrspd_bar_cd,
+        amb_disamb_sngl_sub_tab.sbx_qty sbxQty
+
+
+        <!--         SELECT
+                amb_disamb_sngls.*,invty_docs.*,measr_corp_docs.measr_corp_nm,whs_docs.whs_nm,form_typ_tabs.form_typ_name
+                ,
+                 amb_disamb_sngls.mom_qty/invty_docs.bx_rule  bxQty
+                ,measr_corp_doc.measr_corp_nm smeasr_corp_nm
+                ,whs_doc.whs_nm swhs_nm,
+                amb_disamb_sngl_sub_tab.ordr_num
+                ordr_num,
+                amb_disamb_sngl_sub_tab.form_num
+                form_num ,
+                amb_disamb_sngl_sub_tab.sub_kit_encd
+                sub_kit_encd ,
+                amb_disamb_sngl_sub_tab.whs_encd
+                swhs_encd,
+                amb_disamb_sngl_sub_tab.sub_qty
+                sub_qty,
+                amb_disamb_sngl_sub_tab.mom_sub_ratio
+                mom_sub_ratio,
+                amb_disamb_sngl_sub_tab.tax_rate
+                stax_rate,
+                amb_disamb_sngl_sub_tab.scntn_tax_uprc
+                scntn_tax_uprc,
+                amb_disamb_sngl_sub_tab.sun_tax_uprc
+                sun_tax_uprc,
+                amb_disamb_sngl_sub_tab.scntn_tax_amt
+                scntn_tax_amt,
+                amb_disamb_sngl_sub_tab.sun_tax_amt
+                sun_tax_amt,
+                amb_disamb_sngl_sub_tab.sbat_num
+                sbat_num,
+                amb_disamb_sngl_sub_tab.sprdc_dt
+                sprdc_dt,
+                amb_disamb_sngl_sub_tab.bao_zhi_qi
+                sbao_zhi_qi,
+                amb_disamb_sngl_sub_tab.sinvldtn_dt
+                ssinvldtn_dt,
+                invty_doc.invty_nm
+                sinvty_nm,
+                invty_doc.spc_model
+                sspc_model,
+                invty_doc.invty_cd sinvty_cd,
+                invty_doc.bx_rule
+                sbx_rule,
+                invty_doc.bao_zhi_qi_dt
+                sbao_zhi_qi_dt,
+                invty_doc.crspd_bar_cd scrspd_bar_cd,
+                amb_disamb_sngl_sub_tab.sub_qty/invty_doc.bx_rule  sbxQty -->
+
+        FROM
+        amb_disamb_sngl
+        amb_disamb_sngls
+        LEFT JOIN invty_doc invty_docs on
+        amb_disamb_sngls.mom_kit_encd =
+        invty_docs.invty_encd
+
+        LEFT JOIN
+        measr_corp_doc measr_corp_docs on invty_docs.measr_corp_id =
+        measr_corp_docs.measr_corp_id
+        LEFT JOIN whs_doc whs_docs ON
+        amb_disamb_sngls.whs_encd =
+        whs_docs.whs_encd
+        LEFT JOIN form_typ_tabs ON(
+        form_typ_tabs.form_typ_encd=amb_disamb_sngls.form_typ_encd
+        )
+        LEFT JOIN
+        amb_disamb_sngl_sub_tab ON (
+        amb_disamb_sngls.form_num =
+        amb_disamb_sngl_sub_tab.form_num
+        )
+        LEFT JOIN invty_doc on
+        amb_disamb_sngl_sub_tab.sub_kit_encd =
+        invty_doc.invty_encd
+
+        LEFT JOIN
+        measr_corp_doc on invty_doc.measr_corp_id =
+        measr_corp_doc.measr_corp_id
+        LEFT JOIN whs_doc ON (
+        amb_disamb_sngl_sub_tab.whs_encd = whs_doc.whs_encd
+        )
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND amb_disamb_sngls.memo like #{memo}
+            </if>
+            <if test="formNum != null and formNum.size() >0">
+                AND amb_disamb_sngls.form_num in
+                <foreach collection="formNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and  formTypEncd.size() >0">
+                AND amb_disamb_sngls.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND amb_disamb_sngls.form_dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND amb_disamb_sngls.form_dt &lt;= #{formDt2}
+            </if>
+            <if test="whsEncd != null and whsEncd.size() >0 ">
+                AND amb_disamb_sngls.whs_encd in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="typ != null and typ.size() >0 ">
+                AND amb_disamb_sngls.typ in
+                <foreach collection="typ" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTyp != null and formTyp.size() >0 ">
+                AND amb_disamb_sngls.form_Typ in
+                <foreach collection="formTyp" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null and isNtChk != '' ">
+                AND amb_disamb_sngls.is_nt_chk = #{isNtChk}
+            </if>
+        </where>
+    </select>
+    <!-- 查询是否已审核 -->
+    <select id="selectISChr" resultType="AmbDisambSngl">
+        select *
+        from amb_disamb_sngl
+        where form_num = #{formNum}
+    </select>
+    <insert id="exInsertAmbDisambSngl" parameterType="AmbDisambSngl">
+        insert into
+        amb_disamb_sngl (
+
+        mom_kit_encd ,
+        form_num ,
+        form_dt ,
+        form_typ
+        ,
+        fee ,
+        fee_comnt ,
+        memo ,
+        typ ,
+        whs_encd ,
+        mom_qty ,
+        tax_rate ,
+        mcntn_tax_uprc ,
+        mun_tax_uprc ,
+        mcntn_tax_amt ,
+        mun_tax_amt ,
+        mbat_num ,
+        mprdc_dt ,
+        bao_zhi_qi ,
+        invldtn_dt ,
+        is_nt_wms ,
+        is_nt_chk ,
+        is_nt_book_entry ,
+        is_nt_cmplt ,
+        is_nt_clos ,
+        print_cnt ,
+        setup_pers ,
+        setup_tm ,
+        mdfr ,
+        modi_tm ,
+        chkr ,
+        chk_tm ,
+        book_entry_pers ,
+        book_entry_tm,form_typ_encd,
+        bx_qty
+        )
+        values
+        (
+        #{momKitEncd}, #{formNum},
+        <if test="formDt  == '' ">
+            null
+        </if>
+        <if test="formDt  != '' ">
+            #{formDt}
+        </if>
+        , #{formTyp}, #{fee},
+        #{feeComnt},
+        #{memo}, #{typ},
+        #{whsEncd},
+        #{momQty}, #{taxRate},
+        #{mcntnTaxUprc},
+        #{munTaxUprc}, #{mcntnTaxAmt},
+        #{munTaxAmt}, #{mbatNum},
+        <if test="mprdcDt  == '' ">
+            null
+        </if>
+        <if test="mprdcDt  != '' ">
+            #{mprdcDt}
+        </if>
+        ,
+
+        #{baoZhiQi},
+        <if test="invldtnDt  == '' ">
+            null
+        </if>
+        <if test="invldtnDt  != '' ">
+            #{invldtnDt}
+        </if>
+        , #{isNtWms},
+        #{isNtChk}, #{isNtBookEntry},
+        #{isNtCmplt},
+        #{isNtClos},
+        #{printCnt}, #{setupPers},
+        <if test="setupTm  == '' ">
+            null
+        </if>
+        <if test="setupTm  != '' ">
+            #{setupTm}
+        </if>
+        ,
+
+        #{mdfr},
+        <if test="modiTm  == '' ">
+            null
+        </if>
+        <if test="modiTm  != '' ">
+            #{modiTm}
+        </if>
+        ,
+        #{chkr},
+        <if test="chkTm  == '' ">
+            null
+        </if>
+        <if test="chkTm  != '' ">
+            #{chkTm}
+        </if>
+        ,
+        #{bookEntryPers},
+        <if test="bookEntryTm  == '' ">
+            null,
+        </if>
+        <if test="bookEntryTm  != '' ">
+            #{bookEntryTm},
+        </if>
+        #{formTypEncd},#{bxQty}
+        )
+    </insert>
+
+    <insert id="exInsertAmbDisambSnglubTab"
+            parameterType="java.util.List">
+        insert into amb_disamb_sngl_sub_tab(
+        sub_kit_encd, ordr_num,
+        whs_encd,
+        sub_qty, mom_qty,
+        mom_sub_ratio, tax_rate, scntn_tax_uprc,
+        sun_tax_uprc, scntn_tax_amt, sun_tax_amt,
+        sbat_num, sprdc_dt,
+        bao_zhi_qi,
+        sinvldtn_dt, form_num, sbx_qty,proj_encd
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.subKitEncd}, #{item.ordrNum},
+            #{item.whsEncd},
+            #{item.subQty},
+            #{item.momQty},
+            #{item.momSubRatio}, #{item.taxRate},
+            #{item.scntnTaxUprc},
+            #{item.sunTaxUprc}, #{item.scntnTaxAmt},
+            #{item.sunTaxAmt},
+            #{item.sbatNum},
+
+            <if test="item.sprdcDt  == '' ">
+                null
+            </if>
+            <if test="item.sprdcDt  != '' ">
+                #{item.sprdcDt}
+            </if>
+
+            , #{item.baoZhiQi},
+
+            <if test="item.sinvldtnDt  == '' ">
+                null
+            </if>
+            <if test="item.sinvldtnDt  != '' ">
+                #{item.sinvldtnDt}
+            </if>
+            , #{item.formNum},#{item.sbxQty},
+            #{item.projEncd}
+            )
+        </foreach>
+    </insert>
+    <insert id="insertAmbDisambSnglDl"
+            parameterType="java.util.List">
+        INSERT INTO amb_disamb_sngl_dl SELECT
+        *
+        FROM
+        amb_disamb_sngl
+        WHERE form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+    <insert id="insertAmbDisambSnglubTabDl"
+            parameterType="java.util.List">
+        INSERT INTO amb_disamb_sngl_sub_tab_dl SELECT
+        *
+        FROM
+        amb_disamb_sngl_sub_tab
+        WHERE form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+
+
+</mapper>

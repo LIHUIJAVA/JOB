@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtySubjSetTabDao">
+	<resultMap id="BaseResultMap" type="com.px.mis.account.entity.InvtySubjSetTab" autoMapping="true">
+		<id column="ordr_num" property="ordrNum" />
+		<result column="invty_big_cls_encd" property="invtyBigClsEncd" />
+		<result column="invty_subj_id" property="invtySubjId" />
+		<result column="entrs_agn_subj_id" property="entrsAgnSubjId" />
+		<result column="invtyClsNm" property="invtyClsNm" />
+		<result column="invtySubjNm" property="invtySubjNm" />
+		<result column="entrsAgnSubjNm" property="entrsAgnSubjNm"/>
+		<result column="memo" property="memo" />
+	</resultMap>
+    <!--   按照编号查询采购订单主表 -->
+    <sql id="Base_Column_List">
+	    i.ordr_num ordrNum,i.invty_big_cls_encd invtyBigClsEncd,c.invty_cls_nm invtyClsNm,
+	 	i.invty_subj_id invtySubjId,a.subj_nm invtySubjNm,
+	 	i.entrs_agn_subj_id entrsAgnSubjId,b.subj_nm entrsAgnSubjNm
+    </sql>
+	<!-- 分页查询所有 -->
+	<select id="selectInvtySubjSetTabList" parameterType="Map" resultType="com.px.mis.account.entity.InvtySubjSetTab">
+	 SELECT
+	 <include refid="Base_Column_List" />
+	 FROM invty_subj_set_tab i LEFT JOIN invty_cls c ON i.invty_big_cls_encd=c.invty_cls_encd
+	                           LEFT JOIN acct_itm_doc a ON i.invty_subj_id = a.subj_id
+	                           LEFT JOIN acct_itm_doc b ON i.entrs_agn_subj_id = b.subj_id
+	 GROUP BY i.invty_big_cls_encd
+	 ORDER BY i.ordr_num
+	 <if test="index != null and  num != null">
+	 LIMIT #{index},#{num}
+	 </if>
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectInvtySubjSetTabCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM invty_subj_set_tab
+	</select>
+	
+	<!-- 查询存货科目中的存货分类编号是否存在 -->
+	<select id="selectInvtyBigClsEncd" resultType="String">
+		SELECT invty_big_cls_encd
+		FROM invty_subj_set_tab i where i.invty_big_cls_encd=#{invtyBigClsEncd}
+	</select>
+	
+	
+	
+	<!-- 查询单个 -->
+	<select id="selectInvtySubjSetTabByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.InvtySubjSetTab">
+	 SELECT 
+	 <include refid="Base_Column_List" />
+	 FROM invty_subj_set_tab i LEFT JOIN invty_cls c ON i.invty_big_cls_encd=c.invty_cls_encd
+	                           LEFT JOIN acct_itm_doc a ON i.invty_subj_id = a.subj_id
+	                           LEFT JOIN acct_itm_doc b ON i.entrs_agn_subj_id = b.subj_id
+	 WHERE i.ordr_num=#{ordrNum}
+	</select>
+	
+	
+	<!-- 添加 -->
+	<insert id="insertInvtySubjSetTab" parameterType="com.px.mis.account.entity.InvtySubjSetTab">
+
+		INSERT INTO invty_subj_set_tab(invty_big_cls_encd,invty_subj_id,entrs_agn_subj_id,memo)
+		VALUES(#{invtyBigClsEncd},#{invtySubjId},#{entrsAgnSubjId},#{memo})
+
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteInvtySubjSetTabByOrdrNum" parameterType="int">
+	 DELETE FROM invty_subj_set_tab
+	 WHERE ordr_num=#{ordrNum}
+	</delete>
+	
+	<!-- 根据主键批量删除 -->
+	<delete id="deleteInvtySubjSetTabList" parameterType="Map">
+	 DELETE FROM invty_subj_set_tab
+	 WHERE ordr_num in (${ordrNum})
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateInvtySubjSetTabByOrdrNum" parameterType="com.px.mis.account.entity.InvtySubjSetTab">
+	 UPDATE invty_subj_set_tab
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="invtyBigClsEncd != null">
+        invty_big_cls_encd = #{invtyBigClsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="invtySubjId != null">
+        invty_subj_id = #{invtySubjId,jdbcType=VARCHAR},
+      </if>
+      <if test="entrsAgnSubjId != null">
+        entrs_agn_subj_id = #{entrsAgnSubjId,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+	
+	
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.CurmthAvgUprcTabDao">
+	<resultMap type="com.px.mis.account.entity.CurmthAvgUprcTab"
+		id="CurmthAvgUprcTabMap" >
+		<id column="ordr_num" jdbcType="BIGINT" property="ordrNum" />
+		<result column="acct_yr" jdbcType="VARCHAR" property="acctYr" />
+		<result column="accti_mth" jdbcType="VARCHAR" property="acctiMth" />
+		<result column="invty_encd" jdbcType="VARCHAR"  property="invtyEncd" />
+		<result column="qty" jdbcType="BIGINT" property="qty" />
+		<result column="amt" jdbcType="BIGINT" property="amt" />
+		<result column="avg_uprc" jdbcType="BIGINT" property="avgUprc" />
+		<association  property="invtydoc"
+			javaType="com.px.mis.purc.entity.InvtyDoc" >
+			<id column="invty_encd" jdbcType="VARCHAR" property="invtyEncd" />
+			<result column="invty_nm" jdbcType="VARCHAR" property="invtyNm" />
+		</association >
+	</resultMap>
+	<!-- 本月平均单价表分页查询所有 -->
+	<select id="selectCurmthAvgUprcTabList" parameterType="Map"
+		resultType="com.px.mis.account.entity.CurmthAvgUprcTab">
+		SELECT a.ordr_num ordrNum,a.acct_yr acctYr,a.accti_mth
+		acctiMth,a.invty_encd
+		invtyEncd,
+		a.qty qty,a.amt amt,a.avg_uprc
+		avgUprc,b.invty_nm invtyNm
+		FROM curmth_avg_uprc_tab a
+		LEFT JOIN
+		invty_doc b
+		ON a.invty_encd = b.invty_encd
+		ORDER BY a.ordr_num
+		LIMIT
+		#{index},#{num}
+	</select>
+
+	<!-- 查询单个 -->
+	<select id="selectCurmthAvgUprcTabByOrdrNum" parameterType="int"
+		resultType="com.px.mis.account.entity.CurmthAvgUprcTab">
+		SELECT a.ordr_num ordrNum,a.acct_yr acctYr,a.accti_mth
+		acctiMth,a.invty_encd
+		invtyEncd,
+		a.qty qty,a.amt amt,a.avg_uprc
+		avgUprc,b.invty_nm invtyNm
+		FROM curmth_avg_uprc_tab a
+		LEFT JOIN
+		invty_doc b
+		ON a.invty_encd = b.invty_encd
+		WHERE a.ordr_num=#{ordrNum}
+	</select>
+
+	<!-- 查询总行数 -->
+	<select id="selectCurmthAvgUprcTabCount" resultType="int">
+		SELECT
+		count(ordr_num)
+		FROM curmth_avg_uprc_tab
+	</select>
+
+	<!-- 添加 -->
+	<insert id="insertCurmthAvgUprcTab"
+		parameterType="com.px.mis.account.entity.CurmthAvgUprcTab">
+		INSERT INTO curmth_avg_uprc_tab
+		VALUES(null,#{acctYr},#{acctiMth},#{invtyEncd},
+		#{qty},#{amt},#{avgUprc})
+	</insert>
+
+	<!-- 根据主键删除 -->
+	<delete id="deleteCurmthAvgUprcTabByOrdrNum" parameterType="int">
+		DELETE FROM curmth_avg_uprc_tab
+		WHERE ordr_num=#{ordrNum}
+	</delete>
+
+	<!-- 根据主键更新 -->
+	<update id="updateCurmthAvgUprcTabByOrdrNum"
+		parameterType="com.px.mis.account.entity.CurmthAvgUprcTab">
+		UPDATE curmth_avg_uprc_tab
+		<set>
+			<if test="ordrNum != null">
+				ordr_num = #{ordrNum,jdbcType=BIGINT},
+			</if>
+			<if test="acctYr != null">
+				acct_yr = #{acctYr,jdbcType=VARCHAR},
+			</if>
+			<if test="acctiMth != null">
+				accti_mth = #{acctiMth,jdbcType=VARCHAR},
+			</if>
+			<if test="invtyEncd != null">
+				invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+			</if>
+			<if test="qty != null">
+				qty = #{qty,jdbcType=DECIMAL},
+			</if>
+			<if test="amt != null">
+				amt = #{amt,jdbcType=DECIMAL},
+			</if>
+			<if test="avgUprc != null">
+				avg_uprc = #{avgUprc,jdbcType=DECIMAL},
+			</if>
+
+		</set>
+		WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+
+	<!-- 导出表 -->
+	<select id="getCurmthAvgUprcList" parameterType="Map"
+		resultMap="CurmthAvgUprcTabMap">
+		SELECT
+		curmth_avg_uprc_tab.ordr_num,curmth_avg_uprc_tab.acct_yr,
+		curmth_avg_uprc_tab.accti_mth,curmth_avg_uprc_tab.invty_encd,
+		curmth_avg_uprc_tab.qty,curmth_avg_uprc_tab.amt,
+		curmth_avg_uprc_tab.avg_uprc,invty_doc.invty_nm
+		FROM
+		curmth_avg_uprc_tab LEFT JOIN invty_doc ON
+		curmth_avg_uprc_tab.invty_encd = invty_doc.invty_encd
+
+	</select>
+
+	
+	
+
+</mapper>

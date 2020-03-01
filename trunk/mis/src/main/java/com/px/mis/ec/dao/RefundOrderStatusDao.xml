@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.RefundOrderStatusDao">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.RefundOrderStatus">
+	INSERT INTO refund_order_status (ref_status_id, ref_status_name, memo)
+    VALUES(#{refStatusId}, #{refStatusName}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.RefundOrderStatus">
+  	SELECT ref_status_id, ref_status_name, memo
+  	FROM refund_order_status 
+  	WHERE ref_status_id = #{refStatusId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  refund_order_status
+  	WHERE ref_status_id = #{refStatusId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.RefundOrderStatus">
+  	UPDATE refund_order_status 
+  	SET ref_status_id=#{refStatusId}, ref_status_name=#{refStatusName}, memo=#{memo}
+  	WHERE ref_status_id=#{refStatusId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.RefundOrderStatus">
+	SELECT ref_status_id, ref_status_name, memo
+  	FROM refund_order_status 
+  	<where>
+  		<if test="refStatusId != null and refStatusId != ''">
+            AND ref_status_id=#{refStatusId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(*)
+  	FROM refund_order_status 
+  	<where>
+  		<if test="refStatusId != null and refStatusId != ''">
+            AND ref_status_id=#{refStatusId}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtyDetailDao">
+	  <resultMap id="BaseResultMap" type="com.px.mis.account.entity.InvtyDetail">
+	  	 <id column="detail_id"   property="detailId" />
+	     <result column="sub_id"   property="subId" />
+	     <result column="sub_nm"   property="subNm" />
+	     <result column="invty_nm"   property="invtyNm" />
+	     <result column="spc_model"   property="spcModel" />
+	     <result column="measr_corp_nm"   property="measrCorpNm" />
+	     <result column="invty_cls_encd"   property="invtyClsEncd" />
+	     <result column="invty_cls_nm" property="invtyClsNm"/>
+	     <result column="level" property="level"/>
+	     <result column="invty_encd"   property="invtyEncd" />
+	     <result column="invty_cd"   property="invtyCd" />
+	     <result column="bat_num"   property="batNum" />
+	     <result column="whs_encd"   property="whsEncd" />
+	     <result column="whs_nm" property="whsNm"/>
+	     <result column="weight" property="weight"/>
+	     <result column="bx_rule" property="bxRule"/>
+	     <result column="amt" property="amt"/>
+	     <result column="qty" property="qty"/>
+	     <result column="uprc" property="uprc"/>
+	  	 <collection property="invtyDetailsList" ofType="com.px.mis.account.entity.InvtyDetails" autoMapping="true">
+		    <id property="invtyDetailsId" column="invty_details_id" /> 
+		    <result column="book_ok_dt"   property="bookOkDt" />
+		    <result column="make_vouch_id"   property="makeVouchId" />
+		    <result column="make_vouch_abst"   property="makeVouchAbst" />
+		    <result column="recv_send_cate_id"   property="recvSendCateId" />
+		    <result column="recv_send_cate_nm"   property="recvSendCateNm" />
+		    <result column="in_unit_price"  property="inUnitPrice" />
+		    <result column="send_unit_price"  property="sendUnitPrice" />
+		    <result column="oth_unit_price"  property="othUnitPrice" />
+		    <result column="in_qty"  property="inQty" />
+		    <result column="send_qty"  property="sendQty" />
+		    <result column="oth_qty"  property="othQty" />
+		    <result column="in_moeny"  property="inMoeny" />
+		    <result column="send_moeny"  property="sendMoeny" />
+		    <result column="oth_moeny"  property="othMoeny" />
+		    <result column="detail_id"   property="detailId" />
+		    <result column="form_num"   property="formNum" />
+		    <result column="is_nt_bllg" property="isNtBllg"/>
+		    <result column="sell_ordr_ind" property="sellOrdrInd"/>
+	    </collection>
+	  </resultMap>
+	  <resultMap type="SellOutWhsPool" id="BaseSendMap">
+	  	<result column="cust_id" property="custId"/>
+	    <result column="invty_nm"   property="invtyNm" />
+	  	<result column="invty_encd"   property="invtyEncd" />
+	  	<result column="amt" property="amt"/>
+	    <result column="qty" property="qty"/>
+	  	<result column="in_qty"  property="inQty" />
+	    <result column="send_qty"  property="sendQty" />
+	    <result column="oth_qty"  property="othQty" />
+	    <result column="in_moeny"  property="inMoeny" />
+	    <result column="send_moeny"  property="sendMoeny" />
+	    <result column="oth_moeny"  property="othMoeny" />
+	  </resultMap>
+	  
+	<select id="selectByInvty" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+		  it.detail_id,it.invty_nm, it.spc_model, it.measr_corp_nm, it.invty_cls_encd,cls.invty_cls_nm, it.invty_encd, 
+		  it.invty_cd, it.bat_num, it.whs_encd,its.invty_details_id,its.book_ok_dt,its.make_vouch_id,its.make_vouch_abst,its.in_unit_price,its.send_unit_price, 
+		  its.oth_unit_price,its.in_qty, send_qty,its.oth_qty, its.in_moeny,its.send_moeny,its.oth_moeny,its.detail_id, 
+		  its.form_num,fo.out_into_whs_typ_id as recv_send_cate_id,fo.out_into_whs_typ_nm as recv_send_cate_nm,
+			fo.is_nt_bllg as is_nt_bllg,sell.sell_ordr_ind as sell_ordr_ind
+		FROM
+			invty_detail AS it
+		INNER JOIN invty_details AS its ON it.detail_id = its.detail_id
+		LEFT JOIN form_book_entry AS fo ON fo.form_num = its.form_num
+		LEFT JOIN invty_cls cls ON cls.invty_cls_encd = it.invty_cls_encd
+		LEFT JOIN sell_out_whs AS sell ON sell.out_whs_id = fo.form_num
+		LEFT JOIN invty_cls ils ON ils.invty_cls_encd = it.invty_cls_encd
+		where 1=1
+	
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND it.invty_Encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND it.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND it.bat_num = #{batNum}
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND it.invty_cls_encd = #{invtyClsEncd}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND its.form_num = #{formNum}
+		</if> 
+		<if test="bookOkDt != null and bookOkDt != ''">
+			AND DATE_FORMAT(its.book_ok_dt, '%Y%m') = DATE_FORMAT(#{bookOkDt}, '%Y%m')
+		</if>
+		<if test="recvSendCateId != null and recvSendCateId != ''">
+			AND fo.out_into_whs_typ_id = #{recvSendCateId}
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND its.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND its.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="invtyEncdList != null and invtyEncdList.size() > 0 ">
+			AND it.invty_encd IN
+			<foreach collection="invtyEncdList" item="formNum" open="(" close=")" separator=",">
+				#{invtyEncd}
+			</foreach>
+		</if>
+	</select>
+	
+	<insert id="insertInvtyDetail" parameterType="com.px.mis.account.entity.InvtyDetail"  keyProperty="detailId" useGeneratedKeys="true" >
+		INSERT INTO invty_detail(detail_id,sub_id,sub_nm,invty_nm,spc_model,measr_corp_nm,invty_cls_encd,invty_encd,invty_cd,bat_num,whs_encd)
+		VALUES(#{detailId},#{subId},#{subNm},#{invtyNm},#{spcModel},#{measrCorpNm},#{invtyClsEncd},#{invtyEncd},#{invtyCd},#{batNum},#{whsEncd})
+	</insert>
+	<insert id="insertInvtyDetailList" parameterType="java.util.List">
+		INSERT INTO invty_detail(detail_id,invty_nm,spc_model,measr_corp_nm,invty_cls_encd,invty_encd,invty_cd,bat_num,whs_encd)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," close=";">
+	       ( #{item.detailId},#{item.invtyNm },#{item.spcModel}, #{item.measrCorpNm},#{item.invtyClsEncd}, 
+			 #{item.invtyEncd },#{item.invtyCd },#{item.batNum}, #{item.whsEncd}
+			)
+		</foreach>
+	</insert>
+	<insert id="insertInvtyDetailsList" parameterType="java.util.List">
+	   insert into invty_details (book_ok_dt, make_vouch_id,make_vouch_abst, recv_send_cate_id, recv_send_cate_nm, 
+      	in_unit_price, send_unit_price, oth_unit_price,in_qty, send_qty, oth_qty,in_moeny, send_moeny, oth_moeny,detail_id,
+      	 form_num,to_ordr_num)
+      values
+      <foreach collection="list" item="item" index="index" separator="," close=";">
+       ( #{item.bookOkDt }, #{item.makeVouchId },#{item.makeVouchAbst },#{item.recvSendCateId}, #{item.recvSendCateNm},#{item.inUnitPrice}, 
+		 #{item.sendUnitPrice },#{item.othUnitPrice },#{item.inQty}, #{item.sendQty},#{item.othQty},#{item.inMoeny},
+		 #{item.sendMoeny},#{item.othMoeny},#{item.detailId },#{item.formNum},#{item.toOrdrNum}
+		)
+		</foreach>
+	</insert>
+	<insert id="insertInvtyDetails" parameterType="com.px.mis.account.entity.InvtyDetails">
+		insert into invty_details (book_ok_dt, make_vouch_id,make_vouch_abst, recv_send_cate_id, recv_send_cate_nm, 
+	    in_unit_price, send_unit_price, oth_unit_price,in_qty, send_qty, oth_qty, in_moeny, send_moeny, oth_moeny, 
+	    detail_id, form_num,to_ordr_num)
+	    values (#{bookOkDt},#{makeVouchId},#{makeVouchAbst},#{recvSendCateId },#{recvSendCateNm},#{inUnitPrice},
+		#{sendUnitPrice},#{othUnitPrice},#{inQty},#{sendQty},#{othQty},#{inMoeny},#{sendMoeny},#{othMoeny},#{detailId},
+		#{formNum},#{toOrdrNum})
+	</insert>
+	
+	<delete id="delectInvtyList" parameterType="java.util.List">
+		delete its FROM invty_detail it INNER JOIN invty_details its ON it.detail_id = its.detail_id
+	    where its.invty_details_id in
+		<foreach item="invty" collection="list" open="(" close=")" separator=",">
+		     #{invty.invtyDetailsId}
+		</foreach>
+	</delete>
+	<select id="selectSendAndRecePool" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+			it.whs_encd,it.invty_encd,it.send_unit_price,it.in_unit_price,it.oth_unit_price,it.uprc,it.ordr_num,it.bat_num,io.invty_nm,
+			io.weight,io.bx_rule,SUM(it.send_moeny) as send_moeny,SUM(it.send_qty) as send_qty,SUM(it.in_moeny) as in_moeny,
+			SUM(it.in_qty) as in_qty,SUM(it.oth_moeny) as oth_moeny,SUM(it.oth_qty) as oth_qty,SUM(it.qty) AS qty,SUM(it.amt) as amt,
+			wd.whs_nm,io.weight,io.bx_rule,cls.invty_cls_nm as invty_cls_nm,cls.invty_cls_encd as invty_cls_encd,cls.level as level
+		FROM	invty_mth_term_bgn_tab  it
+		LEFT JOIN whs_doc wd ON wd.whs_encd = it.whs_encd
+		LEFT JOIN invty_doc io ON io.invty_encd = it.invty_encd
+		LEFT JOIN invty_cls cls ON cls.invty_cls_encd = it.invty_cls_encd 
+		WHERE 1=1	
+		
+		<if test="whsEncd != null and whsEncd != ''">
+			AND it.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND it.bat_num = #{batNum}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND it.invty_encd =#{invtyEncd}
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND it.invty_cls_encd = #{invtyClsEncd}
+		</if>
+		<if test="year != null and year != ''">
+			AND it.acct_yr = #{year}
+		</if>
+		<if test="month != null and month != ''">
+			AND it.accti_mth = #{month}
+		</if>
+		<if test="start != null and start != ''">
+			AND it.accti_mth &gt;= #{start}
+		</if>
+		<if test="end != null and end != ''">
+			AND it.accti_mth &lt;= #{end}
+		</if>
+		<if test="isBatNumPool != null and isBatNumPool != ''">
+			GROUP BY it.invty_encd,it.whs_encd,it.bat_num
+		</if>
+		<if test="isWhsEncdPool != null and isWhsEncdPool != ''">
+			GROUP BY it.invty_encd,it.whs_encd
+		</if>
+		<if test="isInvtyEncdCls != null and isInvtyEncdCls != ''">
+			GROUP BY it.invty_cls_encd
+		</if>
+	</select>
+	<select id="countSelectSendAndRecePool" parameterType="Map" resultType="int">
+		SELECT COUNT(*) FROM (
+			SELECT SUM(it.ordr_num)
+				
+			FROM	invty_mth_term_bgn_tab  it
+			LEFT JOIN whs_doc wd ON wd.whs_encd = it.whs_encd
+			LEFT JOIN invty_doc io ON io.invty_encd = it.invty_encd
+			LEFT JOIN invty_cls cls ON cls.invty_cls_encd = it.invty_cls_encd 
+			WHERE 1=1
+		<if test="whsEncd != null and whsEncd != ''">
+			AND it.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND it.bat_num = #{batNum}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND it.invty_encd =#{invtyEncd}
+		</if>
+		<if test="year != null and year != ''">
+			AND it.acct_yr = #{year}
+		</if>
+		<if test="month != null and month != ''">
+			AND it.accti_mth = #{month}
+		</if>
+		<if test="start != null and start != ''">
+			AND it.accti_mth &gt;= #{start}
+		</if>
+		<if test="end != null and end != ''">
+			AND it.accti_mth &lt;= #{end}
+		</if>
+		<if test="isBatNumPool != null and isBatNumPool != ''">
+			GROUP BY it.invty_encd,it.whs_encd,it.bat_num
+		</if>
+		<if test="isWhsEncdPool != null and isWhsEncdPool != ''">
+			GROUP BY it.invty_encd,it.whs_encd
+		</if>
+		<if test="isInvtyEncdCls != null and isInvtyEncdCls != ''">
+			GROUP BY it.invty_cls_encd
+		</if>
+		) a
+	</select>
+	<select id="sendProductList" parameterType="Map" resultMap="BaseSendMap">
+		SELECT
+			sow.cust_id,sows.invty_encd,sow.is_nt_bllg,sow.is_nt_stl,iv.invty_nm,sows.no_tax_amt as amt ,sows.qty as qty
+		FROM
+			sell_out_whs AS sow
+		INNER JOIN sell_out_whs_sub AS sows ON sow.out_whs_id = sows.out_whs_id
+		LEFT JOIN invty_doc as iv ON iv.invty_encd = sows.invty_encd
+		WHERE
+			sow.is_nt_chk = 1
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sows.whs_encd = #{whsEncd}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sows.invty_encd =#{invtyEncd}
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND sow.book_entry_tm &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND sow.book_entry_tm &lt;= #{bookOkEDt}
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND sow.out_whs_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND sow.out_whs_dt &lt;= #{formEDt}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND sow.is_nt_book_entry = #{isNtBookOk}
+		</if>	
+		LIMIT #{index},#{num}
+	</select>
+	
+	<select id="sendProductsPool" parameterType="Map" resultMap="BaseSendMap">
+		SELECT
+			sow.cust_id,
+			sows.invty_encd,
+			sow.is_nt_bllg,
+			sow.is_nt_stl,
+			iv.invty_nm,
+			SUM(sows.no_tax_amt) AS inMoeny,
+			SUM(sows.qty) AS inQty,
+			cd.cust_nm AS cust_nm,
+			SUM(sell.un_bllg_qty) AS sendQty
+		FROM
+			sell_out_whs AS sow
+		INNER JOIN sell_out_whs_sub AS sows ON sow.out_whs_id = sows.out_whs_id
+		LEFT JOIN invty_doc AS iv ON iv.invty_encd = sows.invty_encd
+		LEFT JOIN cust_doc AS cd ON cd.cust_id = sow.cust_id
+		LEFT JOIN sell_sngl_sub as sell ON sell.sell_sngl_id = sow.sell_ordr_ind
+		WHERE
+			sow.is_nt_chk = 1
+		<if test="whsEncd != null and whsEncd != ''">
+			AND sows.whs_encd = #{whsEncd}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sows.invty_encd =#{invtyEncd}
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND sow.book_entry_tm &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND sow.book_entry_tm &lt;= #{bookOkEDt}
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND sow.out_whs_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND sow.out_whs_dt &lt;= #{formEDt}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND sow.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		<if test="isWhsEncdPool != null and isWhsEncdPool != ''">
+			GROUP BY sows.whs_encd,sows.invty_encd
+		</if>
+		<if test="isInvtyEncdPool != null and isInvtyEncdPool != ''">
+			GROUP BY sows.invty_encd
+		</if>
+		<if test="isCustPool != null and isCustPool != ''">
+			GROUP BY sow.cust_id,sows.invty_encd
+		</if>	
+		LIMIT #{index},#{num}
+	</select>
+	<select id="countSendProductsPool" parameterType="Map" resultType="int">
+		SELECT count(*) from (
+			SELECT
+				sow.out_whs_id
+			FROM
+				sell_out_whs AS sow
+			INNER JOIN sell_out_whs_sub AS sows ON sow.out_whs_id = sows.out_whs_id
+			WHERE
+				sow.is_nt_chk = 1
+			<if test="whsEncd != null and whsEncd != ''">
+				AND sows.whs_encd = #{whsEncd}
+			</if>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND sows.invty_encd =#{invtyEncd}
+			</if>
+			<if test="bookOkSDt != null and bookOkSDt != ''">
+				AND sow.book_entry_tm &gt;= #{bookOkSDt}
+			</if>
+			<if test="bookOkEDt != null and bookOkEDt != ''">
+				AND sow.book_entry_tm &lt;= #{bookOkEDt}
+			</if>
+			<if test="formSDt != null and formSDt != ''">
+				AND sow.out_whs_dt &gt;= #{formSDt}
+			</if>
+			<if test="formEDt != null and formEDt != ''">
+				AND sow.out_whs_dt &lt;= #{formEDt}
+			</if>
+			<if test="isNtBookOk != null and isNtBookOk != ''">
+				AND sow.is_nt_book_entry = #{isNtBookOk}
+			</if>
+			<if test="isWhsEncdPool != null and isWhsEncdPool != ''">
+				GROUP BY sows.whs_encd,sows.invty_encd
+			</if>
+			<if test="isInvtyEncdPool != null and isInvtyEncdPool != ''">
+				GROUP BY sows.invty_encd
+			</if>
+			<if test="isCustPool != null and isCustPool != ''">
+				GROUP BY sow.cust_id,sows.invty_encd
+			</if>
+		) a
+	</select>
+	
+	<select id="selectByInvtyDeatil" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+			detail_id,invty_encd,bat_num,whs_encd,invty_cls_encd
+		FROM
+			invty_detail i
+
+		WHERE 1=1
+		<if test="whsEncd != null and whsEncd != ''">
+			AND i.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND i.bat_num = #{batNum}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND i.invty_encd =#{invtyEncd}
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND i.invty_cls_encd =#{invtyClsEncd}
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND i.whs_encd IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.whsEncd}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND i.bat_num IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.batNum}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND i.invty_encd IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.invtyEncd}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND i.invty_cls_encd IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.invtyClsEncd}
+           	  </foreach>
+		</if>
+		<if test="whsList != null and whsList.size() > 0">
+			AND i.whs_encd IN 
+		      <foreach collection="whsList" index="whs" open="(" separator="," close=")">
+                #{whs}
+           	  </foreach>
+		</if>
+		<if test="batNumList != null and batNumList.size() > 0">
+			AND i.bat_num IN 
+		       <foreach collection="batNumList" item="batNum" open="(" close=")" separator=",">
+					#{batNum}
+			   </foreach>
+		</if>
+		<if test="invtysList != null and invtysList.size() > 0">
+			AND i.invty_encd IN 
+		      <foreach collection="invtysList" item="invtyEncd" open="(" close=")" separator=",">
+					#{invtyEncd}
+			   </foreach>
+		</if>
+	</select>
+	<select id="selectByInvtyDeatilsList" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+			i.*,it.*
+		FROM
+			invty_detail i
+		INNER JOIN invty_details it ON i.detail_id = it.detail_id
+		WHERE
+			1 = 1
+		<if test="whsEncd != null and whsEncd != ''">
+			AND i.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND i.bat_num = #{batNum}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND i.invty_encd =#{invtyEncd}
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND i.invty_cls_encd =#{invtyClsEncd}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND it.form_num = #{formNum}
+		</if>
+		<if test="backNumList != null and backNumList.size() > 0 ">
+			AND it.form_num IN
+			<foreach collection="backNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="selectBeginDataByMap" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+			it.*,im.qty as qty ,im.amt as amt
+		FROM
+			invty_detail it
+		LEFT JOIN invty_mth_term_bgn_tab im ON im.invty_encd = it.invty_encd
+		WHERE
+			 exists (
+				SELECT
+					DISTINCT(invty_encd)
+				FROM
+					invty_mth_term_bgn_tab 
+				<where>
+					<if test="month != null and month != ''">
+						and accti_mth = #{month}
+					</if>
+				</where>
+				
+			)
+		<if test="invtyEncd != null and invtyEncd != ''">
+			and it.invty_encd = #{invtyEncd}
+		</if>
+		GROUP BY it.invty_encd
+		LIMIT #{index},#{num}
+	</select>
+	<select id="selectBeginDataByMapCount" parameterType="Map" resultType="int">
+	SELECT count(*) from (
+		SELECT
+			it.detail_id
+		FROM
+			invty_detail it
+		LEFT JOIN invty_mth_term_bgn_tab im ON im.invty_encd = it.invty_encd
+		WHERE
+			 exists (
+				SELECT
+					DISTINCT(invty_encd)
+				FROM
+					invty_mth_term_bgn_tab 
+				<where>
+					<if test="month != null and month != ''">
+						and accti_mth = #{month}
+					</if>
+					<if test="year != null and year != ''">
+						and acct_yr = #{year}
+					</if>
+				</where>
+				
+			)
+		<if test="invtyEncd != null and invtyEncd != ''">
+			and it.invty_encd = #{invtyEncd}
+		</if>
+		GROUP BY it.invty_encd
+	) a
+	</select>
+	
+	<select id="sumQtyAndAmtByInvtyEncd" parameterType="Map" resultType="InvtyDetail">
+	
+		SELECT SUM(qty) as qty,SUM(amt) as amt from invty_mth_term_bgn_tab 
+		
+		<where>
+			<if test="month != null and month != ''">
+				and accti_mth = #{month}
+			</if>
+			<if test="year != null and year != ''">
+				and acct_yr = #{year}
+			</if>
+			<if test="start != null and start != ''">
+				AND accti_mth &gt;= #{start}
+			</if>
+			<if test="end != null and end != ''">
+				AND accti_mth &lt;= #{end}
+			</if>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				and invty_encd = #{invtyEncd}
+			</if>	
+		</where>
+	</select>
+	
+	 	
+  	
+</mapper>

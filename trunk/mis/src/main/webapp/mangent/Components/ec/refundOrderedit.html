@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+		
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>退款单修改</title>
+	</head>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css"/>
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>		
+		<script type="text/javascript" src="../../assets/js/mis/ec/refundOrderedit.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>		
+		
+		
+	<body>
+		<div class="box">			
+		<div class="purchaseTit">
+			<!--<h1 class="title">退款单修改</h1>-->
+			<div class="buttons">								
+				<!--<button class="importExcel">导入</button>
+				<button class="exportExcel">导出</button>
+				<button class="addOrder">增行</button>
+				<button class="delOrder">删行</button>
+				<button class="saveOrder">保存</button>-->
+				<button class="update">更新</button>
+				<!--<button id="find">条件查询</button>
+				<button class="Audit">审核</button>
+				<button class="unAudit">弃审</button>
+				<button class="jSearch">联查</button>
+				<button class="Reverse">逆向操作</button>
+				<button class="goodsUpt">商品调整</button>
+				<button class="download">下载</button>
+				<button class="print">打印</button>-->
+				<!--<button id="searchAll" >搜索全部</button>-->
+			</div>			
+		</div>
+			
+			<div class="order-title">
+				<form class="row" id="formSave">			
+				<div class="info">
+					<div class="supplier col-md-4" >
+						<span>退款单编码</span>
+						<input type="text" class="refId" name="refId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>订单编码</span>
+						<input type="text" class="orderId" name="orderId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>电商平台编码</span>
+						<input type="text" class="ecId" name="ecId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>电商订单编码</span>
+						<input type="text" class="ecOrderId" name="ecOrderId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>店铺编码</span>
+						<input type="text" class="storeId" name="storeId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>店铺名称</span>
+						<input type="text" class="storeName" name="storeName1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>电商退款单号</span>
+						<input type="text" class="ecRefId" name="ecRefId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>申请日期</span>
+						<input type="text" class="applyDate" name="applyDate1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>买家会员号</span>
+						<input type="text" class="buyerId" name="buyerId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>是否退货</span>
+						<input type="text" class="isRefNum" name="isRefNum1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>整单退货数量</span>
+						<input type="text" class="allRefNum" name="allRefNum1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>整单退款金额</span>
+						<input type="text" class="allRefMoney" name="allRefMoney1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>退款原因</span>
+						<input type="text" class="refReason" name="refReason1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>退款说明</span>
+						<input type="text" class="refExplain" name="refExplain1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>退款状态</span>
+						<input type="text" class="refStatus" name="refStatus1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>下载时间</span>
+						<input type="text" class="downTime" name="downTime1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>处理日期</span>
+						<input type="text" class="treDate" name="treDate1" value="" />
+					</div><div class="supplier col-md-4" >
+						<span>操作员</span>
+						<input type="text" class="operator" name="operator1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>是否审核</span>
+						<input type="text" class="isAudit" name="isAudit1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>备注</span>
+						<input type="text" class="memo" name="memo1" value="" />
+					</div>
+					
+					
+				</div>	
+			</form>			
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqGridPager"></div>
+			<div class="smallbox">
+				<table cellspacing="10"
+		cellpadding="10" border="1" class="table table-hover">
+					<tr>
+						<th>chkTm</th>
+  						<th>chkr</th>
+	  					<th>name</th>
+	  					<th>orderCode</th>
+	  					<th>setupPers</th>
+	  					<th>setupTm</th>
+					</tr>
+					<!--<tr>
+						<td>852</td>
+	  					<td>52</td>
+	  					<td>852</td>
+	  					<td>52</td>
+	  					<td>852</td>
+	  					<td>52</td>
+					</tr>-->					
+				</table>
+			</div>
+	</body>
+</html>
+<style>
+	.smallbox{
+		display:none;
+		position: absolute;
+		left: 0;
+		top: 254px; 
+		width: 1510px; 
+		height:492px; 
+		background:lightgrey;
+		text-align: center;
+		}
+	.smallbox>table{
+		border-collapse:collapse;
+		border: 1px solid black;
+		border-spacing: 20px;
+		
+	}
+	
+	ul>li{
+		list-style: none;
+		width: 230px;
+		display: inline-block;
+		justify-content: space-between;
+		text-align: center;
+		  
+	}
+	.ui-state-highlight{color: red !important;}
+	.editable.inline-edit-cell.ui-widget-content.ui-corner-all{
+		width: 100%
+		!important;
+	}
+	.info>div{
+		width:33%;
+		display:inline-block;
+		
+	}
+	#jqgrids_cb{
+		width:17px!important;
+	}
+	#jqgrids_rn{
+		width:28px!important;
+	}
+
+</style>
+<script type="text/javascript">
+	
+	$("table").delegate("tr","mouseover",function(){
+//		$(this).addClass("mouseover")
+		$(this).css("background-color","#FC3");
+	});	
+	$("table").delegate("tr","mouseout",function(){
+//		$(this).removeClass("mouseover");
+		$(this).css("background-color","");
+	});	
+	$("table").delegate("tr","click",function(){
+		$(this).css("background-color","#FFE48D");
+	});	
+
+</script>

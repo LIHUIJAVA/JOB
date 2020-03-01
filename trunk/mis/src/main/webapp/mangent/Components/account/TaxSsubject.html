@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>税金科目</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/provrCls.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/account/acctltmDoc_quotes.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/account/TaxSsubject.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/drag.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+		
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style>
+		.provr_List {
+			width: 38%;
+			font-size: 12px;
+			margin: 0 auto;
+		}
+		
+		.buttons {
+			margin-bottom: 30px
+		}
+		
+		#big_wrap {
+			width: 100%;
+			height: 100%;
+			background-color: #000;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 999;
+			opacity: 0.3;
+			display: none;
+		}
+		
+		#gbox_jqgrids .ui-jqgrid-bdiv {
+			height: 300px!important;
+		}
+		
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+		#purchaseOrder .purchaseTit {
+			margin-top: 0
+		}
+	</style>
+
+	<body>
+		<div id="big_wrap"></div>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div id='loader'>
+					<div>lo</div>
+					<div>ad</div>
+					<div>ing</div>
+				</div>
+				<!--<h1 class="title">税金科目</h1>-->
+				<div class="buttons">
+					<!--<button class="printing">打印</button>-->
+					<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>
+					<button class="addOrder">增行</button>
+					<button class="delOrder_a">删行</button>
+					<button class="paybl_saveOrder">保存</button>
+					<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>
+				</div>
+				<div id="box">
+					<!--供应商分类-->
+					<div id="provrClsList" class="provr_List">
+						<div class="purchaseOrder">
+							<div class="purchaseTit">
+								<div class="buttons">
+									<button class="sure">确定</button>
+									<button class="cancel">取消</button>
+								</div>
+							</div>
+
+							<aside>
+								<!--左列树-->
+								<div id="tree" style="height:360px"></div>
+							</aside>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<table id="jqgrids"></table>
+			<div id="jqgridPager"></div>
+		</div>
+
+		<!--会计科目-->
+		<div id="insertClsList" class="account_List" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit account">
+					<div class="buttons">
+						<button class="search">查询</button>
+						<button class="sure">确定</button>
+						<button class="cancel">取消</button>
+					</div>
+				</div>
+
+				<div class="purchaseTit">
+					<h1 class="title">会计科目</h1>
+				</div>
+				<table id="jqGrids"></table>
+				<div id="jqGridPager"></div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

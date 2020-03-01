@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.ProActivitysDao">
+  <insert id="insert"    useGeneratedKeys="true"  keyProperty="no"  parameterType="com.px.mis.ec.entity.ProActivitys"  >
+	INSERT INTO pro_activitys (pro_act_id,pro_act_name,all_goods,goods_range, plan_creator,gift_num,has_gift_num,memo,pro_plan_id,pro_plan_name)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.proActId,jdbcType=VARCHAR}, #{item.proActName,jdbcType=VARCHAR}, #{item.allGoods,jdbcType=VARCHAR}, #{item.goodsRange,jdbcType=VARCHAR},
+      #{item.planCreator,jdbcType=VARCHAR}, #{item.giftNum,jdbcType=INTEGER}, #{item.hasGiftNum,jdbcType=INTEGER}, #{item.memo,jdbcType=VARCHAR}
+      
+      ,#{item.proPlanId},#{item.proPlanName})
+    </foreach>
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ProActivitys">
+  	SELECT 
+	*
+  	FROM pro_activitys 
+  	WHERE pro_act_id = #{proActId}
+  </select>
+  
+  <select id="selectById" parameterType="int" resultType="com.px.mis.ec.entity.ProActivitys">
+  	SELECT no,pro_act_id, pro_act_name, all_goods, goods_range, plan_creator, gift_num,has_gift_num, memo,pro_plan_id,pro_plan_name ,pro_plan_id,pro_plan_name
+  	FROM pro_activitys 
+  	WHERE no = #{no}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  pro_activitys
+  	WHERE pro_act_id=#{proActId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.ProActivitys">
+  	UPDATE pro_activitys
+    <set>
+      <if test="no != null">
+        no = #{no,jdbcType=BIGINT},
+      </if>
+      <if test="proActId != null">
+        pro_act_id = #{proActId,jdbcType=VARCHAR},
+      </if>
+      <if test="proActName!= null">
+         pro_act_name= #{proActName,jdbcType=VARCHAR},
+      </if>
+      <if test=" proPlanId!= null">
+       pro_plan_id = #{proPlanId,jdbcType=VARCHAR},
+      </if>
+      <if test="proPlanName != null">
+        pro_plan_name = #{proPlanName,jdbcType=VARCHAR},
+      </if>
+      <if test="allGoods != null">
+        all_goods = #{allGoods,jdbcType=INTEGER},
+      </if>
+      <if test="goodsRange != null">
+        goods_range = #{goodsRange,jdbcType=VARCHAR},
+      </if>
+      <if test="planCreator != null">
+        plan_creator = #{planCreator,jdbcType=VARCHAR},
+      </if>
+      <if test="giftNum != null">
+        gift_num = #{giftNum,jdbcType=INTEGER},
+      </if>
+      <if test="hasGiftNum != null">
+        has_gift_num = #{hasGiftNum,jdbcType=INTEGER},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+           <if test="proPlanId != null">
+        pro_plan_id = #{proPlanId,jdbcType=VARCHAR},
+      </if>     <if test="proPlanName != null">
+        pro_plan_name = #{proPlanName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE no = #{no,jdbcType=BIGINT}
+  </update>
+  <update id="updateHasGiftNum" parameterType="com.px.mis.ec.entity.ProActivitys">
+  	UPDATE pro_activitys
+    set
+        has_gift_num = IFNULL(has_gift_num,0) + #{hasGiftNum}
+    WHERE no = #{no}
+  </update>
+  
+  <select id="selectProActIdAllGoods" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ProActivitys">
+  	SELECT 
+	  	pro_activitys.`no`,
+		pro_activitys.pro_act_id,
+		pro_activitys.pro_act_name,
+		pro_activitys.all_goods,
+		pro_activitys.goods_range,
+		pro_activitys.plan_creator,
+		pro_activitys.gift_num,
+		pro_activitys.has_gift_num,
+		pro_activitys.memo,
+		pro_activitys.pro_plan_id,
+		pro_activitys.pro_plan_name
+	  	FROM pro_activitys 
+  	WHERE pro_act_id = #{proActId}
+  	and ( all_goods = 1 or  goods_range=#{goodsRange})
+  </select>
+</mapper>

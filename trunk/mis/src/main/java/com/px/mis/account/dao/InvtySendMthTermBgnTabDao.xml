@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtySendMthTermBgnTabDao">
+	 <resultMap id="BaseResultMap" type="com.px.mis.account.entity.InvtyMthTermBgnTab">
+	 
+	    <id column="ordr_num"  property="ordrNum" />
+	    <result column="sub_nm" property="subNm" />
+	    <result column="sub_id" property="subId" />
+	    <result column="whs_encd" property="whsEncd" />
+	    <result column="invty_cls_encd" property="invtyClsEncd" />
+	    <result column="measr_corp_nm" property="measrCorpNm" />
+	    <result column="spc_model" property="bxRule" />
+	    <result column="invty_cd" property="invtyCd" />
+	    <result column="invty_nm" property="invtyNm" />
+	    <result column="bat_num" property="batNum" />
+	    <result column="invty_encd" property="invtyEncd" />
+	    <result column="qty"  property="qty" />
+	    <result column="uprc"  property="uprc" />
+	    <result column="amt"  property="amt" />
+	    <result column="make_vouch_id" property="makeVouchId" />
+	    <result column="make_vouch_abst" property="makeVouchAbst" />
+	    <result column="send_unit_price"  property="sendUnitPrice" />
+	    <result column="send_qty"  property="sendQty" />
+	    <result column="send_moeny"  property="sendMoeny" />
+	    <result column="in_unit_price"  property="inUnitPrice" />
+	    <result column="in_qty"  property="inQty" />
+	    <result column="in_moeny"  property="inMoeny" />
+	    <result column="oth_unit_price"  property="othUnitPrice" />
+	    <result column="oth_moeny"  property="othMoeny" />
+	    <result column="oth_qty"  property="othQty" />
+	    <result column="acct_yr" property="acctYr" />
+	    <result column="accti_mth" property="acctiMth" />
+	    <result column="acc_num" property="accNum" />
+	    <result column="acc_time"  property="accTime" />
+	    <result column="ctime"  property="ctime" />
+	    <result column="is_final_deal" property="isFinalDeal" />
+	    <result column="is_mth_end_stl" property="isMthEndStl" />
+	    <result column="cust_id" property="custId" />
+	    <result column="cust_nm" property="custNm" />
+	  </resultMap>
+	<sql id="Base_Column_List">
+	    ordr_num, sub_nm, sub_id, whs_encd, invty_cls_encd, measr_corp_nm, spc_model, invty_cd, 
+	    invty_nm, bat_num, invty_encd, qty, uprc, amt, make_vouch_id, make_vouch_abst, send_unit_price, 
+	    send_qty, send_moeny, in_unit_price, in_qty, in_moeny, oth_unit_price, oth_moeny, 
+	    oth_qty, acct_yr, accti_mth, acc_num, acc_time, ctime, is_final_deal, is_mth_end_stl
+	</sql>
+	<select id="selectSendMthByMthTerm" parameterType="Map" resultType="com.px.mis.account.entity.InvtyMthTermBgnTab">
+	 	SELECT
+			ordr_num, sub_nm, sub_id, whs_encd,invty_cls.invty_cls_encd,
+	invty_cls.invty_cls_nm, measr_corp_nm, spc_model, invty_cd, 
+		    invty_nm, bat_num, invty_encd, qty, uprc, amt, make_vouch_id, make_vouch_abst, send_unit_price, 
+		    send_qty, send_moeny, in_unit_price, in_qty, in_moeny, oth_unit_price, oth_moeny, 
+		    oth_qty, acct_yr, accti_mth, acc_num, acc_time, ctime, is_final_deal, is_mth_end_stl,it.cust_id,cd.cust_nm
+		FROM
+			invty_send_mth_term_bgn_tab AS it
+		INNER JOIN cust_doc cd ON it.cust_id = cd.cust_id
+		LEFT JOIN invty_cls ON invty_cls.invty_cls_encd = it.invty_cls_encd
+		<!-- LEFT JOIN invty_subj_set_tab as a ON a.invty_big_cls_encd = it.invty_cls_encd
+		LEFT JOIN acct_itm_doc as ac ON ac.subj_id = a.invty_subj_id -->
+	 	WHERE 1=1
+	 	<if test="invtyEncd != null and invtyEncd != ''">
+			AND it.invty_Encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND it.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND it.bat_num=#{batNum}
+		</if>
+		<if test="year != null">
+			AND it.acct_yr = #{year}
+		</if>
+		<if test="start != null and start != ''">
+			AND it.accti_mth &gt;= #{start}
+		</if>
+		<if test="end != null and end != ''">
+			AND it.accti_mth &lt;= #{end}
+		</if>
+		<if test="month != null">
+			AND it.accti_mth = #{month}
+		</if>
+		<if test="isFinalDeal != null and isFinalDeal != ''">
+			AND it.is_final_deal = #{isFinalDeal}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND it.is_mth_end_stl = #{isMthEndStl}
+		</if>
+		<if test="custId != null and custId != ''">
+			AND it.cust_id = #{custId}
+		</if>
+		<if test="invtyEncdList != null and invtyEncdList.size() > 0 ">
+			AND it.invty_encd IN
+			<foreach collection="invtyEncdList" item="invtyEncd" open="(" close=")" separator=",">
+				#{invtyEncd}
+			</foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.whs_encd IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.whsEncd}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.bat_num IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.batNum}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.invty_encd IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.invtyEncd}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.invty_cls_encd IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.invtyClsEncd}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.cust_id IN
+			 <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.projEncd}
+           	 </foreach>
+		</if>
+		<if test="whsList != null and whsList.size() > 0">
+			AND it.whs_encd IN 
+		      <foreach collection="whsList" index="whsEncd" open="(" separator="," close=")">
+                #{whsEncd}
+           	  </foreach>
+		</if>
+		<if test="batNumList != null and batNumList.size() > 0">
+			AND it.bat_num IN 
+		       <foreach collection="batNumList" item="batNum" open="(" close=")" separator=",">
+					#{batNum}
+			   </foreach>
+		</if>
+		<if test="invtysList != null and invtysList.size() > 0">
+			AND it.invty_encd IN 
+		      <foreach collection="invtysList" item="invtyEncd" open="(" close=")" separator=",">
+					#{invtyEncd}
+			   </foreach>
+		</if>
+		ORDER BY it.accti_mth asc
+  	</select>
+  		<select id="selectSendMthByMth" parameterType="Map" resultType="com.px.mis.account.entity.InvtyMthTermBgnTab">
+	 	SELECT
+		  ordr_num, sub_nm, sub_id, whs_encd,invty_cls.invty_cls_encd,invty_cls.invty_cls_nm, measr_corp_nm, spc_model, invty_cd, 
+		  invty_nm, bat_num, invty_encd, SUM(qty) as qty, SUM(amt)/SUM(qty) as uprc, SUM(amt) as amt, make_vouch_id, make_vouch_abst,
+          send_unit_price,send_qty, send_moeny, in_unit_price, in_qty, in_moeny, oth_unit_price, oth_moeny, 
+		  oth_qty, acct_yr, accti_mth, acc_num, acc_time, ctime, is_final_deal, is_mth_end_stl,it.cust_id,cd.cust_nm
+		FROM
+			invty_send_mth_term_bgn_tab AS it
+		INNER JOIN cust_doc cd ON it.cust_id = cd.cust_id
+		LEFT JOIN invty_cls ON invty_cls.invty_cls_encd = it.invty_cls_encd
+		<!-- LEFT JOIN invty_subj_set_tab as a ON a.invty_big_cls_encd = it.invty_cls_encd
+		LEFT JOIN acct_itm_doc as ac ON ac.subj_id = a.invty_subj_id -->
+	 	WHERE 1=1
+	 	<if test="invtyEncd != null and invtyEncd != ''">
+			AND it.invty_Encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND it.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND it.bat_num=#{batNum}
+		</if>
+		<if test="year != null">
+			AND it.acct_yr = #{year}
+		</if>
+		<if test="start != null and start != ''">
+			AND it.accti_mth &gt;= #{start}
+		</if>
+		<if test="end != null and end != ''">
+			AND it.accti_mth &lt;= #{end}
+		</if>
+		<if test="month != null">
+			AND it.accti_mth = #{month}
+		</if>
+		<if test="isFinalDeal != null and isFinalDeal != ''">
+			AND it.is_final_deal = #{isFinalDeal}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND it.is_mth_end_stl = #{isMthEndStl}
+		</if>
+		<if test="custId != null and custId != ''">
+			AND it.cust_id = #{custId}
+		</if>
+		<if test="invtyEncdList != null and invtyEncdList.size() > 0 ">
+			AND it.invty_encd IN
+			<foreach collection="invtyEncdList" item="invtyEncd" open="(" close=")" separator=",">
+				#{invtyEncd}
+			</foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.whs_encd IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.whsEncd}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.bat_num IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.batNum}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.invty_encd IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.invtyEncd}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.invty_cls_encd IN 
+		      <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.invtyClsEncd}
+           	  </foreach>
+		</if>
+		<if test="invtyList != null and invtyList.size() > 0">
+			AND it.cust_id IN
+			 <foreach collection="invtyList" index="index" item="item" open="(" separator="," close=")">
+                #{item.projEncd}
+           	 </foreach>
+		</if>
+		<if test="whsList != null and whsList.size() > 0">
+			AND it.whs_encd IN 
+		      <foreach collection="whsList" index="whsEncd" open="(" separator="," close=")">
+                #{whsEncd}
+           	  </foreach>
+		</if>
+		<if test="batNumList != null and batNumList.size() > 0">
+			AND it.bat_num IN 
+		       <foreach collection="batNumList" item="batNum" open="(" close=")" separator=",">
+					#{batNum}
+			   </foreach>
+		</if>
+		<if test="invtysList != null and invtysList.size() > 0">
+			AND it.invty_encd IN 
+		      <foreach collection="invtysList" item="invtyEncd" open="(" close=")" separator=",">
+					#{invtyEncd}
+			   </foreach>
+		</if>
+		ORDER BY it.accti_mth asc
+  	</select>
+  	
+  	<select id="countSelectByMthTerm" parameterType="Map" resultType="int">
+  		select count(*) from invty_send_mth_term_bgn_tab as it 
+	 	WHERE 1=1
+	 	<if test="invtyEncd != null and invtyEncd != ''">
+			AND it.invty_Encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND it.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND it.bat_num=#{batNum}
+		</if>
+		<if test="year != null and year != ''">
+			AND it.acct_yr = #{year}
+		</if> 
+		<if test="month != null and month != ''">
+			AND it.accti_mth = #{month}
+		</if>
+		<if test="isFinalDeal != null and isFinalDeal != ''">
+			AND it.is_final_deal = #{isFinalDeal}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND it.is_mth_end_stl = #{isMthEndStl}
+		</if>
+  	</select>
+  	<select id="selectMthTermList" parameterType="Map" resultType="com.px.mis.account.entity.InvtyMthTermBgnTab" >
+  		select * from invty_send_mth_term_bgn_tab as it 
+	 	WHERE 1=1
+	 	<if test="invtyEncd != null and invtyEncd != ''">
+			AND it.invty_Encd = #{invtyEncd}
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND it.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND it.bat_num=#{batNum}
+		</if>
+		<if test="year != null and year != ''">
+			AND it.acct_yr = #{year}
+		</if> 
+		<if test="month != null and month != ''">
+			AND it.accti_mth = #{month}
+		</if>
+		<if test="isFinalDeal != null and isFinalDeal != ''">
+			AND it.is_final_deal = #{isFinalDeal}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND it.is_mth_end_stl = #{isMthEndStl}
+		</if>
+  	</select>
+  	<select id="selectIsFinalDeal" parameterType="Map" resultType="com.px.mis.account.entity.InvtyMthTermBgnTab">
+  		SELECT
+			ordr_num, sub_nm, sub_id, whs_encd, invty_cls_encd, measr_corp_nm, spc_model, invty_cd, 
+		    invty_nm, bat_num, invty_encd, qty, uprc, amt, make_vouch_id, make_vouch_abst, send_unit_price, 
+		    send_qty, send_moeny, in_unit_price, in_qty, in_moeny, oth_unit_price, oth_moeny, 
+		    oth_qty, acct_yr, accti_mth, acc_num, acc_time, ctime, is_final_deal, is_mth_end_stl
+		FROM
+			invty_send_mth_term_bgn_tab AS it
+		WHERE
+			1 = 1	
+		<if test="isFinalDeal != null and isFinalDeal != ''">
+			AND it.is_final_deal = #{isFinalDeal}
+		</if>
+		<if test="year != null and year != ''">
+			AND it.acct_yr = #{year}
+		</if> 
+		<if test="month != null and month != ''">
+			AND it.accti_mth = #{month}
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND invty_cls_encd = #{invtyClsEncd}
+		</if>
+		GROUP BY invty_encd
+  	</select>
+  	
+  	<insert id="insertSendMth" parameterType="com.px.mis.account.entity.InvtyMthTermBgnTab">
+	    insert into invty_send_mth_term_bgn_tab (sub_nm, sub_id,whs_encd, invty_cls_encd, measr_corp_nm, 
+    	spc_model, invty_cd, invty_nm,bat_num, invty_encd, qty,uprc, amt, make_vouch_id,make_vouch_abst,
+		send_unit_price,send_qty,send_moeny, in_unit_price, in_qty,in_moeny, oth_unit_price, oth_moeny, 
+    	oth_qty, acct_yr, accti_mth,acc_num, acc_time,ctime,is_final_deal, is_mth_end_stl,cust_id) 
+	    values (#{subNm}, #{subId},#{whsEncd}, #{invtyClsEncd}, #{measrCorpNm}, #{bxRule}, #{invtyCd}, #{invtyNm}, 
+	      #{batNum}, #{invtyEncd}, #{qty},#{uprc}, #{amt}, #{makeVouchId},#{makeVouchAbst}, #{sendUnitPrice}, #{sendQty}, 
+	      #{sendMoeny}, #{inUnitPrice}, #{inQty},#{inMoeny}, #{othUnitPrice}, #{othMoeny},#{othQty}, #{acctYr}, #{acctiMth}, 
+	      #{accNum}, #{accTime}, #{ctime},#{isFinalDeal}, #{isMthEndStl},#{custId}
+	      )
+  	</insert>
+  	<update id="updateSendMth" parameterType="com.px.mis.account.entity.InvtyMthTermBgnTab">
+  		update invty_send_mth_term_bgn_tab
+  		<set>
+	      <if test="qty != null">
+	        qty = #{qty},
+	      </if>
+	      <if test="amt != null">
+	        amt = #{amt},
+	      </if>
+	       <if test="uprc != null">
+	        uprc = #{uprc},
+	      </if>
+	      <if test="isFinalDeal != null">
+	      	is_final_deal = #{isFinalDeal},
+	      </if>
+	      <if test="accNum != null">
+	      	acc_num = #{accNum},
+	      </if>
+	      <if test="isMthEndStl != null">
+	      	is_mth_end_stl = #{isMthEndStl},
+	      </if>
+	      <if test="sendUnitPrice != null">
+	        send_unit_price = #{sendUnitPrice},
+	      </if>
+	      <if test="sendQty != null">
+	        send_qty = #{sendQty},
+	      </if>
+	      <if test="sendMoeny != null">
+	        send_moeny = #{sendMoeny},
+	      </if>
+	      <if test="inUnitPrice != null">
+	        in_unit_price = #{inUnitPrice},
+	      </if>
+	      <if test="inQty != null">
+	        in_qty = #{inQty},
+	      </if>
+	      <if test="inMoeny != null">
+	        in_moeny = #{inMoeny},
+	      </if>
+	      <if test="othUnitPrice != null">
+	        oth_unit_price = #{othUnitPrice},
+	      </if>
+	      <if test="othMoeny != null">
+	        oth_moeny = #{othMoeny},
+	      </if>
+	      <if test="othQty != null">
+	        oth_qty = #{othQty},
+	      </if>
+	    </set>
+	    where ordr_num = #{ordrNum}
+  	</update>
+  	
+  	<update id="updateSendMthList" parameterType="java.util.List">
+  		update invty_send_mth_term_bgn_tab 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_mth_end_stl =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.isMthEndStl}
+				</foreach>
+			</trim>
+			<trim prefix="in_moeny =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.inMoeny}
+				</foreach>
+			</trim>
+			<trim prefix="in_qty =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.inQty}
+				</foreach>
+			</trim>
+			<trim prefix="in_unit_price =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.inUnitPrice}
+				</foreach>
+			</trim>
+			<trim prefix="send_moeny =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.sendMoeny}
+				</foreach>
+			</trim>
+			<trim prefix="send_qty =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.sendQty}
+				</foreach>
+			</trim>
+			<trim prefix="send_unit_price =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.sendUnitPrice}
+				</foreach>
+			</trim>
+			<trim prefix="oth_moeny =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.othMoeny}
+				</foreach>
+			</trim>
+			<trim prefix="oth_qty =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.othQty}
+				</foreach>
+			</trim>
+			<trim prefix="oth_unit_price =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when ordr_num = #{item.ordrNum} then #{item.othUnitPrice}
+				</foreach>
+			</trim>
+	
+		</trim>
+		where ordr_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.ordrNum}
+		</foreach>
+  	</update>
+  	<delete id="deleteByordrNum" parameterType="int">
+	    delete from invty_send_mth_term_bgn_tab
+	    where ordr_num = #{ordrNum}
+  	</delete>
+  	<insert id="insertMthList"  parameterType="list">
+  		insert into invty_send_mth_term_bgn_tab (sub_nm, sub_id,whs_encd, invty_cls_encd, measr_corp_nm, 
+	    spc_model, invty_cd, invty_nm,bat_num, invty_encd, qty,uprc, amt, make_vouch_id,make_vouch_abst,
+		send_unit_price,send_qty,send_moeny, in_unit_price, in_qty,in_moeny, oth_unit_price, oth_moeny, 
+	    oth_qty, acct_yr, accti_mth,acc_num, acc_time,ctime,is_final_deal, is_mth_end_stl,cust_id) VALUES 
+	 	<foreach collection="list" item="item" index="index" separator="," close=";">
+			(#{item.subNm}, #{item.subId},#{item.whsEncd}, #{item.invtyClsEncd}, #{item.measrCorpNm}, 
+			 #{item.bxRule}, #{item.invtyCd}, #{item.invtyNm},#{item.batNum}, #{item.invtyEncd}, #{item.qty}, 
+			 #{item.uprc}, #{item.amt}, #{item.makeVouchId},#{item.makeVouchAbst}, #{item.sendUnitPrice}, #{item.sendQty}, 
+			 #{item.sendMoeny}, #{item.inUnitPrice}, #{item.inQty},#{item.inMoeny}, #{item.othUnitPrice}, #{item.othMoeny}, 
+			 #{item.othQty}, #{item.acctYr}, #{item.acctiMth},#{item.accNum}, #{item.accTime}, #{item.ctime}, 
+			 #{item.isFinalDeal}, #{item.isMthEndStl},#{item.custId})
+		 </foreach>
+  	</insert>
+  	<delete id="deleteSendMthList" parameterType="java.util.List" >
+  		DELETE FROM invty_send_mth_term_bgn_tab
+  		where ordr_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.ordrNum}
+		</foreach>
+  	</delete>
+  	
+  	<!-- 明细账查询期初数据 -->
+  	<select id="selectMthTermByInvty" parameterType="Map" resultMap="BaseResultMap">
+  		SELECT
+			it.whs_encd,it.invty_encd,it.send_unit_price,it.in_unit_price,it.oth_unit_price,it.uprc,it.ordr_num,it.bat_num,it.send_moeny,
+			it.send_qty,it.in_moeny,it.in_qty,it.oth_moeny,it.oth_qty,it.qty,it.amt,it.measr_corp_nm,it.acct_yr,it.accti_mth,
+			wd.whs_nm,io.weight,io.bx_rule,cls.invty_cls_nm as invty_cls_nm,cls.invty_cls_encd as invty_cls_encd,cls.level as level,io.invty_nm,
+			io.weight,io.bx_rule,ac.subj_nm as sub_nm,ac.subj_id as subj_id
+		FROM	invty_send_mth_term_bgn_tab  it
+		LEFT JOIN whs_doc wd ON wd.whs_encd = it.whs_encd
+		LEFT JOIN invty_doc io ON io.invty_encd = it.invty_encd
+		LEFT JOIN invty_cls cls ON cls.invty_cls_encd = it.invty_cls_encd 
+	    LEFT JOIN invty_subj_set_tab as a ON a.invty_big_cls_encd = it.invty_cls_encd 
+        LEFT JOIN acct_itm_doc as ac ON ac.subj_id = a.invty_subj_id
+		WHERE 1=1
+		<if test="whsEncd != null and whsEncd != ''">
+			AND it.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND it.bat_num = #{batNum}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND it.invty_encd =#{invtyEncd}
+		</if>
+		<if test="year != null and year != ''">
+			AND it.acct_yr = #{year}
+		</if>
+		<if test="month != null and month != ''">
+			AND it.accti_mth = #{month}
+		</if>
+		<if test="start != null and start != ''">
+			AND it.accti_mth &gt;= #{start}
+		</if>
+		<if test="end != null and end != ''">
+			AND it.accti_mth &lt;= #{end}
+		</if>
+		<if test="subjId != null and subjId != ''">
+			AND ac.subj_id = #{subjId}
+		</if>
+		ORDER BY it.acct_yr,it.accti_mth
+  		LIMIT #{index},#{num}
+  	</select>
+  	<select id="sendProductMthPool" parameterType="Map" resultMap="BaseResultMap">
+  		SELECT
+			it.whs_encd,it.invty_encd,it.send_unit_price,it.in_unit_price,it.oth_unit_price,it.uprc,
+			it.ordr_num,it.bat_num,SUM(it.send_moeny) as send_moeny,SUM(it.send_qty) as send_qty,SUM(it.in_moeny) as in_moeny,
+			SUM(it.in_qty) as in_qty,SUM(it.oth_moeny) as oth_moeny,SUM(it.oth_qty) as oth_qty,SUM(it.qty) qty,SUM(it.amt) amt,
+			it.measr_corp_nm,it.acct_yr,it.accti_mth,wd.whs_nm,io.weight,io.bx_rule,cls.invty_cls_nm AS invty_cls_nm,
+			cls.invty_cls_encd AS invty_cls_encd,cls.LEVEL AS LEVEL,io.invty_nm,io.weight,io.bx_rule,ac.subj_nm AS sub_nm,
+			ac.subj_id AS subj_id,cust.cust_nm AS cust_nm,cust.cust_id AS cust_id
+		FROM	invty_send_mth_term_bgn_tab  it
+		LEFT JOIN whs_doc wd ON wd.whs_encd = it.whs_encd
+		LEFT JOIN invty_doc io ON io.invty_encd = it.invty_encd
+		LEFT JOIN invty_cls cls ON cls.invty_cls_encd = it.invty_cls_encd 
+	    LEFT JOIN invty_subj_set_tab as a ON a.invty_big_cls_encd = it.invty_cls_encd 
+        LEFT JOIN acct_itm_doc as ac ON ac.subj_id = a.invty_subj_id
+        LEFT JOIN cust_doc cust ON cust.cust_id = it.cust_id 
+		WHERE 1=1
+		<if test="whsEncd != null and whsEncd != ''">
+			AND it.whs_encd = #{whsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND it.bat_num = #{batNum}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND it.invty_encd =#{invtyEncd}
+		</if>
+		<if test="year != null and year != ''">
+			AND it.acct_yr = #{year}
+		</if>
+		<if test="month != null and month != ''">
+			AND it.accti_mth = #{month}
+		</if>
+		<if test="start != null and start != ''">
+			AND it.accti_mth &gt;= #{start}
+		</if>
+		<if test="end != null and end != ''">
+			AND it.accti_mth &lt;= #{end}
+		</if>
+		<if test="subjId != null and subjId != ''">
+			AND ac.subj_id = #{subjId}
+		</if>
+		<if test="isWhsEncdPool != null and isWhsEncdPool != ''">
+			GROUP BY it.whs_encd,it.invty_encd
+		</if>
+		<if test="isInvtyEncdPool != null and isInvtyEncdPool != ''">
+			GROUP BY it.invty_encd
+		</if>
+		<if test="isCustPool != null and isCustPool != ''">
+			GROUP BY it.cust_id,it.invty_encd
+		</if>
+		ORDER BY it.acct_yr,it.accti_mth
+  		
+  	</select>
+  	<select id="countSendProductMthPool" parameterType="Map" resultType="int">
+  		SELECT COUNT(*) FROM (
+			SELECT SUM(it.whs_encd)
+  		
+			FROM	invty_send_mth_term_bgn_tab  it
+			LEFT JOIN whs_doc wd ON wd.whs_encd = it.whs_encd
+			LEFT JOIN invty_doc io ON io.invty_encd = it.invty_encd
+			LEFT JOIN invty_cls cls ON cls.invty_cls_encd = it.invty_cls_encd 
+		    LEFT JOIN invty_subj_set_tab as a ON a.invty_big_cls_encd = it.invty_cls_encd 
+	        LEFT JOIN acct_itm_doc as ac ON ac.subj_id = a.invty_subj_id
+	        LEFT JOIN cust_doc cust ON cust.cust_id = it.cust_id 
+			WHERE 1=1
+			<if test="whsEncd != null and whsEncd != ''">
+				AND it.whs_encd = #{whsEncd}
+			</if>
+			<if test="batNum != null and batNum != ''">
+				AND it.bat_num = #{batNum}
+			</if>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND it.invty_encd =#{invtyEncd}
+			</if>
+			<if test="year != null and year != ''">
+				AND it.acct_yr = #{year}
+			</if>
+			<if test="month != null and month != ''">
+				AND it.accti_mth = #{month}
+			</if>
+			<if test="start != null and start != ''">
+				AND it.accti_mth &gt;= #{start}
+			</if>
+			<if test="end != null and end != ''">
+				AND it.accti_mth &lt;= #{end}
+			</if>
+			<if test="subjId != null and subjId != ''">
+				AND ac.subj_id = #{subjId}
+			</if>
+			<if test="isWhsEncdPool != null and isWhsEncdPool != ''">
+				GROUP BY it.whs_encd,it.invty_encd
+			</if>
+			<if test="isInvtyEncdPool != null and isInvtyEncdPool != ''">
+				GROUP BY it.invty_encd
+			</if>
+			<if test="isCustPool != null and isCustPool != ''">
+				GROUP BY it.cust_id,it.invty_encd
+			</if>
+  		) a
+  	</select>
+  	
+  	
+</mapper>

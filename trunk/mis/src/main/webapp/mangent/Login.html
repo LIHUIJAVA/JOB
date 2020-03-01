@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="shortcut icon" href="assets/img/LoginLogo.png">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Login</title>
+		<link rel="stylesheet" href="assets/css/font-awesome.css" />
+		<link rel="stylesheet" href="assets/css/Login/Login.css" />
+		<link type="text/css" rel="stylesheet" href="assets/css/baseDoc/calendar.min.css" />
+		<script type="text/javascript" src="assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="assets/js/common/jquery.cookie.js"></script>
+		<script type="text/javascript" src="./assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="assets/js/Login/Login.js"></script>
+		<script type="text/javascript" src="./assets/js/common/location.js"></script>
+	</head>
+
+	<body>
+		<div class="loginWrap">
+			<div class="admin_login">
+				<h1>
+					<img src="assets/img/LoginLogo.png" alt="loginLog" />
+					<span>账号密码登录</span>
+				</h1>
+				<form class="m-t common-form-style form_login" role="form">
+					<div class="form-group">
+						<i class="fa fa-user"></i>
+						<input type="text" placeholder="请输入账号" AUTOCOMPLETE="off" class="userName" id="userName" value="" />
+						<i class="fa fa-times-circle-o"></i>
+					</div>
+					<div class="form-group">
+						<i class="fa fa-lock"></i>
+						<input type="password" name="password" placeholder="请输入密码" class="password" id="password" value="" />
+						<i class="fa fa-eye"></i>
+					</div>
+					<div class="form-group">
+						<i class="fa fa-briefcase"></i>
+							<div class="select">
+							<div id="main">
+								<div id="content" class="ul">请选择账套</div>
+							</div>
+							<div id="div">
+								<ul id="ul">
+									<li onclick="change(this)" value = "005">上海品星互联网信息技术有限公司</li>
+									<!--<li onclick="change(this)" value = "006">北京鲜美来贸易有限公司</li>
+									<li onclick="change(this)" value = "007">上海食庆贸易有限公司</li>-->
+									<input id="bookSet" type="text" value="" style="display: none;"/>
+								</ul>
+							</div>
+						</div>
+						<i class="fa fa-angle-down ul"></i>
+					</div>
+					<div class="form-group">
+						<i class="fa fa-clock-o"></i>
+						<input type="text" id="dt" placeholder="请选择日期" calendar="YYYY-MM-DD">
+						<i class="fa fa-calendar-o"></i>
+					</div>
+				</form>
+				<button class="submit_btn">登录</button>
+			</div>
+			<div class="img_login">
+				<img src="assets/img/loginLog.jpg" alt="loginLog" />
+			</div>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PlatOrder">
+  <insert id="insert" parameterType="com.px.mis.ec.entity.PlatOrder">
+	INSERT INTO plat_order (order_id, store_id, store_name, pay_time, waif, is_audit, audit_hint, good_num, good_money, pay_money, 
+	buyer_note, seller_note, rec_address, buyer_id, rec_name, rec_mobile, ec_order_id, is_invoice, invoice_title, 
+	note_flag, is_close, is_ship, adjust_money, discount_money, order_status, return_status, 
+	has_gift, memo,adjust_status,trade_dt,biz_typ_id,sell_typ_id,recv_send_cate_id)
+	VALUES (#{orderId}, #{storeId}, #{storeName}, #{payTime}, #{waif}, #{isAudit}, #{auditHint}, #{goodNum}, #{goodMoney}, #{payMoney}, 
+	#{buyerNote}, #{sellerNote}, #{recAddress}, #{buyerId}, #{recName}, #{recMobile}, #{ecOrderId}, #{isInvoice}, #{invoiceTitle}, 
+	#{noteFlag}, #{isClose}, #{isShip}, #{adjustMoney}, #{discountMoney}, #{orderStatus}, #{returnStatus}, 
+	#{hasGift}, #{memo},#{adjustStatus},#{tradeDt},#{bizTypId},#{sellTypId},#{recvSendCateId})
+  </insert>
+  
+  <insert id="insertList" parameterType="com.px.mis.ec.entity.PlatOrder">
+	INSERT INTO plat_order (order_id, store_id, store_name, pay_time, waif, is_audit, audit_hint, good_num, good_money, pay_money, 
+	buyer_note, seller_note, rec_address, buyer_id, rec_name, rec_mobile, ec_order_id, is_invoice, invoice_title, 
+	note_flag, is_close, is_ship, adjust_money, discount_money, order_status, return_status, 
+	has_gift, memo,adjust_status,trade_dt,biz_typ_id,sell_typ_id,recv_send_cate_id)
+	VALUES 
+	<foreach collection="list" item="item" index="index" separator="," close=";">
+		(#{item.orderId}, #{item.storeId}, #{item.storeName}, #{item.payTime}, #{item.waif},
+		#{item.isAudit}, #{item.auditHint}, #{item.goodNum}, #{item.goodMoney}, #{item.payMoney}, 
+		#{item.buyerNote},#{item.sellerNote},#{item.recAddress},#{item.buyerId},#{item.recName},#{item.recMobile}, 
+		#{item.ecOrderId}, #{item.isInvoice}, #{item.invoiceTitle}, #{item.noteFlag}, #{item.isClose}, 
+		#{item.isShip}, #{item.adjustMoney}, #{item.discountMoney}, #{item.orderStatus}, #{item.returnStatus}, 
+		#{item.hasGift}, #{item.memo}, #{item.adjustStatus}, #{item.tradeDt}, #{item.bizTypId},
+		#{item.sellTypId}, #{item.recvSendCateId})
+	</foreach>
+  </insert>
+  
+  <select id="selectNumByOrderAndSKu" parameterType="Map" resultType="Map">
+  	SELECT pos.good_num,pos.pay_money
+  	FROM plat_order po,plat_orders pos 
+  	WHERE po.order_id = pos.order_id AND po.ec_order_id = #{ecOrderId} AND pos.good_sku = #{goodSku}
+  </select>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PlatOrder">
+  	SELECT order_id, store_id, store_name, pay_time, waif, is_audit, audit_hint, good_num, good_money, pay_money, 
+			buyer_note, seller_note, rec_address, buyer_id, rec_name, rec_mobile, ec_order_id, is_invoice, invoice_title, 
+			note_flag, is_close, is_ship, adjust_money, discount_money, order_status, return_status, 
+			has_gift, memo,adjust_status,trade_dt,biz_typ_id,sell_typ_id,recv_send_cate_id
+  	FROM plat_order 
+  	WHERE order_id = #{orderId}
+  </select>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.PlatOrder">
+  	UPDATE plat_order 
+  	SET order_id=#{orderId}, store_id=#{storeId}, store_name=#{storeName}, pay_time=#{payTime}, waif=#{waif}, is_audit=#{isAudit}, audit_hint=#{auditHint}, good_num=#{goodNum}, good_money=#{goodMoney}, pay_money=#{payMoney}, 
+	buyer_note=#{buyerNote}, seller_note=#{sellerNote}, rec_address=#{recAddress}, buyer_id=#{buyerId}, rec_name=#{recName}, rec_mobile=#{recMobile}, ec_order_id=#{ecOrderId}, is_invoice=#{isInvoice}, invoice_title=#{invoiceTitle}, 
+	note_flag=#{noteFlag}, is_close=#{isClose}, is_ship=#{isShip}, adjust_money=#{adjustMoney}, discount_money=#{discountMoney}, order_status=#{orderStatus}, return_status=#{returnStatus}, 
+	has_gift=#{hasGift}, memo=#{memo},adjust_status=#{adjustStatus},trade_dt=#{tradeDt},biz_typ_id=#{bizTypId},sell_typ_id=#{sellTypId},recv_send_cate_id=#{recvSendCateId}
+  </update>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE po, pos 
+  	FROM plat_order as po LEFT JOIN plat_orders as pos ON po.order_id = pos.order_id 
+  	WHERE po.order_id=#{orderId}
+  </delete>
+  
+  <select id="selectList" parameterType="Map" resultType="java.util.Map">
+	SELECT po.order_id, po.store_id, po.store_name, po.pay_time, po.waif, po.is_audit, po.audit_hint, po.good_num, po.good_money, po.pay_money, 
+	po.buyer_note, po.seller_note, po.rec_address, po.buyer_id, po.rec_name, po.rec_mobile, po.ec_order_id, po.is_invoice, po.invoice_title, 
+	po.note_flag, po.is_close, po.is_ship, po.adjust_money, po.discount_money, po.order_status, po.return_status, 
+	po.has_gift,po.memo,po.adjust_status,po.trade_dt,po.biz_typ_id,po.sell_typ_id,po.recv_send_cate_id
+	pos.no,pos.good_id, pos.good_num, pos.good_money, pos.pay_money, pos.good_sku, pos.order_id, pos.batch_no, 
+	pos.express_com, pos.pro_act_id, pos.discount_money, pos.adjust_money,pos.memo,pos.good_price,pos.pay_price,pos.deliver_whs
+	FROM plat_order as po LEFT JOIN plat_orders as pos ON po.order_id = pos.order_id 
+  	<where>
+  		<if test="accNum != null and accNum != ''">
+            AND acc_num=#{accNum}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="Integer">
+	SELECT count(*)
+  	FROM plat_order as po LEFT JOIN plat_orders as pos ON po.order_id = pos.order_id 
+  	<where>
+  		<if test="accNum != null and accNum != ''">
+            AND acc_num=#{accNum}
+        </if>
+  	</where>
+  </select>
+  
+  
+</mapper>

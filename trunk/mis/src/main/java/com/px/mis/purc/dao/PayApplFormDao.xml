@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.PayApplFormDao">
+
+	<resultMap id="BaseResultListMap"
+		type="com.px.mis.purc.entity.PayApplForm" autoMapping="true">
+		<id column="pay_appl_id" jdbcType="VARCHAR" property="payApplId" />
+		<result column="pay_appl_dt" jdbcType="VARCHAR"
+			property="payApplDt" />
+		<collection property="list"
+			ofType="com.px.mis.purc.entity.PayApplFormSub" autoMapping="true">
+			<id column="ordr_num" jdbcType="BIGINT" property="ordrNum" />
+			<result column="memos" jdbcType="VARCHAR" property="memo" />
+		</collection>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		pay_appl_id, pay_appl_dt, provr_id, form_typ_encd, acc_num,
+		user_name, dept_id,
+		provr_ordr_num,
+		is_nt_pay, payr, stl_subj,
+		prepy_money_bal, acct_pybl_bal, is_nt_chk, chkr,
+		chk_tm,
+		setup_pers,
+		setup_tm, mdfr, modi_tm, memo,to_form_typ_encd,stl_mode,purs_ordr_id
+	</sql>
+	<!-- 按照主表编码查询主表信息 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
+		resultType="PayApplForm">
+		select
+		<include refid="Base_Column_List" />
+		from pay_appl_form
+		where pay_appl_id = #{payApplId}
+	</select>
+	<!-- 按照多个主表编码查询主表信息 -->
+	<select id="selectByPrimaryKeyLsit" parameterType="list"
+		resultType="PayApplForm">
+		select
+		<include refid="Base_Column_List" />
+		from pay_appl_form
+		where pay_appl_id in
+		<foreach collection="list" item="payApplId" open="(" close=")"
+			separator=",">
+			#{payApplId}
+		</foreach>
+	</select>
+	<!-- 批量删除主子表信息 -->
+	<delete id="deleteByPrimaryKeyList"
+		parameterType="java.util.List">
+		DELETE pay_appl_form,
+		pay_appl_form_sub
+		FROM
+		pay_appl_form
+		LEFT JOIN
+		pay_appl_form_sub ON pay_appl_form.pay_appl_id =
+		pay_appl_form_sub.pay_appl_id
+		WHERE pay_appl_form.pay_appl_id in
+		<foreach item="payApplId" collection="list" open="(" close=")"
+			separator=",">
+			#{payApplId}
+		</foreach>
+	</delete>
+	<insert id="insertPayApplForm"
+		parameterType="com.px.mis.purc.entity.PayApplForm">
+		insert into pay_appl_form (pay_appl_id,pay_appl_dt,
+		provr_id, form_typ_encd,
+		acc_num, user_name, dept_id,
+		provr_ordr_num,
+		is_nt_pay, payr,
+		stl_subj, prepy_money_bal, acct_pybl_bal,
+		is_nt_chk,
+		setup_pers, setup_tm,memo,to_form_typ_encd,stl_mode,purs_ordr_id)
+		values (#{payApplId},#{payApplDt}, #{provrId}, #{formTypEncd},
+		#{accNum}, #{userName}, #{deptId},
+		#{provrOrdrNum}, 0, #{payr},
+		#{stlSubj}, #{prepyMoneyBal}, #{acctPyblBal},
+		0, #{setupPers}, now(),
+		#{memo},
+		#{toFormTypEncd},#{stlMode},#{pursOrdrId})
+	</insert>
+	<!--删除之前，插入备份 -->
+	<insert id="insertPayApplFormDl" parameterType="list">
+		insert into pay_appl_form_dl
+		select * from pay_appl_form where
+		pay_appl_id in
+		<foreach collection="list" item="pay_appl_id" open="("
+			separator="," close=")">
+			#{pay_appl_id}
+		</foreach>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.px.mis.purc.entity.PayApplForm">
+		update pay_appl_form
+		<set>
+			<if test="payApplDt != null">
+				pay_appl_dt = #{payApplDt},
+			</if>
+			<if test="provrId != null">
+				provr_id = #{provrId},
+			</if>
+			<if test="pursOrdrId != null">
+				purs_ordr_id = #{pursOrdrId},
+			</if>
+			<if test="formTypEncd != null">
+				form_typ_encd = #{formTypEncd},
+			</if>
+			<if test="accNum != null">
+				acc_num = #{accNum},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName},
+			</if>
+			<if test="deptId != null">
+				dept_id = #{deptId},
+			</if>
+			<if test="provrOrdrNum != null">
+				provr_ordr_num = #{provrOrdrNum},
+			</if>
+			<if test="isNtPay != null">
+				is_nt_pay = #{isNtPay},
+			</if>
+			<if test="payr != null">
+				payr = #{payr},
+			</if>
+			<if test="stlSubj != null">
+				stl_subj = #{stlSubj},
+			</if>
+			<if test="prepyMoneyBal != null">
+				prepy_money_bal = #{prepyMoneyBal},
+			</if>
+			<if test="acctPyblBal != null">
+				acct_pybl_bal = #{acctPyblBal},
+			</if>
+			<if test="isNtChk != null">
+				is_nt_chk = #{isNtChk},
+			</if>
+			<if test="chkr != null">
+				chkr = #{chkr},
+			</if>
+			<if test="chkTm != null">
+				chk_tm = #{chkTm},
+			</if>
+			<if test="mdfr != null">
+				mdfr = #{mdfr},
+			</if>
+			<if test="modiTm != null">
+				modi_tm = #{modiTm},
+			</if>
+			<if test="memo != null">
+				memo = #{memo},
+			</if>
+			<if test="stlMode != null">
+				stl_mode = #{stlMode},
+			</if>
+			<if test="toFormTypEncd != null">
+				to_form_typ_encd = #{toFormTypEncd},
+			</if>
+		</set>
+		where pay_appl_id = #{payApplId}
+	</update>
+
+
+	<sql id="Base_Column_List_Pay_Appl_Form_Sub">
+		pay_appl_form.*,pay_appl_form_sub.*,pay_appl_form_sub.memo
+		as memos,pd.provr_nm,dd.dept_name,ftt.form_typ_name
+	</sql>
+	<select id="selectByPrimaryList"
+		parameterType="java.lang.String" resultMap="BaseResultListMap">
+		select
+		<include refid="Base_Column_List_Pay_Appl_Form_Sub" />
+		from pay_appl_form
+		LEFT JOIN pay_appl_form_sub ON
+		pay_appl_form.pay_appl_id
+		=pay_appl_form_sub.pay_appl_id
+		LEFT JOIN
+		provr_doc pd on
+		pay_appl_form.provr_id=pd.provr_id
+		LEFT JOIN dept_doc dd
+		on pay_appl_form.dept_id=dd.dept_id
+		LEFT JOIN form_typ_tabs ftt on
+		ftt.form_typ_encd=pay_appl_form.form_typ_encd
+		where
+		pay_appl_form.pay_appl_id = #{payApplId}
+	</select>
+	<select id="selectPayApplFormList" parameterType="Map"
+		resultMap="BaseResultListMap">
+	SELECT
+		pay_appl_form.*,pay_appl_form_sub.ordr_num,pay_appl_form_sub.expct_pay_dt,Sum(pay_appl_form_sub.qty) qty,
+		pay_appl_form_sub.src_form_num,Sum(pay_appl_form_sub.orgnl_sngl_curr_appl_amt) orgnl_sngl_curr_appl_amt,
+		sum(pay_appl_form_sub.amt) amt,pay_appl_form_sub.form_ordr_num,pay_appl_form_sub.actl_pay_tm,
+		pay_appl_form_sub.to_ordr_num,pay_appl_form_sub.memo as memos,pd.provr_nm,dd.dept_name,ftt.form_typ_name
+		FROM pay_appl_form JOIN pay_appl_form_sub ON pay_appl_form.pay_appl_id=pay_appl_form_sub.pay_appl_id
+		LEFT JOIN provr_doc pd on pay_appl_form.provr_id=pd.provr_id
+		LEFT JOIN dept_doc dd on pay_appl_form.dept_id=dd.dept_id
+		LEFT JOIN form_typ_tabs ftt on ftt.form_typ_encd=pay_appl_form.form_typ_encd
+		<where>
+			<if test="toFormTypEncd != null and toFormTypEncd!= ''">
+				AND pay_appl_form.to_form_typ_encd =#{toFormTypEncd}
+			</if>
+			<if test="payApplDt1 != null and payApplDt1 != ''">
+				AND pay_appl_form.pay_appl_dt &gt;= #{payApplDt1}
+			</if>
+			<if test="payApplDt2 != null and payApplDt2 != ''">
+				AND pay_appl_form.pay_appl_dt &lt;= #{payApplDt2}
+			</if>
+			<if test="payApplId != null and payApplId!= ''">
+				AND pay_appl_form.pay_appl_id =#{payApplId}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() >0">
+				AND pay_appl_form.provr_id in
+				<foreach collection="provrIdList" index="index" item="provrId"
+					separator="," open="(" close=")">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() >0">
+				AND pay_appl_form.acc_num in
+				<foreach collection="accNumList" index="index" item="accNum"
+					separator="," open="(" close=")">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="userNameList != null and userNameList.size() >0">
+				AND pay_appl_form.user_name in
+				<foreach collection="userNameList" index="index" item="userName"
+					separator="," open="(" close=")">
+					#{userName}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() >0">
+				AND pay_appl_form.dept_id in
+				<foreach collection="deptIdList" index="index" item="deptId"
+					separator="," open="(" close=")">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="provrOrdrNumList != null and provrOrdrNumList.size() >0">
+				AND pay_appl_form.provr_ordr_num in
+				<foreach collection="provrOrdrNumList" index="index" item="provrOrdrNum"
+					separator="," open="(" close=")">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtPay != null and isNtPay != ''">
+				AND pay_appl_form.is_nt_pay = #{isNtPay}
+			</if>
+			<if test="payrList != null  and payrList.size() >0">
+				AND pay_appl_form.payr in
+				<foreach collection="payrList" index="index" item="payr"
+					separator="," open="(" close=")">
+					#{payr}
+				</foreach>
+			</if>
+			<if test="stlSubjList != null  and stlSubjList.size() >0">
+				AND pay_appl_form.stl_subj in
+				<foreach collection="stlSubjList" index="index" item="stlSubj"
+					separator="," open="(" close=")">
+					#{stlSubj}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND pay_appl_form.is_nt_chk = #{isNtChk}
+			</if>
+		</where>
+		GROUP BY pay_appl_form.pay_appl_id
+		ORDER BY pay_appl_form.pay_appl_id
+		DESC
+		<if test="index != null and num != null">
+			LIMIT #{index},#{num}
+		</if>
+
+	</select>
+	<select id="selectPayApplFormCount" parameterType="Map"
+		resultType="Integer">
+		SELECT
+		count(DISTINCT(pay_appl_form.pay_appl_id))
+		FROM pay_appl_form JOIN pay_appl_form_sub 
+		ON pay_appl_form.pay_appl_id=pay_appl_form_sub.pay_appl_id
+		<where>
+			<if test="memo != null and memo != ''">
+				<bind name="memo" value="'%'+ memo +'%'"/>
+				AND pay_appl_form.memo like #{memo}
+			</if>
+			<if test="toFormTypEncd != null and toFormTypEncd!= ''">
+				AND pay_appl_form.to_form_typ_encd =#{toFormTypEncd}
+			</if>
+			<if test="payApplDt1 != null and payApplDt1 != ''">
+				AND pay_appl_form.pay_appl_dt &gt;= #{payApplDt1}
+			</if>
+			<if test="payApplDt2 != null and payApplDt2 != ''">
+				AND pay_appl_form.pay_appl_dt &lt;= #{payApplDt2}
+			</if>
+			<if test="payApplId != null and payApplId!= ''">
+				AND pay_appl_form.pay_appl_id =#{payApplId}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() >0">
+				AND pay_appl_form.provr_id in
+				<foreach collection="provrIdList" index="index" item="provrId"
+					separator="," open="(" close=")">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() >0">
+				AND pay_appl_form.acc_num in
+				<foreach collection="accNumList" index="index" item="accNum"
+					separator="," open="(" close=")">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="userNameList != null and userNameList.size() >0">
+				AND pay_appl_form.user_name in
+				<foreach collection="userNameList" index="index" item="userName"
+					separator="," open="(" close=")">
+					#{userName}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() >0">
+				AND pay_appl_form.dept_id in
+				<foreach collection="deptIdList" index="index" item="deptId"
+					separator="," open="(" close=")">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="provrOrdrNumList != null and provrOrdrNumList.size() >0">
+				AND pay_appl_form.provr_ordr_num in
+				<foreach collection="provrOrdrNumList" index="index" item="provrOrdrNum"
+					separator="," open="(" close=")">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtPay != null and isNtPay != ''">
+				AND pay_appl_form.is_nt_pay = #{isNtPay}
+			</if>
+			<if test="payrList != null  and payrList.size() >0">
+				AND pay_appl_form.payr in
+				<foreach collection="payrList" index="index" item="payr"
+					separator="," open="(" close=")">
+					#{payr}
+				</foreach>
+			</if>
+			<if test="stlSubjList != null  and stlSubjList.size() >0">
+				AND pay_appl_form.stl_subj in
+				<foreach collection="stlSubjList" index="index" item="stlSubj"
+					separator="," open="(" close=")">
+					#{stlSubj}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND pay_appl_form.is_nt_chk = #{isNtChk}
+			</if>
+		</where>
+	</select>
+	<!-- 审核时单个更新审核状态 -->
+	<update id="updatePayApplFormIsNtChk"
+		parameterType="PayApplForm">
+		update pay_appl_form
+		<set>
+			<if test="isNtChk != null">
+				is_nt_chk = #{isNtChk},
+			</if>
+			<if test="chkr != null">
+				chkr = #{chkr},
+			</if>
+			chk_tm = now(),
+		</set>
+		where pay_appl_id=#{payApplId}
+	</update>
+	<select id="selectPayApplIsNtChk"
+		parameterType="java.lang.String" resultType="Integer">
+		select is_nt_chk FROM
+		pay_appl_form where pay_appl_id=#{payApplId}
+	</select>
+	<!-- 查询付款申请单付款状态 -->
+	<select id="selectPayApplIsNtPay"
+		parameterType="java.lang.String" resultType="Integer">
+		select is_nt_pay FROM
+		pay_appl_form where pay_appl_id=#{payApplId}
+	</select>
+	<resultMap id="BaseResultListOrderBy"
+		type="com.px.mis.purc.service.impl.PayApplFormServiceImpl$zizhu"
+		autoMapping="true">
+		<id column="ordr_num" jdbcType="BIGINT" property="ordrNum" />
+		<result column="pay_appl_dt" jdbcType="VARCHAR"
+			property="payApplDt" />
+		<result column="memos" jdbcType="VARCHAR" property="memo" />
+	</resultMap>
+	<!-- 分页+排序查询 -->
+	<select id="selectPayApplFormListOrderBy" parameterType="Map"
+		resultMap="BaseResultListOrderBy">
+		SELECT
+		pay_appl_form.*,
+		pay_appl_form_sub.ordr_num,pay_appl_form_sub.expct_pay_dt,Sum(pay_appl_form_sub.qty)
+		qty,
+		pay_appl_form_sub.src_form_num,Sum(pay_appl_form_sub.orgnl_sngl_curr_appl_amt)
+		orgnl_sngl_curr_appl_amt,
+		sum(pay_appl_form_sub.amt)
+		amt,pay_appl_form_sub.form_ordr_num,pay_appl_form_sub.actl_pay_tm,
+		pay_appl_form_sub.to_ordr_num,pay_appl_form_sub.memo as
+		memos,pd.provr_nm,dd.dept_name,ftt.form_typ_name
+		FROM pay_appl_form 
+		JOIN pay_appl_form_sub ON pay_appl_form.pay_appl_id=pay_appl_form_sub.pay_appl_id
+		LEFT JOIN provr_doc pd on pay_appl_form.provr_id=pd.provr_id
+		LEFT JOIN dept_doc dd on pay_appl_form.dept_id=dd.dept_id
+		LEFT JOIN form_typ_tabs ftt on ftt.form_typ_encd=pay_appl_form.form_typ_encd
+		<where>
+			<if test="memo != null and memo != ''">
+				<bind name="memo" value="'%'+ memo +'%'"/>
+				AND pay_appl_form.memo like #{memo}
+			</if>
+			<if test="payApplId != null and payApplId != ''">
+				AND pay_appl_form.pay_appl_id=#{payApplId}
+			</if>
+			<if test="toFormTypEncd != null and toFormTypEncd!= ''">
+				AND pay_appl_form.to_form_typ_encd =#{toFormTypEncd}
+			</if>
+			<if test="payApplDt1 != null and payApplDt1 != ''">
+				AND pay_appl_form.pay_appl_dt &gt;= #{payApplDt1}
+			</if>
+			<if test="payApplDt2 != null and payApplDt2 != ''">
+				AND pay_appl_form.pay_appl_dt &lt;= #{payApplDt2}
+			</if>
+			<if test="payApplIdList != null and payApplIdList.size>0">
+				AND pay_appl_form.pay_appl_id in 
+				<foreach collection="payApplIdList" item="payApplId"  open="("
+				 close=")" separator=",">
+				 #{payApplId}
+				 </foreach>
+			</if>
+			<if test="provrIdList != null and provrIdList.size() >0">
+				AND pay_appl_form.provr_id in
+				<foreach collection="provrIdList" index="index" item="provrId"
+					separator="," open="(" close=")">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() >0">
+				AND pay_appl_form.acc_num in
+				<foreach collection="accNumList" index="index" item="accNum"
+					separator="," open="(" close=")">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="userNameList != null and userNameList.size() >0">
+				AND pay_appl_form.user_name in
+				<foreach collection="userNameList" index="index" item="userName"
+					separator="," open="(" close=")">
+					#{userName}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() >0">
+				AND pay_appl_form.dept_id in
+				<foreach collection="deptIdList" index="index" item="deptId"
+					separator="," open="(" close=")">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="provrOrdrNumList != null and provrOrdrNumList.size() >0">
+				AND pay_appl_form.provr_ordr_num in
+				<foreach collection="provrOrdrNumList" index="index" item="provrOrdrNum"
+					separator="," open="(" close=")">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtPay != null  and isNtPay != '' ">
+				AND pay_appl_form.is_nt_pay = #{isNtPay}
+			</if>
+			<if test="payrList != null  and payrList.size() >0">
+				AND pay_appl_form.payr in
+				<foreach collection="payrList" index="index" item="payr"
+					separator="," open="(" close=")">
+					#{payr}
+				</foreach>
+			</if>
+			<if test="stlSubjList != null  and stlSubjList.size() >0">
+				AND pay_appl_form.stl_subj in
+				<foreach collection="stlSubjList" index="index" item="stlSubj"
+					separator="," open="(" close=")">
+					#{stlSubj}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND pay_appl_form.is_nt_chk = #{isNtChk}
+			</if>
+		</where>
+		GROUP BY pay_appl_form.pay_appl_id
+		<if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+		ORDER BY   ${sort} ${sortOrder} 
+		</if> 
+		<if test="index != null and num != null">
+			LIMIT #{index},#{num}
+		</if>
+
+	</select>
+	
+<select id="selectPayApplFormListSums" parameterType="Map"
+		resultType="map">
+		SELECT
+		IFNULL(SUM(qty),0.0) qty,IFNULL(SUM(amt),0.0) amt,IFNULL(SUM(orgnl_sngl_curr_appl_amt),0.0) orgnlSnglCurrApplAmt,
+		IFNULL(SUM(pay_appl_form_sub.actl_pay_tm),0.0) actlPayTm
+		FROM
+		pay_appl_form
+		LEFT
+		JOIN pay_appl_form_sub ON pay_appl_form.pay_appl_id
+		=pay_appl_form_sub.pay_appl_id
+		LEFT JOIN provr_doc pd on
+		pay_appl_form.provr_id=pd.provr_id
+		LEFT JOIN dept_doc dd on
+		pay_appl_form.dept_id=dd.dept_id
+		LEFT JOIN form_typ_tabs ftt on
+		ftt.form_typ_encd=pay_appl_form.form_typ_encd
+		<where>
+			<if test="memo != null and memo != ''">
+				<bind name="memo" value="'%'+ memo +'%'"/>
+				AND pay_appl_form.memo like #{memo}
+			</if>
+			<if test="payApplId != null and payApplId != ''">
+				AND pay_appl_form.pay_appl_id=#{payApplId}
+			</if>
+			<if test="toFormTypEncd != null and toFormTypEncd!= ''">
+				AND pay_appl_form.to_form_typ_encd =#{toFormTypEncd}
+			</if>
+			<if test="payApplDt1 != null and payApplDt1 != ''">
+				AND pay_appl_form.pay_appl_dt &gt;= #{payApplDt1}
+			</if>
+			<if test="payApplDt2 != null and payApplDt2 != ''">
+				AND pay_appl_form.pay_appl_dt &lt;= #{payApplDt2}
+			</if>
+			<if test="provrIdList != null and provrIdList.size>0">
+				AND pay_appl_form.pay_appl_id in 
+				<foreach collection="provrIdList" item="item"  open="("
+				 close=")" separator=",">
+				 #{item}
+				 </foreach>
+			</if>
+			<if test="provrIdList != null and provrIdList.size() >0">
+				AND pay_appl_form.provr_id in
+				<foreach collection="provrIdList" index="index" item="item"
+					separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() >0">
+				AND pay_appl_form.acc_num in
+				<foreach collection="accNumList" index="index" item="item"
+					separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="userNameList != null and userNameList.size() >0">
+				AND pay_appl_form.user_name in
+				<foreach collection="userNameList" index="index" item="item"
+					separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() >0">
+				AND pay_appl_form.dept_id in
+				<foreach collection="deptIdList" index="index" item="item"
+					separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="provrOrdrNumList != null and provrOrdrNumList.size() >0">
+				AND pay_appl_form.provr_ordr_num in
+				<foreach collection="provrOrdrNumList" index="index" item="item"
+					separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="isNtPay != null and isNtPay != ''  ">
+				AND pay_appl_form.is_nt_pay = #{isNtPay}
+			</if>
+			<if test="payrList != null  and payrList.size() >0">
+				AND pay_appl_form.payr in
+				<foreach collection="payrList" index="index" item="item"
+					separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="stlSubjList != null  and stlSubjList.size() >0">
+				AND pay_appl_form.stl_subj in
+				<foreach collection="stlSubjList" index="index" item="item"
+					separator="," open="(" close=")">
+					#{item}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND pay_appl_form.is_nt_chk = #{isNtChk}
+			</if>
+		</where>
+	</select>
+	
+	<select id="printPayApplFormList" parameterType="Map"
+		resultMap="BaseResultListOrderBy">
+		SELECT
+		pay_appl_form.*,
+		pay_appl_form_sub.ordr_num,pay_appl_form_sub.expct_pay_dt,Sum(pay_appl_form_sub.qty)
+		qty,
+		pay_appl_form_sub.src_form_num,Sum(pay_appl_form_sub.orgnl_sngl_curr_appl_amt)
+		orgnl_sngl_curr_appl_amt,
+		sum(pay_appl_form_sub.amt)
+		amt,pay_appl_form_sub.form_ordr_num,pay_appl_form_sub.actl_pay_tm,
+		pay_appl_form_sub.to_ordr_num,pay_appl_form_sub.memo as
+		memos,pd.provr_nm,dd.dept_name,ftt.form_typ_name
+		FROM pay_appl_form 
+		JOIN pay_appl_form_sub ON pay_appl_form.pay_appl_id=pay_appl_form_sub.pay_appl_id
+		LEFT JOIN provr_doc pd on pay_appl_form.provr_id=pd.provr_id
+		LEFT JOIN dept_doc dd on pay_appl_form.dept_id=dd.dept_id
+		LEFT JOIN form_typ_tabs ftt on ftt.form_typ_encd=pay_appl_form.form_typ_encd
+		<where>
+			<if test="payApplId != null and payApplId != ''">
+				AND pay_appl_form.pay_appl_id=#{payApplId}
+			</if>
+			<if test="toFormTypEncd != null and toFormTypEncd!= ''">
+				AND pay_appl_form.to_form_typ_encd =#{toFormTypEncd}
+			</if>
+			<if test="payApplDt1 != null and payApplDt1 != ''">
+				AND pay_appl_form.pay_appl_dt &gt;= #{payApplDt1}
+			</if>
+			<if test="payApplDt2 != null and payApplDt2 != ''">
+				AND pay_appl_form.pay_appl_dt &lt;= #{payApplDt2}
+			</if>
+			<if test="payApplIdList != null and payApplIdList.size>0">
+				AND pay_appl_form.pay_appl_id in 
+				<foreach collection="payApplIdList" item="payApplId"  open="("
+				 close=")" separator=",">
+				 #{payApplId}
+				 </foreach>
+			</if>
+			<if test="provrIdList != null and provrIdList.size() >0">
+				AND pay_appl_form.provr_id in
+				<foreach collection="provrIdList" index="index" item="provrId"
+					separator="," open="(" close=")">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() >0">
+				AND pay_appl_form.acc_num in
+				<foreach collection="accNumList" index="index" item="accNum"
+					separator="," open="(" close=")">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="userNameList != null and userNameList.size() >0">
+				AND pay_appl_form.user_name in
+				<foreach collection="userNameList" index="index" item="userName"
+					separator="," open="(" close=")">
+					#{userName}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() >0">
+				AND pay_appl_form.dept_id in
+				<foreach collection="deptIdList" index="index" item="deptId"
+					separator="," open="(" close=")">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="provrOrdrNumList != null and provrOrdrNumList.size() >0">
+				AND pay_appl_form.provr_ordr_num in
+				<foreach collection="provrOrdrNumList" index="index" item="provrOrdrNum"
+					separator="," open="(" close=")">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtPay != null  and isNtPay != ''  ">
+				AND pay_appl_form.is_nt_pay = #{isNtPay}
+			</if>
+			<if test="payrList != null  and payrList.size() >0">
+				AND pay_appl_form.payr in
+				<foreach collection="payrList" index="index" item="payr"
+					separator="," open="(" close=")">
+					#{payr}
+				</foreach>
+			</if>
+			<if test="stlSubjList != null  and stlSubjList.size() >0">
+				AND pay_appl_form.stl_subj in
+				<foreach collection="stlSubjList" index="index" item="stlSubj"
+					separator="," open="(" close=")">
+					#{stlSubj}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND pay_appl_form.is_nt_chk = #{isNtChk}
+			</if>
+		</where>
+		GROUP BY pay_appl_form.pay_appl_id
+	</select>
+	<select id="selectPayApplForms" parameterType="list"
+		resultMap="BaseResultListMap">
+		SELECT
+		pay_appl_form.*,
+		pay_appl_form_sub.*,
+		pay_appl_form_sub.memo as
+		memos
+		FROM pay_appl_form 
+		JOIN pay_appl_form_sub ON pay_appl_form.pay_appl_id=pay_appl_form_sub.pay_appl_id
+		where pay_appl_form.pay_appl_id IN 
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+		
+	</select>
+
+</mapper>

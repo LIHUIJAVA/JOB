@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>平台仓映射列表</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/baseDoc/DeptDoc.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/whsDocList.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<style type="text/css">
+			.ui-state-highlight {
+				color: red !important;
+			}
+			
+			/*form {
+				display: inline-block;
+				font-size: 14px;
+			}*/
+			.info {
+				width: auto!important
+			}
+			.editable.inline-edit-cell.ui-widget-content.ui-corner-all {
+				width: 100% !important;
+			}
+			
+			.info>div {
+				width: 33%;
+				display: inline-block;
+			}
+			.info>div {
+				width: 50%!important;
+			}
+			#mengban {
+				bottom: 0!important;
+				height: 82%!important;
+				/*background-color: #ccc;*/
+			}
+			body {
+				overflow: hidden;
+			}
+			/*#mengban {
+				top: 0;
+				height:130%!important;
+			}*/
+		</style>
+	</head>
+
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/ec/platWhsMapp.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="print">打印</button>
+					<!--<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>-->
+					<button class="addOrder">增行</button>
+					<button class="delOrder">删行</button>
+					<button class="saveOrder">保存</button>
+					<button class="find">查询</button>
+					<!--<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>-->
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="businessType col-md-4 three">
+							<span>线上仓库编码</span>
+							<input type="text" id="online1" class="online1" name="online1" value="" />
+						</div>
+						<div class="businessType col-md-4 three">
+							<span>线下仓库编码</span>
+							<input type="text" id="tranInWhsEncd" class="whsEncd encds" name="offline1" value="" />
+							<input type="text" id="tranInWhsNm" class="whsNm names" name="whsNm" value="" readonly="readonly" />
+							<span><img class="storeId1_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqGridPager"></div>
+		</div>
+		
+		
+		
+		<div id="wwrap" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<h1 class="title">仓库档案列表</h1>
+				</div>
+				<div class="purchaseTit">
+					<div class="buttons">
+						<button class="true">确定</button>
+						<button class="false">取消</button>
+						<div class="whs_find">查询</div>
+					</div>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-4">
+								<span>仓库编码</span>
+								<input type="text" class="whsEncd" name="whsEncd" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>仓库名称</span>
+								<input type="text" class="whsNm" name="whsNm" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>部门编码</span>
+								<input type="text" class="deptEncd" name="deptEncd" value="" />
+							</div>
+
+						</div>
+					</form>
+				</div>
+
+					<table id="whs_jqgrids"></table>
+					<div id="whs_jqGridPager"></div>
+			</div>
+		</div>
+	</body>
+
+</html>

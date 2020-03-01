@@ -1,0 +1,23 @@
+body{
+	height:100%;
+}
+
+.container{
+	height: 100%;
+}
+
+.container .top_container{
+	height: 30%;
+}
+
+.container .bottom_container{
+	height: 70%;
+}
+
+.container .bottom_container #gbox_jqgrids{
+	height: 100%;
+}
+
+.ui-jqgrid-bdiv {
+	height: 100%; !important
+}

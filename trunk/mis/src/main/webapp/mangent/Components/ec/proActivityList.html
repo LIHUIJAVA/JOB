@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>促销活动列表</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+	</head>
+	
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/ec/proActivityList.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+
+		<div class="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">促销活动列表</h1>-->
+				<div class="buttons">
+					<button class="delted">删除</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+					<button class="search">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="businessType col-md-4">
+						<span>促销活动编码</span><input type="text" class="proActId" name="proActId" value="" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>促销活动名称</span><input type="text" class="proActName" name="proActName" value="" />
+					</div>
+					<!--<div class="purchaseType col-md-4">
+						<span>促销条件</span><input type="text" class="proCriteria" name="proCriteria" value="" />
+					</div>-->
+					<!--<div class="orderDates col-md-8">
+						<span>促销日期 <b>*</b></span>
+						<input type="text" class="intoWhsSnglDt1" name="intoWhsSnglDt1" value="" calendar="YYYY-MM-DD"/>到<input type="text" class="intoWhsSnglDt2" name="intoWhsSnglDt2" value="" calendar="YYYY-MM-DD"/>
+					</div>-->
+				</form>
+			</div>
+			<table id="jqGrids"></table>
+			<div id="jqGridPager"></div>
+		</div>
+	</body>
+
+</html>

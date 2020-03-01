@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtyPayblSubjDao">
+	<!-- 分页查询所有 -->
+	<select id="selectInvtyPayblSubjList" parameterType="Map" resultType="com.px.mis.account.entity.InvtyPayblSubj">
+	 SELECT a.incrs_id incrsId,a.provr_cls_encd provrClsEncd,a.paybl_subj_encd payblSubjEncd,
+	 		a.prepy_subj_encd prepySubjEncd,b.provr_cls_nm provrClsNm,
+	 		c.subj_nm payblSubjNm,d.subj_nm prepySubjNm 
+	 FROM  invty_paybl_subj a LEFT JOIN  provr_cls b ON a.provr_cls_encd = b.provr_cls_id
+							  LEFT JOIN  acct_itm_doc c ON a.paybl_subj_encd = c.subj_id
+							  LEFT JOIN  acct_itm_doc d ON a.prepy_subj_encd = d.subj_id
+     GROUP BY a.provr_cls_encd
+	 ORDER BY a.incrs_id
+	 <if test="index != null and  num != null">
+	 	 LIMIT #{index},#{num}
+	 </if>
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectInvtyPayblSubjCount" resultType="int">
+		SELECT count(incrs_id)
+		FROM invty_paybl_subj
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectInvtyPayblSubjById" parameterType="int" resultType="com.px.mis.account.entity.InvtyPayblSubj">
+	 SELECT a.incrs_id incrsId,a.provr_cls_encd provrClsEncd,a.paybl_subj_encd payblSubjEncd,
+	 		a.prepy_subj_encd prepySubjEncd,b.provr_cls_nm provrClsNm,
+	 		c.subj_nm payblSubjNm,d.subj_nm prepySubjNm 
+	 FROM  invty_paybl_subj a LEFT JOIN  provr_cls b ON a.provr_cls_encd = b.provr_cls_id
+							  LEFT JOIN  acct_itm_doc c ON a.paybl_subj_encd = c.subj_id
+							  LEFT JOIN  acct_itm_doc d ON a.prepy_subj_encd = d.subj_id
+	 WHERE a.incrs_id=#{incrsId}
+	</select>
+	
+	<!-- 查询存货科目中的存货分类编号是否存在 -->
+	<select id="selectProvrClsEncd" resultType="String">
+		SELECT provr_cls_encd 
+		FROM invty_paybl_subj i where i.provr_cls_encd=#{provr_cls_encd}
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertInvtyPayblSubj" parameterType="com.px.mis.account.entity.InvtyPayblSubj">
+		INSERT INTO invty_paybl_subj
+		VALUES(null,#{provrClsEncd},#{payblSubjEncd},#{prepySubjEncd})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteInvtyPayblSubjById" parameterType="int">
+	 DELETE FROM invty_paybl_subj
+	 WHERE incrs_id=#{incrsId} 
+	</delete>
+	
+    <!-- 根据主键批量删除 -->
+	<delete id="deleteInvtyPayblSubjList" parameterType="Map">
+	 DELETE FROM invty_paybl_subj
+	 WHERE incrs_id in (${incrsId})
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateInvtyPayblSubjById" parameterType="com.px.mis.account.entity.InvtyPayblSubj">
+	 UPDATE invty_paybl_subj
+    <set>
+      <if test="incrsId != null">
+        incrs_id = #{incrsId,jdbcType=BIGINT},
+      </if>
+      <if test="provrClsEncd != null">
+        provr_cls_encd = #{provrClsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="payblSubjEncd != null">
+        paybl_subj_encd = #{payblSubjEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="prepySubjEncd != null">
+        prepy_subj_encd = #{prepySubjEncd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE incrs_id = #{incrsId,jdbcType=BIGINT}
+	</update>
+</mapper>

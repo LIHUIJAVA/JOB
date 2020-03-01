@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.VouchTabDao">
+	<sql id="Base_Column_List">
+	    ordr_num, comn_vouch_id, comn_vouch_comnt, memos, subj_id, cnt_pty_subj_id, qty_debit, 
+	    qty_crdt, debit_amt, crdt_amt, stl_mode_id, dept_id, cust_id, biz_mem_id, provr_id, 
+	    imported, memo, import_nm, import_dt, is_nt_book_ok, book_ok_acc, book_ok_dt, is_nt_chk, 
+	    chkr, chk_tm, acc_num, vouch_cate_wor
+	 </sql>
+	<!-- 凭证表分页查询所有 -->
+	<select id="selectVouchTabList" parameterType="Map" resultType="com.px.mis.account.entity.VouchTab">
+	SELECT
+		  a.ordr_num, a.comn_vouch_id,a.comn_vouch_comnt,a.memos,s.sub_debit_id subj_id,s.sub_credit_id as cnt_pty_subj_id,
+			s.sub_debit_num as qty_debit,s.sub_credit_num as qty_crdt,s.sub_debit_money as debit_amt,s.sub_credit_money as crdt_amt,
+		  a.stl_mode_id,a.dept_id,a.cust_id,a.biz_mem_id,a.provr_id, 
+			a.imported,a.memo,a.import_nm,a.import_dt,a.is_nt_book_ok,a.book_ok_acc,a.book_ok_dt,a.is_nt_chk, 
+			a.chkr,a.chk_tm,a.acc_num,a.vouch_cate_wor,a.ctime,a.tab_num,d.dept_name deptName,
+		  e.cust_nm custNm,f.emp_nm bizMemNm,g.provr_nm provrNm,mu.user_name,s.*
+		FROM
+			vouch_tab a
+		INNER JOIN vouch_tab_sub s ON s.comn_vouch_id = a.comn_vouch_id
+		LEFT JOIN dept_doc d ON a.dept_id = d.dept_id
+		LEFT JOIN cust_doc e ON a.cust_id = e.cust_id
+		LEFT JOIN biz_mem_doc f ON a.biz_mem_id = f.emp_id
+		LEFT JOIN provr_doc g ON a.provr_id = g.provr_id
+		LEFT JOIN mis_user mu ON a.acc_num = mu.acc_num
+		WHERE
+			1 = 1
+	 <if test="comnVouchId != null and comnVouchId != ''">
+	 	AND a.comn_vouch_id = #{comnVouchId}
+	 </if>
+	 <if test="vouchCateWor != null and vouchCateWor != ''">
+	 	AND a.vouch_cate_wor = #{vouchCateWor}
+	 </if>
+	 <if test="userName != null and userName != ''">
+	 	AND a.acc_num = #{userName}
+	 </if>
+	 <if test="start != null  and start != ''">
+        AND a.ctime &gt;= #{start}
+     </if>
+     <if test="end != null and end != ''">
+        AND a.ctime &lt;= #{end}
+     </if>
+     <if test="imported != null and imported != ''">
+     	AND a.imported = #{imported}
+     </if>
+     <if test="tabSubList != null and tabSubList.size() > 0 ">
+		AND a.comn_vouch_id not in 
+		<foreach item="vouch" collection="tabSubList" open="(" close=")" separator=",">
+		     #{vouch.comnVouchId}
+		</foreach>
+	</if>
+		
+	 ORDER BY a.ordr_num
+	</select>
+	<select id="selectVouchTab" parameterType="Map" resultType="com.px.mis.account.entity.VouchTab">
+		select * from vouch_tab
+		<where>
+			 <if test="tabSubList != null and tabSubList.size() > 0 ">
+				AND comn_vouch_id not in 
+				<foreach item="vouch" collection="tabSubList" open="(" close=")" separator=",">
+				     #{vouch.comnVouchId}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="exportVouchTabList" parameterType="Map" resultType="com.px.mis.account.entity.VouchTab">
+		SELECT
+		  a.ordr_num, a.comn_vouch_id,a.comn_vouch_comnt,a.memos,s.sub_debit_id subj_id,s.sub_credit_id as cnt_pty_subj_id,
+			s.sub_debit_num as qty_debit,s.sub_credit_num as qty_crdt,s.sub_debit_money as debit_amt,s.sub_credit_money as crdt_amt,
+		  a.stl_mode_id,a.dept_id,a.cust_id,a.biz_mem_id,a.provr_id, 
+			a.imported,a.memo,a.import_nm,a.import_dt,a.is_nt_book_ok,a.book_ok_acc,a.book_ok_dt,a.is_nt_chk, 
+			a.chkr,a.chk_tm,a.acc_num,a.vouch_cate_wor,a.ctime,d.dept_name deptName,
+		  e.cust_nm custNm,f.emp_nm bizMemNm,g.provr_nm provrNm,mu.user_name,s.*
+		FROM
+			vouch_tab a
+		INNER JOIN vouch_tab_sub s ON s.comn_vouch_id = a.comn_vouch_id
+		LEFT JOIN dept_doc d ON a.dept_id = d.dept_id
+		LEFT JOIN cust_doc e ON a.cust_id = e.cust_id
+		LEFT JOIN biz_mem_doc f ON a.biz_mem_id = f.emp_id
+		LEFT JOIN provr_doc g ON a.provr_id = g.provr_id
+		LEFT JOIN mis_user mu ON a.acc_num = mu.acc_num
+		WHERE
+			1 = 1
+	 <if test="comnVouchId != null and comnVouchId != ''">
+	 	AND a.comn_vouch_id = #{comnVouchId}
+	 </if>
+	 <if test="vouchCateWor != null and vouchCateWor != ''">
+	 	AND a.vouch_cate_wor = #{vouchCateWor}
+	 </if>
+	 <if test="userName != null and userName != ''">
+	 	AND a.user_name like '%${userName}%'
+	 </if>
+	 <if test="start != null  and start != ''">
+        AND a.ctime &gt;= #{start}
+     </if>
+     <if test="end != null  and end != ''">
+        AND a.ctime &lt;= #{end}
+     </if>
+     <if test="imported != null and imported !=''">
+     	AND a.imported = #{imported}
+     </if>
+	 ORDER BY a.ordr_num
+	</select>
+	<!-- 查询单个 -->
+	<select id="selectVouchTabByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.VouchTab">
+	 SELECT a.ordr_num ordrNum,a.comn_vouch_id comnVouchId,a.comn_vouch_comnt comnVouchComnt,
+	 		a.memos memos,a.subj_id subjId,a.cnt_pty_subj_id cntPtySubjId,a.qty_debit qtyDebit,
+	 		a.qty_crdt qtyCrdt,a.debit_amt debitAmt,a.crdt_amt crdtAmt,
+	 		a.stl_mode_id stlModeId,a.dept_id deptId,a.cust_id custId,a.biz_mem_id bizMemId,
+	 		a.provr_id provrId,a.imported imported,a.memo memo,
+	 		b.subj_nm subjNm,c.subj_nm cntPtySubjNm,d.dept_name deptName,
+	 		e.cust_nm custNm,f.emp_nm bizMemNm,g.provr_nm provrNm
+	 FROM vouch_tab a
+	 LEFT JOIN acct_itm_doc b
+	 ON a.subj_id = b.subj_id
+	 LEFT JOIN acct_itm_doc c
+	 ON a.cnt_pty_subj_id = c.subj_id
+	 LEFT JOIN dept_doc d
+	 ON a.dept_id = d.dept_id
+	 LEFT JOIN cust_doc e
+	 ON a.cust_id = e.cust_id
+	 LEFT JOIN biz_mem_doc f
+	 ON a.biz_mem_id = f.emp_id
+	 LEFT JOIN provr_doc g
+	 ON a.provr_id = g.provr_id
+	 WHERE a.ordr_num=#{ordrNum}
+	</select>
+	
+	<select id="selectVouchTabBycomnVouchId"  parameterType="String" resultType="com.px.mis.account.entity.VouchTab">
+		SELECT <include refid="Base_Column_List" /> 
+		FROM vouch_tab where comn_vouch_id = #{comnVouchId}
+	</select>	
+	<!-- 查询总行数 -->
+	<select id="selectVouchTabCount" resultType="int" parameterType="Map">
+		
+		SELECT
+		  count(*)
+		FROM
+			vouch_tab a
+		INNER JOIN vouch_tab_sub s ON s.comn_vouch_id = a.comn_vouch_id
+		LEFT JOIN dept_doc d ON a.dept_id = d.dept_id
+		LEFT JOIN cust_doc e ON a.cust_id = e.cust_id
+		LEFT JOIN biz_mem_doc f ON a.biz_mem_id = f.emp_id
+		LEFT JOIN provr_doc g ON a.provr_id = g.provr_id
+		LEFT JOIN mis_user mu ON a.acc_num = mu.acc_num
+		WHERE
+			1 = 1
+		 <if test="comnVouchId != null and comnVouchId != ''">
+		 	AND a.comn_vouch_id = #{comnVouchId}
+		 </if>
+		 <if test="vouchCateWor != null and vouchCateWor != ''">
+		 	AND a.vouch_cate_wor = #{vouchCateWor}
+		 </if>
+		 <if test="userName != null and userName != ''">
+		 	AND a.user_name like '%${userName}%'
+		 </if>
+		  <if test="imported != null and imported !=''">
+	     	AND a.imported = #{imported}
+	      </if>
+		 <if test="start != null and start != ''">
+	        AND a.ctime &gt;=  #{start}
+	     </if>
+	     <if test="end != null  and end != ''">
+	        AND a.ctime &lt;= #{end}
+	     </if>
+	</select>
+	<select id="selectVouchTabMap" parameterType="Map" resultType="com.px.mis.account.entity.VouchTab">
+		select 
+	    <include refid="Base_Column_List" />
+	    from vouch_tab
+	    where 1=1 
+	    <if test="vouchList != null and vouchList.size() > 0 ">
+			AND comn_vouch_id IN
+			<foreach collection="vouchList" item="vouch" open="(" close=")" separator=",">
+				#{vouch}
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="selectLastTab" resultType="VouchTab">
+		select * from vouch_tab order by tab_num desc limit 1;
+	</select>
+	<delete id="deleteVouchTabList">
+		delete FROM vouch_tab 
+	    where comn_vouch_id in
+		<foreach item="vouchTab" collection="list" open="(" close=")" separator=",">
+		     #{vouchTab.comnVouchId}
+		</foreach>
+	</delete>
+	<!-- 批量删除凭证以及子表 -->
+	<delete id="delectVouchTabSubList">
+		delete form,sub
+	  	FROM
+			vouch_tab AS form
+		INNER JOIN vouch_tab_sub sub ON sub.comn_vouch_id = form.comn_vouch_id
+	    where form.comn_vouch_id in
+		<foreach item="vouch" collection="list" open="(" close=")" separator=",">
+		     #{vouch.comnVouchId}
+		</foreach>
+	</delete>
+	
+	<update id="updateVouchList">
+		update vouch_tab 
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="imported =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when comn_vouch_id = #{item.comnVouchId} then #{item.imported}
+				</foreach>
+			</trim>	
+			<trim prefix="comn_vouch_comnt =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when comn_vouch_id = #{item.comnVouchId} then #{item.comnVouchComnt}
+				</foreach>
+			</trim>	
+			<trim prefix="import_nm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when comn_vouch_id = #{item.comnVouchId} then #{item.importNm}
+				</foreach>
+			</trim>	
+			<trim prefix="import_dt =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when comn_vouch_id = #{item.comnVouchId} then #{item.importDt}
+				</foreach>
+			</trim>	
+			<trim prefix="tab_num =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when comn_vouch_id = #{item.comnVouchId} then #{item.tabNum}
+				</foreach>
+			</trim>	
+		</trim>
+		where comn_vouch_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.comnVouchId}
+		</foreach>
+	</update>
+	
+	<!-- 添加 -->
+	<insert id="insertVouchTab" parameterType="com.px.mis.account.entity.VouchTab">
+	insert into vouch_tab (comn_vouch_id, comn_vouch_comnt, 
+	      memos, subj_id, cnt_pty_subj_id, 
+	      qty_debit, qty_crdt, debit_amt, 
+	      crdt_amt, stl_mode_id, dept_id, 
+	      cust_id, biz_mem_id, provr_id, 
+	      imported, memo, import_nm, 
+	      import_dt, is_nt_book_ok, book_ok_acc, 
+	      book_ok_dt, is_nt_chk, chkr, 
+	      chk_tm, acc_num, vouch_cate_wor,ctime,user_name,tab_num
+	      )
+	    values (#{comnVouchId},#{comnVouchComnt},#{memos},#{subjId},#{cntPtySubjId},#{qtyDebit},#{qtyCrdt},#{debitAmt},#{crdtAmt},#{stlModeId},#{deptId},#{custId},
+	     #{bizMemId},#{provrId},#{imported},#{memo},#{importNm},#{importDt},#{isNtBookOk},#{bookOkAcc},#{bookOkDt},#{isNtChk},#{chkr},#{chkTm},#{accNum},
+	     #{vouchCateWor},#{ctime},#{userName},#{tabNum}
+	    )
+	</insert>
+	
+	<insert id="insertVouchTabDlList" parameterType="java.util.List">	
+	    INSERT INTO vouch_tab_dl SELECT
+			*
+		FROM
+		vouch_tab
+		WHERE comn_vouch_id in  	
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.comnVouchId}
+		</foreach>
+	</insert>
+	
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteVouchTabByOrdrNum" parameterType="int">
+	 DELETE FROM vouch_tab
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateVouchTabByOrdrNum" parameterType="com.px.mis.account.entity.VouchTab">
+	 UPDATE vouch_tab
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="comnVouchId != null">
+        comn_vouch_id = #{comnVouchId,jdbcType=VARCHAR},
+      </if>
+      <if test="comnVouchComnt != null">
+        comn_vouch_comnt = #{comnVouchComnt,jdbcType=VARCHAR},
+      </if>
+      <if test="memos != null">
+        memos = #{memos,jdbcType=VARCHAR},
+      </if>
+      <if test="subjId != null">
+        subj_id = #{subjId,jdbcType=VARCHAR},
+      </if>
+      <if test="cntPtySubjId != null">
+        cnt_pty_subj_id = #{cntPtySubjId,jdbcType=VARCHAR},
+      </if>
+      <if test="qtyDebit != null">
+        qty_debit = #{qtyDebit,jdbcType=VARCHAR},
+      </if>
+      <if test="qtyCrdt != null">
+        qty_crdt = #{qtyCrdt,jdbcType=VARCHAR},
+      </if>
+      <if test="debitAmt != null">
+        debit_amt = #{debitAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="crdtAmt != null">
+        crdt_amt = #{crdtAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="stlModeId != null">
+        stl_mode_id = #{stlModeId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="custId != null">
+        cust_id = #{custId,jdbcType=VARCHAR},
+      </if>
+      <if test="bizMemId != null">
+        biz_mem_id = #{bizMemId,jdbcType=VARCHAR},
+      </if>
+      <if test="provrId != null">
+        provr_id = #{provrId,jdbcType=VARCHAR},
+      </if>
+      <if test="imported != null">
+        imported = #{imported,jdbcType=INTEGER},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+</mapper>

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.RefundOrderDao">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.RefundOrder">
+	INSERT INTO refund_order (ref_id, order_id,store_id, store_name, ec_ref_id, apply_date, buyer_id, is_refund, all_ref_num, all_ref_money, 
+	ref_reason, ref_explain, ref_status, down_time, tre_date, is_audit,operator, memo,audit_time,source,source_no,operator_id,operator_time,
+	ec_order_id,audit_hint,express_code)
+    VALUES
+    (#{refId}, #{orderId},#{storeId}, #{storeName}, #{ecRefId}, #{applyDate}, #{buyerId}, #{isRefund}, #{allRefNum}, 
+    #{allRefMoney}, #{refReason}, #{refExplain}, #{refStatus}, 
+    #{downTime}, #{treDate},#{isAudit}, #{operator}, #{memo},#{auditTime},#{source},#{sourceNo},#{operatorId},#{operatorTime},#{ecOrderId},#{auditHint},#{expressCode})
+  </insert>
+  
+  <insert id="insertList" parameterType="com.px.mis.ec.entity.RefundOrder">
+	INSERT INTO refund_order (ref_id, order_id,store_id, store_name, ec_ref_id, apply_date, buyer_id, is_refund, all_ref_num, all_ref_money, 
+	ref_reason, ref_explain, ref_status, down_time, tre_date, is_audit,operator, memo,audit_time,source,source_no,operator_id,operator_time,
+	ec_order_id,audit_hint,express_code)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.refId},#{item.orderId}, #{item.storeId}, #{item.storeName}, #{item.ecRefId}, #{item.applyDate}, #{item.buyerId}, #{item.isRefund}, 
+      #{item.allRefNum}, #{item.allRefMoney}, #{item.refReason}, #{item.refExplain}, #{item.refStatus}, 
+      #{item.downTime}, #{item.treDate}, #{item.isAudit},#{item.operator}, #{item.memo},#{item.auditTime},#{item.source},#{item.sourceNo},
+      #{item.operatorId},#{item.operatorTime},#{item.ecOrderId},#{item.auditHint},#{item.expressCode})
+    </foreach>
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.RefundOrder">
+  	SELECT *
+  	FROM refund_order 
+  	WHERE ref_id = #{refId}
+  </select>
+	<select id="selectEcRefId" parameterType="java.lang.String"
+		resultType="com.px.mis.ec.entity.RefundOrder">
+		SELECT *
+		FROM refund_order
+		WHERE ec_ref_id = #{ecRefId}
+	</select>
+  
+  
+  <delete id="delete" parameterType="String">
+  	DELETE refund_order,refund_orders FROM  refund_order ,refund_orders 
+  	WHERE refund_order.ref_id = refund_orders.ref_id AND refund_order.ref_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.RefundOrder">
+  	UPDATE refund_order 
+  	<!-- SET store_id=#{storeId}, store_name=#{storeName},is_audit=#{isAudit}, ec_ref_id=#{ecRefId}, apply_date=#{applyDate}, buyer_id=#{buyerId}, 
+  	is_refund=#{isRefund}, all_ref_num=#{allRefNum}, all_ref_money=#{allRefMoney}, ref_reason=#{refReason}, ref_explain=#{refExplain}, 
+  	ref_status=#{refStatus}, down_time=#{downTime}, tre_date=#{treDate}, operator=#{operator}, memo=#{memo},
+  	audit_time=#{auditTime},source=#{source},source_no=#{sourceNo},operator_id=#{operatorId},operator_time=#{operatorTime},
+  	audit_user_id=#{auditUserId},audit_user_name=#{auditUserName},audit_hint=#{auditHint} -->
+  	SET store_id=#{storeId}, store_name=#{storeName},is_audit=#{isAudit}, ec_ref_id=#{ecRefId}, apply_date=#{applyDate}, buyer_id=#{buyerId}, 
+  	is_refund=#{isRefund}, all_ref_num=#{allRefNum}, all_ref_money=#{allRefMoney}, ref_reason=#{refReason}, ref_explain=#{refExplain}, 
+  	ref_status=#{refStatus},  tre_date=#{treDate}, memo=#{memo},
+  	audit_time=#{auditTime},audit_user_id=#{auditUserId},audit_user_name=#{auditUserName},audit_hint=#{auditHint}
+  	,express_code=#{expressCode}
+  	WHERE ref_id = #{refId}
+  </update>
+  
+  
+  <update id="updateAudit" parameterType="com.px.mis.ec.entity.RefundOrder">
+  	UPDATE refund_order 
+ 
+  	SET is_audit=#{isAudit},
+  	audit_time=#{auditTime},audit_user_id=#{auditUserId},
+  	audit_user_name=#{auditUserName},audit_hint=#{auditHint}
+	,express_code=#{expressCode}
+  	WHERE ref_id = #{refId} and is_audit=0
+  </update>
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.RefundOrder">
+	SELECT ro.*,ros.* ,
+	count(ro.ref_id)
+  	FROM refund_order ro,refund_orders ros
+  	WHERE ro.ref_id = ros.ref_id
+  	<if test="refId != null and refId != ''">
+		AND ro.ref_id=#{refId}
+    </if>
+	  <if test="expressCode != null and expressCode != ''">
+		  AND ro.express_code=#{expressCode}
+	  </if>
+    <if test="orderId != null and orderId != ''">
+		AND ro.order_id=#{orderId}
+    </if>
+    <if test="ecOrderId != null and ecOrderId != ''">
+		AND ro.ec_order_id=#{ecOrderId}
+    </if>
+    <if test="storeId != null and storeId != ''">
+        AND ro.store_id=#{storeId}
+    </if>
+    <if test="ecRefId != null and ecRefId != ''">
+		AND ro.ec_ref_id=#{ecRefId}
+    </if>
+    <if test="buyerId != null and buyerId != ''">
+		AND ro.buyer_id=#{buyerId}
+    </if>
+    <if test="isRefund != null and isRefund != ''">
+        AND ro.is_refund=#{isRefund}
+    </if>
+    <if test="refStatus != null and refStatus != ''">
+        AND ro.ref_status=#{refStatus}
+    </if>
+    <if test="applyDateStart != null and applyDateStart != '' ">
+		AND ro.apply_date <![CDATA[>=]]> #{applyDateStart}
+	</if>
+	<if test="applyDateEnd != null and applyDateEnd != ''">
+		AND ro.apply_date <![CDATA[<=]]> #{applyDateEnd}
+	</if>
+	<if test="treDateStart != null and treDateStart != '' ">
+		AND ro.tre_date <![CDATA[>=]]> #{treDateStart}
+	</if>
+	<if test="treDateEnd != null and treDateEnd != ''">
+		AND ro.tre_date <![CDATA[<=]]> #{treDateEnd}
+	</if>
+	<if test="invtyEncd != null and invtyEncd != ''">
+		AND ros.good_id=#{invtyEncd}
+	</if>
+	<if test="isAudit !=null and isAudit != ''">
+		AND ro.is_audit = #{isAudit}
+	</if>
+		group by ro.ref_id
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <resultMap type="RefundOrder" id="RefundOrdersMap" autoMapping="true">
+		<id property="refId" column="ref_id" />
+	    <collection property="refundOrders" ofType="RefundOrders" autoMapping="true">
+		    <id property="no" column="no" /> 
+		    <id property="memo" column="memo1"></id>
+	    </collection>
+  </resultMap>
+  
+  
+   <select id="exportList" parameterType="Map" resultType="Map">
+	SELECT
+	ro.ref_id AS 退款单号,
+	ro.order_id AS 订单编码,
+	ro.ec_order_id AS 平台订单号,
+	ro.store_id AS 店铺编码,
+	ro.store_name AS 店铺名称,
+	ro.ec_ref_id AS 电商退款单号,
+	ro.apply_date AS 申请日期,
+	ro.buyer_id AS 买家会员号,
+	ro.is_refund AS 是否退货,
+	ro.all_ref_num AS 整单退货数量,
+	ro.all_ref_money AS 整单退款金额,
+	ro.ref_reason AS 退款原因,
+	ro.ref_explain AS 退款说明,
+	ro.down_time AS 下载时间,
+	ro.tre_date AS 处理日期,
+	ro.operator AS 操作员,
+	ro.operator_time AS 操作时间,
+	ro.is_audit AS 是否审核,
+	ro.audit_time AS 审核时间,
+	ro.audit_user_name AS 审核人,
+	ro.audit_hint AS 审核提示,
+	ro.memo AS 主备注,
+	ro.source AS 退款来源,
+	ro.source_no AS 退款来源单号,
+	ro.express_code AS  快递单号,
+	ros.NO AS 明细序号,
+	ros.good_id AS 存货编码,
+	ros.good_name AS 存货名称,
+	ros.ec_good_id AS 店铺商品编码,
+	ros.good_sku AS 商品SKU,
+	ros.can_ref_num AS 可退数量,
+	ros.ref_num AS 退货数量,
+	ros.can_ref_money AS 可退金额,
+	ros.ref_money AS 退货金额,
+	ros.ref_whs AS 退货仓库编码,
+	whs.whs_nm AS 仓库名称,
+	ros.batch_no AS 批号,
+	ros.prdc_dt AS 生产日期,
+	ros.invldtn_dt AS 失效日期,
+	ros.baozhiqi AS 保质期天数,
+	ros.is_gift AS 是否赠品,
+	ros.memo AS 明细备注 
+FROM
+	refund_order ro,
+	refund_orders ros,
+	whs_doc whs 
+WHERE
+	ro.ref_id = ros.ref_id 
+	AND ros.ref_whs = whs.whs_encd
+  	<if test="refId != null and refId != ''">
+        AND ro.ref_id=#{refId}
+    </if>
+	   <if test="expressCode != null and expressCode != ''">
+		   AND ro.express_code=#{expressCode}
+	   </if>
+    <if test="orderId != null and orderId != ''">
+        AND ro.order_id=#{orderId}
+    </if>
+    <if test="ecOrderId != null and ecOrderId != ''">
+        AND ro.ec_order_id=#{ecOrderId}
+    </if>
+    <if test="storeId != null and storeId != ''">
+        AND ro.store_id=#{storeId}
+    </if>
+    <if test="ecRefId != null and ecRefId != ''">
+        AND ro.ec_ref_id=#{ecRefId}
+    </if>
+    <if test="buyerId != null and buyerId != ''">
+        AND ro.buyer_id=#{buyerId}
+    </if>
+    <if test="isRefund != null and isRefund != ''">
+        AND ro.is_refund=#{isRefund}
+    </if>
+    <if test="refStatus != null and refStatus != ''">
+        AND ro.ref_status=#{refStatus}
+    </if>
+    <if test="applyDateStart != null and applyDateStart != '' ">
+		AND ro.apply_date <![CDATA[>=]]> #{applyDateStart}
+	</if>
+	<if test="applyDateEnd != null and applyDateEnd != ''">
+		AND ro.apply_date <![CDATA[<=]]> #{applyDateEnd}
+	</if>
+	<if test="treDateStart != null and treDateStart != '' ">
+		AND ro.tre_date <![CDATA[>=]]> #{treDateStart}
+	</if>
+	<if test="treDateEnd != null and treDateEnd != ''">
+		AND ro.tre_date <![CDATA[<=]]> #{treDateEnd}
+	</if>
+	<if test="invtyEncd != null and invtyEncd != ''">
+		AND ros.good_id=#{invtyEncd}
+	</if>
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT
+        count( a.order_id11 )
+        FROM
+        (
+	SELECT count(ro.ref_id) order_id11 
+  	FROM refund_order ro,refund_orders ros
+  	WHERE ro.ref_id = ros.ref_id	
+  	<if test="refId != null and refId != ''">
+		AND ro.ref_id=#{refId}
+    </if>
+	  <if test="expressCode != null and expressCode != ''">
+		  AND ro.express_code=#{expressCode}
+	  </if>
+    <if test="orderId != null and orderId != ''">
+		AND ro.order_id=#{orderId}
+    </if>
+    <if test="storeId != null and storeId != ''">
+        AND ro.store_id=#{storeId}
+    </if>
+    <if test="ecRefId != null and ecRefId != ''">
+		AND ro.ec_ref_id=#{ecRefId}
+    </if>
+    <if test="ecOrderId != null and ecOrderId != ''">
+		AND ro.ec_order_id=#{ecOrderId}
+    </if>
+    <if test="buyerId != null and buyerId != ''">
+		AND ro.buyer_id=#{buyerId}
+    </if>
+     <if test="isRefund != null and isRefund != ''">
+        AND ro.is_refund=#{isRefund}
+    </if>
+    <if test="isAudit !=null and isAudit != ''">
+		AND ro.is_audit = #{isAudit}
+	</if>
+    <if test="refStatus != null and refStatus != ''">
+        AND ro.ref_status=#{refStatus}
+    </if>
+    <if test="applyDateStart != null and applyDateStart != '' ">
+		AND ro.apply_date <![CDATA[>=]]> #{applyDateStart}
+	</if>
+	<if test="applyDateEnd != null and applyDateEnd != ''">
+		AND ro.apply_date <![CDATA[<=]]> #{applyDateEnd}
+	</if>
+	<if test="treDateStart != null and treDateStart != '' ">
+		AND ro.tre_date <![CDATA[>=]]> #{treDateStart}
+	</if>
+	<if test="treDateEnd != null and treDateEnd != ''">
+		AND ro.tre_date <![CDATA[<=]]> #{treDateEnd}
+	</if>
+	<if test="invtyEncd != null and invtyEncd != ''">
+		AND ros.good_id=#{invtyEncd}
+	</if>
+	GROUP BY
+        ro.ref_id
+        ) a
+  </select>
+  
+  <update id="audit" parameterType="String">
+  	UPDATE refund_order  
+  	SET is_audit = CASE is_audit WHEN 0 THEN 1 END
+	WHERE ref_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </update>
+    
+  <update id="noAudit" parameterType="String">
+  	UPDATE aftermarket 
+  	SET is_audit = CASE is_audit WHEN 1 THEN 0 END
+	WHERE ref_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </update>
+  <select id="selectListByRefIds" resultType="com.px.mis.ec.entity.RefundOrder">
+  select * from refund_order
+  where ref_id IN
+  <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </select>
+  
+  
+  <!-- 销售单列表中查询所有销售单信息 -->
+	<select id="selectSellSnglsByOrderId" parameterType="Map"
+		resultMap="sellSnglMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sell_sngl as ss LEFT JOIN sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+		LEFT JOIN sell_type as st ON ss.sell_typ_id = st.sell_typ_id
+		LEFT JOIN mis_user mu on ss.acc_num=mu.acc_num
+		LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+		LEFT JOIN biz_type bt on bt.biz_typ_id=ss.biz_typ_id
+		<!-- LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=ss.recv_send_cate_id -->
+		LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+		LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+		<where>
+		ss.is_nt_chk=1
+		AND ss.tx_id IN 
+		 <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item.orderId}
+    	</foreach>
+		</where>
+		ORDER BY ss.sell_sngl_id DESC
+	</select>
+	<resultMap type="SellSngl" id="sellSnglMap"
+		autoMapping="true">
+		<id property="sellSnglId" column="sell_sngl_id" />
+		<collection property="sellSnglSub" ofType="SellSnglSub"
+			autoMapping="true"><!-- 采购订单子表 -->
+			<id property="ordrNum" column="ordr_num" />
+			<result property="memo" column="memos" />
+		</collection>
+	</resultMap>
+	
+	<!-- 查询销售单信息 -->
+	<sql id="Base_Column_List">
+		ss.*,sss.*,sss.memo as memos,st.sell_typ_nm,bt.biz_typ_nm,
+		mu.user_name,mu.dep_name,cd.cust_nm,mcd.measr_corp_nm,wd.whs_nm,
+		ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+		ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost
+	</sql>
+	
+	
+	<select id="selectPlatOrderListByEcOrderId" resultType="com.px.mis.ec.entity.PlatOrder">
+	select * from plat_order where ec_order_id=#{ecOrderId} and is_audit=1
+	</select>
+	<!-- 根据平台订单号查询退款单 -->
+  	<select id="selectByEcOrderId" parameterType="java.lang.String" resultMap="refundOrdersMap">
+  		SELECT re.*, res.*  FROM refund_order re LEFT JOIN refund_orders res ON re.ref_id = res.ref_id
+		WHERE re.ec_order_id = #{ecOrderId} AND re.store_id = #{storeId}
+  	</select>
+  	
+  	<resultMap type="RefundOrder" id="refundOrdersMap" autoMapping="true">
+		<id property="refId" column="ref_id" />
+	    <collection property="refundOrders" ofType="RefundOrders" autoMapping="true">
+		    <id property="no" column="no" /> 
+	    </collection>
+   </resultMap>
+   
+   <select id="selectCountByEcOrderId" resultType="int" parameterType="java.lang.String">
+   select count(ref_id) from refund_order where ec_order_id=#{ecOrderId}
+   </select>
+   
+    <select id="selectRtnGoodsByRefId" resultType="com.px.mis.purc.entity.RtnGoods" parameterType="java.lang.String">
+   select *  from rtn_goods where ref_id=#{refId} limit 0,1
+   </select>
+   
+   
+    <select id="selectSellOutWhsByRtnId" resultType="com.px.mis.purc.entity.SellOutWhs" parameterType="java.lang.String">
+   select * from sell_out_whs where sell_Ordr_Ind=#{sellOrdrInd} limit 0,1
+   </select>
+</mapper>

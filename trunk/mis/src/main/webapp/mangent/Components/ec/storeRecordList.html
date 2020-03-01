@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>店铺档案列表</title>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/ec/storeRecordList.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<style>
+			.editable.inline-edit-cell.ui-widget-content.ui-corner-all {
+				width: 100% !important;
+			}
+			
+			.info>div {
+				width: 33%;
+				display: inline-block;
+			}
+			.dt {
+				width: 380px!important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="box">
+			<div class="purchaseTit">
+				<!--<h1 class="title">店铺档案</h1>-->
+				<div class="buttons">
+					<button class="delOrder">删除</button>
+					<button class="findList">查询</button>
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>店铺编码</span>
+							<input type="text" class="storeId" name="storeId" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>佣金扣点编码 </span>
+							<input type="text" class="brokId" name="brokId" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>电商平台编码 </span>
+							<input type="text" class="ecId" name="ecId" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>负责部门 </span>
+							<input type="text" class="respDep" name="respDep" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>负责人 </span>
+							<input type="text" class="respPerson" name="respPerson" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>业务类型 </span>
+							<input type="text" class="business" name="business" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>默认退货仓 </span>
+							<input type="text" class="defaultRefWhs" name="defaultRefWhs" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>店铺名称 </span>
+							<input type="text" class="storeName" name="storeName" value=""/>
+						</div>
+						<div class="supplier col-md-4 dt">
+							<span>日期 </span> 
+							<input type="text" class="startDate date date1" name="startDate" value="" readonly="readonly"  calendar="YYYY-MM-DD"/>到<input type="text" class="endDate date date2" name="endDate" readonly="readonly"  value="" calendar="YYYY-MM-DD"/>
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<table id="List_jqgrids"></table>
+			<div id="List_jqGridPager"></div>
+			
+
+	</body>
+
+</html>

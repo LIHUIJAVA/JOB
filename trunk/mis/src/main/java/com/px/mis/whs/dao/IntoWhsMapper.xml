@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.IntoWhsMapper">
+    <!-- 查询所有到货单 -->
+    <resultMap id="toGdsSnglMap"
+               type="com.px.mis.purc.entity.ToGdsSngl" autoMapping="true">
+        <id property="toGdsSnglId" column="to_gds_sngl_id"/>
+        <collection property="toGdsSnglSub"
+                    ofType="com.px.mis.purc.entity.ToGdsSnglSub" autoMapping="true"><!-- 采购订单子表 -->
+            <id property="ordrNum" column="ordr_num"/>
+            <result property="memo" column="memos"/>
+        </collection>
+    </resultMap>
+    <!-- 查询所有入库单 -->
+    <resultMap type="com.px.mis.purc.entity.IntoWhs"
+               id="intoWhsMap" autoMapping="true">
+        <id property="intoWhsSnglId" column="into_whs_sngl_id"/>
+        <collection property="iList"
+                    ofType="com.px.mis.purc.entity.IntoWhsSub" autoMapping="true"><!-- 采购订单子表 -->
+            <id property="ordrNum" column="ordr_num"/>
+            <id property="memo" column="memos"/>
+        </collection>
+    </resultMap>
+    <!-- 查询所有销售单 -->
+    <resultMap type="com.px.mis.purc.entity.SellOutWhs"
+               id="sellOutWhsMap" autoMapping="true">
+        <id property="outWhsId" column="out_whs_id"/>
+        <collection property="sList"
+                    ofType="com.px.mis.purc.entity.SellOutWhsSub" autoMapping="true"><!-- 采购订单子表 -->
+            <id property="ordrNum" column="ordr_num"/>
+            <result property="memo" column="memos"/>
+        </collection>
+    </resultMap>
+    <!-- 到货单明细 -->
+    <resultMap id="BaseResultSubMap" type="com.px.mis.purc.entity.ToGdsSnglSub">
+        <id column="ordr_num" jdbcType="BIGINT" property="ordrNum"/>
+        <result column="to_gds_sngl_id" jdbcType="VARCHAR" property="toGdsSnglId"/>
+        <result column="invty_encd" jdbcType="VARCHAR" property="invtyEncd"/>
+        <result column="whs_encd" jdbcType="VARCHAR" property="whsEncd"/>
+        <result column="purs_ordr_num" jdbcType="VARCHAR" property="pursOrdrNum"/>
+        <result column="qty" jdbcType="DECIMAL" property="qty"/>
+        <result column="bx_qty" jdbcType="DECIMAL" property="bxQty"/>
+        <result column="tax_rate" jdbcType="DECIMAL" property="taxRate"/>
+        <result column="no_tax_uprc" jdbcType="DECIMAL" property="noTaxUprc"/>
+        <result column="no_tax_amt" jdbcType="DECIMAL" property="noTaxAmt"/>
+        <result column="tax_amt" jdbcType="DECIMAL" property="taxAmt"/>
+        <result column="cntn_tax_uprc" jdbcType="DECIMAL" property="cntnTaxUprc"/>
+        <result column="prc_tax_sum" jdbcType="DECIMAL" property="prcTaxSum"/>
+        <result column="bao_zhi_qi" jdbcType="VARCHAR" property="baoZhiQi"/>
+        <result column="intl_bat" jdbcType="VARCHAR" property="intlBat"/>
+        <result column="bat_num" jdbcType="VARCHAR" property="batNum"/>
+        <result column="prdc_dt" jdbcType="VARCHAR" property="prdcDt"/>
+        <result column="invldtn_dt" jdbcType="VARCHAR" property="invldtnDt"/>
+        <result column="is_complimentary" jdbcType="INTEGER" property="isComplimentary"/>
+        <result column="is_nt_rtn_goods" jdbcType="INTEGER" property="isNtRtnGoods"/>
+        <result column="memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="un_into_whs_qty" jdbcType="DECIMAL" property="unIntoWhsQty"/>
+        <!-- <result column="to_ordr_num" jdbcType="INTEGER" property="toOrdrNum" /> -->
+    </resultMap>
+    <!-- 销售出库单明细 -->
+    <resultMap id="BaseResultMapSell" type="com.px.mis.purc.entity.SellOutWhsSub">
+        <id column="ordr_num" jdbcType="BIGINT" property="ordrNum"/>
+        <result column="whs_encd" jdbcType="VARCHAR" property="whsEncd"/>
+        <result column="invty_encd" jdbcType="VARCHAR" property="invtyEncd"/>
+        <result column="bat_num" jdbcType="VARCHAR" property="batNum"/>
+        <result column="out_whs_id" jdbcType="VARCHAR" property="outWhsId"/>
+        <result column="qty" jdbcType="DECIMAL" property="qty"/>
+        <result column="bx_qty" jdbcType="DECIMAL" property="bxQty"/>
+        <result column="cntn_tax_uprc" jdbcType="DECIMAL" property="cntnTaxUprc"/>
+        <result column="prc_tax_sum" jdbcType="DECIMAL" property="prcTaxSum"/>
+        <result column="no_tax_uprc" jdbcType="DECIMAL" property="noTaxUprc"/>
+        <result column="no_tax_amt" jdbcType="DECIMAL" property="noTaxAmt"/>
+        <result column="tax_amt" jdbcType="DECIMAL" property="taxAmt"/>
+        <result column="tax_rate" jdbcType="DECIMAL" property="taxRate"/>
+        <result column="intl_bat" jdbcType="VARCHAR" property="intlBat"/>
+        <result column="prdc_dt" jdbcType="VARCHAR" property="prdcDt"/>
+        <result column="invldtn_dt" jdbcType="VARCHAR" property="invldtnDt"/>
+        <result column="is_complimentary" jdbcType="INTEGER" property="isComplimentary"/>
+        <result column="is_nt_rtn_goods" jdbcType="INTEGER" property="isNtRtnGoods"/>
+        <result column="bao_zhi_qi" jdbcType="INTEGER" property="baoZhiQi"/>
+        <result column="memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="proj_encd" jdbcType="VARCHAR" property="projEncd"/>
+        <result column="proj_nm" jdbcType="VARCHAR" property="projNm"/>
+        <result column="gds_bit_encd" jdbcType="VARCHAR" property="gdsBitEncd"/>
+        <result column="regn_encd" jdbcType="VARCHAR" property="regnEncd"/>
+    </resultMap>
+    <sql id="Base_Column_List_Sell">
+        ordr_num, whs_encd, invty_encd, bat_num, out_whs_id, qty, bx_qty, cntn_tax_uprc,
+    prc_tax_sum, no_tax_uprc, no_tax_amt, tax_amt, tax_rate, intl_bat, prdc_dt, invldtn_dt, 
+    is_complimentary, is_nt_rtn_goods, bao_zhi_qi, memo, proj_encd, proj_nm, gds_bit_encd, 
+    regn_encd
+    </sql>
+    <select id="selectSellByOrdrNumKey" parameterType="java.lang.Long" resultMap="BaseResultMapSell">
+        select
+        <include refid="Base_Column_List_Sell"/>
+        from sell_out_whs_sub
+        where ordr_num = #{ordrNum,jdbcType=BIGINT}
+    </select>
+
+
+    <sql id="Base_Column_List_Sub">
+        ordr_num, to_gds_sngl_id, invty_encd, whs_encd, purs_ordr_num, qty, bx_qty, tax_rate,
+    no_tax_uprc, no_tax_amt, tax_amt, cntn_tax_uprc, prc_tax_sum, bao_zhi_qi, intl_bat, 
+    bat_num, prdc_dt, invldtn_dt, is_complimentary, is_nt_rtn_goods, memo, un_into_whs_qty, 
+    to_ordr_num,
+	bx_rule
+    </sql>
+    <select id="selectToGdsByOrdrNumKey" parameterType="java.lang.Long" resultMap="BaseResultSubMap">
+        select
+        <!-- <include refid="Base_Column_List_Sub" /> -->
+        to_gds_sngl_sub.*,bx_rule
+        from to_gds_sngl_sub
+        LEFT JOIN invty_doc ON to_gds_sngl_sub.invty_encd = invty_doc.invty_encd
+        where ordr_num = #{ordrNum,jdbcType=BIGINT}
+    </select>
+    <!-- 查询所有到货单 -->
+    <sql id="Base_Column_List">
+        tgs.*,tgss.*,tgss.memo as memos,pt.purs_typ_nm,
+		mu.user_name,mu.dep_name,pd.provr_nm,mcd.measr_corp_nm,wd.whs_nm,
+		ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+		ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost
+		,form_typ_tabs.form_typ_name formTypEncd
+    </sql>
+    <!-- 采购入 -->
+    <!-- 查询所有到货单 -->
+    <select id="selectToGdsSnglList" parameterType="list"
+            resultMap="toGdsSnglMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM to_gds_sngl as tgs INNER JOIN to_gds_sngl_sub as tgss ON
+        tgs.to_gds_sngl_id=tgss.to_gds_sngl_id
+        LEFT JOIN purs_type as pt ON tgs.purs_typ_id = pt.purs_typ_id
+        LEFT JOIN mis_user mu on tgs.acc_num=mu.acc_num
+        LEFT JOIN provr_doc pd on tgs.provr_id=pd.provr_id
+        LEFT JOIN whs_doc wd on tgss.whs_encd=wd.whs_encd
+        LEFT JOIN invty_doc ind on tgss.invty_encd=ind.invty_encd
+        LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        LEFT JOIN form_typ_tabs ON tgs.form_typ_encd = form_typ_tabs.form_typ_encd
+        where
+        tgs.is_nt_chk=1
+        AND
+        tgs.is_nt_rtn_good=0
+        AND tgss.deal_stat="处理中"
+        AND tgs.deal_stat="已打开"
+        <if test="list != null">
+            AND tgss.whs_encd in
+            <foreach collection="list" item="item"
+                     separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <!-- 红字出库单2B，2C-->
+    <select id="selectRedSellOutWhsList" parameterType="list"
+            resultMap="sellOutWhsMap">
+        SELECT
+        <include refid="sell_Column_List"/>
+        FROM sell_out_whs as sow INNER JOIN sell_out_whs_sub as sows on
+        sow.out_whs_id=sows.out_whs_id
+        LEFT JOIN sell_type as st ON sow.sell_typ_id = st.sell_typ_id
+        LEFT JOIN mis_user mu on sow.acc_num=mu.acc_num
+        LEFT JOIN cust_doc cd on sow.cust_id=cd.cust_id
+        LEFT JOIN biz_type bt on bt.biz_typ_id=sow.biz_typ_id
+        LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=sow.recv_send_cate_id
+        LEFT JOIN whs_doc wd on sows.whs_encd=wd.whs_encd
+        LEFT JOIN invty_doc ind on sows.invty_encd=ind.invty_encd
+        LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        LEFT JOIN form_typ_tabs ON sow.form_typ_encd = form_typ_tabs.form_typ_encd
+        Where
+        sow.is_nt_chk ="0"
+        <!-- and  sow.biz_typ_id="2" -->
+        AND sow.is_nt_rtn_good="1"
+        AND sows.qty !="0"
+        <!-- 1	B2B
+             2	B2C -->
+        <!-- 	sow.deal_stat='处理中'
+            AND
+            sows.is_nt_rtn_goods=1
+     -->
+        <if test="list != null ">
+            AND sows.whs_encd in
+            <foreach collection="list" item="item"
+                     separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <!-- 新增到货单拒收单 -->
+    <!-- isNtRtnGoods;//是否是到货拒收单、到货单(到货单是1 但到货拒收单是0) -->
+    <insert id="insertToGdsSngl">
+        insert into to_gds_sngl (to_gds_sngl_id, to_gds_sngl_dt, purs_typ_id,
+                                 provr_id, acc_num,
+                                 provr_ordr_num, is_nt_chk,
+                                 chkr, chk_tm, setup_pers,
+                                 setup_tm, mdfr, modi_tm, memo, deal_stat)
+        values (#{toGdsSnglId}, #{toGdsSnglDt}, #{pursTypId},
+                #{provrId}, #{accNum},
+                #{provrOrdrNum}, #{isNtChk},
+                #{chkr}, #{chkTm}, #{setupPers},
+                #{setupTm}, #{mdfr}, #{modiTm}, #{memo}, '处理中')
+    </insert>
+    <insert id="insertToGdsSnglSub"
+            parameterType="com.px.mis.purc.entity.ToGdsSnglSub">
+        insert into to_gds_sngl_sub values
+        <foreach collection="list" item="item"
+                 separator="," close=";">
+            (#{item.ordrNum},#{item.toGdsSnglId},#{item.invtyEncd},
+            #{item.whsEncd},
+            #{item.pursOrdrNum}, #{item.qty}, #{item.taxRate},
+            #{item.noTaxUprc}, #{item.noTaxAmt}, #{item.taxAmt},
+            #{item.cntnTaxUprc}, #{item.prcTaxSum}, #{item.baoZhiQi},
+            #{item.intlBat}, #{item.batNum}, #{item.prdcDt},
+            #{item.invldtnDt}, #{item.isComplimentary},0, #{item.memo}
+            )
+        </foreach>
+    </insert>
+    <!-- 按照编号查询到货单信息 -->
+    <select id="selectToGdsSnglByToGdsSnglId" parameterType="String"
+            resultMap="toGdsSnglMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM to_gds_sngl as tgs INNER JOIN to_gds_sngl_sub as tgss ON
+        tgs.to_gds_sngl_id=tgss.to_gds_sngl_id
+        LEFT JOIN purs_type as pt ON tgs.purs_typ_id = pt.purs_typ_id
+        LEFT JOIN mis_user mu on tgs.acc_num=mu.acc_num
+        LEFT JOIN provr_doc pd on tgs.provr_id=pd.provr_id
+        LEFT JOIN whs_doc wd on tgss.whs_encd=wd.whs_encd
+        LEFT JOIN invty_doc ind on tgss.invty_encd=ind.invty_encd
+        LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        where tgs.to_gds_sngl_id = #{toGdsSnglId}
+    </select>
+    <!-- 查询是否含有到货单编号 -->
+    <select id="selectToGdsSnglId" resultType="ToGdsSngl">
+        select *
+        FROM to_gds_sngl
+        where to_gds_sngl_id = #{toGdsSnglId}
+    </select>
+
+    <!-- 新增采购入库单表信息 -->
+    <!-- isNtRtnGoods;//是否是到入库单、退货单(入库单是1 但到退货单是0) -->
+    <insert id="insertIntoWhs"
+            parameterType="com.px.mis.purc.entity.IntoWhs">
+        insert into into_whs (into_whs_sngl_id, into_whs_dt, purs_typ_id,
+                              out_into_whs_typ_id, recv_send_cate_id, provr_id,
+                              acc_num, purs_ordr_id,
+                              to_gds_sngl_id, provr_ordr_num,
+                              is_nt_bllg, is_nt_stl, is_nt_chk,
+                              chkr, chk_tm, is_nt_clos,
+                              is_nt_cmplt, setup_pers, setup_tm,
+                              mdfr, modi_tm, is_nt_book_entry,
+                              book_entry_pers, book_entry_tm, exa_rep,
+                              memo)
+        values (#{intoWhsSnglId}, #{intoWhsDt}, #{pursTypId},
+                #{outIntoWhsTypId}, #{recvSendCateId}, #{provrId},
+                #{accNum}, #{pursOrdrId},
+                #{toGdsSnglId}, #{provrOrdrNum},
+                #{isNtBllg}, #{isNtStl}, #{isNtChk},
+                #{chkr}, #{chkTm}, #{isNtClos},
+                #{isNtCmplt}, #{setupPers}, #{setupTm},
+                #{mdfr}, #{modiTm}, #{isNtBookEntry},
+                #{bookEntryPers}, #{bookEntryTm}, #{exaRep},
+                #{memo})
+    </insert>
+    <insert id="insertIntoWhsSub"
+            parameterType="com.px.mis.purc.entity.IntoWhsSub">
+        insert into into_whs_sub (ordr_num, into_whs_sngl_id, invty_encd,
+        whs_encd, purs_ordr_sub_tab_ind, purs_to_gds_sngl_sub_tab_ind,
+        qty, tax_rate, no_tax_uprc,
+        no_tax_amt, tax_amt, cntn_tax_uprc,
+        prc_tax_sum, stl_qty, stl_uprc,
+        stl_Amt, un_bllg_qty, un_bllg_uprc,
+        un_bllg_amt, tees_qty, tees_uprc,
+        tees_amt, crspd_inv_num, bao_zhi_qi,
+        intl_bat, bat_num, prdc_dt,
+        invldtn_dt, gds_bit_encd, is_complimentary, is_nt_rtn_goods,
+        memo)
+        values
+        <foreach collection="list" item="item"
+                 separator="," close=";">
+            (#{item.ordrNum}, #{item.intoWhsSnglId}, #{item.invtyEncd},
+            #{item.whsEncd}, #{item.pursOrdrSubTabInd}, #{item.pursToGdsSnglSubTabInd},
+            #{item.qty}, #{item.taxRate}, #{item.noTaxUprc},
+            #{item.noTaxAmt}, #{item.taxAmt}, #{item.cntnTaxUprc},
+            #{item.prcTaxSum}, #{item.stlQty}, #{item.stlUprc},
+            #{item.stlAmt}, #{item.unBllgQty}, #{item.unBllgUprc},
+            #{item.unBllgAmt}, #{item.teesQty}, #{item.teesUprc},
+            #{item.teesAmt}, #{item.crspdInvNum}, #{item.baoZhiQi},
+            #{item.intlBat}, #{item.batNum}, #{item.prdcDt},
+            #{item.invldtnDt}, #{item.gdsBitEncd}, #{item.isComplimentary},
+            1,#{item.memo})
+        </foreach>
+    </insert>
+    <!-- 到货单有一个处理状态（处理中-处理完成） -->
+    <update id="updateTGdsGngl" parameterType="java.util.List">
+        update to_gds_sngl_sub
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="deal_stat =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when ordr_num =
+                    #{item.ordrNum} then "处理完成"
+                </foreach>
+            </trim>
+        </trim>
+        where ordr_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.ordrNum}
+        </foreach>
+    </update>
+    <!-- 按照采购入库单编号查询采购入库单信息 -->
+    <!-- 查询采购入库单表 -->
+    <sql id="into_Column_List">
+        iw.*,iws.*,iws.memo as memos,pt.purs_typ_nm,rsc.recv_send_cate_nm,
+		mu.user_name,mu.dep_name,pd.provr_nm,mcd.measr_corp_nm,wd.whs_nm,
+		ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+		ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost
+    </sql>
+    <select id="selectIntoWhsByIntoWhsSnglId" parameterType="String"
+            resultMap="intoWhsMap">
+        select
+        <include refid="into_Column_List"/>
+        from into_whs iw INNER JOIN into_whs_sub as iws on
+        iw.into_whs_sngl_id=iws.into_whs_sngl_id
+        LEFT JOIN purs_type as pt ON iw.purs_typ_id = pt.purs_typ_id
+        LEFT JOIN mis_user mu on iw.acc_num=mu.acc_num
+        LEFT JOIN provr_doc pd on iw.provr_id=pd.provr_id
+        LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+        LEFT JOIN whs_doc wd on iws.whs_encd=wd.whs_encd
+        LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+        LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        where iw.into_whs_sngl_id = #{intoWhsSnglId}
+    </select>
+    <!-- 查询是否含有采购入库单编号 -->
+    <select id="selectIntoWhsId" resultType="IntoWhs">
+        select *
+        from into_whs
+        where into_whs_sngl_id = #{intoWhsSnglId}
+    </select>
+
+
+    <!-- 销售出 -->
+    <!-- 查询销售出库单信息 -->
+    <sql id="sell_Column_List">
+        sow.*,sows.*,sows.memo as memos,st.sell_typ_nm,rsc.recv_send_cate_nm,bt.biz_typ_nm,
+		mu.user_name,mu.dep_name,cd.cust_nm,mcd.measr_corp_nm,wd.whs_nm,
+		ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+		ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost
+		,form_typ_tabs.form_typ_name formTypEncd
+    </sql>
+    <select id="selectSellOutWhsList" parameterType="list"
+            resultMap="sellOutWhsMap">
+        SELECT
+        <include refid="sell_Column_List"/>
+        FROM sell_out_whs as sow INNER JOIN sell_out_whs_sub as sows on
+        sow.out_whs_id=sows.out_whs_id
+        LEFT JOIN sell_type as st ON sow.sell_typ_id = st.sell_typ_id
+        LEFT JOIN mis_user mu on sow.acc_num=mu.acc_num
+        LEFT JOIN cust_doc cd on sow.cust_id=cd.cust_id
+        LEFT JOIN biz_type bt on bt.biz_typ_id=sow.biz_typ_id
+        LEFT JOIN recv_send_cate rsc on
+        rsc.recv_send_cate_id=sow.recv_send_cate_id
+        LEFT JOIN whs_doc wd on sows.whs_encd=wd.whs_encd
+        LEFT JOIN invty_doc ind on sows.invty_encd=ind.invty_encd
+        LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        LEFT JOIN form_typ_tabs ON sow.form_typ_encd = form_typ_tabs.form_typ_encd
+        Where
+        sow.is_nt_chk ="0"
+        and
+        sow.biz_typ_id="1"
+        AND sow.is_nt_rtn_good="0"
+        <!-- 1	B2B
+             2	B2C -->
+        <!-- 	sow.deal_stat='处理中'
+            AND
+            sows.is_nt_rtn_goods=1
+     -->        <!-- 入库1退货0 -->
+        <if test="list != null ">
+            AND sows.whs_encd in
+            <foreach collection="list" item="item"
+                     separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <!-- 审核销售出库单 -->
+    <update id="updateSOutWhs"
+            parameterType="com.px.mis.purc.entity.SellOutWhs">
+        update sell_out_whs
+        <set>
+            is_nt_chk = 1,
+            <if test="chkr != null">
+                chkr = #{chkr},
+            </if>
+            <if test="accNum != null">
+                acc_num = #{accNum},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            chk_tm = now(),
+        </set>
+        where out_whs_id = #{outWhsId}
+    </update>
+    <!-- 查询拒收原因 -->
+    <select id="selectReason" resultType="RefuseReason">
+        select *
+        from refuse_reason
+    </select>
+    <!-- 入库 推荐货位 -->
+    <select id="selectIntogBit" resultType="MovBitTab">
+        <!--   SELECT
+          mov.gds_bit_encd,
+          mov.qty,
+          gds.gds_bit_qty
+          FROM
+          mov_bit_tab mov
+          JOIN gds_bit gds ON mov.gds_bit_encd = gds.gds_bit_encd
+          AND mov.qty &lt; gds.gds_bit_qty
+          AND qty != 0
+          WHERE
+          mov.whs_encd = #{whsEncd}
+          AND mov.invty_encd = #{invtyEncd}
+          AND mov.bat_num = #{batNum}
+          SELECT
+          a.gds_bit_encd,
+          a.gds_bit_qty,
+          a.qty
+          FROM
+          (
+          SELECT
+          mov.gds_bit_encd ,
+          mov.qty ,
+          gds.gds_bit_qty
+          FROM
+          mov_bit_tab mov
+          LEFT JOIN gds_bit gds ON mov.gds_bit_encd = gds.gds_bit_encd
+          WHERE
+          mov.whs_encd =
+          AND mov.invty_encd =
+          AND mov.bat_num =
+          ) AS a
+          WHERE
+          a.qty &lt; a.gds_bit_qty -->
+    <!--         SELECT
+            s.gds_bit_encd,
+            s.gds_bit_qty,
+            s.qty,
+            s.regn_encd,
+            mov_bit_tab.mov_bit_encd
+            FROM
+            (
+            SELECT
+            gds_bit.gds_bit_encd,
+            gds_bit.gds_bit_qty,
+            gds_bit.gds_bit_qty - SUM( mov_bit_tab.qty ) qty,
+            whs_gds.regn_encd
+            FROM
+            whs_gds
+            JOIN whs_doc ON whs_gds.real_whs = whs_doc.real_whs
+            AND whs_encd = #{whsEncd}
+            JOIN gds_bit ON whs_gds.gds_bit_encd = gds_bit.gds_bit_encd
+            LEFT JOIN mov_bit_tab ON gds_bit.gds_bit_encd = mov_bit_tab.gds_bit_encd
+            WHERE
+            mov_bit_tab.qty &gt;  0
+            GROUP BY
+            gds_bit.gds_bit_encd
+            HAVING
+            SUM( mov_bit_tab.qty ) &lt; gds_bit.gds_bit_qty
+            ) s
+            LEFT JOIN mov_bit_tab ON s.gds_bit_encd = mov_bit_tab.gds_bit_encd
+            AND mov_bit_tab.invty_encd =  #{invtyEncd}
+            AND mov_bit_tab.bat_num = #{batNum}
+            ORDER BY
+            mov_bit_encd DESC-->
+            SELECT
+            s.gds_bit_encd,
+            s.gds_bit_qty,
+            s.qty,
+            s.regn_encd,
+            mov_bit_tab.mov_bit_encd
+            FROM
+            (
+            SELECT
+            gds_bit.gds_bit_encd,
+            gds_bit.gds_bit_qty,
+            gds_bit.gds_bit_qty - IFNULL(SUM( mov_bit_tab.qty ) ,0) qty,
+            whs_gds.regn_encd
+            FROM
+            whs_gds
+            JOIN whs_doc ON whs_gds.real_whs = whs_doc.real_whs
+            AND whs_encd IN (
+            SELECT
+            whs_encd
+            FROM
+            whs_doc
+            WHERE
+            real_whs = ( SELECT real_whs FROM whs_doc WHERE whs_encd = #{whsEncd} ))
+            JOIN gds_bit ON whs_gds.gds_bit_encd = gds_bit.gds_bit_encd
+            LEFT JOIN mov_bit_tab ON gds_bit.gds_bit_encd = mov_bit_tab.gds_bit_encd
+            AND mov_bit_tab.whs_encd = whs_doc.whs_encd
+            <!-- WHERE
+            mov_bit_tab.qty  &gt;   0 -->
+            GROUP BY
+            gds_bit.gds_bit_encd
+            HAVING
+        IFNULL(SUM( mov_bit_tab.qty ) ,0) &lt; gds_bit.gds_bit_qty
+            ) s
+            LEFT JOIN mov_bit_tab ON s.gds_bit_encd = mov_bit_tab.gds_bit_encd
+            AND mov_bit_tab.invty_encd =  #{invtyEncd}
+            AND mov_bit_tab.bat_num = #{batNum}
+            GROUP BY
+            s.gds_bit_encd
+            ORDER BY
+            mov_bit_tab.mov_bit_encd DESC,
+            s.gds_bit_encd ASC
+
+        </select>
+        <!-- 出库 推荐货位 -->
+    <select id="selectOutgBit" resultType="MovBitTab">
+        SELECT *
+        FROM mov_bit_tab
+        WHERE whs_encd = #{whsEncd}
+          AND invty_encd = #{invtyEncd}
+          AND bat_num = #{batNum}
+          and qty &gt; 0
+        ORDER BY prdc_dt,
+                 into_dt DESC
+    </select>
+    <!-- 红字入库 -->
+    <resultMap id="IntoWhsMap"
+               type="com.px.mis.purc.entity.IntoWhs" autoMapping="true">
+        <id property="intoWhsSnglId" column="into_whs_sngl_id"/>
+        <collection property="intoWhsSub"
+                    ofType="com.px.mis.purc.entity.IntoWhsSub" autoMapping="true"><!-- 红字入库子表 -->
+            <id property="ordrNum" column="ordr_num"/>
+        </collection>
+    </resultMap>
+    <!-- 红字入库 -->
+    <select id="selectIntoWhsList" parameterType="list"
+            resultMap="IntoWhsMap">
+        SELECT
+        into_whs.*,
+        into_whs_sub.*,
+        invty_doc.spc_model,
+        invty_doc.invty_nm,
+        invty_doc.bx_rule,
+        invty_doc.measr_corp_id,
+        invty_doc.crspd_bar_cd,
+        measr_corp_doc.measr_corp_nm,
+        whs_doc.whs_nm,
+        form_typ_tabs.form_typ_name
+        FROM
+        into_whs
+        JOIN into_whs_sub ON into_whs_sub.into_whs_sngl_id = into_whs.into_whs_sngl_id
+        LEFT JOIN invty_doc ON into_whs_sub.invty_encd = invty_doc.invty_encd
+        LEFT JOIN measr_corp_doc ON invty_doc.measr_corp_id = measr_corp_doc.measr_corp_id
+        LEFT JOIN whs_doc ON into_whs_sub.whs_encd = whs_doc.whs_encd
+        LEFT JOIN form_typ_tabs ON into_whs.form_typ_encd = form_typ_tabs.form_typ_encd
+        WHERE
+        into_whs.is_nt_chk = 0
+        AND into_whs.is_nt_rtn_good = 1
+        <if test="list != null">
+            AND into_whs_sub.whs_encd in
+            <foreach collection="list" item="item"
+                     separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>

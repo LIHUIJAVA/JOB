@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.PlatOrderDao">
+  <insert id="insert" parameterType="com.px.mis.ec.entity.PlatOrder">
+	INSERT INTO plat_order (order_id, store_id, store_name, pay_time, waif, is_audit, audit_hint, good_num, good_money, pay_money, 
+	buyer_note, seller_note, rec_address, buyer_id, rec_name, rec_mobile, ec_order_id, is_invoice, invoice_title, 
+	note_flag, is_close, is_ship, adjust_money, discount_money, order_status, return_status, 
+	has_gift, memo,adjust_status,trade_dt,biz_typ_id,sell_typ_id,recv_send_cate_id,order_seller_price,province,province_id,city,city_id,
+	county,county_id,town,town_id,freight_price,deliver_whs,delivery_type,vender_id,deliver_self,express_code,
+	express_no,weight,audit_time,ship_time,close_time,download_time,express_template,can_match_active)
+	VALUES (#{orderId}, #{storeId}, #{storeName}, #{payTime}, #{waif}, #{isAudit}, #{auditHint}, #{goodNum}, #{goodMoney}, #{payMoney}, 
+	#{buyerNote}, #{sellerNote}, #{recAddress}, #{buyerId}, #{recName}, #{recMobile}, #{ecOrderId}, #{isInvoice}, #{invoiceTitle}, 
+	#{noteFlag}, #{isClose}, #{isShip}, #{adjustMoney}, #{discountMoney}, #{orderStatus}, #{returnStatus}, 
+	#{hasGift}, #{memo},#{adjustStatus},#{tradeDt},#{bizTypId},#{sellTypId},#{recvSendCateId},#{orderSellerPrice},#{province},#{provinceId},
+	#{city},#{cityId},#{county},#{countyId},#{town},#{townId},#{freightPrice},#{deliverWhs},
+	#{deliveryType},#{venderId},#{deliverSelf},#{expressCode},#{expressNo},#{weight},#{auditTime},#{shipTime},
+	#{closeTime},#{downloadTime},#{expressTemplate},#{canMatchActive})
+  </insert>
+  
+  <insert id="insertList" parameterType="com.px.mis.ec.entity.PlatOrder">
+	INSERT INTO plat_order (order_id, store_id, store_name, pay_time, waif, is_audit, audit_hint, good_num, good_money, pay_money, 
+	buyer_note, seller_note, rec_address, buyer_id, rec_name, rec_mobile, ec_order_id, is_invoice, invoice_title, 
+	note_flag, is_close, is_ship, adjust_money, discount_money, order_status, return_status, 
+	has_gift, memo,adjust_status,trade_dt,biz_typ_id,sell_typ_id,recv_send_cate_id,order_seller_price,province,province_id,city,city_id,
+	county,county_id,town,town_id,freight_price,deliver_whs,delivery_type,vender_id,deliver_self,express_code,
+	express_no,weight,audit_time,ship_time,close_time,download_time,express_template,can_match_active)
+	VALUES 
+	<foreach collection="list" item="item" index="index" separator="," close=";">
+		(#{item.orderId}, #{item.storeId}, #{item.storeName}, #{item.payTime}, #{item.waif},
+		#{item.isAudit}, #{item.auditHint}, #{item.goodNum}, #{item.goodMoney}, #{item.payMoney}, 
+		#{item.buyerNote},#{item.sellerNote},#{item.recAddress},#{item.buyerId},#{item.recName},#{item.recMobile}, 
+		#{item.ecOrderId}, #{item.isInvoice}, #{item.invoiceTitle}, #{item.noteFlag}, #{item.isClose}, 
+		#{item.isShip}, #{item.adjustMoney}, #{item.discountMoney}, #{item.orderStatus}, #{item.returnStatus}, 
+		#{item.hasGift}, #{item.memo}, #{item.adjustStatus}, #{item.tradeDt}, #{item.bizTypId},
+		#{item.sellTypId}, #{item.recvSendCateId},#{item.orderSellerPrice},#{item.province},#{item.provinceId},
+		#{item.city},#{item.cityId},#{item.county},#{item.countyId},#{item.town},#{item.townId},#{item.freightPrice},
+		#{item.deliverWhs},#{item.deliveryType},#{item.venderId},#{item.deliverSelf},#{item.expressCode},
+		#{item.expressNo},#{item.weight},#{item.auditTime},#{item.shipTime},#{item.closeTime},#{item.downloadTime},
+		#{item.expressTemplate},#{item.canMatchActive})
+	</foreach>
+  </insert>
+  
+  <select id="selectNoAuditCountByOrderIdAndStoreId" resultType="int" parameterType="java.lang.String">
+  	select count(order_id) from plat_order where store_id=#{storeId} and ec_order_id=#{ecOrderId} and is_audit=0
+  </select>
+  
+  <select id="selectNumByOrderAndSKu" parameterType="Map" resultType="Map">
+  	SELECT pos.good_num,pos.pay_money
+  	FROM plat_order po,plat_orders pos 
+  	WHERE po.order_id = pos.order_id AND po.ec_order_id = #{ecOrderId} AND pos.good_sku = #{goodSku}
+  </select>
+  
+  <select id="selectNumAndPayMoneyByOrderAndSKu" parameterType="Map" resultType="com.px.mis.ec.entity.PlatOrders">
+  	select * from plat_orders where ec_order_id=#{ecOrderId} and good_sku=#{goodSku} order by pay_money asc
+  </select>
+  
+  <select id="selectNumAndPayMoneyByOrderAndSKuSN" parameterType="Map" resultType="com.px.mis.ec.entity.PlatOrders">
+  	select * from plat_orders where ec_order_id=#{ecOrderId} and good_id=#{goodId} order by pay_money asc
+  </select>
+  
+      <select id="selectOrderByinvId" parameterType="java.util.List" resultType="com.px.mis.ec.entity.PlatOrders">
+	    SELECT pos.inv_id
+	  	FROM plat_order as po 
+		LEFT JOIN plat_orders as pos ON po.order_id = pos.order_id 
+		where po.order_id in
+		<foreach item="item" collection="list" open="(" close=")" separator=",">
+	            #{orderId}
+	    </foreach>
+	    group by pos.inv_id
+ 
+  </select>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PlatOrder">
+	SELECT
+		plat_order.*,
+		whs_doc.whs_nm deliverWhsNm,
+		express_corp.express_nm expressName 
+	FROM
+		plat_order
+		LEFT JOIN whs_doc ON plat_order.deliver_whs = whs_doc.whs_encd
+		LEFT JOIN express_corp ON plat_order.express_code = express_corp.express_encd 
+  	WHERE plat_order.order_id = #{orderId} 
+  </select>
+  
+  <select id="selectecByorderId" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PlatOrder">
+  	SELECT *
+  	FROM plat_order 
+  	WHERE order_id = #{orderId} 
+  </select>
+  
+  <select id="selectecByorderIds" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PlatOrders">
+  	SELECT *
+  	FROM plat_orders 
+  	WHERE order_id = #{orderId} 
+  </select>
+  
+  
+  <select id="selectByEcOrderId" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PlatOrder">
+  	SELECT order_id, store_id, store_name, pay_time, waif, is_audit, audit_hint, good_num, good_money, pay_money, 
+			buyer_note, seller_note, rec_address, buyer_id, rec_name, rec_mobile, ec_order_id, is_invoice, invoice_title, 
+			note_flag, is_close, is_ship, adjust_money, discount_money, order_status, return_status, 
+			has_gift, memo,adjust_status,trade_dt,biz_typ_id,sell_typ_id,recv_send_cate_id,order_seller_price,
+			province,province_id,city,city_id,county,county_id,town,town_id, freight_price,
+			deliver_whs,delivery_type,vender_id,deliver_self,express_code,express_no,weight,
+			audit_time,ship_time,close_time,download_time,express_template
+  	FROM plat_order 
+  	WHERE ec_order_id = #{ecOrderId} 
+  </select>
+  
+  <select id="selectPlatOrdersByEcOrderId" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PlatOrder">
+  	SELECT order_id, store_id, store_name, pay_time, waif, is_audit, audit_hint, good_num, good_money, pay_money, 
+			buyer_note, seller_note, rec_address, buyer_id, rec_name, rec_mobile, ec_order_id, is_invoice, invoice_title, 
+			note_flag, is_close, is_ship, adjust_money, discount_money, order_status, return_status, 
+			has_gift, memo,adjust_status,trade_dt,biz_typ_id,sell_typ_id,recv_send_cate_id,order_seller_price,
+			province,province_id,city,city_id,county,county_id,town,town_id, freight_price,
+			deliver_whs,delivery_type,vender_id,deliver_self,express_code,express_no,weight,
+			audit_time,ship_time,close_time,download_time,express_template
+  	FROM plat_order 
+  	WHERE ec_order_id = #{ecOrderId} 
+  </select>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.PlatOrder">
+  	UPDATE plat_order 
+  	SET order_id=#{orderId}, store_id=#{storeId}, store_name=#{storeName}, pay_time=#{payTime}, waif=#{waif}, is_audit=#{isAudit}, audit_hint=#{auditHint}, good_num=#{goodNum}, good_money=#{goodMoney}, pay_money=#{payMoney}, 
+	buyer_note=#{buyerNote}, seller_note=#{sellerNote}, rec_address=#{recAddress}, buyer_id=#{buyerId}, rec_name=#{recName}, rec_mobile=#{recMobile}, ec_order_id=#{ecOrderId}, is_invoice=#{isInvoice}, invoice_title=#{invoiceTitle}, 
+	note_flag=#{noteFlag}, is_close=#{isClose}, is_ship=#{isShip}, adjust_money=#{adjustMoney}, discount_money=#{discountMoney}, order_status=#{orderStatus}, return_status=#{returnStatus}, 
+	has_gift=#{hasGift}, memo=#{memo},adjust_status=#{adjustStatus},trade_dt=#{tradeDt},biz_typ_id=#{bizTypId},sell_typ_id=#{sellTypId},recv_send_cate_id=#{recvSendCateId},order_seller_price=#{orderSellerPrice},freight_price=#{freightPrice},
+	deliver_whs=#{deliverWhs} ,express_code=#{expressCode},express_no=#{expressNo},weight=#{weight},audit_time=#{auditTime},
+	ship_time=#{shipTime},close_time=#{closeTime},express_template=#{expressTemplate},can_match_active=#{canMatchActive},province=#{province},city=#{city},county=#{county}
+	WHERE order_id=#{orderId}
+  </update>
+  
+  
+   <update id="updateAudit" parameterType="com.px.mis.ec.entity.PlatOrder">
+  	UPDATE plat_order 
+  	SET 
+  	is_audit=#{isAudit}, audit_hint=#{auditHint}, 
+  
+	audit_time=#{auditTime}
+	
+	WHERE order_id=#{orderId} and is_audit=0
+  </update>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE po, pos 
+  	FROM plat_order as po LEFT JOIN plat_orders as pos ON po.order_id = pos.order_id 
+  	WHERE po.ec_order_id=#{orderId}
+  </delete>
+  
+  <select id="selectList" parameterType="Map" resultMap="platOrdersMap">
+	<!-- SELECT po.order_id as orderId, po.store_id as storeId, po.store_name as storeName, po.pay_time as payTime, po.waif, 
+	po.is_audit as isAudit, po.audit_hint as auditHint, po.good_num as goodNum, po.good_money as goodMoney, po.pay_money as payMoney, 
+	po.buyer_note as buyerNote, po.seller_note as sellerNote, po.rec_address as recAddress, po.buyer_id as buyerId, 
+	po.rec_name as recName, po.rec_mobile as recMobile, po.ec_order_id as ecOrderId, po.is_invoice as isInvoice, po.invoice_title as invoiceTitel, 
+	po.note_flag as noteFlag, po.is_close as isClose, po.is_ship as isShip, po.adjust_money as adjustMoney, po.discount_money as discountMoney,
+	po.order_status as orderStatus, po.return_status as returnStatus, po.has_gift as hasGift, po.memo,po.adjust_status as adjustStatus,
+	po.trade_dt as tradeDt, po.biz_typ_id as bizTypId, po.sell_typ_id as sellTypId, po.recv_send_cate_id as recvSendCate,po.express_template as expressTemplate,
+	pos.good_id as goodId, pos.good_num as goodNum, pos.good_money as goodMoney, pos.pay_money as payMoney, pos.good_sku as goodSku,
+	pos.batch_no as batchNo, pos.express_com as expressCom, pos.pro_act_id as proActId, pos.discount_money as discountMoney, 
+	pos.adjust_money as adjustMoney, pos.memo as memos, pos.good_price as goodPrice, pos.pay_price as payPrice, pos.deliver_whs as deliverWhs,po.order_seller_price as orderSellerPrice,
+	
+	po.province as province,po.province_id as provinceId,po.city as city,po.city_id as cityId,po.county as county,po.county_id as countyId,po.town as town,po.town_id as townId ,
+	po.deliver_self as deliverSelf, po.express_code as expressCode,po.express_no as expressNo,po.weight as weight,po.audit_time as auditTime,
+	po.ship_time as shipTime ,po.close_time as closeTime,po.download_time as downloadTime,
+	po.freight_price as freightPrice ,po.deliver_whs as deliverWhs,po.delivery_type as deliveryType,vender_id as venderId , -->
+	select po.*,c.express_nm as expressName,
+	count(po.order_id)
+	
+	FROM plat_orders as pos 
+	LEFT JOIN plat_order as po ON po.order_id = pos.order_id 
+	LEFT JOIN express_corp c on c.express_encd=po.express_code
+  	<where>
+		<if test="memo != null and memo != ''">
+			<bind name="memo" value="'%'+ memo +'%'"/>
+			AND po.memo like #{memo}
+		</if>
+  		<if test="orderId != null and orderId != ''">
+			AND po.order_id=#{orderId}
+        </if>
+        <if test="ecOrderId != null and ecOrderId != ''">
+			AND po.ec_order_id=#{ecOrderId}
+        </if>
+        <if test="storeId != null and storeId != ''">
+            AND po.store_id=#{storeId}
+        </if>
+        <if test="buyerId != null and buyerId != ''">
+			AND po.buyer_id=#{buyerId}
+        </if>
+        <if test="recName != null and recName != ''">
+			<bind name="recName" value="'%'+ recName +'%'"/>
+			AND po.rec_name like #{recName}
+        </if>
+        <if test="expressCom != null and expressCom != ''">
+            AND po.express_code=#{expressCom}
+        </if>
+        <if test="deliverWhs != null and deliverWhs != ''">
+            AND pos.deliver_whs=#{deliverWhs}
+        </if>
+        <if test="startDate != null and startDate != '' ">
+			AND po.trade_dt <![CDATA[>=]]> #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND po.trade_dt <![CDATA[<=]]> #{endDate}
+		</if>
+		<if test="isShip !=null and isShip!=''" >
+			AND po.is_ship =#{isShip}
+		</if>
+		<if test="isClose !=null and isClose!=''">
+			AND po.is_close =#{isClose}
+		</if>
+		<if test="sellerNote != null and sellerNote != ''">
+			AND po.seller_note=#{sellerNote}
+		</if>
+		<if test="buyerNote != null and buyerNote != ''">
+			AND po.buyer_note=#{buyerNote}
+		</if>
+		<if test="orderStatus != null and orderStatus != ''">
+			AND po.order_status=#{orderStatus}
+		</if>
+		<if test="goodSku != null and goodSku != ''">
+			AND pos.good_sku=#{goodSku}
+		</if>
+		<if test="goodId != null and goodId != ''">
+			AND pos.good_id=#{goodId}
+		</if>
+		<if test="isAudit != null and isAudit!=''">
+			AND po.is_audit=#{isAudit}
+		</if>
+		<if test="invtyEncd != null and invtyEncd!=''">
+			AND pos.inv_id=#{invtyEncd}
+		</if>
+  	</where>
+  	group by po.order_id
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="Integer">
+   SELECT
+        count( a.order_no11 )
+        FROM
+        (
+	SELECT count(po.order_id) order_no11
+  	FROM plat_orders as pos LEFT JOIN plat_order as po ON po.order_id = pos.order_id 
+  	<where>
+		<if test="memo != null and memo != ''">
+			<bind name="memo" value="'%'+ memo +'%'"/>
+			AND po.memo like #{memo}
+		</if>
+  		<if test="orderId != null and orderId != ''">
+			AND po.order_id=#{orderId}
+        </if>
+        <if test="ecOrderId != null and ecOrderId != ''">
+			AND po.ec_order_id=#{ecOrderId}
+        </if>
+        <if test="storeId != null and storeId != ''">
+            AND po.store_id=#{storeId}
+        </if>
+        <if test="buyerId != null and buyerId != ''">
+			AND po.buyer_id=#{buyerId}
+        </if>
+        <if test="recName != null and recName != ''">
+			<bind name="recName" value="'%'+ recName +'%'"/>
+			AND po.rec_name like #{recName}
+        </if>
+        <if test="expressCom != null and expressCom != ''">
+            AND po.express_code=#{expressCom}
+        </if>
+        <if test="deliverWhs != null and deliverWhs != ''">
+            AND pos.deliver_whs=#{deliverWhs}
+        </if>
+         <if test="startDate != null and startDate != '' ">
+			AND po.trade_dt <![CDATA[>=]]> #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND po.trade_dt <![CDATA[<=]]> #{endDate}
+		</if>
+		<if test="isShip !=null and isShip!=''" >
+			AND po.is_ship =#{isShip}
+		</if>
+		<if test="isClose !=null and isClose!=''">
+			AND po.is_close =#{isClose}
+		</if>
+		<if test="sellerNote != null and sellerNote != ''">
+			AND po.seller_note=#{sellerNote}
+		</if>
+		<if test="buyerNote != null and buyerNote != ''">
+			AND po.buyer_note=#{buyerNote}
+		</if>
+		<if test="orderStatus != null and orderStatus != ''">
+			AND po.order_status=#{orderStatus}
+		</if>
+		<if test="goodSku != null and goodSku != ''">
+			AND pos.good_sku=#{goodSku}
+		</if>
+		<if test="goodId != null and goodId != ''">
+			AND pos.good_id=#{goodId}
+		</if>
+		<if test="isAudit != null and isAudit!=''">
+			AND po.is_audit=#{isAudit}
+		</if>
+		<if test="invtyEncd != null and invtyEncd!=''">
+			AND pos.inv_id=#{invtyEncd}
+		</if>
+  	</where>
+  	GROUP BY
+        po.order_id
+        ) a
+  </select>
+  
+  <select id="checkExsits"  parameterType="java.lang.String" resultType="int">
+  	select count(ec_order_id) from plat_order where ec_order_id=#{0} and store_id=#{1}
+  </select>
+  
+  <select id="checkExsits1"  parameterType="java.lang.String" resultType="int">
+  	select count(ec_order_id) from plat_order where ec_order_id=#{0}
+  </select>
+  
+  <select id="selectNoAuditOrderByEcOrderId"  parameterType="java.lang.String" resultType="int">
+  	select count(ec_order_id) from plat_order where ec_order_id=#{0} and is_audit=0
+  </select>
+   <resultMap type="PlatOrder" id="platOrdersMap" autoMapping="true">
+		<id property="orderId" column="order_id" />
+	    <collection property="platOrdersList" ofType="PlatOrders" autoMapping="true">
+		    <id property="no" column="no" /> 
+		    <id property="goodNum" column="good_num1"></id>
+		    <id property="memo" column="memo1"></id>
+		    <id property="goodMoney" column="good_money1"></id>
+		    <id property="payMoney" column="pay_money1"></id>
+		    <id property="discountMoney" column="discount_money1"></id>
+		    <id property="adjustMoney" column="adjust_money1"></id>
+	    </collection>
+  </resultMap>
+    <select id="selectByOrderId" parameterType="java.lang.String" resultMap="platOrdersMap">
+	SELECT po.*,pos.*,inv.invty_nm as invtyName FROM plat_order as po
+	LEFT JOIN plat_orders as pos ON po.order_id = pos.order_id 
+	LEFT JOIN invty_doc   as inv ON pos.inv_id = inv.invty_encd 
+	where po.order_id=#{orderId}
+  </select>
+  
+  
+  <select id="selectSellSnglByOrderId" resultType="com.px.mis.purc.entity.SellSngl">
+  	select * from sell_sngl where tx_id=#{orderId}
+  </select>
+  <select id="selectRefundOrderByOrderId" resultType="com.px.mis.ec.entity.RefundOrder">
+  	select * from refund_order where order_id=#{orderId}
+  </select>
+  <select id="selectRefundOrderByEcOrderId" resultType="com.px.mis.ec.entity.RefundOrder">
+  	select * from refund_order where ec_order_id=#{ecOrderId}
+  </select>
+  <select id="selectLogisticsTabByOrderId" resultType="com.px.mis.ec.entity.LogisticsTab">
+  	select * from logistics_tab where order_id=#{OrderId}
+  </select>
+  
+  
+  <select id="selectSellOutWhsByOrderId" resultType="com.px.mis.purc.entity.SellOutWhs">
+  	select * from sell_out_whs where sell_ordr_ind=#{orderId}
+  </select>
+    <select id="exportList1" parameterType="Map" resultType="Map">
+	SELECT po.order_id as 订单编码,po.ec_order_id as 平台订单号, po.store_id as 店铺编码, po.store_name as 店铺名称, 
+	po.trade_dt as 下单时间,po.pay_time as 付款时间, 
+	po.good_num as 商品数量, po.good_money as 商品金额,po.adjust_money as 调整金额,
+	po.discount_money as 系统优惠金额, po.pay_money as 实付金额, po.order_seller_price as 结算金额,
+	 po.is_invoice as 是否开票, po.invoice_title as 发票抬头, 
+	po.buyer_id as 买家会员号, po.rec_name as 收货人, po.rec_mobile as 联系电话,
+	po.buyer_note as 买家留言, po.seller_note as 卖家备注,po.province as 省,po.city as 市,po.county as 区,po.town as 镇,
+	 po.rec_address as 详细地址,po.has_gift as 包含赠品, po.memo as 备注,
+	 po.is_audit as 是否审核,po.audit_time as 审核时间, po.audit_hint as 审核提示, 
+	po.is_ship as 是否发货,po.ship_time as 发货时间 ,po.return_status as 是否退货,
+	po.is_close as 是否关闭,po.close_time as 关闭时间,
+	po.download_time as 下载时间,
+	po.express_code as 快递公司编码,
+	po.express_no as 快递单号,
+	po.is_ship as 是否发货,
+	 
+	  
+	
+	
+	<!-- pos.good_id as goodId, pos.good_num as goodNum, pos.good_money as goodMoney, pos.pay_money as payMoney, pos.good_sku as goodSku,
+	pos.batch_no as batchNo, pos.express_com as expressCom, pos.pro_act_id as proActId, pos.discount_money as discountMoney, 
+	pos.adjust_money as adjustMoney, pos.memo as memos, pos.good_price as goodPrice, pos.pay_price as payPrice, pos.deliver_whs as deliverWhs, -->
+	
+	
+	
+	po.deliver_self as 是否自发货,c.express_nm as 快递公司名称, po.express_no as 快递单号,po.weight as 重量,
+	po.freight_price as 运费 ,po.deliver_whs as 发货仓库,
+	<!-- select po.* --> 
+	count(po.order_id) as 计数
+	
+	FROM plat_orders as pos 
+	LEFT JOIN plat_order as po ON po.order_id = pos.order_id 
+	LEFT JOIN express_corp c on c.express_encd=po.express_code
+  	<where>
+  		<if test="orderId != null and orderId != ''">
+            AND po.order_id=#{orderId}
+        </if>
+        <if test="ecOrderId != null and ecOrderId != ''">
+            AND po.ec_order_id=#{ecOrderId}
+        </if>
+        <if test="storeId != null and storeId != ''">
+            AND po.store_id=#{storeId}
+        </if>
+        <if test="buyerId != null and buyerId != ''">
+            AND po.buyer_id=#{buyerId}
+        </if>
+        <if test="recName != null and recName != ''">
+            AND po.rec_name=#{recName}
+        </if>
+        <if test="expressCom != null and expressCom != ''">
+            AND po.express_code=#{expressCom}
+        </if>
+        <if test="deliverWhs != null and deliverWhs != ''">
+            AND pos.deliver_whs=#{deliverWhs}
+        </if>
+        <if test="startDate != null and startDate != '' ">
+			AND po.trade_dt <![CDATA[>=]]> #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND po.trade_dt <![CDATA[<=]]> #{endDate}
+		</if>
+		<if test="isShip !=null and isShip!=''" >
+			AND po.is_ship =#{isShip}
+		</if>
+		<if test="isClose !=null and isClose!=''">
+			AND po.is_close =#{isClose}
+		</if>
+		<if test="sellerNote != null and sellerNote != ''">
+			AND po.seller_note=#{sellerNote}
+		</if>
+		<if test="buyerNote != null and buyerNote != ''">
+			AND po.buyer_note=#{buyerNote}
+		</if>
+		<if test="orderStatus != null and orderStatus != ''">
+			AND po.order_status=#{orderStatus}
+		</if>
+		<if test="goodSku != null and goodSku != ''">
+			AND pos.good_sku=#{goodSku}
+		</if>
+		<if test="goodId != null and goodId != ''">
+			AND pos.good_id=#{goodId}
+		</if>
+		<if test="isAudit != null and isAudit!=''">
+			AND po.is_audit=#{isAudit}
+		</if>
+		<if test="invtyEncd != null and invtyEncd!=''">
+			AND pos.inv_id=#{invtyEncd}
+		</if>
+  	</where>
+  	group by po.order_id
+  	order by po.trade_dt
+  </select>
+  
+  
+  
+   <select id="exportPlatOrder" parameterType="Map" resultMap="platOrdersMap">
+	SELECT <!-- po.order_id as orderId, po.store_id as storeId, po.store_name as storeName, po.pay_time as payTime, po.waif, 
+	po.is_audit as isAudit, po.audit_hint as auditHint, po.good_num as goodNum, po.good_money as goodMoney, po.pay_money as payMoney, 
+	po.buyer_note as buyerNote, po.seller_note as sellerNote, po.rec_address as recAddress, po.buyer_id as buyerId, 
+	po.rec_name as recName, po.rec_mobile as recMobile, po.ec_order_id as ecOrderId, po.is_invoice as isInvoice, po.invoice_title as invoiceTitel, 
+	po.note_flag as noteFlag, po.is_close as isClose, po.is_ship as isShip, po.adjust_money as adjustMoney, po.discount_money as discountMoney,
+	po.order_status as orderStatus, po.return_status as returnStatus, po.has_gift as hasGift, po.memo,po.adjust_status as adjustStatus,
+	po.trade_dt as tradeDt, po.biz_typ_id as bizTypId, po.sell_typ_id as sellTypId, po.recv_send_cate_id as recvSendCate, -->
+	<!-- pos.good_id as goodId, pos.good_num as goodNum, pos.good_money as goodMoney, pos.pay_money as payMoney, pos.good_sku as goodSku,
+	pos.batch_no as batchNo, pos.express_com as expressCom, pos.pro_act_id as proActId, pos.discount_money as discountMoney, 
+	pos.adjust_money as adjustMoney, pos.memo as memos, pos.good_price as goodPrice, pos.pay_price as payPrice, pos.deliver_whs as deliverWhs,po.order_seller_price as orderSellerPrice,
+	 -->
+	po.*,pos.*,pos.good_num as good_num1,pos.memo as memo1,c.express_nm as expressName,
+	pos.good_money as good_money1,pos.pay_money as pay_money1,pos.discount_money as discount_money1,
+	pos.adjust_money as adjust_money1
+	<!-- po.province as province,po.province_id as provinceId,po.city as city,po.city_id as cityId,po.county as county,po.county_id as countyId,po.town as town,po.town_id as townId ,
+	po.deliver_self as deliverSelf, po.express_code as expressCode,po.express_no as expressNo,po.weight as weight,po.audit_time as auditTime,
+	po.ship_time as shipTime ,po.close_time as closeTime,po.download_time as downloadTime,
+	po.freight_price as freightPrice ,po.deliver_whs as deliverWhs,po.delivery_type as deliveryType,vender_id as venderId  -->
+	FROM plat_order as po 
+	LEFT JOIN plat_orders as pos ON po.order_id = pos.order_id 
+	LEFT JOIN express_corp c on c.express_encd=po.express_code
+  	<where>
+  		<if test="orderId != null and orderId != ''">
+            AND po.order_id=#{orderId}
+        </if>
+        <if test="ecOrderId != null and ecOrderId != ''">
+            AND po.ec_order_id=#{ecOrderId}
+        </if>
+        <if test="storeId != null and storeId != ''">
+            AND po.store_id=#{storeId}
+        </if>
+        <if test="buyerId != null and buyerId != ''">
+            AND po.buyer_id=#{buyerId}
+        </if>
+        <if test="recName != null and recName != ''">
+            AND po.rec_name=#{recName}
+        </if>
+        <if test="expressCom != null and expressCom != ''">
+            AND po.express_code=#{expressCom}
+        </if>
+        <if test="deliverWhs != null and deliverWhs != ''">
+            AND pos.deliver_whs=#{deliverWhs}
+        </if>
+         <if test="startDate != null and startDate != '' ">
+			AND po.trade_dt <![CDATA[>=]]> #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND po.trade_dt <![CDATA[<=]]> #{endDate}
+		</if>
+		<if test="isShip !=null and isShip!=''" >
+			AND po.is_ship =#{isShip}
+		</if>
+		<if test="isClose !=null and isClose !=''">
+			AND po.is_close =#{isClose}
+		</if>
+		<if test="sellerNote != null and sellerNote != ''">
+			AND po.seller_note=#{sellerNote}
+		</if>
+		<if test="buyerNote != null and buyerNote != ''">
+			AND po.buyer_note=#{buyerNote}
+		</if>
+		<if test="orderStatus != null and orderStatus != ''">
+			AND po.order_status=#{orderStatus}
+		</if>
+		<if test="goodSku != null and goodSku != ''">
+			AND pos.good_sku=#{goodSku}
+		</if>
+		<if test="goodId != null and goodId != ''">
+			AND pos.good_id=#{goodId}
+		</if>
+		<if test="isAudit != null and isAudit!=''">
+			AND po.is_audit=#{isAudit}
+		</if>
+		<if test="invtyEncd != null and invtyEncd!=''">
+			AND pos.inv_id=#{invtyEncd}
+		</if>
+  	</where>
+  	order by trade_dt asc
+  </select>
+  
+  <select id="Near15DaysOrder" resultType="com.px.mis.ec.entity.Near15DaysOrder">
+  	select DATE_FORMAT(trade_dt,'%Y-%m-%d') as date,COUNT(order_id) as count,CONVERT(SUM(pay_money),DECIMAL(18,2)) as money
+	from plat_order 
+	where trade_dt>=DATE_SUB(now(), INTERVAL 15 DAY)
+	GROUP BY DATE_FORMAT(trade_dt,'%Y-%m-%d') 
+	order by DATE_FORMAT(trade_dt,'%Y-%m-%d') asc
+  </select>
+  
+  <update id="updateExpress" >
+  update plat_order plat,express_corp express 
+  set plat.express_code=#{expressEncd},plat.express_template = express.company_code,plat.express_no=null
+  where express.express_encd=#{expressEncd}   
+  and plat.is_ship=0 and
+  plat.order_id in 
+   <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+  
+  </update>
+    <update id="updateGoodNum" >
+  update plat_order set good_num=#{goodNum}
+  where order_id = #{orderId}
+  
+  </update>
+  
+   <update id="closeOrder" >
+  update plat_order set is_close = 1
+  where order_id = #{orderId} and is_close=0
+  
+  </update>
+  
+   <update id="openOrder" >
+ update plat_order set is_close = 0
+  where order_id = #{orderId} and is_close=1
+  
+  </update>
+  
+  <select id="selectInvNumCountByOrderId" resultType="int">
+  	select sum(inv_num) from plat_orders where order_id = #{orderId}
+  </select>
+  
+  
+  
+  <select id="batchList" resultMap="platOrdersMap">
+    SELECT po.*,pos.*,pos.good_num as good_num1,pos.memo as memo1,c.express_nm as expressName,
+	pos.good_money as good_money1,pos.pay_money as pay_money1,pos.discount_money as discount_money1,
+	pos.adjust_money as adjust_money1
+  	FROM plat_order as po 
+	LEFT JOIN plat_orders as pos ON po.order_id = pos.order_id 
+	LEFT JOIN express_corp c on c.express_encd=po.express_code
+	where
+	 po.ec_order_id in 
+	<foreach item="ecOrderId" collection="list" open="(" close=")"
+                 separator=",">
+            #{ecOrderId}
+        </foreach>
+        
+    <if test="isAudit != null and isAudit != ''">
+			AND po.is_audit=#{isAudit}
+		</if>
+    
+  </select>
+   
+  
+</mapper>

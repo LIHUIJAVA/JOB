@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.ShareShipSettingsDao">
+
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ShareShipSettings">
+  	SELECT setting_id, ec, store, seller_nick, ref_phone, ref, con_address, whs, has_merge_order, is_seller_note, seller_note 
+  	FROM share_ship_settings 
+  	WHERE setting_id = #{settingId}
+  </select>
+
+  <update id="update" parameterType="com.px.mis.ec.entity.ShareShipSettings">
+  	UPDATE share_ship_settings 
+  	SET setting_id=#{settingId}, ec=#{ec}, store=#{store}, seller_nick=#{sellerNick}, ref_phone=#{refPhone}, ref=#{ref}, 
+  	con_address=#{conAddress}, whs=#{whs}, has_merge_order=#{hasMergeOrder}, is_seller_note=#{isSellerNote}, seller_note=#{sellerNote}
+  	WHERE setting_id = #{settingId}
+  </update>
+  
+</mapper>

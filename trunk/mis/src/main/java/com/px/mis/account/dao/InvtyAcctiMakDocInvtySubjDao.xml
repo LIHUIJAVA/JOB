@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtyAcctiMakDocInvtySubjDao">
+	<!-- 存货核算制单存货科目分页查询所有 -->
+	<select id="selectInvtyAcctiMakDocInvtySubjList" parameterType="Map" resultType="com.px.mis.account.entity.InvtyAcctiMakDocInvtySubj">
+	 SELECT a.ordr_num ordrNum,a.subj_id subjId,a.subj_nm subjNm,a.is_nt_comn_cashflow_subj isNtComnCashflowSubj,
+			a.is_nt_provr_reco_accti isNtProvrRecoAccti,a.is_nt_end_lvl isNtEndLvl,a.subj_typ subjTyp,
+			a.is_nt_cust_reco_accti isNtCustRecoAccti,a.is_nt_cash_subj isNtCastSubj,a.subj_rec_cd subjRecCd,
+			a.subj_charc subjCharc,a.measr_corp_id measrCorpId,a.proj_big_cls_encd projBigClsEncd,
+			a.is_nt_proj_accti isNtProjAccti,a.is_nt_dept_accti isNtDeptAccti,a.memo memo,
+	 		b.measr_corp_nm measrCorpNm
+	 FROM invty_accti_mak_doc_invty_subj a
+	 LEFT JOIN measr_corp_doc b
+	 ON a.measr_corp_id = b.measr_corp_id
+	 ORDER BY a.ordr_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectInvtyAcctiMakDocInvtySubjByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.InvtyAcctiMakDocInvtySubj">
+	 SELECT a.ordr_num ordrNum,a.subj_id subjId,a.subj_nm subjNm,a.is_nt_comn_cashflow_subj isNtComnCashflowSubj,
+			a.is_nt_provr_reco_accti isNtProvrRecoAccti,a.is_nt_end_lvl isNtEndLvl,a.subj_typ subjTyp,
+			a.is_nt_cust_reco_accti isNtCustRecoAccti,a.is_nt_cash_subj isNtCastSubj,a.subj_rec_cd subjRecCd,
+			a.subj_charc subjCharc,a.measr_corp_id measrCorpId,a.proj_big_cls_encd projBigClsEncd,
+			a.is_nt_proj_accti isNtProjAccti,a.is_nt_dept_accti isNtDeptAccti,a.memo memo,
+	 		b.measr_corp_nm measrCorpNm
+	 FROM invty_accti_mak_doc_invty_subj a
+	 LEFT JOIN measr_corp_doc b
+	 ON a.measr_corp_id = b.measr_corp_id 
+	 WHERE a.ordr_num=#{ordrNum}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectInvtyAcctiMakDocInvtySubjCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM invty_accti_mak_doc_invty_subj
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertInvtyAcctiMakDocInvtySubj" parameterType="com.px.mis.account.entity.InvtyAcctiMakDocInvtySubj">
+		INSERT INTO invty_accti_mak_doc_invty_subj
+		VALUES(null,#{subjId},#{subjNm},#{isNtComnCashflowSubj},
+				#{isNtProvrRecoAccti},#{isNtEndLvl},#{subjTyp},#{isNtCustRecoAccti},
+				#{isNtCastSubj},#{subjRecCd},#{subjCharc},#{measrCorpId},
+				#{projBigClsEncd},#{isNtProjAccti},#{isNtDeptAccti},#{memo})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteInvtyAcctiMakDocInvtySubjByOrdrNum" parameterType="int">
+	 DELETE FROM invty_accti_mak_doc_invty_subj
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateInvtyAcctiMakDocInvtySubjByOrdrNum" parameterType="com.px.mis.account.entity.InvtyAcctiMakDocInvtySubj">
+	 UPDATE invty_accti_mak_doc_invty_subj
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="subjId != null">
+        subj_id = #{subjId,jdbcType=VARCHAR},
+      </if>
+      <if test="subjNm != null">
+        subj_nm = #{subjNm,jdbcType=VARCHAR},
+      </if>
+      <if test="isNtComnCashflowSubj != null">
+        is_nt_comn_cashflow_subj = #{isNtComnCashflowSubj,jdbcType=BIGINT},
+      </if>
+      <if test="isNtProvrRecoAccti != null">
+        is_nt_provr_reco_accti = #{isNtProvrRecoAccti,jdbcType=BIGINT},
+      </if>
+      <if test="isNtEndLvl != null">
+        is_nt_end_lvl = #{isNtEndLvl,jdbcType=BIGINT},
+      </if>
+      <if test="subjTyp != null">
+        subj_typ = #{subjTyp,jdbcType=VARCHAR},
+      </if>
+      <if test="isNtCustRecoAccti != null">
+        is_nt_cust_reco_accti = #{isNtCustRecoAccti,jdbcType=BIGINT},
+      </if>
+      <if test="isNtCastSubj != null">
+        is_nt_cash_subj = #{isNtCastSubj,jdbcType=BIGINT},
+      </if>
+      <if test="subjRecCd != null">
+        subj_rec_cd = #{subjRecCd,jdbcType=VARCHAR},
+      </if>
+      <if test="subjCharc != null">
+        subj_charc = #{subjCharc,jdbcType=VARCHAR},
+      </if>
+      <if test="measrCorpId != null">
+        measr_corp_id = #{measrCorpId,jdbcType=VARCHAR},
+      </if>
+      <if test="projBigClsEncd != null">
+        proj_big_cls_encd = #{projBigClsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="isNtProjAccti != null">
+        is_nt_proj_accti = #{isNtProjAccti,jdbcType=BIGINT},
+      </if>
+      <if test="isNtDeptAccti != null">
+        is_nt_dept_accti = #{isNtDeptAccti,jdbcType=BIGINT},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+</mapper>

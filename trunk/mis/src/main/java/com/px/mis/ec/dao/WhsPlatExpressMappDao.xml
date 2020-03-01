@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.WhsPlatExpressMappDao">
+	<insert id="insert" parameterType="com.px.mis.ec.entity.WhsPlatExpressMapp">
+	insert into whs_plat_express_mapp(whs_id,plat_id,express_id,weight_min,weight_max,template_id)
+	values(#{whsId},#{platId},#{expressId},#{weightMin},#{weightMax},#{templateId})
+	</insert>
+	<delete id="delete" parameterType="com.px.mis.ec.entity.WhsPlatExpressMapp">
+	delete from whs_plat_express_mapp where id=#{id}
+	</delete>
+	<update id="update" parameterType="com.px.mis.ec.entity.WhsPlatExpressMapp">
+	update whs_plat_express_mapp set whs_id=#{whsId},plat_id=#{platId},express_id=#{expressId},
+	weight_min=#{weightMin},weight_max=#{weightMax},template_id=#{templateId}
+	where id=#{id}
+	</update>
+	<select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.WhsPlatExpressMapp">
+	select a.*,b.whs_nm as whsName,c.ec_name as platName,d.express_nm as expressName,l.template_name as templateName  
+	from whs_plat_express_mapp a
+	left join whs_doc b on a.whs_id=b.whs_encd
+	left join ec_platform c  on a.plat_id=c.ec_id
+	left join express_corp d on a.express_id=d.express_encd
+	left join labeltemplates l on l.template_id=a.template_id
+	where 1=1  
+	<if test="whsId != null and whsId !=''">
+	and a.whs_id=#{whsId}
+	</if>
+	<if test="whsName != null and whsName !=''">
+	and b.whs_nm=#{whsName}
+	</if>
+	<if test="platId != null and platId !=''">
+	and a.plat_id=#{platId}
+	</if>
+	<if test="platName != null and platName !=''">
+	and c.ec_name=#{platName}
+	</if>
+	<if test="expressId != null and expressId !=''">
+	and a.express_id=#{expressId}
+	</if>
+	<if test="expressName != null and expressName !=''">
+	and d.express_nm=#{expressName}
+	</if>
+	order by a.whs_id asc
+	LIMIT #{index},#{num}
+	</select>
+	<select id="selectCount" parameterType="Map" resultType="int">
+	select count(a.id) 
+	from whs_plat_express_mapp a,whs_doc b,ec_platform c,express_corp d
+	where a.whs_id=b.whs_encd and a.plat_id=c.ec_id and a.express_id=d.express_encd
+	<if test="whsId != null and whsId !=''">
+	and a.whs_id=#{whsId}
+	</if>
+	<if test="whsName != null and whsName !=''">
+	and b.whs_nm=#{whsName}
+	</if>
+	<if test="platId != null and platId !=''">
+	and a.plat_id=#{platId}
+	</if>
+	<if test="platName != null and platName !=''">
+	and c.ec_name=#{platName}
+	</if>
+	<if test="expressId != null and expressId !=''">
+	and a.express_id=#{expressId}
+	</if>
+	<if test="expressName != null and expressName !=''">
+	and d.express_nm=#{expressName}
+	</if>
+	</select>
+	<select id="checkExsist" parameterType="com.px.mis.ec.entity.WhsPlatExpressMapp" resultType="int">
+	select count(id) from whs_plat_express_mapp where plat_id= #{platId} and whs_id=#{whsId} and express_id=#{expressId}
+	<if test="id != null and id !=''">
+	and id != #{id}
+	</if>
+	</select>
+	
+	<select id="selectListByPlatIdAndWhsCode" resultType="com.px.mis.ec.entity.WhsPlatExpressMapp">
+	select * from whs_plat_express_mapp where whs_id=#{whsCode} and plat_id=#{platId}
+	</select>
+	
+	<select id="selectCloudPrint" resultType="com.px.mis.ec.entity.WhsPlatExpressMapp">
+	SELECT
+		* 
+	FROM
+		whs_plat_express_mapp
+		LEFT JOIN express_corp ON whs_plat_express_mapp.express_id = express_corp.express_encd 
+	WHERE
+		whs_plat_express_mapp.plat_id = #{platId} 
+		AND express_corp.company_code = #{cpCode} 
+	</select>
+	<update id="updateCloudPrint">
+		update whs_plat_express_mapp set cloud_print=#{cloudPrint},
+ 		cloud_print_custom=#{cloudPrintCustom}
+		where id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.id}
+		</foreach>
+	</update>
+</mapper>

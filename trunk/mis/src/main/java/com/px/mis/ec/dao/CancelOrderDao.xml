@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.CancelOrderDao">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.CancelOrder">
+	INSERT IGNORE INTO cancel_order (id, buyer_id, buyer_name, check_time, apply_time, apply_refund_sum, status,
+	check_user_name, order_id, check_remark, reason, system_id, is_audit, ec_id, store_id,download_time,audit_time,audit_user_id,audit_user_name)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+    (#{item.id}, #{item.buyerId}, #{item.buyerName}, #{item.checkTime}, #{item.applyTime}, #{item.applyRefundSum}, #{item.status}, 
+    #{item.checkUserName}, #{item.orderId}, #{item.checkRemark}, #{item.reason}, #{item.systemId}, #{item.isAudit}, #{item.ecId}, #{item.storeId},
+    #{item.downloadTime},#{item.auditTime},#{item.auditUserId},#{item.auditUserName})
+    </foreach>
+  </insert>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.CancelOrder">
+  	UPDATE cancel_order 
+  	SET id=#{id}, buyer_id=#{buyerId}, buyer_name=#{buyerName}, check_time=#{checkTime}, apply_time=#{applyTime},
+  	apply_refund_sum=#{applyRefundSum}, status=#{status}, check_user_name=#{checkUserName}, order_id=#{orderId}, check_remark=#{checkRemark},
+  	reason=#{reason}, system_id=#{systemId}, is_audit=#{isAudit}, ec_id=#{ecId}, store_id=#{storeId},
+  	download_time=#{downloadTime},audit_time=#{auditTime},audit_user_id=#{auditUserId},audit_user_name=#{auditUserName},audit_hint=#{auditHint}
+  	WHERE id=#{id}
+  </update>
+  
+  <update id="audit" parameterType="String">
+  	UPDATE cancel_order 
+  	SET is_audit = CASE is_audit WHEN 0 THEN 1 END
+  	,audit_user_id=#{userId},audit_time=#{auditTime},audit_user_name=#{userName}
+	WHERE id IN
+	<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </update>
+  
+  <delete id="delete" parameterType="com.px.mis.ec.entity.CancelOrder">
+  delete from cancel_order where id=#{id}
+  </delete>
+  
+  <select id="selectByIds" resultType="com.px.mis.ec.entity.CancelOrder">
+	SELECT id, buyer_id, buyer_name, check_time, apply_time, apply_refund_sum, status,
+	check_user_name, order_id, check_remark, reason, system_id, is_audit, ec_id, store_id,
+	download_time,audit_time,audit_user_id,audit_user_name,audit_hint
+  	FROM cancel_order 
+  	WHERE is_audit = 0 AND id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </select>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.CancelOrder">
+	SELECT c.*,s.store_name as storeName  
+  	FROM cancel_order c,store_record s
+  	<where>
+  	c.store_id=s.store_id
+  		<if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="storeId != null and storeId != ''">
+            AND c.store_id = #{storeId}
+        </if>
+        <if test="startTime != null and startTime != '' ">
+			AND apply_time <![CDATA[>=]]> #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND apply_time <![CDATA[<=]]> #{endTime}
+		</if>
+		<if test="isAudit !=null and isAudit != ''">
+			AND is_audit = #{isAudit}
+		</if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(id)
+  	FROM cancel_order 
+  	<where>
+  		<if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="storeId != null and storeId != ''">
+            AND store_id = #{storeId}
+        </if>
+        <if test="startTime != null and startTime != '' ">
+			AND apply_time <![CDATA[>=]]> #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND apply_time <![CDATA[<=]]> #{endTime}
+		</if>
+		<if test="isAudit !=null and isAudit != ''">
+			AND is_audit = #{isAudit}
+		</if>
+  	</where>
+  </select>
+  <select id="selectById" resultType="com.px.mis.ec.entity.CancelOrder">
+	SELECT *
+  	FROM cancel_order 
+  	WHERE id=#{id}
+  </select>
+</mapper>

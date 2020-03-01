@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.OrderStatusDao">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.OrderStatus">
+	INSERT INTO order_status (order_status_id, order_status_name, memo)
+    VALUES(#{orderStatusId}, #{orderStatusName}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.OrderStatus">
+  	SELECT order_status_id, order_status_name, memo
+  	FROM order_status 
+  	WHERE order_status_id = #{orderStatusId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  order_status
+  	WHERE order_status_id = #{orderStatusId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.OrderStatus">
+  	UPDATE order_status 
+  	SET order_status_id=#{orderStatusId}, order_status_name=#{orderStatusName}, memo=#{memo}
+  	WHERE order_status_id = #{orderStatusId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.OrderStatus">
+	SELECT order_status_id, order_status_name, memo
+  	FROM order_status 
+  	<where>
+  		<if test="orderStatusId != null and orderStatusId != ''">
+            AND order_status_id = #{orderStatusId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(*)
+  	FROM order_status 
+  	<where>
+  		<if test="orderStatusId != null and orderStatusId != ''">
+            AND order_status_id = #{orderStatusId}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

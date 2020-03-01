@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.CheckPrftLossMapper">
+    <resultMap id="BaseResultMap" type="CheckPrftLoss"
+               autoMapping="true">
+        <id column="check_form_num" property="checkFormNum"/>
+        <result column="check_dt" property="checkDt"/>
+        <result column="check_dt" property="checkDt1"/>
+        <result column="check_dt" property="checkDt2"/>
+        <result column="book_dt" property="bookDt"/>
+        <result column="whs_encd" property="whsEncd"/>
+        <result column="check_bat" property="checkBat"/>
+        <result column="memo" property="memo"/>
+        <collection property="cPrftLossList"
+                    ofType="CheckPrftLossSubTab" autoMapping="true">
+            <id column="ordr_num" property="ordrNum"/>
+            <result column="check_form_num" property="checkFormNum"/>
+            <result column="invty_encd" property="invtyEncd"/>
+            <result column="invty_big_cls_encd" property="invtyBigClsEncd"/>
+            <result column="bat_num" property="batNum"/>
+            <result column="prdc_dt" property="prdcDt"/>
+            <result column="bao_zhi_qi" property="baoZhiQi"/>
+            <!-- <association property="invtyDoc" javaType="com.px.mis.purc.entity.InvtyDoc"
+                autoMapping="true"> <id property="invtyEncd" column="invty_encd" /> <result
+                property="invtyNm" column="invty_nm" /> <result property="invtyClsEncd" column="invty_cls_encd"
+                /> <result property="baoZhiQiEarWarn" column="bao_zhi_qi_ear_warn" /> <result
+                property="measrCorpNm" column="measr_corp_nm" /> </association> -->
+        </collection>
+    </resultMap>
+
+    <resultMap id="cPrftLossList" type="CheckPrftLossSubTab"
+               autoMapping="true">
+        <id column="ordr_num" property="ordrNum"/>
+        <result column="check_form_num" property="checkFormNum"/>
+        <result column="invty_encd" property="invtyEncd"/>
+        <result column="invty_big_cls_encd" property="invtyBigClsEncd"/>
+        <result column="bat_num" property="batNum"/>
+        <result column="prdc_dt" property="prdcDt"/>
+        <result column="bao_zhi_qi" property="baoZhiQi"/>
+        <result column="gds_bit_encd" property="gdsBitEncd"/>
+        <!-- <association property="invtyDoc" javaType="com.px.mis.purc.entity.InvtyDoc"
+            autoMapping="true"> <id property="invtyEncd" column="invty_encd" /> <result
+            property="invtyNm" column="invty_nm" /> <result property="invtyClsEncd" column="invty_cls_encd"
+            /> <result property="baoZhiQiEarWarn" column="bao_zhi_qi_ear_warn" /> <result
+            property="measrCorpNm" column="measr_corp_nm" /> </association> -->
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        check_form_num,src_form_num, ordr_num, check_dt, book_dt, whs_encd, check_bat, memo, is_nt_wms,
+		is_nt_chk, is_nt_book_entry, is_nt_cmplt, is_nt_clos, print_cnt,
+		setup_pers, setup_tm,
+		mdfr, modi_tm, chkr, chk_tm, book_entry_pers, book_entry_tm
+    </sql>
+
+
+    <!-- 新增盘点损益表 -->
+    <insert id="insertCheckSnglLoss" parameterType="CheckPrftLoss">
+        insert into check_prft_loss (check_form_num, src_form_num, check_dt,
+                                     book_dt, whs_encd, check_bat,
+                                     memo, is_nt_wms, is_nt_chk,
+                                     is_nt_book_entry, is_nt_cmplt, is_nt_clos,
+                                     print_cnt, setup_pers, setup_tm,
+                                     chkr,
+                                     chk_tm, book_entry_pers, book_entry_tm, form_typ_encd)
+        values (#{checkFormNum}, #{srcFormNum}, #{checkDt},
+                #{bookDt}, #{whsEncd}, #{checkBat},
+                #{memo}, 0, 0, 0, 0, 0,
+                #{printCnt}, #{setupPers}, now(),
+                #{chkr},
+                #{chkTm}, #{bookEntryPers}, #{bookEntryTm}, #{formTypEncd})
+    </insert>
+    <insert id="exInsertCSngl" parameterType="CheckPrftLoss">
+        INSERT INTO check_prft_loss (check_form_num,
+                                     src_form_num,
+                                     check_dt,
+                                     book_dt,
+                                     whs_encd,
+                                     check_bat,
+                                     memo,
+                                     is_nt_wms,
+                                     is_nt_chk,
+                                     is_nt_book_entry,
+                                     is_nt_cmplt,
+                                     is_nt_clos,
+                                     print_cnt,
+                                     setup_pers,
+                                     setup_tm,
+                                     mdfr,
+                                     modi_tm,
+                                     chkr,
+                                     chk_tm,
+                                     book_entry_pers,
+                                     book_entry_tm,
+                                     form_typ_encd)
+        VALUES (#{checkFormNum},
+                #{srcFormNum},
+                #{checkDt},
+                #{bookDt},
+                #{whsEncd},
+                #{checkBat},
+                #{memo},
+                #{isNtWms},
+                #{isNtChk},
+                #{isNtBookEntry},
+                #{isNtCmplt},
+                #{isNtClos},
+                #{printCnt},
+                #{setupPers},
+                #{setupTm},
+                #{mdfr},
+                #{modiTm},
+                #{chkr},
+                #{chkTm},
+                #{bookEntryPers},
+                #{bookEntryTm},
+                "029");
+
+    </insert>
+    <insert id="insertCheckSnglLossSubTab"
+            parameterType="java.util.List">
+        insert into check_prft_loss_sub_tab (ordr_num, check_form_num,
+        invty_encd,
+        invty_big_cls_encd, bat_num, prdc_dt,
+        bao_zhi_qi, invldtn_dt, book_qty,
+        check_qty, prft_loss_qty, prft_loss_qtys,
+        book_adjust_qty, adj_into_whs_qty, prft_loss_ratio,
+        adj_out_whs_qty, reasn, tax_rate,
+        cntn_tax_uprc, un_tax_uprc, cntn_tax_book_amt,
+        un_tax_book_amt, cntn_tax_check_amt, un_tax_check_amt,
+        cntn_tax_prft_loss_amt, un_tax_prft_loss_amt, cntn_tax_prft_loss_amts,
+        un_tax_prft_loss_amts,gds_bit_encd,proj_encd
+        ,book_tax_amt,check_tax_amt,prft_loss_tax_amt,prft_loss_tax_amts
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.ordrNum}, #{item.checkFormNum}, #{item.invtyEncd},
+            #{item.invtyBigClsEncd}, #{item.batNum}, #{item.prdcDt},
+            #{item.baoZhiQi}, #{item.invldtnDt}, #{item.bookQty},
+            #{item.checkQty}, #{item.prftLossQty}, #{item.prftLossQtys},
+            #{item.bookAdjustQty}, #{item.adjIntoWhsQty}, #{item.prftLossRatio},
+            #{item.adjOutWhsQty}, #{item.reasn}, #{item.taxRate},
+            #{item.cntnTaxUprc}, #{item.unTaxUprc}, #{item.cntnTaxBookAmt},
+            #{item.unTaxBookAmt}, #{item.cntnTaxCheckAmt}, #{item.unTaxCheckAmt},
+            #{item.cntnTaxPrftLossAmt}, #{item.unTaxPrftLossAmt},
+            #{item.cntnTaxPrftLossAmts},
+            #{item.unTaxPrftLossAmts},
+            #{item.gdsBitEncd},
+            #{item.projEncd},
+            #{item.bookTaxAmt},
+            #{item.checkTaxAmt},
+            #{item.prftLossTaxAmt},
+            #{item.prftLossTaxAmts}
+            )
+        </foreach>
+    </insert>
+    <!-- 修改盘点损益表 -->
+    <update id="updateCheckSnglLoss" parameterType="CheckPrftLoss">
+        update check_prft_loss
+        <set>
+            <if test="srcFormNum != null">
+                src_form_num = #{srcFormNum},
+            </if>
+            <if test="checkDt != null">
+                check_dt = #{checkDt},
+            </if>
+            <if test="bookDt != null">
+                book_dt = #{bookDt},
+            </if>
+            <if test="whsEncd != null">
+                whs_encd = #{whsEncd},
+            </if>
+            <if test="checkBat != null">
+                check_bat = #{checkBat},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="isNtWms != null">
+                is_nt_wms = #{isNtWms},
+            </if>
+            <if test="isNtChk != null">
+                is_nt_chk = #{isNtChk},
+            </if>
+            <if test="isNtBookEntry != null">
+                is_nt_book_entry = #{isNtBookEntry},
+            </if>
+            <if test="isNtCmplt != null">
+                is_nt_cmplt = #{isNtCmplt},
+            </if>
+            <if test="isNtClos != null">
+                is_nt_clos = #{isNtClos},
+            </if>
+            <if test="printCnt != null">
+                print_cnt = #{printCnt},
+            </if>
+            <if test="mdfr != null">
+                mdfr = #{mdfr},
+            </if>
+            modi_tm =now(),
+            <if test="chkr != null">
+                chkr = #{chkr},
+            </if>
+            <if test="chkTm != null">
+                chk_tm = #{chkTm},
+            </if>
+            <if test="bookEntryPers != null">
+                book_entry_pers = #{bookEntryPers},
+            </if>
+            <if test="bookEntryTm != null">
+                book_entry_tm = #{bookEntryTm},
+            </if>
+        </set>
+        where check_form_num = #{checkFormNum}
+    </update>
+    <!-- 删除盘点损益表 批删 -->
+    <delete id="deleteCheckSnglSubLossTab"
+            parameterType="java.lang.String">
+        delete
+        from check_prft_loss_sub_tab
+        where check_form_num = #{checkFormNum}
+    </delete>
+    <!--批量删除 -->
+    <delete id="deleteAllCheckSnglLoss"
+            parameterType="java.util.List">
+        delete cpl,cplTab
+        from check_prft_loss as cpl
+        left join check_prft_loss_sub_tab as cplTab
+        ON cpl.check_form_num = cplTab.check_form_num
+        where cpl.check_form_num in
+        <foreach item="checkFormNum" collection="list" open="("
+                 close=")" separator=",">
+            #{checkFormNum}
+        </foreach>
+    </delete>
+
+    <!--查询 -->
+    <select id="selectCheckSnglLoss" resultType="CheckPrftLoss">
+        select check_prft_loss.check_form_num   as checkFormNum,
+               check_prft_loss.src_form_num     as srcFormNum,
+               check_prft_loss.check_dt         as checkDt,
+               check_prft_loss.book_dt          as bookDt,
+               check_prft_loss.whs_encd         as whsEncd,
+               check_prft_loss.check_bat        as checkBat,
+               check_prft_loss.memo,
+               check_prft_loss.is_nt_wms        as isNtWms,
+               check_prft_loss.is_nt_chk        as isNtChk,
+               check_prft_loss.is_nt_book_entry as isNtBookEntry,
+               check_prft_loss.is_nt_cmplt      as isNtCmplt,
+               check_prft_loss.is_nt_clos       as isNtClos,
+               check_prft_loss.print_cnt        as printCnt,
+               check_prft_loss.setup_pers       as setupPers,
+               check_prft_loss.setup_tm         as setupTm,
+               check_prft_loss.mdfr,
+               check_prft_loss.modi_tm          as modiTm,
+               chkr,
+               check_prft_loss.chk_tm           as chkTm,
+               book_entry_pers                  as bookEntryPers,
+               book_entry_tm                    as bookEntryTm,
+               whs_doc.whs_nm
+                ,
+               check_prft_loss.form_typ_encd       formTypEncd,
+               form_typ_tabs.form_typ_name         formTypName
+
+        from check_prft_loss
+                 LEFT JOIN whs_doc on whs_doc.whs_encd = check_prft_loss.whs_encd
+                 LEFT JOIN form_typ_tabs ON (
+            form_typ_tabs.form_typ_encd = check_prft_loss.form_typ_encd
+            )
+        where check_form_num = #{checkFormNum}
+    </select>
+    <!--查询 -->
+    <select id="selectSrcCheckSnglLoss" resultType="CheckPrftLoss">
+        select check_prft_loss.check_form_num   as checkFormNum,
+               check_prft_loss.src_form_num     as srcFormNum,
+               check_prft_loss.check_dt         as checkDt,
+               check_prft_loss.book_dt          as bookDt,
+               check_prft_loss.whs_encd         as whsEncd,
+               check_prft_loss.check_bat        as checkBat,
+               check_prft_loss.memo,
+               check_prft_loss.is_nt_wms        as isNtWms,
+               check_prft_loss.is_nt_chk        as isNtChk,
+               check_prft_loss.is_nt_book_entry as isNtBookEntry,
+               check_prft_loss.is_nt_cmplt      as isNtCmplt,
+               check_prft_loss.is_nt_clos       as isNtClos,
+               check_prft_loss.print_cnt        as printCnt,
+               check_prft_loss.setup_pers       as setupPers,
+               check_prft_loss.setup_tm         as setupTm,
+               check_prft_loss.mdfr,
+               check_prft_loss.modi_tm          as modiTm,
+               chkr,
+               check_prft_loss.chk_tm           as chkTm,
+               book_entry_pers                  as bookEntryPers,
+               book_entry_tm                    as bookEntryTm,
+               whs_doc.whs_nm
+                ,
+               check_prft_loss.form_typ_encd       formTypEncd,
+               form_typ_tabs.form_typ_name         formTypName
+
+        from check_prft_loss
+                 LEFT JOIN whs_doc on whs_doc.whs_encd = check_prft_loss.whs_encd
+                 LEFT JOIN form_typ_tabs ON (
+            form_typ_tabs.form_typ_encd = check_prft_loss.form_typ_encd
+            )
+        where src_form_num = #{srcFormNum}
+    </select>
+    <sql id="check_sngl_Tab_List">
+        ordr_num as ordrNum, check_form_num as checkFormNum, invty_encd as invtyEncd,
+		invty_big_cls_encd as invtyBigClsEncd, bat_num as batNum, prdc_dt as
+		prdcDt,
+		bao_zhi_qi as baoZhiQi, invldtn_dt as invldtnDt, book_qty as bookQty, check_qty
+		as checkQty,
+		prft_loss_qty as prftLossQty,prft_loss_qtys as prftLossQtys, book_adjust_qty as
+		bookAdjustQty,
+		adj_into_whs_qty as adjIntoWhsQty,prft_loss_ratio as prftLossRatio, adj_out_whs_qty as
+		adjOutWhsQty,
+		reasn, tax_rate as taxRate, cntn_tax_uprc as cntnTaxUprc,
+		un_tax_uprc as unTaxUprc, cntn_tax_book_amt as cntnTaxBookAmt,
+		un_tax_book_amt as unTaxBookAmt,
+		cntn_tax_check_amt as cntnTaxCheckAmt, un_tax_check_amt as unTaxCheckAmt,
+		cntn_tax_prft_loss_amt as cntnTaxPrftLossAmt, un_tax_prft_loss_amt as
+		unTaxPrftLossAmt,
+		cntn_tax_prft_loss_amts as cntnTaxPrftLossAmts, un_tax_prft_loss_amts as unTaxPrftLossAmts
+    </sql>
+    <select id="selectCheckSnglLossSubTab" resultType="com.px.mis.whs.entity.CheckPrftLossSubTab">
+        SELECT cplTab.*,
+               iDoc.*,
+               mDoc.measr_corp_nm,
+               cplTab.gds_bit_encd gdsBitEncd,
+               gDit.gds_bit_nm     gdsBitNm,
+               proj_cls.proj_nm
+        FROM check_prft_loss_sub_tab AS cplTab
+                 LEFT JOIN invty_doc AS iDoc ON cplTab.invty_encd = iDoc.invty_encd
+                 LEFT JOIN measr_corp_doc mDoc ON iDoc.measr_corp_id = mDoc.measr_corp_id
+                 LEFT JOIN gds_bit AS gDit ON gDit.gds_bit_encd = cplTab.gds_bit_encd
+                 LEFT JOIN proj_cls  ON proj_cls.proj_encd = cplTab.proj_encd
+        where check_form_num = #{checkFormNum}
+    </select>
+    <!-- 批量查询 -->
+    <select id="selectCSnglLossList" resultType="CheckPrftLoss">
+        SELECT *
+        from check_prft_loss
+        WHERE check_form_num in
+        <foreach collection="checkFormNum" item="checkFormNum"
+                 open="(" close=")" separator=",">
+            #{checkFormNum}
+        </foreach>
+    </select>
+    <!-- 分页查 -->
+    <select id="selectList" parameterType="Map"
+            resultType="CheckPrftLossMap">
+        SELECT
+        cpl.*,
+        whsdoc.whs_nm whsNm,
+        form_typ_tabs.form_typ_name,
+        cplTab.*,
+        iDoc.invty_nm invtyNm,
+        iDoc.spc_model spcModel,
+        iDoc.invty_cd invtyCd,
+        iDoc.bx_rule bxRule,
+        iDoc.crspd_bar_cd crspdBarCd,
+        iDoc.measr_corp_id measrCorpId,
+        mDoc.measr_corp_nm <!-- ,
+		cplTab.check_Qty/iDoc.bx_rule  bxQty -->,
+        gDit.gds_bit_nm gdsBitNm,
+        proj_cls.proj_nm
+        FROM
+        check_prft_loss AS cpl
+        LEFT JOIN whs_doc whsdoc ON whsdoc.whs_encd = cpl.whs_encd
+        LEFT JOIN form_typ_tabs ON ( form_typ_tabs.form_typ_encd = cpl.form_typ_encd )
+        LEFT JOIN check_prft_loss_sub_tab AS cplTab ON cpl.check_form_num = cplTab.check_form_num
+        LEFT JOIN invty_doc AS iDoc ON cplTab.invty_encd = iDoc.invty_encd
+        LEFT JOIN measr_corp_doc mDoc ON iDoc.measr_corp_id = mDoc.measr_corp_id
+        LEFT JOIN gds_bit AS gDit ON gDit.gds_bit_encd = cplTab.gds_bit_encd
+        LEFT JOIN proj_cls  ON proj_cls.proj_encd = cplTab.proj_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND cpl.memo like #{memo}
+            </if>
+            <if test="reasn != null and reasn != ''">
+                <bind name="reasn" value="'%'+ reasn +'%'"/>
+                AND cplTab.reasn like #{reasn}
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                 AND iDoc.invty_cls_encd like #{invtyClsEncd}
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0">
+                AND cplTab.invty_encd in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="batNum != null and batNum.size() >0">
+                AND cplTab.bat_num in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="setupPers != null and setupPers.size() >0">
+                AND cpl.setup_pers in
+                <foreach collection="setupPers" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="checkFormNum != null and checkFormNum.size() >0">
+                AND cpl.check_form_num in
+                <foreach collection="checkFormNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND cpl.whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and formTypEncd.size() >0">
+                AND cpl.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="checkDt1 != null and checkDt1 != ''">
+                AND cpl.check_Dt &gt;= #{checkDt1}
+            </if>
+            <if test="checkDt2 != null and checkDt2 != ''">
+                AND cpl.check_Dt &lt;= #{checkDt2}
+            </if>
+            <if test="whsEncd != null and whsEncd.size() >0">
+                AND cpl.whs_encd in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null  and isNtChk != ''">
+                AND cpl.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="srcFormNum != null  and srcFormNum.size() >0">
+                AND cpl.src_form_num in
+                <foreach collection="srcFormNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+
+
+        SELECT count( cpl.check_form_num) check_form_num
+        FROM
+        check_prft_loss AS cpl
+        LEFT JOIN whs_doc whsdoc ON whsdoc.whs_encd = cpl.whs_encd
+        LEFT JOIN check_prft_loss_sub_tab AS cplTab ON cpl.check_form_num =
+        cplTab.check_form_num
+        LEFT JOIN invty_doc AS iDoc ON cplTab.invty_encd = iDoc.invty_encd
+        LEFT JOIN measr_corp_doc mDoc ON iDoc.measr_corp_id = mDoc.measr_corp_id
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND cpl.memo like #{memo}
+            </if>
+            <if test="reasn != null and reasn != ''">
+                <bind name="reasn" value="'%'+ reasn +'%'"/>
+                AND cplTab.reasn like #{reasn}
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                 AND iDoc.invty_cls_encd like #{invtyClsEncd}
+            </if>
+            <if test="batNum != null and batNum.size() >0">
+                AND cplTab.bat_num in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0">
+                AND cplTab.invty_encd in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND cpl.whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="setupPers != null and setupPers.size() >0">
+                AND cpl.setup_pers in
+                <foreach collection="setupPers" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="checkFormNum != null and checkFormNum.size() >0">
+                AND cpl.check_form_num in
+                <foreach collection="checkFormNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and formTypEncd.size() >0">
+                AND cpl.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="checkDt1 != null and checkDt1 != ''">
+                AND cpl.check_Dt &gt;= #{checkDt1}
+            </if>
+            <if test="checkDt2 != null and checkDt2 != ''">
+                AND cpl.check_Dt &lt;= #{checkDt2}
+            </if>
+            <if test="whsEncd != null and whsEncd.size() >0">
+                AND cpl.whs_encd in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null  and isNtChk != ''">
+                AND cpl.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="srcFormNum != null  and srcFormNum.size() >0">
+                AND cpl.src_form_num in
+                <foreach collection="srcFormNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+    <!-- 审核 -->
+    <update id="updateCSnglLossChk" parameterType="java.util.List">
+        update check_prft_loss
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when check_form_num = #{item.checkFormNum} then 1
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when check_form_num = #{item.checkFormNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when check_form_num = #{item.checkFormNum} then #{item.chkTm}
+                </foreach>
+            </trim>
+        </trim>
+        where check_form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.checkFormNum}
+        </foreach>
+        and is_nt_chk = 0
+    </update>
+    <!-- 弃审 -->
+    <update id="updateCSnglLossNoChk" parameterType="java.util.List">
+        update check_prft_loss
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when check_form_num = #{item.checkFormNum} then 0
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when check_form_num = #{item.checkFormNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when check_form_num = #{item.checkFormNum} then now()
+                </foreach>
+            </trim>
+        </trim>
+        where check_form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.checkFormNum}
+        </foreach>
+        and is_nt_chk = 1
+    </update>
+    <!-- 打印 -->
+    <select id="selectListDaYin" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+        cpl.*,
+        whsdoc.whs_nm whsNm,
+        form_typ_tabs.form_typ_name,
+        cplTab.*,
+        iDoc.invty_nm invtyNm,
+        iDoc.spc_model spcModel,
+        iDoc.invty_cd invtyCd,
+        iDoc.bx_rule bxRule,
+        iDoc.crspd_bar_cd crspdBarCd,
+        iDoc.measr_corp_id measrCorpId,
+        mDoc.measr_corp_nm <!-- ,
+		cplTab.check_Qty/iDoc.bx_rule  bxQty -->,
+        gDit.gds_bit_nm gdsBitNm
+        FROM
+        check_prft_loss AS cpl
+        LEFT JOIN whs_doc whsdoc ON whsdoc.whs_encd = cpl.whs_encd
+        LEFT JOIN form_typ_tabs ON ( form_typ_tabs.form_typ_encd = cpl.form_typ_encd )
+        LEFT JOIN check_prft_loss_sub_tab AS cplTab ON cpl.check_form_num = cplTab.check_form_num
+        LEFT JOIN invty_doc AS iDoc ON cplTab.invty_encd = iDoc.invty_encd
+        LEFT JOIN measr_corp_doc mDoc ON iDoc.measr_corp_id = mDoc.measr_corp_id
+        LEFT JOIN gds_bit AS gDit ON gDit.gds_bit_encd = cplTab.gds_bit_encd
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND cpl.memo like #{memo}
+            </if>
+            <if test="reasn != null and reasn != ''">
+                <bind name="reasn" value="'%'+ reasn +'%'"/>
+                AND cplTab.reasn like #{reasn}
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd.size() >0">
+                AND iDoc.invty_cls_encd in
+                <foreach collection="invtyClsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0">
+                AND cplTab.invty_encd in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="setupPers != null and setupPers.size() >0">
+                AND cpl.setup_pers in
+                <foreach collection="setupPers" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="checkFormNum != null and checkFormNum.size() >0">
+                AND cpl.check_form_num in
+                <foreach collection="checkFormNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and formTypEncd.size() >0">
+                AND cpl.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="checkDt1 != null and checkDt1 != ''">
+                AND cpl.check_Dt &gt;= #{checkDt1}
+            </if>
+            <if test="checkDt2 != null and checkDt2 != ''">
+                AND cpl.check_Dt &lt;= #{checkDt2}
+            </if>
+            <if test="whsEncd != null and whsEncd.size() >0">
+                AND cpl.whs_encd in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null  and isNtChk != ''">
+                AND cpl.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="srcFormNum != null  and srcFormNum.size() >0">
+                AND cpl.src_form_num in
+                <foreach collection="srcFormNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+    <!-- 查询是否审核 -->
+    <select id="selectIsChr" resultType="CheckPrftLoss">
+        select *
+        from check_prft_loss
+        where check_form_num = #{checkFormNum}
+    </select>
+    <!-- 修改子表 -->
+    <update id="updateCheckPrftLossSubTab"
+            parameterType="java.util.List">
+        update check_prft_loss_sub_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="prft_loss_qtys =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.prftLossQtys != null">
+                        when
+                        ordr_num = #{item.ordrNum}
+                        then #{item.prftLossQtys}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="cntn_tax_prft_loss_amts =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.cntnTaxPrftLossAmts != null">
+                        when
+                        ordr_num = #{item.ordrNum}
+                        then
+                        #{item.cntnTaxPrftLossAmts}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="un_tax_prft_loss_amts =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.unTaxPrftLossAmts != null">
+                        when
+                        ordr_num = #{item.ordrNum}
+                        then
+                        #{item.unTaxPrftLossAmts}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator=")or(" open="(" close=")">
+            ordr_num = #{item.ordrNum}
+        </foreach>
+    </update>
+
+    <insert id="insertCheckSnglLossDl"
+            parameterType="java.util.List">
+        INSERT INTO check_prft_loss_dl SELECT
+        *
+        FROM
+        check_prft_loss
+        WHERE check_form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+    <insert id="insertCheckSnglLossSubTabDl"
+            parameterType="java.util.List">
+        INSERT INTO check_prft_loss_sub_tab_dl SELECT
+        *
+        FROM
+        check_prft_loss_sub_tab
+        WHERE check_form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+
+</mapper>

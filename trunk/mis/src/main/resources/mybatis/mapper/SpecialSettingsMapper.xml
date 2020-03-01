@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SpecialSettings">
+
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.SpecialSettings">
+  	SELECT *
+  	FROM special_settings 
+  	WHERE setting_id = #{settingId}
+  </select>
+
+  <update id="update" parameterType="com.px.mis.ec.entity.SpecialSettings">
+  	UPDATE special_settings 
+  	SET down_time=#{downTime}, receipt=#{receipt}, no_receipt=#{noReceipt}, no_receipt_days=#{noReceiptDays},
+  	no_check=#{noCheck}, no_check_days=#{noCheckDays}, order_date=#{orderDate}
+  	WHERE setting_id = #{settingId}
+  </update>
+  
+</mapper>

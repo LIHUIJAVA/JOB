@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>退货单列表</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/drag.js"></script>
+	</head>
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/sell/returnOrderList.js?" + new Date().getTime() + "'></scr" + "ipt>");
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/system/baseDocAll.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<style>
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+		
+		#formSave select {
+			outline: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			width: 220px;
+			border: 0;
+			border-bottom: 1px solid #B8C7CE
+		}
+		
+		#formSave select:-ms-expand {
+			display: none;
+		}
+		
+		.calendar.min {
+			z-index: 11111!important;
+		}
+		
+		#box .purchaseType {
+			margin-top: 4px;
+			/*width: 20%!important;*/
+		}
+	</style>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">退货单列表</h1>-->
+				<div class="buttons">
+					<div class="dropdown" style="display: inline-block;">
+						<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    导入
+						    <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+							<li class="li1">
+								<a href="#">U8导入</a>
+							</li>
+							<li class="li2">
+								<a href="#">新系统导入</a>
+							</li>
+						</ul>
+					</div>
+					<button class="exportExcel">导出</button>
+					<button class="delOrder">删除</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+					<button class="search">查询</button>
+					<button class="more">更多查询条件</button>
+					<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>
+				</div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="orderDates col-md-4">
+						<span>存货编码</span>
+						<input type="text" id="invtyEncd" class="invtyEncd encds" name="invtyEncd" value="" />
+						<input type="text" id="invtyNm" class="invtyNm names" name="invtyNm" value="" readonly="readonly"/>
+						<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>存货分类编码</span><input type="text" id="invtyCls" class="invtyClsEncd encds" name="invtyClsEncd" value="" />
+						<input type="text" id="invtyClsNm" class="invtyClsNm names" name="invtyClsNm" value="" readonly="readonly" />
+						<span><img class="invtyClsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>退货单号</span><input type="text" id="rtnGoodsId" name="rtnGoodsId" value="" />
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>客户名称</span><input type="text" id="custId" class="custId encds" name="custId" value="" />
+						<input type="text" id="custNm" class="custNm names" name="custNm" value="" readonly="readonly"/>
+						<span><img class="biao_custId" id="custNm" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>是否审核</span>
+						<select name="isNtChk" id="isNtChk">
+							<option value="" selected value></option>
+							<option value="1">已审</option>
+							<option value="0">未审</option>
+						</select>
+					</div>
+					<div class="orderDates col-md-8">
+						<span>退货日期</span>
+						<input type="text" class="rtnGoodsDt1 date1" name="rtnGoodsDt1" value="" calendar="YYYY-MM-DD" />到<input type="text" class="rtnGoodsDt2 date2" name="rtnGoodsDt2" value="" calendar="YYYY-MM-DD" />
+					</div>
+				</form>
+				<div id='addr' style="display: none;"></div>
+				<div id="custId1" style="display: none;"></div>
+				<div id="custNm1" style="display: none;"></div>
+				<!--<div class="orderDates col-md-8" style="opacity: 0;"></div>
+				<div class="orderDates col-md-8">
+					<span class="more"><a href="#">更多查询条件 > ></a></span>
+				</div>-->
+			</div>
+
+			<table id="jqGrids">
+			</table>
+
+			<div id="jqGridPager">
+			</div>
+		</div>
+
+		<div id="big_wrap"></div>
+		<div id="box" style="display: block">
+			<!--查询条件-->
+			<div id="insertClsList" class="search_more" style="display: ;">
+				<div class="purchaseOrder">
+					<div class="purchaseTit">
+						<div class="buttons">
+							<button class="sure">确定</button>
+							<button class="cancel">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="order-title" style="width:550px">
+				<form class="row" id="formSave">
+					<div class="purchaseType col-md-4">
+						<span>退货单号</span><input type="text" name="rtnGoodsId1" value="" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>销售单号</span><input type="text" class="inputText" name="sellOrdrId" value=""/>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>存货代码</span><input type="text" id="invtyCd" name="invtyCd" value="" />
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>存货编码</span>
+						<input type="text" class="invtyEncd encds" name="invtyEncd1" value="" />
+						<input type="text" class="invtyNm names" name="invtyNm1" value="" readonly="readonly"/>
+						<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>存货分类编码</span><input type="text" class="invtyClsEncd encds" name="invtyClsEncd1" value="" />
+						<input type="text" class="invtyClsNm names" name="invtyClsNm1" value="" readonly="readonly" />
+						<span><img class="invtyClsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>仓库编码</span><input type="text" id="whsEncd" class="whsEncd encds" name="whsEncd" value="" />
+						<input type="text" id="whsNm" class="whsNm names" name="whsNm" value="" readonly="readonly" />
+						<span><img class="biao_whsEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>批次</span><input type="text" id="batNum" name="batNum" value="" />
+						<span><img class="biao_batNum" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>客户名称</span>
+						<input type="text" class="custId1 encds" name="custId1" value="" />
+						<input type="text" class="custNm1 names" name="custNm1" value="" readonly="readonly"/>
+						<span><img class="biao_custId" id="custNm" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>业务员编码</span><input type="text" id="user" class="inputText encds" name="accNum" value=""/>
+						<input type="text" id="userName" class="inputText names" value="" readonly="readonly" />
+						<span><img class="accNum_biaoge" id="fuze" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>部门编码</span>
+						<input type="text" id="deptId" class="encds" name="deptId" value="" />
+						<input type="text" id="deptName" class="names" name="deptName" value="" />
+						<span><img class="biao_deptId" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="purchaseType col-md-8">
+						<span>退货日期</span>
+						<input type="text" name="rtnGoodsDt3" value="" readonly="readonly" calendar="YYYY-MM-DD"/>到<input type="text" readonly="readonly" name="rtnGoodsDt4" value="" calendar="YYYY-MM-DD"/>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>国际批次</span><input type="text" id="intlBat" name="intlBat" value="" />
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>客户订单号</span><input type="text" id="custOrdrNum" name="custOrdrNum" value="" />
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>交易编码</span><input type="text" id="txId" name="txId" value="" />
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>是否审核</span>
+						<select name="isNtChk1">
+							<option value="" selected value></option>
+							<option value="1">已审</option>
+							<option value="0">未审</option>
+						</select>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>业务类型编码</span>
+						<select name="bizTypId">
+							<option value="" selected value></option>
+							<option value="1">B2B</option>
+							<option value="2">B2C</option>
+						</select>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>销售类型编码</span>
+						<select name="sellTypId">
+							<option value="" selected value></option>
+							<option value="1">普通销售</option>
+							<option value="2">委托代销</option>
+						</select>
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>是否开票</span>
+						<select name="isNtBllg" id="isNtBllg">
+							<option value="" selected value></option>
+							<option value="1">是</option>
+							<option value="0">否</option>
+						</select>
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>备注</span><input type="text" class="memo" name="memo" value="" />
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>

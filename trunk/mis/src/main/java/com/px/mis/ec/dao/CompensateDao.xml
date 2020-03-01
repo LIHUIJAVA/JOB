@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.CompensateDao">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.Compensate">
+	INSERT IGNORE INTO compensate (compensate_id, compensate_keyid, vender_id, type, order_id, order_type, modified,
+	created, compensate_type, should_pay, compensate_amount, compensate_reason, check_status, erp_check_status, can_second_appeal,
+	is_audit, ec_id, store_id,download_time)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+    (#{item.compensateId}, #{item.compensateKeyid}, #{item.venderId}, #{item.type}, #{item.orderId}, #{item.orderType}, #{item.modified}, 
+    #{item.created}, #{item.compensateType}, #{item.shouldPay}, #{item.compensateAmount}, #{item.compensateReason}, #{item.checkStatus}, #{item.erpCheckStatus}, 
+    #{item.canSecondAppeal}, #{item.isAudit}, #{item.ecId}, #{item.storeId},#{item.downloadTime})
+    </foreach>
+  </insert>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.Compensate">
+  	UPDATE compensate 
+  	SET compensate_id=#{compensateId}, compensate_keyid=#{compensateKeyid}, vender_id=#{venderId}, type=#{type}, order_id=#{orderId},
+  	order_type=#{orderType}, modified=#{modified}, created=#{created}, compensate_type=#{compensateType}, should_pay=#{shouldPay},
+  	compensate_amount=#{compensateAmount}, compensate_reason=#{compensateReason}, check_status=#{checkStatus}, 
+  	erp_check_status=#{erpCheckStatus}, can_second_appeal=#{canSecondAppeal},
+  	is_audit=#{isAudit}, ec_id=#{ecId}, store_id=#{storeId},download_time=#{downloadTime},audit_time=#{auditTime},
+  	audit_user_id=#{auditUserId},audit_user_name=#{auditUserName},audit_hint=#{auditHint}
+  	WHERE compensate_id=#{compensateId}
+  </update>
+  
+  <update id="audit" parameterType="String">
+  	UPDATE compensate 
+  	SET is_audit = CASE is_audit WHEN 0 THEN 1 END,audit_time=#{auditTime},
+  	audit_user_id=#{auditUserId},audit_user_name=#{auditUserName},audit_hint=''
+	WHERE compensate_id IN
+	<foreach collection="compensateIdList" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </update>
+  
+  <select id="selectByIds" resultType="com.px.mis.ec.entity.Compensate">
+	SELECT *
+  	FROM compensate 
+  	WHERE compensate_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </select>
+  
+  <delete id="delete" parameterType="com.px.mis.ec.entity.Compensate">
+  delete from compensate where compensate_id=#{compensateId}
+  </delete>
+  
+  <select id="selectById" resultType="com.px.mis.ec.entity.Compensate">
+	SELECT * 
+  	FROM compensate 
+  	WHERE compensate_id=#{compensateId}
+  </select>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.Compensate">
+	SELECT c.*,s.store_name as storeName 
+  	FROM compensate c,store_record s 
+  	<where>
+  	c.store_id=s.store_id
+  		<if test="compensateId != null and compensateId != ''">
+            AND compensate_id = #{compensateId}
+        </if>
+        <if test="storeId != null and storeId != ''">
+            AND c.store_id = #{storeId}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="startTime != null and startTime != '' ">
+			AND created <![CDATA[>=]]> #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND created <![CDATA[<=]]> #{endTime}
+		</if>
+		<if test="checkStatus != null and checkStatus != ''">
+            AND check_status = #{checkStatus}
+        </if>
+        <if test="isAudit != null and isAudit != ''">
+            AND is_audit = #{isAudit}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(compensate_id)
+  	FROM compensate 
+  	<where>
+  		<if test="compensateId != null and compensateId != ''">
+            AND compensate_id = #{compensateId}
+        </if>
+        <if test="storeId != null and storeId != ''">
+            AND store_id = #{storeId}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="startTime != null and startTime != '' ">
+			AND created <![CDATA[>=]]> #{startTime}
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND created <![CDATA[<=]]> #{endTime}
+		</if>
+		<if test="checkStatus != null and checkStatus != ''">
+            AND check_status = #{checkStatus}
+        </if>
+        <if test="isAudit != null and isAudit != ''">
+            AND is_audit = #{isAudit}
+        </if>
+  	</where>
+  </select>
+  <select id="selectSellSnglSubBySellSnglId"
+		parameterType="String" resultType="SellSnglSub">
+		select
+		*
+		from sell_sngl_sub
+		where prc_tax_sum!=0 and sell_sngl_id = #{sellSnglId}
+	</select>
+</mapper>

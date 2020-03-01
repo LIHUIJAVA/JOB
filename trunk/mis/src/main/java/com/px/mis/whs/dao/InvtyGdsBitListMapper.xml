@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.InvtyGdsBitListMapper">
+
+    <!-- 查询 -->
+    <select id="selectInvtyGdsBitList" resultType="MovBitTab">
+        SELECT
+        invty_gds_bit_list.id,
+        invty_gds_bit_list.whs_encd,
+        invty_gds_bit_list.invty_encd,
+        invty_gds_bit_list.regn_encd,
+        invty_gds_bit_list.gds_bit_encd,
+        invty_gds_bit_list.bat_num,
+        invty_gds_bit_list.into_dt,
+        invty_gds_bit_list.order_num,
+        invty_gds_bit_list.serial_num,
+        invty_gds_bit_list.qty,
+        invty_gds_bit_list.prdc_dt
+        FROM
+        invty_gds_bit_list
+        <where>
+            <if test="whsEncd != null and whsEncd !=''">
+                AND invty_gds_bit_list.whs_encd =#{whsEncd}
+            </if>
+            <if test="invtyEncd != null and invtyEncd !=''">
+                AND invty_gds_bit_list.invty_encd =#{invtyEncd}
+            </if>
+            <if test="regnEncd != null and regnEncd !=''">
+                AND invty_gds_bit_list.regn_encd =#{regnEncd}
+            </if>
+            <if test="gdsBitEncd != null and gdsBitEncd !=''">
+                AND invty_gds_bit_list.gds_bit_encd =#{gdsBitEncd}
+            </if>
+            <if test="batNum != null and batNum !=''">
+                AND invty_gds_bit_list.bat_num =#{batNum}
+            </if>
+            <if test="intoDt != null and intoDt !=''">
+                AND invty_gds_bit_list.into_dt =#{intoDt}
+            </if>
+            <if test="orderNum != null and orderNum !=''">
+                AND invty_gds_bit_list.order_num =#{orderNum}
+            </if>
+            <if test="serialNum != null and serialNum !=''">
+                AND invty_gds_bit_list.serial_num =#{serialNum}
+            </if>
+            <if test="qty != null ">
+                AND invty_gds_bit_list.qty =#{qty}
+            </if>
+            <if test="id != null ">
+                AND invty_gds_bit_list.id =#{id}
+            </if>
+        </where>
+    </select>
+    <select id="selectInvtyGdsBitListf" resultType="MovBitTab">
+        SELECT invty_gds_bit_list.id,
+               invty_gds_bit_list.whs_encd,
+               invty_gds_bit_list.Invty_encd,
+               invty_gds_bit_list.regn_encd,
+               invty_gds_bit_list.gds_bit_encd,
+               invty_gds_bit_list.bat_num,
+               invty_gds_bit_list.into_dt,
+               invty_gds_bit_list.order_num,
+               invty_gds_bit_list.serial_num,
+               invty_gds_bit_list.qty,
+               invty_gds_bit_list.prdc_dt
+        FROM invty_gds_bit_list
+        where invty_gds_bit_list.order_num = #{orderNum}
+    </select>
+    <select id="selectInvtyGdsBitListOrderNum"
+            resultType="MovBitTab">
+        SELECT invty_gds_bit_list.id,
+               invty_gds_bit_list.whs_encd,
+               invty_gds_bit_list.Invty_encd,
+               invty_gds_bit_list.regn_encd,
+               invty_gds_bit_list.gds_bit_encd,
+               invty_gds_bit_list.bat_num,
+               invty_gds_bit_list.into_dt,
+               invty_gds_bit_list.order_num,
+               invty_gds_bit_list.serial_num,
+               SUM(invty_gds_bit_list.qty) qty,
+               invty_gds_bit_list.prdc_dt
+        FROM invty_gds_bit_list
+        where invty_gds_bit_list.order_num = #{orderNum}
+
+        GROUP BY whs_encd,
+                 invty_encd,
+                 bat_num
+
+    </select>
+
+    <!-- 查询sum -->
+    <select id="selectInvtyGdsBitSum" resultType="MovBitTab">
+        SELECT
+        invty_gds_bit_list.id,
+        invty_gds_bit_list.whs_encd,
+        invty_gds_bit_list.Invty_encd,
+        invty_gds_bit_list.regn_encd,
+        invty_gds_bit_list.gds_bit_encd,
+        invty_gds_bit_list.bat_num,
+        invty_gds_bit_list.into_dt,
+        invty_gds_bit_list.order_num,
+        invty_gds_bit_list.serial_num,
+        SUM(invty_gds_bit_list.qty) qty,
+        invty_gds_bit_list.prdc_dt
+        FROM
+        invty_gds_bit_list
+        <where>
+            <if test="whsEncd != null  and whsEncd !='' ">
+                AND invty_gds_bit_list.whs_encd =#{whsEncd}
+            </if>
+            <if test="invtyEncd != null  and invtyEncd !='' ">
+                AND invty_gds_bit_list.invty_encd =#{invtyEncd}
+            </if>
+            <if test="batNum != null  and batNum !='' ">
+                AND invty_gds_bit_list.bat_num =#{batNum}
+            </if>
+            <if test="orderNum != null  and orderNum !='' ">
+                AND invty_gds_bit_list.order_num =#{orderNum}
+            </if>
+            <if test="serialNum != null  and serialNum !='' ">
+                AND invty_gds_bit_list.serial_num =#{serialNum}
+            </if>
+            <if test="gdsBitEncd != null  and gdsBitEncd !='' ">
+                AND invty_gds_bit_list.gds_bit_encd = #{gdsBitEncd}
+            </if>
+        </where>
+        GROUP BY
+        invty_gds_bit_list.order_num
+    </select>
+    <select id="selectInvtyGdsBitListNum" resultType="MovBitTab">
+        SELECT
+        invty_gds_bit_list.id,
+        invty_gds_bit_list.whs_encd,
+        invty_gds_bit_list.Invty_encd,
+        invty_gds_bit_list.regn_encd,
+        invty_gds_bit_list.gds_bit_encd,
+        invty_gds_bit_list.bat_num,
+        invty_gds_bit_list.into_dt,
+        invty_gds_bit_list.order_num,
+        invty_gds_bit_list.serial_num,
+        invty_gds_bit_list.qty,
+        invty_gds_bit_list.prdc_dt
+        FROM
+        invty_gds_bit_list
+        where
+        invty_gds_bit_list.order_num =#{orderNum}
+        and
+        invty_gds_bit_list.serial_num in
+        <foreach item="num" collection="list" open="(" close=")"
+                 separator=",">
+            #{num}
+        </foreach>
+    </select>
+    <!-- 删 -->
+
+    <delete id="deleteInvtyGdsBitList"
+            parameterType="java.util.List">
+        delete from
+        invty_gds_bit_list
+        where invty_gds_bit_list.order_num in
+        <foreach item="orderNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{orderNum}
+        </foreach>
+    </delete>
+    <delete id="deleteInvtyGdsBitId" parameterType="java.util.List">
+        delete from
+        invty_gds_bit_list
+        where
+        invty_gds_bit_list.id in
+        <foreach item="item" collection="list" open="(" close=")"
+                 separator=",">
+            #{item}
+        </foreach>
+    </delete>
+    <delete id="deleteInvtyGdsBitSerial"
+            parameterType="java.util.List">
+        delete from
+        invty_gds_bit_list
+        where
+        invty_gds_bit_list.serial_num in
+        <foreach item="serialNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{serialNum}
+        </foreach>
+    </delete>
+
+    <!-- 增 -->
+    <insert id="insertInvtyGdsBitList" keyColumn="id"
+            keyProperty="id" parameterType="MovBitTab" useGeneratedKeys="true">
+        insert
+        into
+        invty_gds_bit_list (whs_encd, invty_encd,
+        regn_encd,
+        gds_bit_encd,
+        bat_num, into_dt,
+        order_num, serial_num, qty,prdc_dt
+        )
+        values
+        (#{whsEncd},
+        #{invtyEncd},
+        #{regnEncd},
+        #{gdsBitEncd},
+        #{batNum},
+        now(),
+        #{orderNum},
+        #{serialNum},
+        #{qty},
+        <if test="prdcDt == '' ">
+            null
+        </if>
+        <if test="prdcDt != '' ">
+            #{prdcDt}
+        </if>
+        )
+    </insert>
+
+
+    <!-- 增加表 -->
+    <insert id="insertInvtyGdsBitLists"
+            parameterType="java.util.List">
+        insert into invty_gds_bit_list(whs_encd, invty_encd,
+        regn_encd,
+        gds_bit_encd,
+        bat_num, into_dt,
+        order_num, serial_num, qty,prdc_dt
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.whsEncd},#{item.invtyEncd},#{item.regnEncd},
+            #{item.gdsBitEncd},#{item.batNum},now(),#{item.orderNum},#{item.serialNum},#{item.qty},
+            <if test="item.prdcDt == '' ">
+                null
+            </if>
+            <if test="item.prdcDt != '' ">
+                #{item.prdcDt}
+            </if>
+            )
+        </foreach>
+    </insert>
+    <!-- 改 -->
+    <update id="updateInvtyGdsBitList" parameterType="MovBitTab">
+        update invty_gds_bit_list
+        <set>
+            <if test="whsEncd != null">
+                whs_encd = #{whsEncd},
+            </if>
+            <if test="invtyEncd != null">
+                invty_encd = #{invtyEncd},
+            </if>
+            <if test="regnEncd != null">
+                regn_encd = #{regnEncd},
+            </if>
+            <if test="gdsBitEncd != null">
+                gds_bit_encd = #{gdsBitEncd},
+            </if>
+            <if test="batNum != null">
+                bat_num = #{batNum},
+            </if>
+            <if test="orderNum != null">
+                order_num = #{orderNum},
+            </if>
+            <if test="serialNum != null">
+                serial_num = #{serialNum},
+            </if>
+            <if test="qty != null">
+                qty = #{qty},
+            </if>
+            into_dt = now()
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateInvtyGdsBitLists"
+            parameterType="java.util.List">
+        update invty_gds_bit_list
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="whs_encd =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.whsEncd != null and item.whsEncd != '' ">
+                        when id =
+                        #{item.id} then #{item.whsEncd}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="invty_encd =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.invtyEncd != null and item.invtyEncd != '' ">
+                        when id =
+                        #{item.id} then #{item.invtyEncd}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="regn_encd =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.regnEncd != null and item.regnEncd !=''">
+                        when id = #{item.id} then #{item.regnEncd}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="gds_bit_encd =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.gdsBitEncd != null and item.gdsBitEncd !=''">
+                        when id =
+                        #{item.id} then #{item.gdsBitEncd}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="bat_num =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.batNum != null and item.batNum !=''">
+                        when id =
+                        #{item.id} then #{item.batNum}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.qty != null ">
+                        when id =
+                        #{item.id} then #{item.qty}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="into_dt =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when id =
+                    #{item.id} then now()
+                </foreach>
+            </trim>
+            <trim prefix="order_num =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.orderNum != null and item.orderNum !='' ">
+                        when id =
+                        #{item.id} then #{item.orderNum}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="serial_num =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.serialNum != null and item.serialNum != '' ">
+                        when id =
+                        #{item.id} then #{item.serialNum}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where id in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+    <!-- 加 -->
+    <update id="updateIntoinvtyGdsBitList" parameterType="MovBitTab">
+        update
+            invty_gds_bit_list
+        set qty = qty + #{qty}
+        where id =
+              #{id}
+    </update>
+    <!--减 -->
+    <update id="updateOutInvtyGdsBitList" parameterType="MovBitTab">
+        update
+            invty_gds_bit_list
+        set qty = qty - #{qty}
+        where id =
+              #{id}
+    </update>
+
+</mapper>

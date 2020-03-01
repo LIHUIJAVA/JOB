@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.InvtyClsDao">
+  <!-- 新增存货分类 -->
+    <insert id="insertInvtyCls" parameterType="InvtyCls">
+    insert into invty_cls (invty_cls_encd, invty_cls_nm, ico, level, pid, memo)
+    values (#{invtyClsEncd}, #{invtyClsNm}, #{ico}, #{level}, #{pid}, #{memo})
+   </insert>
+   
+  <!-- 修改存货分类 -->
+    <update id="updateInvtyClsByInvtyClsEncd" parameterType="InvtyCls">
+    update invty_cls
+    <set>
+      <if test="invtyClsEncd != null">
+        invty_cls_nm = #{invtyClsEncd},
+      </if>
+      <if test="invtyClsNm != null">
+        invty_cls_nm = #{invtyClsNm},
+      </if>
+      <if test="ico != null">
+        ico = #{ico},
+      </if>
+       <if test="level != null">
+        level = #{level},
+      </if>
+       <if test="pid != null">
+        pid = #{pid},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+    where invty_cls_encd = #{invtyClsEncd}
+  </update>
+  
+  <!-- 删除存货分类 -->
+    <delete id="deleteInvtyClsByInvtyClsEncd" parameterType="String">
+    delete from invty_cls
+    where invty_cls_encd = #{invtyClsEncd}
+  </delete>
+  
+  <!-- 按照编号查询存货分类 -->
+  <sql id="Base_Column_List">
+    invty_cls_encd , invty_cls_nm, ico, level, pid, memo,proj_encd
+  </sql>
+  <select id="selectInvtyClsByInvtyClsEncd" parameterType="String" resultType="InvtyCls">
+    select 
+    <include refid="Base_Column_List" />
+    from invty_cls
+    where invty_cls_encd = #{invtyClsEncd}
+  </select>
+  
+  <!--   查询所有存货分类 -->
+  <select id="selectInvtyCls"  resultType="InvtyCls">
+    select 
+    <include refid="Base_Column_List" />
+    from invty_cls
+     <where>
+        <if test="invtyClsNm != null and invtyClsNm != ''">
+            AND inc.invty_cls_nm like "%"#{invtyClsNm}"%"
+        </if>
+        <if test="invtyClsEncd!= null and invtyClsEncd!= ''">
+			AND SUBSTRING(ind.invty_cls_encd,1,LENGTH(#{invtyClsEncd}))=#{invtyClsEncd}
+		</if>
+  	</where>
+  </select>
+  
+  <select id="selectInvtyClsSuper" parameterType="String" resultType="InvtyCls">
+  	SELECT * from invty_cls as a WHERE a.invty_cls_encd in(
+		SELECT
+			b.pid
+		FROM
+			invty_cls b
+		WHERE 1=1
+		AND b.invty_cls_encd = #{invtyClsEncd} 
+	)
+  	
+  </select>
+</mapper>

@@ -1,0 +1,644 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>京东面单打印</title>
+		<link rel="stylesheet" href="../../assets/css/print/print.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/JsBarcode.all.js"></script>
+		<!--<script type="text/javascript" src="../../assets/js/common/jquery-barcode.js"></script>-->
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/art-template.js"></script>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			.top {
+				border: 1px solid #CCCCCC;
+				width: 480px;
+				height: 280px;
+			}
+			.top .top_1,.top .top_2,.top .top_3,.top .top_4 {
+				width: 100%;
+			}
+			.top .top_1 {
+				border-bottom: 1px solid #CCCCCC;
+				height: 30%;
+				text-align: center;
+			}
+			.top .top_2 {
+				border-bottom: 1px solid #CCCCCC;
+				height: 25%;
+			}
+			.top .top_3 {
+				height: 10%;
+				width: 100%;
+				border-bottom: 1px solid #CCCCCC;
+			}
+			.top .top_4 {
+				height: 35%;
+			}
+			.top .top_2 .top_2_t {
+				width: 50%;
+				height: 100%;
+				border-right: 1px solid #CCCCCC;
+				float: left;
+			}
+			.top .top_2 .top_2_b {
+				width: 49.7%;
+				height: 100%;
+				float: right;
+			}
+			.top_3 .a, .top_3 .b {
+				display: inline-block;
+			}
+			.top_3 .a {
+				width: 50%;
+				height: 100%;
+				border-right: 1px solid #CCCCCC;
+				float: left;
+			}
+			.top_3 .b {
+				width: 49.7%;
+				height: 100%;
+				float: right;
+			}
+			.top_3 .a .top_3_mt {
+				height: 100%;
+				width: 79.5%;
+				float: right;
+			}
+			.top_3 .a .top_3_t {
+				height: 100%;
+				width: 8%;
+				float: left;
+				border-right: 1px solid #CCCCCC;
+			}
+			.top_3 .b .top_3_b {
+				height: 100%;
+				width: 79.5%;
+				float: right;
+			}
+			.top_3 .b .top_3_mb {
+				height: 100%;
+				width: 20%;
+				float: left;
+				border-right: 1px solid #CCCCCC;
+			}
+			.top_2_b, .top_2_t {
+				display: inline-block;
+			}
+			.top_4 .top_4_a,.top_4  .top_4_b,.top_4  .top_4_c {
+				height: 100%;
+			}
+			.top .top_4_b {
+				width: 50%;
+				float: left;
+				border-right: 1px solid #CCCCCC;
+				
+			}
+			.top .top_4_c {
+				width: 46%;
+				float: right;
+			}
+			.top .top_4_a {
+				width: 4%;
+				float: left;
+				border-right: 1px solid #CCCCCC;
+			}
+			.top_4_c_m {
+				border-bottom: 1px solid #CCCCCC;
+				height: 50%;
+			}
+			.top_4_c_b {
+				height: 50%;
+			}
+			.top_4_c_m_t, .top_4_c_m_b, .top_4_c_b_t, .top_4_c_b_b {
+				height: 100%;
+			}
+			.top_4_c_m_t, .top_4_c_b_t {
+				width: 30px;
+				border-right: 1px solid #CCCCCC;
+				float: left;
+			}
+			.top_4_c_m_b, .top_4_c_b_b{
+				width: 158px;
+				float: right;
+			}
+			#fg1 {
+				height: 30px;
+				width: 480px;
+				text-align: center;
+			}
+			#fg2 {
+				height: 15px;
+				width: 480px;
+				text-align: center;
+			}
+			.bottom {
+				border: 1px solid #CCCCCC;
+				width: 480px;
+				height: 231px;
+			}
+			.bottom .bottom_1 {
+				width: 100%;
+				height: 15%;
+				border-bottom: 1px solid #CCCCCC;
+				text-align: center;
+			    font-size: 23px;
+			    font-weight: 600;
+			}
+			.bottom .bottom_2 {
+				width: 100%;
+				height: 31%;
+				border-bottom: 1px solid #CCCCCC;
+				
+			}
+			.bottom .bottom_3 {
+				width: 100%;
+				height: 11%;
+				border-bottom: 1px solid #CCCCCC;
+				
+			}
+			.bottom .bottom_4 {
+				width: 100%;
+				height: 22%;
+				border-bottom: 1px solid #CCCCCC;
+				
+			}
+			.bottom .bottom_5 {
+				width: 100%;
+				height: 21%;
+				
+			}
+			.bottom_5_t {
+				font-size: 12px;
+			}
+			.bottom .bottom_2 .bottom_2_t, .bottom .bottom_3 .bottom_3_t, .bottom .bottom_4 .bottom_4_t, .bottom .bottom_5 .bottom_5_t {
+				float: left;
+				height: 100%;
+				width: 270px;
+				border-right: 1px solid #CCCCCC;
+			}
+			.bottom .bottom_2 .bottom_2_b, .bottom .bottom_3 .bottom_3_b, .bottom .bottom_4 .bottom_4_b, .bottom .bottom_5 .bottom_5_b {
+				float: right;
+				height: 100%;
+				width: 208px;
+			}
+			.bottom_3_t_l {
+				width: 120px;
+				height: 100%;
+				float: left;
+				border-right: 1px solid #CCCCCC;
+				text-align: center;
+			    font-size: 16px;
+			    font-weight: 600;
+			}
+			.bottom_3_t_r {
+				width: 149px;
+				height: 100%;
+				float: right;
+				text-align: center;
+			    font-size: 16px;
+			    font-weight: 600;
+			}
+			.bottom_3_b_l {
+				width: 110px;
+				height: 100%;
+				float: left;
+				border-right: 1px solid #CCCCCC;
+			}
+			.bottom_3_b_r {
+				width: 98px;
+				height: 100%;
+				float: right;
+			}
+			.bottom_4 div, .bottom_5 div {
+				font-size: 10px!important;
+			}
+			.all {
+				width: 500px;
+				height: 560px;
+				padding: 10px;
+				display: inline-block;
+	       		position: relative;
+			}
+			.all_t {
+				width: 480px;
+				height: 550px;
+				position: absolute;
+		        top: 0;
+		        right: 0;
+		        bottom: 0;
+		        left: 0;
+		        margin: auto;
+			}
+			.search1 {
+				display: inline-block;
+			}
+			
+			.print_dy .back {
+				margin-left: 20px;
+				margin-bottom: 10px;
+			}
+			
+			.other-ele {
+				display: inline-block;
+			}
+			
+			@media print {
+				@page {
+					size: A4 portrait;
+					/*// A4大小 纵向*/
+				}
+				.other-ele {
+					/*// 打印时将不需要的元素隐藏*/
+					display: none;
+				}
+				.pdf-title {
+					/*// 只在打印时候显示的元素*/
+					display: block;
+				}
+				.panel-sm {
+					/*// 打印时候改变某些元素的样式*/
+					margin: 0;
+					border: 1px solid #bce8f1;
+				}
+			}
+			.top_1 img {
+			    display: inline-block;
+			    width: 80%;
+			    height: 100%;
+			    margin-left: -94px;
+			}
+			.bottom_2_t img {
+			    display: inline-block;
+			    width: 94%;
+			    height: 61%;
+			}
+			#sfd, #mdd {
+				width: 10px;
+			    position: absolute;
+			    margin-top: 12px;
+			}
+			#card1, #card2, #card3, #card4 {
+				margin-left: 20px;
+			}
+			#dress_s, #dress_m {
+				font-size: 20px;
+    			font-weight: 600;
+			}
+			#encd_s, #encd_m {
+				font-size: 25px;
+    			font-weight: 600;
+			}
+			#card2, #card4 {
+				text-align: center;
+				margin-top: 12px;
+			}
+			#cen {
+				text-align: center;
+			    font-size: 18px;
+			    font-weight: 600;
+			}
+			#cen span {
+				display: inline-block;
+				position: absolute;
+				top: auto;
+			}
+			.top_3_mb {
+				text-align: center;
+			}
+			.top_3_mb span {
+				display: inline-block;
+				position: absolute;
+				top: auto;
+				font-size: 20px;
+			}
+			.pin{
+				height:3px;
+			}
+			#invtyNm{
+				float: left;
+			}
+			.qty{
+				float: left;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="purchaseTit other-ele">
+			<div class="buttons other-ele">
+				<button class="other-ele print_dy">打印面单</button>
+			</div>
+		</div>
+		<div id="content"></div>
+
+		<script id="test" type="text/html">
+
+			{{each data as item i}}
+			<div class="all">
+				<div class="all_t">
+					<div class="top">
+						<div class="top_1">
+							<img class="barcode{{i}}" />
+						</div>
+						<div class="top_2">
+							<div class="top_2_t">
+								<div id="sfd">始发地</div>
+								<div id="card1">
+									<span id="dress_s">
+										{{item.bigShotCode}}										
+									</span>
+								</div>
+								<div id="card2">
+									<span id="encd_s">
+										{{item.bigShotName}}										
+									</span>
+								</div>
+							</div>
+							<div class="top_2_b">
+								<div id="mdd">目的地</div>
+								<div id="card3">
+									<span id="dress_m">
+										{{item.gatherCenterName}}										
+									</span>
+								</div>
+								<div id="card4">
+									<span id="encd_m">
+										{{item.gatherCenterCode}}										
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="top_3">
+							<div class="a">
+								<div class="top_3_t"></div>
+								<div class="top_3_mt">
+									<div>{{item.branchName}}</div>									
+								</div>
+							</div>
+							<div class="b">
+								<div class="top_3_mb">
+									<span>
+										{{item.branchCode}}
+									</span>
+								</div>
+								<div class="top_3_b">
+									<div id="cen">
+										<span>1/1</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="top_4">
+							<div class="top_4_a">
+								<div>
+									收件信息
+								</div>
+							</div>
+							<div class="top_4_b">
+								<div>
+									<span>{{item.recAddress}}</span>
+								</div>
+								<div>
+									<span>{{item.recName}}</span>:
+									<span>{{item.recMobile}}</span>
+								</div>
+							</div>
+							<div class="top_4_c">
+								<div class="top_4_c_m">
+									<div class="top_4_c_m_t">
+										<div>
+											客户签字
+										</div>
+									</div>
+									<div class="top_4_c_m_b"></div>
+								</div>
+								<div class="top_4_c_b">
+									<div class="top_4_c_b_t"></div>
+									<div class="top_4_c_b_b"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="fg1">
+						<span></span>
+					</div>
+					<div class="bottom">
+						<div class="bottom_1">
+							<span>
+								运单号：{{item.expressCode}}
+							</span>
+						</div>
+						<div class="bottom_2">
+							<div class="bottom_2_t">
+								收件信息：{{item.recName}} {{item.recMobile}}
+								<img id="barcode{{i}}"/>
+							</div>
+							<div class="bottom_2_b">
+								<div>
+									<span>
+										备注：{{each item.sellSnglSubMap j}}
+										<div class="pin">
+											
+											<div id="invtyNm">
+												<span>{{j.invtyNm}}</span>
+											</div>
+											<div>
+												<span class="fr qty">{{j.qty}}</span>
+											</div>
+											
+										</div>
+										{{/each}}
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="bottom_3">
+							<div class="bottom_3_t">
+								<div class="bottom_3_t_l">
+									<span>{{item.secondSectionCode}}</span>
+								</div>
+								<div class="bottom_3_t_r">
+									<span>特惠送</span>
+								</div>
+							</div>
+							<div class="bottom_3_b">
+								<div class="bottom_3_b_l"></div>
+								<div class="bottom_3_b_r"></div>
+							</div>
+						</div>
+						<div class="bottom_4">
+							<div class="bottom_4_t">
+								<div>
+									<span>
+										寄方信息：
+									</span>
+								</div>
+								<div>
+									<span>
+										{{item.shipProvince}}{{item.shipCity}}{{item.shipCounty}}{{item.shipAddress}}
+									</span>
+								</div>
+								<div>
+									<span>
+										{{item.shiperName}}{{item.shiperPhone}}
+									</span>
+								</div>
+							</div>
+							<div class="bottom_4_b">
+								<div>
+									<span>
+										商家ID：010K345716
+									</span>
+								</div>
+								<div>
+									<span>
+										B商家订单号：{{item.thirdSectionCode}}
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="bottom_5">
+							<div class="bottom_5_t">
+								<span>请您确认包裹完好，保留此包裹联时，代表您已经正常签收并确认外包裹完好http://www.jdwl.com     客服电话：400-603-3600</span>
+							</div>
+							<div class="bottom_5_b">
+								<div>
+									<span>
+										始发城市：{{item.shipCity}}
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="fg2">
+						<span></span>
+					</div>
+				</div>
+			</div>
+			{{/each}}
+
+		</script>
+		<script>
+			var sum = localStorage.getItem("sum")
+			var grs = localStorage.getItem("grs")
+			console.log(sum,grs)
+			var savedata = {
+				reqHead,
+				"reqBody": {
+					"ordrNum":sum
+				}
+			};
+			var saveData = JSON.stringify(savedata);
+			console.log(saveData)
+			if(grs.length != 0) {
+				$("#serial_tab").show()
+				$("#serial_tab").css("opacity",1)
+				$("#purchaseOrder").hide()
+				$.ajax({
+					type: "post",
+					contentType: 'application/json; charset=utf-8',
+					url: url + '/mis/ec/logisticsTab/selectPrint',
+					async: false,
+					data: saveData,
+					dataType: 'json',
+					success: function(data) {
+						console.log(data)
+						var list = data.respBody.list
+						console.log(list)
+						document.getElementById('content').innerHTML = template('test', {data: list});
+						for(var i = 0;i<list.length;i++) {
+							JsBarcode(".barcode"+i, list[i].expressCode + '-1-1-', {
+							  format:"code128",
+							  displayValue:true,
+							  fontSize:24,
+							});
+							JsBarcode("#barcode"+i, list[i].expressCode + '-1-1-', {
+							  format:"code128",
+							  displayValue:true,
+							  fontSize:24,
+							});
+						}
+					},
+					error:function(error) {
+						console.log(error)
+					}
+				})
+			}
+
+			
+			function CloseAfterPrint() {
+				if(tata = document.execCommand("print")) {
+					prints()
+				}
+			}
+			
+			$(document).on('click', '.print_dy', function() {
+				if(confirm("请确认无误后选择打印")) {
+					CloseAfterPrint();
+				}
+			})
+			
+			function prints() {
+				var sum = localStorage.getItem("sum")
+				var savedata = {
+					reqHead,
+					"reqBody": {
+						"logisticsNum":sum
+					}
+				};
+				var saveData = JSON.stringify(savedata);
+				console.log(saveData)
+				$.ajax({
+					type: "post",
+					contentType: 'application/json; charset=utf-8',
+					url: url + '/mis/ec/logisticsTab/print',
+					async: true,
+					data: saveData,
+					dataType: 'json',
+					success: function(data) {
+						console.log(data)
+						localStorage.removeItem("sum")
+						localStorage.removeItem("grs")
+						window.close()
+					}
+				})
+			}
+			function getNowFormatDate() {
+		        var date = new Date();
+		        var seperator1 = "-";
+		        var year = date.getFullYear();
+		        var month = date.getMonth() + 1;
+		        var strDate = date.getDate();
+		        if (month >= 1 && month <= 9) {
+		            month = "0" + month;
+		        }
+		        if (strDate >= 0 && strDate <= 9) {
+		            strDate = "0" + strDate;
+		        }
+		        var currentdate = year + seperator1 + month + seperator1 + strDate;
+		        return currentdate;
+		   }
+			$(function(){
+				var tDate = getNowFormatDate()
+				$("#fg2 span").text(tDate)
+			})
+			
+		</script>
+	</body>
+
+</html>

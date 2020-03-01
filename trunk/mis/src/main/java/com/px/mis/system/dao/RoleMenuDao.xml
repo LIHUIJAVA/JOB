@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.system.dao.RoleMenuDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.system.entity.RoleMenu">
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="menu_id" jdbcType="VARCHAR" property="menuId" />
+  </resultMap>
+  <insert id="insert" parameterType="com.px.mis.system.entity.RoleMenu">
+	INSERT INTO role_menu (role_id,menu_id)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.roleId,jdbcType=VARCHAR}, #{item.menuId,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  <select id="selectRoleMenu" parameterType="java.lang.String" resultType="com.px.mis.system.entity.Menu">
+  	SELECT menu.*
+  	FROM menu left join role_menu on role_menu.menu_id = menu.id
+  	WHERE role_menu.role_id = #{roleId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  role_menu
+  	WHERE role_id = #{roleId}
+  </delete>
+  
+</mapper>

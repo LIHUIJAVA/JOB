@@ -1,0 +1,90 @@
+ * {
+ 	margin: 0;
+ 	padding: 0;
+ 	list-style: none;
+ }
+ 
+ .buoyinlet {
+ 	padding: 10px 0;
+ }
+ 
+ .business,
+ .folder,
+ .commen {
+ 	width: 100%;
+ 	border-bottom: 2px dashed #C0C0C0;
+ }
+ 
+ .business ol,
+ .folder ol,
+ .commen ol {
+ 	display: flex;
+ 	margin-bottom: 10px;
+ }
+ 
+ .business ol li,
+ .folder ol li,
+ .commen ol li {
+ 	text-align: center;
+ 	padding: 5px 25px;
+ }
+ 
+ .business ol li img,
+ .folder ol li img,
+ .commen ol li img {
+ 	width: 70%;
+ }
+ 
+ .business ol li span,
+ .folder ol li span,
+ .commen ol li span {
+ 	display: block;
+ 	white-space: nowrap;
+ 	padding-top: 10px;
+ }
+
+.commen {
+	border-bottom: none;
+}
+
+.business h3,
+.folder h3,
+.commen h3 {
+	font-size: 20px;
+	padding-top: 10px;
+}
+
+.business ol,
+.folder ol,
+.commen ol {
+	box-sizing: border-box;
+	display: flex;
+}
+
+.business ol li,
+.folder ol li,
+.commen ol li {
+	width: 20%;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+}
+
+.business ol li img,
+.folder ol li img,
+.commen ol li img {
+	width: 50%;
+	height: 70%;
+}
+
+.business ol li span,
+.folder ol li span,
+.commen ol li span {
+	display: block;
+	white-space: nowrap;
+}
+
+.bgColor {
+	border:1px solid dodgerblue;
+	cursor: pointer;
+}

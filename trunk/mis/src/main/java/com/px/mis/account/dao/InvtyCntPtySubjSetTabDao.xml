@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtyCntPtySubjSetTabDao">
+	<resultMap id="BaseResultMap" type="com.px.mis.account.entity.InvtyCntPtySubjSetTab" autoMapping="true">
+		<id column="ordr_num" property="ordrNum" />
+		<result column="invty_encd" property="invtyEncd" />
+		<result column="invty_big_cls_encd" property="invtyBigClsEncd" />
+		<result column="dept_id" property="deptId" />
+		<result column="recv_send_cate_id" property="recvSendCateId" />
+		<result column="cnt_pty_subj_id" property="cntPtySubjId" />
+		<result column="tees_subj_encd" property="teesSubjEncd" />
+		<result column="invtyNm" property="invtyNm"/>
+		<result column="invtyBigClsNm" property="invtyBigClsNm" />
+		<result column="deptNm" property="deptNm" />
+		<result column="cntPtySubjNm" property="cntPtySubjNm" />
+		<result column="teesSubjNm" property="teesSubjNm"/>
+		<result column="memo" property="memo" />
+	</resultMap>
+	<!-- 分页查询所有 -->
+	<select id="selectInvtyCntPtySubjSetTabList" parameterType="Map" resultType="com.px.mis.account.entity.InvtyCntPtySubjSetTab">
+	 SELECT  a.ordr_num ordrNum,a.invty_encd invtyEncd,a.invty_big_cls_encd invtyBigClsEncd,
+	 		 a.dept_id deptId,a.recv_send_cate_id recvSendCateId,
+	 		 a.cnt_pty_subj_id cntPtySubjId,a.tees_subj_encd teesSubjEncd,a.memo memo,
+	 		 b.invty_nm invtyNm,c.invty_cls_nm invtyBigClsNm,
+	 		 f.recv_send_cate_nm recvSendCateNm,g.subj_nm cntPtySubjNm,
+	 		 h.subj_nm teesSubjNm
+	 FROM invty_cnt_pty_subj_set_tab a LEFT JOIN  invty_doc b ON a.invty_encd = b.invty_encd
+									   LEFT JOIN invty_cls c ON a.invty_big_cls_encd = c.invty_cls_encd
+									   LEFT JOIN recv_send_cate f ON a.recv_send_cate_id = f.recv_send_cate_id
+									   LEFT JOIN acct_itm_doc g ON a.cnt_pty_subj_id = g.subj_id
+									   LEFT JOIN acct_itm_doc h ON a.tees_subj_encd = h.subj_id
+	 GROUP BY a.recv_send_cate_id,a.invty_encd,a.invty_big_cls_encd,a.cnt_pty_subj_id,a.tees_subj_encd
+	 ORDER BY a.ordr_num
+	 <if test="index != null and  num != null">
+	 	 LIMIT #{index},#{num}
+	 </if>
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectInvtyCntPtySubjSetTabCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM invty_cnt_pty_subj_set_tab
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectInvtyCntPtySubjSetTabByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.InvtyCntPtySubjSetTab">
+	 SELECT  a.ordr_num ordrNum,a.invty_encd invtyEncd,a.invty_big_cls_encd invtyBigClsEncd,
+	 		 a.dept_id deptId,a.recv_send_cate_id recvSendCateId,
+	 		 a.cnt_pty_subj_id cntPtySubjId,a.tees_subj_encd teesSubjEncd,a.memo memo,
+	 		 b.invty_nm invtyNm,c.invty_cls_nm invtyBigClsNm,
+	 		 f.recv_send_cate_nm recvSendCateNm,g.subj_nm cntPtySubjNm,
+	 		 h.subj_nm teesSubjNm
+	 FROM invty_cnt_pty_subj_set_tab a LEFT JOIN  invty_doc b ON a.invty_encd = b.invty_encd
+									   LEFT JOIN invty_cls c ON a.invty_big_cls_encd = c.invty_cls_encd
+									   LEFT JOIN recv_send_cate f ON a.recv_send_cate_id = f.recv_send_cate_id
+									   LEFT JOIN acct_itm_doc g ON a.cnt_pty_subj_id = g.subj_id
+									   LEFT JOIN acct_itm_doc h ON a.tees_subj_encd = h.subj_id
+	 WHERE a.ordr_num=#{ordrNum}
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertInvtyCntPtySubjSetTab" parameterType="com.px.mis.account.entity.InvtyCntPtySubjSetTab">
+		INSERT INTO invty_cnt_pty_subj_set_tab(ordr_num,invty_encd,invty_big_cls_encd,dept_id,
+		recv_send_cate_id,cnt_pty_subj_id,tees_subj_encd,memo)
+		VALUES(#{ordrNum},#{invtyEncd},#{invtyBigClsEncd},#{deptId},
+		#{recvSendCateId},#{cntPtySubjId},#{teesSubjEncd},#{memo})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteInvtyCntPtySubjSetTabByOrdrNum" parameterType="int">
+	 DELETE FROM invty_cnt_pty_subj_set_tab
+	 WHERE ordr_num=#{ordrNum}
+	</delete>
+	
+	<!-- 根据主键批量删除 -->
+	<delete id="deleteInvtyCntPtySubjSetTabList" parameterType="Map">
+	 DELETE FROM invty_cnt_pty_subj_set_tab
+	 WHERE ordr_num in (${ordrNum})
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateInvtyCntPtySubjSetTabByOrdrNum" parameterType="com.px.mis.account.entity.InvtyCntPtySubjSetTab">
+	 UPDATE invty_cnt_pty_subj_set_tab
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="invtyBigClsEncd != null">
+        invty_big_cls_encd = #{invtyBigClsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=VARCHAR},
+      </if>
+      <if test="recvSendCateId != null">
+        recv_send_cate_id = #{recvSendCateId,jdbcType=VARCHAR},
+      </if>
+      <if test="cntPtySubjId != null">
+        cnt_pty_subj_id = #{cntPtySubjId,jdbcType=VARCHAR},
+      </if>
+      <if test="teesSubjEncd != null">
+        tees_subj_encd = #{teesSubjEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+     
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+	
+	
+</mapper>

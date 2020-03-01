@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.MthTermBgnTabDao">
+	<!-- 分页查询所有 -->
+	<select id="selectMthTermBgnTabList" parameterType="Map" resultType="com.px.mis.account.entity.MthTermBgnTab">
+	 SELECT a.ordr_num ordrNum,a.acct_yr acctYr,a.accti_mth acctiMth,a.whs_encd whsEncd,a.invty_encd invtyEncd,
+			a.qty qty,a.bat bat,a.uprc uprc,a.amt amt,a.cntn_tax_uprc cntnTaxUprc,
+			a.prc_tax_sum prcTaxSum,a.prdc_dt prdcDt,a.qua_guar_per quaGuarPer,a.invldtn_dt invldtnDt,
+	 		b.whs_nm whsNm,c.invty_nm invtyNm
+	 FROM mth_term_bgn_tab a
+	 LEFT JOIN whs_doc b
+	 ON a.whs_encd = b.whs_encd
+	 LEFT JOIN invty_doc c
+	 ON a.invty_encd = c.invty_encd
+	 ORDER BY a.ordr_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectMthTermBgnTabByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.MthTermBgnTab">
+	 SELECT a.ordr_num ordrNum,a.acct_yr acctYr,a.accti_mth acctiMth,a.whs_encd whsEncd,a.invty_encd invtyEncd,
+			a.qty qty,a.bat bat,a.uprc uprc,a.amt amt,a.cntn_tax_uprc cntnTaxUprc,
+			a.prc_tax_sum prcTaxSum,a.prdc_dt prdcDt,a.qua_guar_per quaGuarPer,a.invldtn_dt invldtnDt,
+	 		b.whs_nm whsNm,c.invty_nm invtyNm
+	 FROM mth_term_bgn_tab a
+	 LEFT JOIN whs_doc b
+	 ON a.whs_encd = b.whs_encd
+	 LEFT JOIN invty_doc c
+	 ON a.invty_encd = c.invty_encd
+	 WHERE a.ordr_num=#{ordrNum}
+	</select>
+	<select id="selectMthTermInitList" parameterType="Map" resultType="com.px.mis.account.entity.MthTermBgnTab">
+		SELECT
+			a.ordr_num ordrNum,a.acct_yr acctYr,a.accti_mth acctiMth,a.whs_encd whsEncd,a.invty_encd invtyEncd,
+			a.qty qty,a.bat bat,a.uprc uprc,a.amt amt,a.cntn_tax_uprc cntnTaxUprc,
+			a.prc_tax_sum prcTaxSum,a.prdc_dt prdcDt,a.qua_guar_per quaGuarPer,a.invldtn_dt invldtnDt
+		FROM
+			mth_term_bgn_tab as a
+		WHERE 1=1
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND a.invty_encd = #{invtyEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND a.bat = #{batNum}
+		</if>
+		<if test="whsEncd !=null and whsEncd !=''">
+			AND a.whs_encd = #{whsEncd}
+		</if>
+		<if test="year !=null and year !=''">
+			AND a.acct_yr = #{year}
+		</if>
+		<if test="month !=null and month !=''">
+			AND a.accti_mth = #{month}
+		</if>
+	</select>
+	<select id="countSelectMthTermInit" parameterType="Map" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			mth_term_bgn_tab as a
+		WHERE 1=1
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND a.invty_encd = #{invtyEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND a.bat = #{batNum}
+		</if>
+		<if test="whsEncd !=null and whsEncd !=''">
+			AND a.whs_encd = #{whsEncd}
+		</if>
+		<if test="year !=null and year !=''">
+			AND a.acct_yr = #{year}
+		</if>
+		<if test="month !=null and month !=''">
+			AND a.accti_mth = #{month}
+		</if>
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectMthTermBgnTabCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM mth_term_bgn_tab
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertMthTermBgnTab" parameterType="com.px.mis.account.entity.MthTermBgnTab">
+		INSERT INTO mth_term_bgn_tab
+		VALUES(null,#{acctYr},#{acctiMth},#{whsEncd},#{invtyEncd},
+			#{qty},#{bat},#{uprc},#{amt},#{cntnTaxUprc},
+			#{prcTaxSum},#{prdcDt},#{quaGuarPer},#{invldtnDt})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteMthTermBgnTabByOrdrNum" parameterType="int">
+	 DELETE FROM mth_term_bgn_tab
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateMthTermBgnTabByOrdrNum" parameterType="com.px.mis.account.entity.MthTermBgnTab">
+	 UPDATE mth_term_bgn_tab
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="acctYr != null">
+        acct_yr = #{acctYr,jdbcType=VARCHAR},
+      </if>
+      <if test="acctiMth != null">
+        accti_mth = #{acctiMth,jdbcType=VARCHAR},
+      </if>
+      <if test="whsEncd != null">
+        whs_encd = #{whsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="bat != null">
+        bat = #{bat,jdbcType=VARCHAR},
+      </if>
+      <if test="uprc != null">
+        uprc = #{uprc,jdbcType=DECIMAL},
+      </if>
+      <if test="amt != null">
+        amt = #{amt,jdbcType=DECIMAL},
+      </if>
+      <if test="cntnTaxUprc != null">
+        cntn_tax_uprc = #{cntnTaxUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="prcTaxSum != null">
+        prc_tax_sum = #{prcTaxSum,jdbcType=DECIMAL},
+      </if>
+      <if test="prdcDt != null">
+        prdc_dt = #{prdcDt,jdbcType=DATE},
+      </if>
+      <if test="quaGuarPer != null">
+        qua_guar_per = #{quaGuarPer,jdbcType=VARCHAR},
+      </if>
+      <if test="invldtnDt != null">
+        invldtn_dt = #{invldtnDt,jdbcType=DATE},
+      </if>
+      
+      
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+</mapper>

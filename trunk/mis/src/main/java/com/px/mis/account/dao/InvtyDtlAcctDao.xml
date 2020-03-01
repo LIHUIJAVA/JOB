@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtyDtlAcctDao">
+	<!-- 存货明细账分页查询所有 -->
+	<select id="selectInvtyDtlAcctList" parameterType="Map" resultType="com.px.mis.account.entity.InvtyDtlAcct">
+	 SELECT  ordr_num ordrNum,form_id formId,form_dt formDt,recv_send_ind recvSendInd,sell_typ_id sellTypId,
+			 crspd_sell_typ_sngl_num crspdSellTypSnglNum,out_into_whs_adj_sngl_sub_tab_ind outIntoWhsAdjSnglSubtabInd,setup_pers setupPers,setup_tm setupTm,is_nt_chk isNtChk,
+			 chkr chkr,chk_tm chkTm,is_nt_book_entry isNtBookEntry,book_entry_pers bookEntryPers,book_entry_tm bookEntryTm,
+			 accti_prd acctiPrd,vouch_id vouchId,vouch_cate vouchCate,vouch_dt vouchDt,vouch_memo vouchMemo,
+			 invty_subj_id invtySubjId,cnt_pty_subj_id cntPtySubjId,form_typ formTyp,biz_typ_id bizTypId,purs_typ_id pursTypId,
+			 recv_send_cate_id recvSendCateId,invty_encd invtyEncd,provr_id provrId,cust_id custId,purs_ordr_num pursOrdrNum,
+			 purs_to_gds_id pursToGdsId,inv_sub_tab_ind invSubTabInd,rtn_goods_sngl_sub_tab_ind rtnGoodsSnglSubtabInd,biz_mem_id bizMemId,incom_qty incomQty,
+			 delv_qty delvQty,incom_uprc incomUprc,delv_uprc delvUprc,incom_amt incomAmt,delv_amt delvAmt,
+			 proj_id projId,bat_num batNum,prdc_dt prdcDt,qua_gua_per quaGuaPer,invldtn_dt invldtnDt,
+			 sell_sngl_num sellSnglNum,sell_sngl_mas_tab_id sellSnglMasTabId,sell_sngl_sub_tab_id sellSnglSubTabId,purs_ordr_sub_tab_id pursOrdrSubTabId,memo memo
+	 FROM  invty_dtl_acct
+	 ORDER BY ordr_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectInvtyDtlAcctByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.InvtyDtlAcct">
+	 SELECT  ordr_num ordrNum,form_id formId,form_dt formDt,recv_send_ind recvSendInd,sell_typ_id sellTypId,
+			 crspd_sell_typ_sngl_num crspdSellTypSnglNum,out_into_whs_adj_sngl_sub_tab_ind outIntoWhsAdjSnglSubtabInd,setup_pers setupPers,setup_tm setupTm,is_nt_chk isNtChk,
+			 chkr chkr,chk_tm chkTm,is_nt_book_entry isNtBookEntry,book_entry_pers bookEntryPers,book_entry_tm bookEntryTm,
+			 accti_prd acctiPrd,vouch_id vouchId,vouch_cate vouchCate,vouch_dt vouchDt,vouch_memo vouchMemo,
+			 invty_subj_id invtySubjId,cnt_pty_subj_id cntPtySubjId,form_typ formTyp,biz_typ_id bizTypId,purs_typ_id pursTypId,
+			 recv_send_cate_id recvSendCateId,invty_encd invtyEncd,provr_id provrId,cust_id custId,purs_ordr_num pursOrdrNum,
+			 purs_to_gds_id pursToGdsId,inv_sub_tab_ind invSubTabInd,rtn_goods_sngl_sub_tab_ind rtnGoodsSnglSubtabInd,biz_mem_id bizMemId,incom_qty incomQty,
+			 delv_qty delvQty,incom_uprc incomUprc,delv_uprc delvUprc,incom_amt incomAmt,delv_amt delvAmt,
+			 proj_id projId,bat_num batNum,prdc_dt prdcDt,qua_gua_per quaGuaPer,invldtn_dt invldtnDt,
+			 sell_sngl_num sellSnglNum,sell_sngl_mas_tab_id sellSnglMasTabId,sell_sngl_sub_tab_id sellSnglSubTabId,purs_ordr_sub_tab_id pursOrdrSubTabId,memo memo
+	 FROM  invty_dtl_acct 
+	 WHERE ordr_num=#{ordrNum}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectInvtyDtlAcctCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM invty_dtl_acct
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertInvtyDtlAcct" parameterType="com.px.mis.account.entity.InvtyDtlAcct">
+		INSERT INTO invty_dtl_acct
+		VALUES(null,#{formId},#{formDt},#{recvSendInd},#{sellTypId},
+		#{crspdSellTypSnglNum},#{outIntoWhsAdjSnglSubtabInd},#{setupPers},now(),#{isNtChk},
+				#{chkr},#{chkTm},#{isNtBookEntry},#{bookEntryPers},#{bookEntryTm},
+				#{acctiPrd},#{vouchId},#{vouchDt},#{vouchCate},#{vouchMemo},
+				#{invtySubjId},#{cntPtySubjId},#{formTyp},#{bizTypId},#{pursTypId},
+				#{recvSendCateId},#{invtyEncd},#{provrId},#{custId},#{pursOrdrNum},
+				#{pursToGdsId},#{invSubTabInd},#{rtnGoodsSnglSubtabInd},#{bizMemId},#{incomQty},
+				#{delvQty},#{incomUprc},#{delvUprc},#{incomAmt},#{delvAmt},
+				#{projId},#{batNum},#{prdcDt},#{quaGuaPer},#{invldtnDt},
+				#{sellSnglNum},#{sellSnglMasTabId},#{sellSnglSubTabId},#{pursOrdrSubTabId},#{memo})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteInvtyDtlAcctByOrdrNum" parameterType="int">
+	 DELETE FROM invty_dtl_acct
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateInvtyDtlAcctByOrdrNum" parameterType="com.px.mis.account.entity.InvtyDtlAcct">
+	 UPDATE invty_dtl_acct
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="formId != null">
+        form_id = #{formId,jdbcType=VARCHAR},
+      </if>
+      <if test="formDt != null">
+        form_dt = #{formDt,jdbcType=DATE},
+      </if>
+      <if test="recvSendInd != null">
+        recv_send_ind = #{recvSendInd,jdbcType=VARCHAR},
+      </if>
+      <if test="sellTypId != null">
+        sell_typ_id = #{sellTypId,jdbcType=VARCHAR},
+      </if>
+      <if test="crspdSellTypSnglNum != null">
+        crspd_sell_typ_sngl_num = #{crspdSellTypSnglNum,jdbcType=VARCHAR},
+      </if>
+      <if test="outIntoWhsAdjSnglSubtabInd != null">
+        out_into_whs_adj_sngl_sub_tab_ind = #{outIntoWhsAdjSnglSubtabInd,jdbcType=VARCHAR},
+      </if>
+      <if test="setupPers != null">
+        setup_pers = #{setupPers,jdbcType=VARCHAR},
+      </if>
+      <if test="setupTm != null">
+        setup_tm = #{setupTm,jdbcType=DATE},
+      </if>
+      <if test="isNtChk != null">
+        is_nt_chk = #{isNtChk,jdbcType=INTEGER},
+      </if>
+      <if test="chkr != null">
+        chkr = #{chkr,jdbcType=VARCHAR},
+      </if>
+      <if test="chkTm != null">
+        chk_tm = #{chkTm,jdbcType=DATE},
+      </if>
+      <if test="isNtBookEntry != null">
+        is_nt_book_entry = #{isNtBookEntry,jdbcType=INTEGER},
+      </if>
+      <if test="bookEntryPers != null">
+        book_entry_pers = #{bookEntryPers,jdbcType=VARCHAR},
+      </if>
+      <if test="bookEntryTm != null">
+        book_entry_tm = #{bookEntryTm,jdbcType=DATE},
+      </if>
+      <if test="acctiPrd != null">
+        accti_prd = #{acctiPrd,jdbcType=VARCHAR},
+      </if>
+      <if test="vouchId != null">
+        vouch_id = #{vouchId,jdbcType=VARCHAR},
+      </if>
+      <if test="vouchDt != null">
+        vouch_dt = #{vouchDt,jdbcType=DATE},
+      </if>
+      <if test="vouchCate != null">
+        vouch_cate = #{vouchCate,jdbcType=VARCHAR},
+      </if>
+      <if test="vouchMemo != null">
+        vouch_memo = #{vouchMemo,jdbcType=VARCHAR},
+      </if>
+      <if test="invtySubjId != null">
+        invty_subj_id = #{invtySubjId,jdbcType=VARCHAR},
+      </if>
+      <if test="cntPtySubjId != null">
+        cnt_pty_subj_id = #{cntPtySubjId,jdbcType=BIGINT},
+      </if>
+      <if test="formTyp != null">
+        form_typ = #{formTyp,jdbcType=VARCHAR},
+      </if>
+      <if test="bizTypId != null">
+        biz_typ_id = #{bizTypId,jdbcType=VARCHAR},
+      </if>
+      <if test="pursTypId != null">
+        purs_typ_id = #{pursTypId,jdbcType=VARCHAR},
+      </if>
+      <if test="recvSendCateId != null">
+        recv_send_cate_id = #{recvSendCateId,jdbcType=VARCHAR},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="provrId != null">
+        provr_id = #{provrId,jdbcType=VARCHAR},
+      </if>
+      <if test="custId != null">
+        cust_id = #{custId,jdbcType=VARCHAR},
+      </if>
+      <if test="pursOrdrNum != null">
+        purs_ordr_num = #{pursOrdrNum,jdbcType=VARCHAR},
+      </if>
+      <if test="pursToGdsId != null">
+        purs_to_gds_id = #{pursToGdsId,jdbcType=VARCHAR},
+      </if>
+      <if test="invSubTabInd != null">
+        inv_sub_tab_ind = #{invSubTabInd,jdbcType=VARCHAR},
+      </if>
+      <if test="rtnGoodsSnglSubtabInd != null">
+        rtn_goods_sngl_sub_tab_ind = #{rtnGoodsSnglSubtabInd,jdbcType=BIGINT},
+      </if>
+      <if test="bizMemId != null">
+        biz_mem_id = #{bizMemId,jdbcType=VARCHAR},
+      </if>
+      <if test="incomQty != null">
+        incom_qty = #{incomQty,jdbcType=DECIMAL},
+      </if>
+      <if test="delvQty != null">
+        delv_qty = #{delvQty,jdbcType=DECIMAL},
+      </if>
+      <if test="incomUprc != null">
+        incom_uprc = #{incomUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="delvUprc != null">
+        delv_uprc = #{delvUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="incomAmt != null">
+        incom_amt = #{incomAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="delvAmt != null">
+        delv_amt = #{delvAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="projId != null">
+        proj_id = #{projId,jdbcType=VARCHAR},
+      </if>
+      <if test="batNum != null">
+        bat_num = #{batNum,jdbcType=VARCHAR},
+      </if>
+      <if test="prdcDt != null">
+        prdc_dt = #{prdcDt,jdbcType=DATE},
+      </if>
+      <if test="quaGuaPer != null">
+        qua_gua_per = #{quaGuaPer,jdbcType=VARCHAR},
+      </if>
+      <if test="invldtnDt != null">
+        invldtn_dt = #{invldtnDt,jdbcType=DATE},
+      </if>
+      <if test="sellSnglNum != null">
+        sell_sngl_num = #{sellSnglNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sellSnglMasTabId != null">
+        sell_sngl_mas_tab_id = #{sellSnglMasTabId,jdbcType=VARCHAR},
+      </if>
+      <if test="sellSnglSubTabId != null">
+        sell_sngl_sub_tab_id = #{sellSnglSubTabId,jdbcType=VARCHAR},
+      </if>
+      <if test="pursOrdrSubTabId != null">
+        purs_ordr_sub_tab_id = #{pursOrdrSubTabId,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+	
+	<insert id="inserDtlAccttList">
+	  insert into invty_dtl_acct (ordr_num, form_id, form_dt,recv_send_ind, sell_typ_id, crspd_sell_typ_sngl_num, 
+      	out_into_whs_adj_sngl_sub_tab_ind, setup_pers,setup_tm, is_nt_chk, chkr,chk_tm, is_nt_book_entry, book_entry_pers, 
+        book_entry_tm, accti_prd, vouch_id,vouch_dt, vouch_cate, vouch_memo,invty_subj_id, cnt_pty_subj_id, form_typ, 
+        biz_typ_id, purs_typ_id, recv_send_cate_id,invty_encd, provr_id, cust_id,purs_ordr_num, purs_to_gds_id, inv_sub_tab_ind, 
+        rtn_goods_sngl_sub_tab_ind, biz_mem_id, incom_qty,delv_qty, incom_uprc, delv_uprc, incom_amt, delv_amt, proj_id,bat_num,
+        prdc_dt, qua_gua_per,invldtn_dt, sell_sngl_num, sell_sngl_mas_tab_id, sell_sngl_sub_tab_id, purs_ordr_sub_tab_id, memo
+       )
+      values
+      <foreach collection="list" item="item" index="index" separator="," close=";">
+       ( #{item.ordrNum }, #{item.formId },#{item.formDt },#{item.recvSendInd}, #{item.sellTypId},#{item.crspdSellTypSnglNum}, 
+		 #{item.outIntoWhsAdjSnglSubTabInd },#{item.setupPers },#{item.setupTm}, #{item.isNtChk},#{item.chkr},#{item.chkTm},
+		 #{item.isNtBookEntry},#{item.bookEntryPers},#{item.bookEntryTm },#{item.acctiPrd},#{item.vouchId},#{item.vouchDt},
+		 #{item.vouchCate},#{item.vouchMemo},#{item.invtySubjId },#{item.cntPtySubjId},#{item.formTyp},#{item.bizTypId}, 
+		 #{item.pursTypId}, #{item.recvSendCateId},#{item.invtyEncd},#{item.provrId},#{item.custId},#{item.pursOrdrNum}, 
+		 #{item.pursToGdsId}, #{item.invSubTabInd},#{item.rtnGoodsSnglSubTabInd},#{item.bizMemId}, #{item.incomQty},#{item.delvQty}, 
+		 #{item.incomUprc}, #{item.delvUprc},#{item.incomAmt}, #{item.delvAmt}, #{item.projId }, 
+		 #{item.batNum}, #{item.prdcDt}, #{item.quaGuaPer}, #{item.invldtnDt}, #{item.sellSnglNum }, #{item.sellSnglMasTabId }, 
+		 #{item.sellSnglSubTabId}, #{item.pursOrdrSubTabId}, #{item.memo }
+		)
+		</foreach>
+	</insert>
+	
+</mapper>

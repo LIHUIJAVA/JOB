@@ -1,0 +1,974 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.WhsDocMapper">
+    <resultMap id="BaseResultMap" type="WhsDoc"
+               autoMapping="true">
+        <id column="whs_encd" property="whsEncd"/>
+        <result column="ordr_num" property="ordrNum"/>
+        <result column="whs_nm" property="whsNm"/>
+        <result column="dept_encd" property="deptEncd"/>
+        <result column="whs_addr" property="whsAddr"/>
+        <result column="dept_name" property="deptName"/>
+    </resultMap>
+
+
+    <!--添加仓库档案 -->
+    <insert id="insertWhsDoc" parameterType="WhsDoc">
+        insert into whs_doc
+        (whs_encd, whs_nm,
+         dept_encd, whs_addr, tel,
+         princ, valtn_mode,
+         crspd_bar_cd,
+         is_nt_prgr_gds_bit_mgmt, whs_attr,
+         sell_aval_qty_ctrl_mode,
+         invty_aval_qty_ctrl_mode, memo, is_nt_shop,
+         stp_use_dt, prov, cty,
+         cnty, dumy_whs, setup_pers,
+         setup_tm, real_whs)
+        values (#{whsEncd}, #{whsNm},
+                #{deptEncd}, #{whsAddr}, #{tel},
+                #{princ},
+                #{valtnMode}, #{crspdBarCd},
+                #{isNtPrgrGdsBitMgmt}, #{whsAttr},
+                #{sellAvalQtyCtrlMode},
+                #{invtyAvalQtyCtrlMode}, #{memo}, #{isNtShop},
+                #{stpUseDt}, #{prov}, #{cty},
+                #{cnty}, #{dumyWhs}, #{setupPers},
+                now(), #{realWhs})
+    </insert>
+    <!--修改仓库档案 -->
+    <update id="updateWhsDoc" parameterType="WhsDoc">
+        update whs_doc
+        <set>
+
+            <if test="whsNm != null">
+                whs_nm = #{whsNm},
+            </if>
+            <if test="deptEncd != null">
+                dept_encd = #{deptEncd},
+            </if>
+            <if test="whsAddr != null">
+                whs_addr = #{whsAddr},
+            </if>
+            <if test="tel != null">
+                tel = #{tel},
+            </if>
+            <if test="princ != null">
+                princ = #{princ},
+            </if>
+            <if test="valtnMode != null">
+                valtn_mode = #{valtnMode},
+            </if>
+            <if test="crspdBarCd!= null">
+                crspd_bar_cd= #{crspdBarCd},
+            </if>
+            <if test="isNtPrgrGdsBitMgmt != null">
+                is_nt_prgr_gds_bit_mgmt = #{isNtPrgrGdsBitMgmt},
+            </if>
+            <if test="whsAttr != null">
+                whs_attr = #{whsAttr},
+            </if>
+            <if test="sellAvalQtyCtrlMode != null">
+                sell_aval_qty_ctrl_mode = #{sellAvalQtyCtrlMode},
+            </if>
+            <if test="invtyAvalQtyCtrlMode != null">
+                invty_aval_qty_ctrl_mode = #{invtyAvalQtyCtrlMode},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="isNtShop != null">
+                is_nt_shop = #{isNtShop},
+            </if>
+            <if test="stpUseDt != null">
+                stp_use_dt = #{stpUseDt},
+            </if>
+            <if test="prov!= null">
+                prov= #{prov},
+            </if>
+            <if test="cty != null">
+                cty = #{cty},
+            </if>
+            <if test="cnty != null">
+                cnty = #{cnty},
+            </if>
+            <if test="dumyWhs != null">
+                dumy_whs = #{dumyWhs},
+            </if>
+            <if test="mdfr != null">
+                mdfr = #{mdfr},
+            </if>
+            real_whs = #{realWhs},
+            modi_tm = now(),
+        </set>
+        where whs_encd = #{whsEncd}
+    </update>
+    <!-- 删除仓库档案 -->
+    <delete id="deleteWhsDoc" parameterType="java.lang.String">
+        delete
+        from whs_doc
+        where whs_encd = #{whsEncd}
+    </delete>
+    <!-- 批量修改 -->
+    <delete id="deleteWDocList" parameterType="java.util.List">
+        delete wDoc
+        from whs_doc as wDoc
+        where wDoc.whs_encd in
+        <foreach item="whsEncd" collection="list" open="(" close=")"
+                 separator=",">
+            #{whsEncd}
+        </foreach>
+    </delete>
+    <!-- 简单查 仓库档案 -->
+    <sql id="whs_doc_list">
+        whs_encd, whs_nm, dept_encd, whs_addr, tel, princ,
+		valtn_mode, crspd_bar_cd,
+		is_nt_prgr_gds_bit_mgmt, whs_attr,
+		sell_aval_qty_ctrl_mode,
+		invty_aval_qty_ctrl_mode,
+		memo, is_nt_shop,
+		stp_use_dt, prov, cty, cnty, dumy_whs, setup_pers,
+		setup_tm, mdfr,
+		modi_tm,real_Whs
+    </sql>
+    <select id="selectWDoc" resultType="Integer">
+        SELECT
+        count(*)
+        FROM whs_doc
+        <where>
+            <if test="whsEncd != null and whsEncd != ''">
+                whs_encd = #{whsEncd}
+            </if>
+        </where>
+    </select>
+    <select id="selectWhsDoc" parameterType="Map"
+            resultType="WhsDoc">
+        SELECT
+        <include refid="whs_doc_list"/>
+        FROM whs_doc
+        <where>
+            <if test="whsEncd != null and whsEncd != ''">
+                whs_encd = #{whsEncd}
+            </if>
+        </where>
+    </select>
+    <select id="selectWhsDocList" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+        <!-- <include refid="whs_doc_list" /> -->
+        wDoc.*,dDoc.dept_name
+        FROM whs_doc wDoc
+        LEFT JOIN
+        dept_doc as
+        dDoc on wDoc.dept_encd = dDoc.dept_id
+        <where>
+            1=1
+            <if test="whsEncd != null and whsEncd != ''">
+                AND whs_encd = #{whsEncd}
+            </if>
+        </where>
+    </select>
+    <!-- 批量查询 -->
+    <select id="selectAllWDocList" resultType="WhsDoc">
+        SELECT * from whs_doc
+        WHERE whs_encd in
+        <foreach collection="whsEncd" item="whsEncd" open="("
+                 close=")" separator=",">
+            #{whsEncd}
+        </foreach>
+    </select>
+
+    <!-- 分页查 -->
+    <select id="selectList" parameterType="Map"
+            resultMap="BaseResultMap">
+        select
+        wDoc.*,dDoc.dept_name
+        From
+        whs_doc as wDoc
+        LEFT JOIN
+        dept_doc as
+        dDoc on wDoc.dept_encd = dDoc.dept_id
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND wDoc.memo like #{memo}
+            </if>
+            <if test=" whsEncd != null and  whsEncd!= ''">
+                <bind name="whsEncd" value="'%'+ whsEncd +'%'"/>
+                AND wDoc.whs_encd like #{whsEncd}
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND wDoc.whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test=" whsNm!= null and  whsNm!= ''">
+                <bind name="whsNm" value="'%'+ whsNm +'%'"/>
+                AND wDoc.whs_nm like #{whsNm}
+            </if>
+            <if test=" tel!= null and  tel!= ''">
+                <bind name="tel" value="'%'+ tel +'%'"/>
+                AND wDoc.tel like #{tel}
+            </if>
+            <if test=" valtnMode!= null and  valtnMode!= ''">
+                <bind name="valtnMode" value="'%'+ valtnMode +'%'"/>
+                AND wDoc.valtn_mode like #{valtnMode}
+            </if>
+            <if test=" princ!= null and  princ!= ''">
+                <bind name="princ" value="'%'+ princ +'%'"/>
+                AND wDoc.princ like #{princ}
+            </if>
+            <if test=" deptEncd!= null and  deptEncd!= ''">
+                AND wDoc.dept_encd = #{deptEncd}
+            </if>
+            <if test=" deptName != null and  deptName != ''">
+                <bind name="deptName" value="'%'+ deptName +'%'"/>
+                AND dDoc.dept_name like #{deptName}
+            </if>
+            <if test=" realWhs != null and  realWhs != ''">
+                AND wDoc.real_whs = #{realWhs}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        LIMIT #{index},#{num}
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+        select
+        count( wDoc.whs_encd)
+        From
+        whs_doc as wDoc
+        LEFT JOIN
+        dept_doc as
+        dDoc on
+        wDoc.dept_encd = dDoc.dept_id
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND wDoc.memo like #{memo}
+            </if>
+            <if test=" whsEncd != null and  whsEncd!= ''">
+                <bind name="whsEncd" value="'%'+ whsEncd +'%'"/>
+                AND wDoc.whs_encd like #{whsEncd}
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND wDoc.whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test=" whsNm!= null and  whsNm!= ''">
+                <bind name="whsNm" value="'%'+ whsNm +'%'"/>
+                AND wDoc.whs_nm like #{whsNm}
+            </if>
+            <if test=" tel!= null and  tel!= ''">
+                <bind name="tel" value="'%'+ tel +'%'"/>
+                AND wDoc.tel like #{tel}
+            </if>
+            <if test=" valtnMode!= null and  valtnMode!= ''">
+                <bind name="valtnMode" value="'%'+ valtnMode +'%'"/>
+                AND wDoc.valtn_mode like #{valtnMode}
+            </if>
+            <if test=" princ!= null and  princ!= ''">
+                <bind name="princ" value="'%'+ princ +'%'"/>
+                AND wDoc.princ like #{princ}
+            </if>
+            <if test=" deptEncd!= null and  deptEncd!= ''">
+                AND wDoc.dept_encd = #{deptEncd}
+            </if>
+            <if test=" deptName != null and  deptName != ''">
+                <bind name="deptName" value="'%'+ deptName +'%'"/>
+                AND dDoc.dept_name like #{deptName}
+            </if>
+            <if test=" realWhs != null and  realWhs != ''">
+                AND wDoc.real_whs = #{realWhs}
+            </if>
+        </where>
+    </select>
+    <!-- 打印 -->
+    <select id="selectListDaYin" parameterType="Map"
+            resultType="WhsDoc">
+        select
+        wDoc.*,dDoc.dept_name
+        From
+        whs_doc as wDoc
+        LEFT JOIN
+        dept_doc as
+        dDoc on wDoc.dept_encd = dDoc.dept_id
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND wDoc.memo like #{memo}
+            </if>
+            <if test=" whsEncd != null and  whsEncd!= ''">
+                <bind name="whsEncd" value="'%'+ whsEncd +'%'"/>
+                AND wDoc.whs_encd like #{whsEncd}
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND wDoc.whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test=" whsNm!= null and  whsNm!= ''">
+                <bind name="whsNm" value="'%'+ whsNm +'%'"/>
+                AND wDoc.whs_nm like #{whsNm}
+            </if>
+            <if test=" tel!= null and  tel!= ''">
+                <bind name="tel" value="'%'+ tel +'%'"/>
+                AND wDoc.tel like #{tel}
+            </if>
+            <if test=" valtnMode!= null and  valtnMode!= ''">
+                <bind name="valtnMode" value="'%'+ valtnMode +'%'"/>
+                AND wDoc.valtn_mode like #{valtnMode}
+            </if>
+            <if test=" princ!= null and  princ!= ''">
+                <bind name="princ" value="'%'+ princ +'%'"/>
+                AND wDoc.princ like #{princ}
+            </if>
+            <if test=" deptEncd!= null and  deptEncd!= ''">
+                AND wDoc.dept_encd = #{deptEncd}
+            </if>
+            <if test=" deptName != null and  deptName != ''">
+                <bind name="deptName" value="'%'+ deptName +'%'"/>
+                AND dDoc.dept_name like #{deptName}
+            </if>
+            <if test=" realWhs != null and  realWhs != ''">
+                AND wDoc.real_whs = #{realWhs}
+            </if>
+        </where>
+    </select>
+    <!-- 省 市 县 -->
+    <select id="selectCity" resultType="City">
+        select *
+        from city
+        <where>
+            <if test="codeId != null and  codeId != ''">
+                code_id = #{codeId}
+            </if>
+            <if test="superiorCode != null and  superiorCode != ''">
+                superior_code = #{superiorCode}
+            </if>
+        </where>
+    </select>
+    <!-- 省 -->
+    <select id="selectProvinces" resultType="City">
+        select *
+        from city
+        where code_level = 0
+    </select>
+    <!-- 市 -->
+    <select id="selectCities" resultType="City">
+        select *
+        from city
+        <where>
+            code_level=1
+            <if test="superiorCode != null and  superiorCode != ''">
+                AND superior_code = #{superiorCode}
+            </if>
+        </where>
+    </select>
+    <!-- 县 -->
+    <select id="selectCounties" resultType="City">
+        select *
+        from city
+        <where>
+            code_level=2
+            <if test="superiorCode != null and  superiorCode != ''">
+                AND superior_code = #{superiorCode}
+            </if>
+        </where>
+    </select>
+    <!-- 计价方式 -->
+    <select id="selectValtnMode" resultType="ValtnMode">
+        select *
+        from valtn_mode
+    </select>
+    <!-- 仓库属性 -->
+    <select id="selectWhsAttr" resultType="WhsAttr">
+        select *
+        from whs_attr
+    </select>
+    <!-- 可用量控制方式 -->
+    <select id="selectAMode" resultType="AvalQtyCtrlMode">
+        select *
+        from aval_qty_ctrl_mode
+    </select>
+
+    <insert id="exInsertWhsDoc" parameterType="WhsDoc">
+        insert into whs_doc
+        (whs_encd, whs_nm,
+        dept_encd, whs_addr, tel,
+        princ,
+        valtn_mode,
+        crspd_bar_cd,
+        is_nt_prgr_gds_bit_mgmt, whs_attr,
+        sell_aval_qty_ctrl_mode,
+        invty_aval_qty_ctrl_mode, memo, is_nt_shop,
+        stp_use_dt, prov, cty,
+        cnty, dumy_whs, setup_pers,
+        setup_tm,mdfr,modi_tm,real_whs
+        )
+        values
+        (#{whsEncd}, #{whsNm},
+        #{deptEncd},
+        #{whsAddr}, #{tel},
+        #{princ},
+        #{valtnMode}, #{crspdBarCd},
+        #{isNtPrgrGdsBitMgmt}, #{whsAttr},
+        #{sellAvalQtyCtrlMode},
+        #{invtyAvalQtyCtrlMode}, #{memo}, #{isNtShop},
+        <choose>
+            <when test="stpUseDt != null and stpUseDt != '' ">
+                #{stpUseDt}
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+        , #{prov},
+        #{cty},
+        #{cnty}, #{dumyWhs}, #{setupPers},
+        <choose>
+            <when test="setupTm != null and setupTm != '' ">
+                #{setupTm}
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+        ,#{mdfr},
+        <choose>
+            <when test="modiTm != null and modiTm != '' ">
+                #{modiTm}
+            </when>
+            <otherwise>
+                null
+            </otherwise>
+        </choose>
+        ,#{realWhs}
+        )
+    </insert>
+
+
+    <insert id="insertUserWhs" parameterType="java.util.List">
+        insert into user_whs (acc_num, real_whs)
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.accNum}, #{item.realWhs})
+        </foreach>
+    </insert>
+
+    <update id="updateUserWhs" parameterType="UserWhs">
+        update user_whs
+        set acc_num  = #{accNum},
+            real_whs = #{realWhs}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserWhsList" parameterType="java.lang.Integer">
+        delete from user_whs
+        where id in
+        <foreach item="item" collection="list" open="(" close=")"
+                 separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <select id="selectUserWhsList" parameterType="Map"
+            resultType="UserWhs">
+        <bind name="address" value="'%' + address + '%'"/>
+        SELECT
+        user_whs.id,
+        user_whs.acc_num,
+        user_whs.real_whs
+        FROM
+        user_whs
+        LEFT JOIN whs_doc ON user_whs.real_whs = whs_doc.whs_encd
+        LEFT JOIN real_whs ON whs_doc.real_whs = real_whs.real_whs
+        where
+         user_whs.acc_num = #{accNum}
+         and  real_whs.whs_addr LIKE #{address}
+    </select>
+
+
+    <select id="selectUserWhsCount" parameterType="Map"
+            resultType="Integer">
+        select
+        count(id) id
+        from user_whs
+        <where>
+            <if test="id !=null and id != '' ">
+                and id = #{id}
+            </if>
+            <if test="accNum !=null and  accNum accNum != '' ">
+                and acc_num = #{accNum}
+            </if>
+            <if test="whsEncd !=null and whsEncd != '' ">
+                and whs_encd = #{whsEncd}
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="deleteWhsGds">
+        delete from whs_gds
+        where id in
+        <foreach item="item" collection="list" open="(" close=")"
+                 separator=",">
+            #{item}
+        </foreach>
+        <!-- whs_encd
+             = #{whsEncd}
+            and real_whs = #{realWhs}  -->
+    </delete>
+
+    <insert id="insertWhsGds" parameterType="java.util.List">
+        insert into whs_gds (real_whs, gds_bit_encd, regn_encd)
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.realWhs}, #{item.gdsBitEncd} ,#{item.regnEncd})
+        </foreach>
+    </insert>
+
+
+    <select id="selectWhsGdsList" parameterType="Map"
+            resultType="WhsGds">
+        SELECT
+        whs_gds.id ,
+        whs_gds.real_whs,
+        real_whs.real_nm,
+        whs_gds.gds_bit_encd,
+        gds_bit.gds_bit_nm,
+        whs_gds.regn_encd,
+        regn.regn_nm
+        FROM
+        whs_gds
+        LEFT JOIN real_whs ON real_whs.real_whs = whs_gds.real_whs
+        LEFT JOIN regn ON regn.regn_encd = whs_gds.regn_encd
+        LEFT JOIN gds_bit ON gds_bit.gds_bit_encd = whs_gds.gds_bit_encd
+        <where>
+            <if test="gdsBitEncd !=null and gdsBitEncd.size() > 0">
+                and whs_gds.gds_bit_encd IN
+                <foreach collection="gdsBitEncd" item="invId" open="("
+                         close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+            <if test="realWhs !=null and realWhs.size() > 0 ">
+                and whs_gds.real_whs IN
+                <foreach collection="realWhs" item="invId" open="("
+                         close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+            <if test="regnEncd !=null and regnEncd.size() > 0 ">
+                and whs_gds.regn_encd IN
+                <foreach collection="regnEncd" item="invId" open="("
+                         close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+        </where>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectWhsGdsListCount" parameterType="Map"
+            resultType="int">
+        SELECT
+        count(*)
+        FROM
+        whs_gds
+        LEFT JOIN real_whs ON real_whs.real_whs = whs_gds.real_whs
+        LEFT JOIN regn ON regn.regn_encd = whs_gds.regn_encd
+        LEFT JOIN gds_bit ON gds_bit.gds_bit_encd = whs_gds.gds_bit_encd
+        <where>
+            <if test="gdsBitEncd !=null and gdsBitEncd.size() > 0">
+                and whs_gds.gds_bit_encd IN
+                <foreach collection="gdsBitEncd" item="invId" open="("
+                         close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+            <if test="realWhs !=null and realWhs.size() > 0 ">
+                and whs_gds.real_whs IN
+                <foreach collection="realWhs" item="invId" open="("
+                         close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+            <if test="regnEncd !=null and regnEncd.size() > 0 ">
+                and whs_gds.regn_encd IN
+                <foreach collection="regnEncd" item="invId" open="("
+                         close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+    <select id="selectWhsGds" parameterType="WhsGds"
+            resultType="WhsGds">
+        SELECT *
+        FROM whs_gds
+        where whs_gds.gds_bit_encd = #{gdsBitEncd}
+
+          and whs_gds.real_whs = #{realWhs}
+
+    </select>
+    <select id="selectWhsGdsReal" resultType="String">
+        SELECT regn_encd
+        FROM whs_gds
+                 JOIN whs_doc ON whs_doc.real_whs = whs_gds.real_whs
+        WHERE whs_gds.gds_bit_encd = #{gdsBitEncd}
+          AND whs_doc.whs_encd = #{whsEncd}
+    </select>
+
+    <select id="selectWhsGdsRealList" resultType="WhsGds">
+        SELECT-- whs_gds.real_whs,
+        -- real_whs.real_nm,
+        -- whs_gds.regn_encd,
+        -- regn.regn_nm,
+        DISTINCT whs_gds.gds_bit_encd
+        -- ,gds_bit.gds_bit_nm
+        FROM
+        whs_gds -- 总仓库 区域 货位关系
+        -- LEFT JOIN real_whs ON whs_gds.real_whs = real_whs.real_whs -- 区域档案
+        -- LEFT JOIN regn ON whs_gds.regn_encd = regn.regn_encd -- 区域档案
+        LEFT JOIN gds_bit ON whs_gds.gds_bit_encd = gds_bit.gds_bit_encd -- 货位档案
+        LEFT JOIN whs_doc ON whs_gds.real_whs = whs_doc.real_whs
+        <where>
+            <if test="whsEncd !=null and whsEncd.size() > 0">
+                and whs_doc.whs_encd IN
+                <foreach collection="whsEncd" item="item" open="("
+                         close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <!-- <if test="regnEncd !=null and regnEncd.size() > 0">
+                and regn.regn_encd  IN
+                <foreach collection="regnEncd" item="invId" open="("
+                    close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+            <if test="gdsBitEncd !=null and gdsBitEncd.size() > 0">
+                and gds_bit.gds_bit_encd  IN
+                <foreach collection="gdsBitEncd" item="invId" open="("
+                    close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+            <if test="realWhs !=null and realWhs.size() > 0">
+                and whs_gds.real_whs  IN
+                <foreach collection="realWhs" item="invId" open="("
+                    close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if> -->
+        </where>
+    </select>
+
+
+    <select id="selectRealWhs" parameterType="string" resultType="RealWhs">
+        SELECT
+        wDoc.*,dDoc.dept_name
+        FROM real_whs wDoc
+        LEFT JOIN
+        dept_doc as
+        dDoc on wDoc.dept_encd = dDoc.dept_id
+        <where>
+            <if test="realWhs != null and realWhs != ''">
+                wDoc.real_whs = #{realWhs}
+            </if>
+        </where>
+    </select>
+    <insert id="insertRealWhs" keyColumn="id" keyProperty="id" parameterType="RealWhs" useGeneratedKeys="true">
+        insert into real_whs (real_whs, dept_encd, whs_addr,
+                              tel, princ, crspd_bar_cd,
+                              is_nt_prgr_gds_bit_mgmt, whs_attr, sell_aval_qty_ctrl_mode,
+                              invty_aval_qty_ctrl_mode, memo, valtn_mode,
+                              is_nt_shop, stp_use_dt, prov,
+                              cty, cnty, dumy_whs,
+                              setup_pers, setup_tm, real_nm)
+        values (#{realWhs}, #{deptEncd}, #{whsAddr},
+                #{tel}, #{princ}, #{crspdBarCd},
+                #{isNtPrgrGdsBitMgmt}, #{whsAttr}, #{sellAvalQtyCtrlMode},
+                #{invtyAvalQtyCtrlMode}, #{memo}, #{valtnMode},
+                #{isNtShop}, #{stpUseDt}, #{prov},
+                #{cty}, #{cnty}, #{dumyWhs},
+                #{setupPers}, now(), #{realNm})
+    </insert>
+    <update id="updateRealWhs" parameterType="RealWhs">
+        update real_whs
+        <set>
+            <if test="realNm != null">
+                real_nm = #{realNm},
+            </if>
+            <if test="deptEncd != null">
+                dept_encd = #{deptEncd},
+            </if>
+            <if test="whsAddr != null">
+                whs_addr = #{whsAddr},
+            </if>
+            <if test="tel != null">
+                tel = #{tel},
+            </if>
+            <if test="princ != null">
+                princ = #{princ},
+            </if>
+            <if test="valtnMode != null">
+                valtn_mode = #{valtnMode},
+            </if>
+            <if test="crspdBarCd!= null">
+                crspd_bar_cd= #{crspdBarCd},
+            </if>
+            <if test="isNtPrgrGdsBitMgmt != null">
+                is_nt_prgr_gds_bit_mgmt = #{isNtPrgrGdsBitMgmt},
+            </if>
+            <if test="whsAttr != null">
+                whs_attr = #{whsAttr},
+            </if>
+            <if test="sellAvalQtyCtrlMode != null">
+                sell_aval_qty_ctrl_mode = #{sellAvalQtyCtrlMode},
+            </if>
+            <if test="invtyAvalQtyCtrlMode != null">
+                invty_aval_qty_ctrl_mode = #{invtyAvalQtyCtrlMode},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="isNtShop != null">
+                is_nt_shop = #{isNtShop},
+            </if>
+            <if test="stpUseDt != null">
+                stp_use_dt = #{stpUseDt},
+            </if>
+            <if test="prov!= null">
+                prov= #{prov},
+            </if>
+            <if test="cty != null">
+                cty = #{cty},
+            </if>
+            <if test="cnty != null">
+                cnty = #{cnty},
+            </if>
+            <if test="dumyWhs != null">
+                dumy_whs = #{dumyWhs},
+            </if>
+            <if test="mdfr != null">
+                mdfr = #{mdfr},
+            </if>
+
+            modi_tm = now(),
+        </set>
+        where real_whs = #{realWhs}
+    </update>
+    <select id="queryRealWhsList" parameterType="Map"
+            resultType="RealWhs">
+        select
+        wDoc.*,dDoc.dept_name
+        From
+        real_whs as wDoc
+        LEFT JOIN
+        dept_doc as
+        dDoc on wDoc.dept_encd = dDoc.dept_id
+        <where>
+            <if test=" deptName != null and  deptName != ''">
+                <bind name="deptName" value="'%'+ deptName +'%'"/>
+                AND dDoc.dept_name like #{deptName}
+            </if>
+            <if test=" realWhs != null and  realWhs != ''">
+                <bind name="realWhs" value="'%'+ realWhs +'%'"/>
+                AND wDoc.real_whs like #{realWhs}
+            </if>
+            <if test=" realNm != null and  realNm != ''">
+                <bind name="realNm" value="'%'+ realNm +'%'"/>
+                AND wDoc.real_nm like #{realNm}
+            </if>
+            <if test=" tel!= null and  tel!= ''">
+                AND wDoc.tel = #{tel}
+            </if>
+            <if test=" valtnMode!= null and  valtnMode!= ''">
+                AND wDoc.valtn_mode = #{valtnMode}
+            </if>
+            <if test=" princ!= null and  princ!= ''">
+                AND wDoc.princ = #{princ}
+            </if>
+            <if test=" deptEncd!= null and  deptEncd!= ''">
+                AND wDoc.dept_encd = #{deptEncd}
+            </if>
+        </where>
+        LIMIT #{index},#{num}
+    </select>
+
+    <select id="queryRealWhsCount" parameterType="Map"
+            resultType="Integer">
+        select
+        count( wDoc.real_whs )
+        From
+        real_whs as wDoc
+        LEFT JOIN
+        dept_doc as
+        dDoc on wDoc.dept_encd = dDoc.dept_id
+        <where>
+            <if test=" deptName != null and  deptName != ''">
+                <bind name="deptName" value="'%'+ deptName +'%'"/>
+                AND dDoc.dept_name like #{deptName}
+            </if>
+            <if test=" realWhs != null and  realWhs != ''">
+                <bind name="realWhs" value="'%'+ realWhs +'%'"/>
+                AND wDoc.real_whs like #{realWhs}
+            </if>
+            <if test=" realNm != null and  realNm != ''">
+                <bind name="realNm" value="'%'+ realNm +'%'"/>
+                AND wDoc.real_nm like #{realNm}
+            </if>
+            <if test=" tel!= null and  tel!= ''">
+                AND wDoc.tel = #{tel}
+            </if>
+            <if test=" valtnMode!= null and  valtnMode!= ''">
+                AND wDoc.valtn_mode = #{valtnMode}
+            </if>
+            <if test=" princ!= null and  princ!= ''">
+                AND wDoc.princ = #{princ}
+            </if>
+            <if test=" deptEncd!= null and  deptEncd!= ''">
+                AND wDoc.dept_encd = #{deptEncd}
+            </if>
+        </where>
+
+    </select>
+    <select id="queryRealWhsListDaYin" parameterType="Map"
+            resultType="RealWhs">
+        select
+        wDoc.*,dDoc.dept_name
+        From
+        real_whs as wDoc
+        LEFT JOIN
+        dept_doc as
+        dDoc on wDoc.dept_encd = dDoc.dept_id
+        <where>
+            <if test=" deptName != null and  deptName != ''">
+                <bind name="deptName" value="'%'+ deptName +'%'"/>
+                AND dDoc.dept_name like #{deptName}
+            </if>
+            <if test=" realWhs != null and  realWhs != ''">
+                <bind name="realWhs" value="'%'+ realWhs +'%'"/>
+                AND wDoc.real_whs like #{realWhs}
+            </if>
+            <if test=" realNm != null and  realNm != ''">
+                <bind name="realNm" value="'%'+ realNm +'%'"/>
+                AND wDoc.real_nm like #{realNm}
+            </if>
+            <if test=" tel!= null and  tel!= ''">
+                AND wDoc.tel = #{tel}
+            </if>
+            <if test=" valtnMode!= null and  valtnMode!= ''">
+                AND wDoc.valtn_mode = #{valtnMode}
+            </if>
+            <if test=" princ!= null and  princ!= ''">
+                AND wDoc.princ = #{princ}
+            </if>
+            <if test=" deptEncd!= null and  deptEncd!= ''">
+                AND wDoc.dept_encd = #{deptEncd}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectRealWhsMap" parameterType="java.lang.Integer" resultType="RealWhsMap">
+        select id,
+               real_whs,
+               whs_encd
+        from real_whs_map
+        where whs_encd = #{whsEncd}
+    </select>
+
+
+    <insert id="insertRealWhsMap" keyColumn="id" keyProperty="id" parameterType="RealWhsMap" useGeneratedKeys="true">
+        insert into real_whs_map (real_whs, whs_encd)
+        values (#{realWhs,jdbcType=VARCHAR}, #{whsEncd,jdbcType=VARCHAR})
+    </insert>
+
+
+    <select id="selectRealWhsMapList" parameterType="Map"
+            resultType="RealWhsMap">
+        SELECT
+        real_whs_map.real_whs,
+        real_whs_map.whs_encd,
+        whs_doc.whs_nm,
+        real_whs.real_nm
+        FROM
+        real_whs_map
+        LEFT JOIN whs_doc ON whs_doc.whs_encd = real_whs_map.whs_encd
+        LEFT JOIN real_whs ON real_whs.real_whs = real_whs_map.real_whs
+        <where>
+            <if test="realWhs !=null and realWhs.size() > 0">
+                and real_whs_map.real_whs IN
+                <foreach collection="realWhs" item="invId" open="("
+                         close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+            <if test="whsEncd !=null and whsEncd.size() > 0 ">
+                and real_whs_map.whs_encd IN
+                <foreach collection="realWhs" item="invId" open="("
+                         close=")" separator=",">
+                    #{invId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <delete id="deleteRealWhsMap">
+        delete from real_whs_map
+        where id in
+        <foreach item="item" collection="list" open="(" close=")"
+                 separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <select id="selectRealWhsList" parameterType="list"
+            resultType="string">
+        SELECT
+        whs_encd whsEncd
+        FROM
+        whs_doc
+        WHERE
+        whs_doc.real_whs IN
+        <foreach item="item" collection="list" open="(" close=")"
+                 separator=",">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectisNtPrgrGdsBitMgmtWhs" parameterType="String"
+            resultType="Integer">
+        SELECT real_whs.is_nt_prgr_gds_bit_mgmt
+        FROM whs_doc
+                 JOIN real_whs ON whs_doc.real_whs = real_whs.real_whs
+        WHERE whs_doc.whs_encd = #{whsEncd}
+    </select>
+    <delete id="deleteRealWhsList" parameterType="java.util.List">
+        delete
+        from real_whs
+        where real_whs.real_whs in
+        <foreach item="realWhs" collection="list" open="(" close=")"
+                 separator=",">
+            #{realWhs}
+        </foreach>
+    </delete>
+</mapper>

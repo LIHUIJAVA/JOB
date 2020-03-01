@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>收发存汇总表</title>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/whs/summary.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+	</head>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">收发存汇总表</h1>-->
+				<div class="buttons">
+					<button class="print" >打印</button>
+					<button class="exportExcel">导出</button>
+					<button id="find">查询</button>
+				</div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="purchaseType col-md-4">
+						<span>单据日期</span><input type="text" class="formDt1 date1" name="formDt1" value="" calendar="YYYY-MM-DD" />到<input type="text" class="formDt2 date2" name="formDt2" value="" calendar="YYYY-MM-DD" />
+					</div>
+					<div class="purchaseType col-md-4">
+						<span>审核日期</span><input type="text" class="chkTm1 date" name="chkTm1" value="" calendar="YYYY-MM-DD" />到<input type="text" class="chkTm2 date" name="chkTm2" value="" calendar="YYYY-MM-DD" />
+					</div>
+					<div class="businessType col-md-4">
+						<span>仓库编码</span>
+						<input type="text" id="whsEncd" class="whsEncd encds" name="whsEncd" value="" />
+						<input type="text" id="whsNm" class="whsNm names" name="whsNm" value="" readonly="readonly" />
+						<span><img class="biao_whsEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<!--<div class="orderNumbers col-md-4">
+						<span>存货分类</span><input type="text" id="invtyCls" name="invtyCls" value=""/>
+						<span><img class="invtyClsEncd" id="invtyClsEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>-->
+					<div class="businessType col-md-4">
+						<span>存货分类编码</span>
+						<input type="text" id="invtyCls" class="invtyCls encds" name="invtyCls" value="" />
+						<input type="text" id="invtyClsNm" class="invtyClsNm names" name="invtyClsNm" value="" readonly="readonly" />
+						<span><img class="invtyClsEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>存货编码</span>
+						<input type="text" id="invtyEncd" name="invtyEncd" class="encds" value=""/>
+						<input type="text" id="invtyNm" name="invtyNm" class="invtyNm names" value=""/>
+						<span><img class="biao_invtyEncd" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>批次</span><input type="text" id="batNum" name="batNum" value="" />
+						<span><img class="biao_batNum" id="whsNm" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					
+				</form>
+
+			</div>
+
+			<table id="summary_jqGrids"></table>
+			<div id="jqgridPager"></div>
+		</div>
+	</body>
+
+
+</html>
+

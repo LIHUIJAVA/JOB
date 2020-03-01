@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>订单列表</title>
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/ec/PlatOrderList.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<style type="text/css">
+			select {
+				outline: none;
+				appearance: none;
+				-moz-appearance: none;
+				-webkit-appearance: none;
+				width: 220px;
+				border: 0;
+				border-bottom: 1px solid #B8C7CE
+			}
+			
+			select:-ms-expand {
+				display: none;
+			}
+			#whs_plat_jqgrids {
+				width: 100%!important;
+			}
+			
+			.col-md-4 {
+				width: 33.33333% !important;
+			}
+			
+			#gbox_plat_jqgrids .ui-jqgrid-bdiv {
+				height: 300px!important;
+			}
+			.tian {
+				width: 80px!important;
+				text-align: center;
+			}
+			#_input {
+				width: 70px!important;
+			}
+			.batch {
+				width: 400px;
+				height: 400px;
+				border: 1px solid #CCCCCC;
+				background-color: #FFFFFF;
+				position: absolute;
+				top: 80px;
+				left: 37%;
+				/*z-index: 3;*/
+				/*display: none;*/
+			}
+			.batch .order-title1 {
+				width: 100%;
+			}
+			.batch .order-title1 div {
+				margin-left: 10px;
+				
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">现存量查询</h1>-->
+				<div class="buttons">
+					<!--<button class="print">打印</button>-->
+					<button class="exportExcel">导出</button>
+					<button id="find">查询</button>
+					<button class="batchSelect">批量查询</button>
+				</div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>订单编码</span>
+							<input type="text" class="orderId" name="orderId1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>店铺编码</span>
+							<input type="text" id="storeId" class="storeId encds" name="storeId1" value="" />
+							<input type="text" id="storeName" class="storeNm names" name="storeNm1" value="" readonly="readonly" />
+							<span><img class="storeId_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="orderNumbers col-md-4">
+							<span>存货编码</span>
+							<input type="text" id="invtyEncd" class="encds" name="invtyEncd" value="" />
+							<input type="text" id="invtyNm" class="names" name="invtyNm" value="" />
+							<span><img class="invtyEncd_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否客审</span>
+							<select name="isAudit1" id="isAudit">
+								<option value="">请选择</option>
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</div>
+						<div class="supplier col-md-4">
+							<span>买家会员号</span>
+							<input type="text" class="buyerId" name="buyerId" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>收货人姓名</span>
+							<input type="text" class="recName" name="recName" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>电商订单号</span>
+							<input type="text" class="ecOrderId" name="ecOrderId" value="" />
+						</div>
+						<div class="businessType col-md-4">
+							<span>发货仓库编码</span>
+							<input type="text" id="whsEncd" class="whsEncd encds" name="deliverWhs" value="" />
+							<input type="text" id="whsNm" class="whsNm names" name="whsNm" value="" readonly="readonly" />
+							<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="businessType col-md-4">
+							<span>快递公司编码</span>
+							<input type="text" id="expressId" class="expressId encds" name="expressCom" value="" />
+							<input type="text" id="expressName" class="expressName names" name="expressName" value="" readonly="readonly" />
+							<span><img class="expressCom_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否发货</span>
+							<select name="isShip" id="isShip">
+								<option value="">请选择</option>
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否关闭</span>
+							<select name="isClose">
+								<option value="">请选择</option>
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</div>
+						<div class="businessType col-md-4">
+							<span>备注查询</span><input type="text" class="memo" name="memo" value="" />
+						</div>
+						<div id="realWhs" style="opacity: 0;"></div>
+						<div class="supplier col-md-8">
+							<span>起始日期</span>
+							<input type="text" class="startDate date1 date" name="startDate" value="" calendar="YYYY-MM-DD" readonly="readonly" />到<input type="text" class="endDate date2 date" name="endDate" value="" calendar="YYYY-MM-DD" readonly="readonly" />
+						</div>
+					</div>
+				</form>
+			</div>
+
+		</div>
+		<table id="sales_jqGrids"></table>
+		<div id="sales_jqgridPager"></div>
+		<div class="batch" style="opacity: 0;">
+			<div class="purchaseTit">
+				<!--<h1 class="title">全部订单</h1>-->
+				<div class="buttons">
+					<button class="queding">确定</button>
+					<button class="quxiao">取消</button>
+				</div>
+			</div>
+			<div class="order-title1">
+				<form class="row" id="formSave">
+					<div class="supplier col-md-24">
+						<textarea type="tel" name="ecOrderIds" rows="15" cols="50" wrap="physical" placeholder="请输入订单号(请以英文逗号分隔或回车换行)"></textarea>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+
+</html>

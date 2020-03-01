@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.GdsBitDistionMapper">
+    <!-- 查询所有仓库 -->
+    <resultMap id="wDocAll" type="WhsDoc" autoMapping="true">
+        <id column="whs_encd" property="whsEncd"/>
+        <result column="ordr_num" property="ordrNum"/>
+        <result column="whs_nm" property="whsNm"/>
+        <collection property="movBitList" ofType="MovBitTab"
+                    autoMapping="true">
+            <id column="mov_bit_encd" property="movBitEncd"/>
+            <result column="invty_encd" property="invtyEncd"/>
+            <result column="whs_encd" property="whsEncd"/>
+        </collection>
+    </resultMap>
+    <!-- 该仓库下 查询所有区域 -->
+    <resultMap id="regnAll" type="Regn" autoMapping="true">
+        <id column="regn_encd" property="regnEncd"/>
+        <result column="whs_encd" property="whsEncd"/>
+        <result column="regn_nm" property="regnNm"/>
+        <collection property="movBitList" ofType="MovBitTab"
+                    autoMapping="true">
+            <id column="mov_bit_encd" property="movBitEncd"/>
+            <result column="invty_encd" property="invtyEncd"/>
+            <result column="whs_encd" property="whsEncd"/>
+        </collection>
+    </resultMap>
+    <!-- 该区域下 查询所有货位 -->
+    <resultMap id="gdsBitAll" type="GdsBit" autoMapping="true">
+        <id column="gds_bit_encd" property="gdsBitEncd"/>
+        <result column="regn_encd" property="regnEncd"/>
+        <result column="gds_bit_nm" property="gdsBitNm"/>
+        <result column="gds_bit_typ_nm" property="gdsBitTypNm"/>
+        <collection property="movBitList" ofType="MovBitTab"
+                    autoMapping="true">
+            <id column="mov_bit_encd" property="movBitEncd"/>
+            <result column="invty_encd" property="invtyEncd"/>
+            <result column="whs_encd" property="whsEncd"/>
+        </collection>
+    </resultMap>
+    <!-- 该货位下 所有存货 -->
+    <resultMap id="invtyAll" type="MovBitTab" autoMapping="true">
+        <id column="mov_bit_encd" property="movBitEncd"/>
+        <result column="invty_encd" property="invtyEncd"/>
+        <result column="whs_encd" property="whsEncd"/>
+        <!-- <collection property="iDocList" ofType="com.px.mis.purc.entity.InvtyDoc"
+            autoMapping="true"> -->
+        <!-- <id property="invtyEncd" column="invty_encd" /> -->
+        <!-- <result property="invtyNm" column="invty_nm" /> -->
+        <!-- <result property="measrCorpNm" column="measr_corp_nm" /> -->
+        <!-- </collection> -->
+        <association property="invtyDoc"
+                     javaType="com.px.mis.purc.entity.InvtyDoc" autoMapping="true">
+            <id property="invtyEncd" column="invty_encd"/>
+            <result property="invtyNm" column="invty_nm"/>
+            <result property="measrCorpNm" column="measr_corp_nm"/>
+        </association>
+        <association property="invtyTab" javaType="InvtyTab"
+                     autoMapping="true">
+            <id property="ordrNum" column="ordrNum"/>
+            <result property="whsEncd" column="whsEncd"/>
+        </association>
+    </resultMap>
+    <!-- 不要了 原PDA列表查询 -->
+    <resultMap id="movTab" type="MovBitTab" autoMapping="true">
+        <id column="mov_bit_encd" property="movBitEncd"/>
+        <result column="invty_encd" property="invtyEncd"/>
+        <association property="whsDoc" javaType="WhsDoc">
+            <id column="whs_encd" property="whsEncd"/>
+            <result column="whs_nm" property="whsNm"/>
+        </association>
+        <association property="regn" javaType="Regn">
+            <id column="regn_encd" property="regnEncd"/>
+            <result column="regn_nm" property="regnNm"/>
+        </association>
+        <association property="invtyDoc"
+                     javaType="com.px.mis.purc.entity.InvtyDoc" autoMapping="true">
+            <id property="invtyEncd" column="invty_encd"/>
+            <result property="invtyNm" column="invty_nm"/>
+            <result property="measrCorpNm" column="measr_corp_nm"/>
+        </association>
+        <association property="invtyTab" javaType="InvtyTab"
+                     autoMapping="true">
+            <id property="ordrNum" column="ordrNum"/>
+            <result property="whsEncd" column="whsEncd"/>
+        </association>
+    </resultMap>
+    <!-- PDA展示列表 -->
+    <resultMap id="movBitList" type="MovBitList"
+               autoMapping="true">
+        <id column="ordr_num" property="ordrNum"/>
+        <result column="invty_encd" property="invtyEncd"/>
+        <association property="whsDoc" javaType="WhsDoc">
+            <id column="whs_encd" property="whsEncd"/>
+            <result column="whs_nm" property="whsNm"/>
+        </association>
+        <association property="regn" javaType="Regn">
+            <id column="regn_encd" property="regnEncd"/>
+            <result column="regn_nm" property="regnNm"/>
+        </association>
+        <association property="invtyDoc"
+                     javaType="com.px.mis.purc.entity.InvtyDoc" autoMapping="true">
+            <id property="invtyEncd" column="invty_encd"/>
+            <result property="invtyNm" column="invty_nm"/>
+            <result property="measrCorpNm" column="measr_corp_nm"/>
+        </association>
+    </resultMap>
+    <!-- 查询所有仓库 -->
+    <sql id="whs_doc_list">
+        whs_encd, ordr_num, whs_nm, dept_encd, whs_addr, tel, princ, valtn_mode,
+		crspd_bar_cd,
+		is_nt_prgr_gds_bit_mgmt, whs_attr, sell_aval_qty_ctrl_mode, invty_aval_qty_ctrl_mode,
+		memo, is_nt_shop, stp_use_dt, prov, cty, cnty, dumy_whs, setup_pers,
+		setup_tm, mdfr, modi_tm
+    </sql>
+    <!-- 该仓库下 查询所有区域 -->
+    <sql id="Regn_List">
+        regn_encd as regnEncd, whs_encd as whsEncd, regn_nm as regnNm,
+		longs, wide, site_qty as siteQty, memo,setup_pers as setupPers,
+		setup_tm as setupTm, mdfr, modi_tm as modiTm
+    </sql>
+    <!-- 该区域下 查询所有货位 -->
+    <sql id="Gds_Bit_List">
+        gds_bit_encd as gdsBitEncd, regn_encd as regnEncd, gds_bit_nm as gdsBitNm,
+		gds_bit_typ as gdsBitTyp, gds_bit_cd as gdsBitCd,gds_bit_qty as
+		gdsBitQty,
+		memo, gds_bit_cd_encd as gdsBitCdEncd, setup_pers as setupPers,
+		setup_tm as setupTm, mdfr, modi_tm as modiTm
+    </sql>
+    <!-- 查询仓库、区域、货位 -->
+    <!-- 查询所有仓库 -->
+    <select id="selectWDoc" resultMap="wDocAll">
+        SELECT wDoc.*,
+               mBit.*
+        FROM whs_doc AS wDoc
+                 LEFT JOIN mov_bit_tab AS mBit ON wDoc.whs_encd = mBit.whs_encd
+    </select>
+    <!-- 该仓库下 查询所有区域 -->
+    <select id="selectRegn" resultMap="regnAll">
+        SELECT regn.*,
+               mBit.*
+        FROM regn
+                 LEFT JOIN mov_bit_tab AS mBit ON regn.whs_encd = mBit.whs_encd
+        where mBit.whs_encd = #{whsEncd}
+    </select>
+    <!-- 该区域下 查询所有货位 -->
+    <select id="selectBit" resultMap="gdsBitAll">
+        SELECT gBit.*,
+               mBit.*,
+               gBitTyp.gds_bit_typ_nm
+        FROM mov_bit_tab AS mBit
+                 LEFT JOIN gds_bit AS gBit ON gBit.regn_encd = mBit.regn_encd
+                 LEFT JOIN gds_bit_typ AS gBitTyp ON gBit.gds_bit_typ_encd =
+                                                     gBitTyp.gds_bit_typ_encd
+        WHERE mBit.regn_encd = #{regnEncd}
+    </select>
+    <!-- 该货位下 所有存货 -->
+    <select id="selectInvty" resultMap="invtyAll">
+        SELECT mBit.*,
+               iDoc.*,
+               mDoc.measr_corp_nm,
+               iTab.*
+        FROM mov_bit_tab AS mBit
+                 LEFT JOIN invty_doc AS iDoc ON iDoc.invty_encd = mBit.invty_encd
+                 LEFT JOIN measr_corp_doc mDoc ON iDoc.measr_corp_id = mDoc.measr_corp_id
+                 LEFT JOIN invty_tab iTab ON mBit.invty_encd = iTab.invty_encd and
+                                             mBit.bat_num = iTab.bat_num and mBit.whs_encd = iTab.whs_encd
+        WHERE mBit.gds_bit_encd = #{gdsBitEncd}
+    </select>
+    <!-- 移位 -->
+    <update id="updateMovbit" parameterType="MovBitTab">
+        update mov_bit_tab
+        <set>
+            <if test="invtyEncd != null">
+                invty_encd = #{invtyEncd},
+            </if>
+            <if test="whsEncd != null">
+                whs_encd = #{whsEncd},
+            </if>
+            <if test="regnEncd != null">
+                regn_encd = #{regnEncd},
+            </if>
+            <if test="gdsBitEncd != null">
+                gds_bit_encd = #{gdsBitEncd},
+            </if>
+            <if test="qty != null">
+                qty = #{qty},
+            </if>
+        </set>
+        where mov_bit_encd = #{movBitEncd}
+    </update>
+    <!-- 修改移位表数量(减法) -->
+    <update id="updateMovbitTab" parameterType="java.util.List">
+        update mov_bit_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.qty1 != null and item.qty1 !=''">
+                        when
+                        invty_encd=#{item.invtyEncd}
+                        AND
+                        whs_encd = #{item.whsEncd}
+                        AND
+                        regn_encd = #{item.regnEncd}
+                        AND
+                        gds_bit_encd=#{item.gdsBitEncd1}
+                        AND
+                        bat_num=#{item.batNum}
+
+                        then qty-#{item.qty1}
+
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            invty_encd=#{item.invtyEncd}
+            AND
+            whs_encd = #{item.whsEncd}
+            AND
+            regn_encd = #{item.regnEncd}
+            AND
+            gds_bit_encd=#{item.gdsBitEncd1}
+            AND
+            bat_num=#{item.batNum}
+
+        </foreach>
+    </update>
+    <!-- 修改移位表数量(加法) -->
+    <update id="updateMovbitTabJia" parameterType="java.util.List">
+        update mov_bit_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.qty2 != null and item.qty2 !=''">
+                        when
+                        invty_encd=#{item.invtyEncd}
+                        AND
+                        whs_encd = #{item.whsEncd}
+                        AND
+                        regn_encd = #{item.regnEncd}
+                        AND
+                        gds_bit_encd=#{item.gdsBitEncd2}
+                        AND
+                        bat_num=#{item.batNum}
+                        then qty+#{item.qty2}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            invty_encd=#{item.invtyEncd}
+            AND
+            whs_encd = #{item.whsEncd}
+            AND
+            regn_encd = #{item.regnEncd}
+            AND
+            gds_bit_encd=#{item.gdsBitEncd2}
+            AND
+            bat_num=#{item.batNum}
+        </foreach>
+    </update>
+    <!-- 插入移位清单 -->
+    <insert id="insertMovBitList" parameterType="java.util.List">
+        insert into mov_bit_list(oal_bit, oal_bit_num, target_bit,
+        target_bit_num, invty_encd, bat_num, prdc_dt, whs_encd,
+        regn_encd,target_regn_encd,operator,operator_id,is_opor_fish
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.oalBit}, #{item.oalBitNum}, #{item.targetBit},
+            #{item.targetBitNum}, #{item.invtyEncd}, #{item.batNum},
+            #{item.prdcDt}, #{item.whsEncd}, #{item.regnEncd},#{item.targetRegnEncd},
+            #{item.operator}, #{item.operatorId}, 0
+            )
+        </foreach>
+    </insert>
+    <select id="selectMTab" resultMap="movTab">
+        select
+        mBit.*,iDoc.invty_nm,mDoc.measr_corp_nm,
+        wDoc.whs_nm,regn.regn_nm,iTab.bat_num,iTab.prdc_dt
+        from
+        mov_bit_tab as mBit,
+        invty_doc as iDoc,
+        whs_doc as wDoc,
+        measr_corp_doc mDoc,
+        regn,
+        invty_tab iTab
+        where
+        mBit.invty_encd=iDoc.invty_encd
+        AND
+        mBit.whs_encd=wDoc.whs_encd
+        AND
+        mBit.regn_encd=regn.regn_encd
+        AND
+        iDoc.measr_corp_id=mDoc.measr_corp_id
+        AND
+        mBit.invty_encd=iTab.invty_encd
+        <if test="whsEncd != null and whsEncd!=''">
+            ANd mBit.whs_encd=#{whsEncd}
+        </if>
+    </select>
+    <!-- PDA展示列表 -->
+    <select id="selectMTabList" resultMap="movBitList" parameterType="java.util.List">
+        SELECT
+        *
+        FROM
+        mov_bit_list AS mList
+        LEFT JOIN invty_doc AS iDoc ON mList.invty_encd = iDoc.invty_encd
+        LEFT JOIN whs_doc AS wDoc ON mList.whs_encd = wDoc.whs_encd
+        LEFT JOIN measr_corp_doc mDoc ON iDoc.measr_corp_id = mDoc.measr_corp_id
+        <!-- LEFT JOIN regn ON mList.regn_encd = regn.regn_encd -->
+        WHERE
+        is_opor_fish = 0
+        <!-- select * from mov_bit_list as mList, invty_doc as iDoc, whs_doc as
+            wDoc, measr_corp_doc mDoc, regn where mList.invty_encd=iDoc.invty_encd AND
+            mList.whs_encd=wDoc.whs_encd AND mList.regn_encd=regn.regn_encd AND iDoc.measr_corp_id=mDoc.measr_corp_id
+            AND is_opor_fish=0 -->
+        ANd mList.whs_encd in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </select>
+    <!-- PDA回传数据 -->
+    <update id="updateMBitList" parameterType="MovBitList">
+        update mov_bit_list
+        <set>
+            <if test="operator != null">
+                operator = #{operator},
+            </if>
+            <if test="operatorId != null">
+                operator_id = #{operatorId},
+            </if>
+            is_opor_fish = 1,
+        </set>
+        where ordr_num = #{ordrNum}
+    </update>
+
+    <select id="selectInvtyWhs" resultType="Map">
+        SELECT
+        whs_doc.whs_nm,
+        mov_bit_tab.mov_bit_encd,
+        mov_bit_tab.invty_encd,
+        mov_bit_tab.whs_encd,
+        mov_bit_tab.regn_encd,
+        mov_bit_tab.gds_bit_encd,
+        mov_bit_tab.qty,
+        mov_bit_tab.bat_num,
+        date_format( mov_bit_tab.prdc_dt ,
+        '%Y-%m-%d' )
+        as prdc_dt
+        ,
+        date_format( mov_bit_tab.into_dt ,
+        '%Y-%m-%d' )
+        as into_dt
+        ,
+        invty_doc.*,
+        measr_corp_doc.measr_corp_nm,
+        regn.regn_nm,
+        gds_bit.gds_bit_nm,
+        gds_bit.gds_bit_qty,
+        invty_cls.invty_cls_nm
+        FROM
+        mov_bit_tab
+        LEFT JOIN whs_doc ON mov_bit_tab.whs_encd = whs_doc.whs_encd
+        LEFT JOIN gds_bit ON mov_bit_tab.gds_bit_encd = gds_bit.gds_bit_encd
+        LEFT JOIN invty_doc ON invty_doc.invty_encd = mov_bit_tab.invty_encd
+        LEFT JOIN measr_corp_doc ON invty_doc.measr_corp_id = measr_corp_doc.measr_corp_id
+        LEFT JOIN invty_cls ON invty_cls.invty_cls_encd = invty_doc.invty_cls_encd
+        LEFT JOIN regn ON mov_bit_tab.regn_encd = regn.regn_encd
+
+        <!-- SELECT
+            whs_doc.whs_nm,
+            mov_bit_tab.*,
+            invty_doc.*,
+            measr_corp_doc.measr_corp_nm,
+            regn.regn_nm,
+            gds_bit.gds_bit_nm,
+            gds_bit.gds_bit_qty,
+            invty_cls.invty_cls_nm
+            FROM
+            whs_doc
+            LEFT JOIN regn ON
+            regn.whs_encd = whs_doc.whs_encd
+            LEFT JOIN
+            gds_bit ON gds_bit.regn_encd
+            = regn.regn_encd
+            LEFT JOIN mov_bit_tab ON
+            mov_bit_tab.regn_encd =
+            regn.regn_encd
+            AND mov_bit_tab.whs_encd = whs_doc.whs_encd
+            AND
+            mov_bit_tab.gds_bit_encd = gds_bit.gds_bit_encd
+            LEFT JOIN invty_doc ON
+            invty_doc.invty_encd = mov_bit_tab.invty_encd
+            LEFT JOIN measr_corp_doc
+            ON invty_doc.measr_corp_id = measr_corp_doc.measr_corp_id
+            LEFT JOIN
+            invty_cls ON invty_cls.invty_cls_encd = invty_doc.invty_cls_encd -->
+        <where>
+            mov_bit_tab.qty > 0
+            <if test="whsEncd != null and whsEncd != '' ">
+                ANd mov_bit_tab.whs_encd=#{whsEncd}
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                ANd mov_bit_tab.whs_encd
+                in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                ANd invty_doc.invty_cls_encd=#{invtyClsEncd}
+            </if>
+            <if test="invtyEncd != null and invtyEncd != '' ">
+                ANd mov_bit_tab.invty_encd=#{invtyEncd}
+            </if>
+            <if test="regnEncd != null and regnEncd != '' ">
+                ANd mov_bit_tab.regn_encd=#{regnEncd}
+            </if>
+            <if test="gdsBitEncd != null and gdsBitEncd != '' ">
+                ANd mov_bit_tab.gds_bit_encd=#{gdsBitEncd}
+            </if>
+            <if test="batNum != null and batNum != '' ">
+                ANd mov_bit_tab.bat_num=#{batNum}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        <if test="sort == null or sort == '' ">
+            ORDER BY mov_bit_tab.qty DESC
+        </if>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectInvtyWhsCount" resultType="integer">
+        SELECT
+        count(*)
+        FROM
+        mov_bit_tab
+        LEFT JOIN whs_doc ON mov_bit_tab.whs_encd = whs_doc.whs_encd
+        LEFT JOIN gds_bit ON mov_bit_tab.gds_bit_encd = gds_bit.gds_bit_encd
+        LEFT JOIN invty_doc ON invty_doc.invty_encd = mov_bit_tab.invty_encd
+        LEFT JOIN measr_corp_doc ON invty_doc.measr_corp_id = measr_corp_doc.measr_corp_id
+        LEFT JOIN invty_cls ON invty_cls.invty_cls_encd = invty_doc.invty_cls_encd
+        LEFT JOIN regn ON mov_bit_tab.regn_encd = regn.regn_encd
+        <where>
+            mov_bit_tab.qty > 0
+            <if test="whsEncd != null and whsEncd != '' ">
+                ANd mov_bit_tab.whs_encd=#{whsEncd}
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                ANd mov_bit_tab.whs_encd
+                in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                ANd invty_doc.invty_cls_encd=#{invtyClsEncd}
+            </if>
+            <if test="invtyEncd != null and invtyEncd != '' ">
+                ANd mov_bit_tab.invty_encd=#{invtyEncd}
+            </if>
+            <if test="regnEncd != null and regnEncd != '' ">
+                ANd mov_bit_tab.regn_encd=#{regnEncd}
+            </if>
+            <if test="gdsBitEncd != null and gdsBitEncd != '' ">
+                ANd mov_bit_tab.gds_bit_encd=#{gdsBitEncd}
+            </if>
+            <if test="batNum != null and batNum != '' ">
+                ANd mov_bit_tab.bat_num=#{batNum}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+    </select>
+
+    <!-- 查询移位 -->
+    <select id="selectMTabListId" parameterType="list"
+            resultType="MovBitList">
+        select
+        ordr_num, oal_bit, oal_bit_num, target_bit, target_bit_num, invty_encd,
+        bat_num,
+        prdc_dt, whs_encd, regn_encd, target_regn_encd, `operator`, operator_id,
+        is_opor_fish from mov_bit_list
+        where ordr_num
+        in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <delete id="deleteMTabList" parameterType="list">
+        delete from mov_bit_list
+        where ordr_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 展示列表 -->
+    <select id="selectMTabLists" resultMap="movBitList">
+        SELECT
+        *
+        FROM
+        mov_bit_list AS mList
+        LEFT JOIN invty_doc AS iDoc ON
+        mList.invty_encd = iDoc.invty_encd
+        LEFT JOIN whs_doc AS wDoc ON
+        mList.whs_encd = wDoc.whs_encd
+        LEFT JOIN measr_corp_doc mDoc ON
+        iDoc.measr_corp_id = mDoc.measr_corp_id
+        <!-- LEFT JOIN regn ON
+        mList.regn_encd = regn.regn_encd -->
+        <where>
+            <if test="whsEncd != null and whsEncd.size() >0 ">
+                ANd mList.whs_encd
+                in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                ANd mList.whs_encd
+                in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0 ">
+                ANd mList.invty_encd
+                in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="batNum != null and  batNum.size() >0 ">
+                ANd mList.bat_num
+                in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="oalBit != null and oalBit.size() >0 ">
+                ANd mList.oal_bit
+                in
+                <foreach collection="oalBit" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="targetBit != null and targetBit.size() >0 ">
+                ANd mList.target_bit
+                in
+                <foreach collection="targetBit" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="regnEncd != null and regnEncd.size() >0 ">
+                ANd mList.regn_encd
+                in
+                <foreach collection="regnEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="targetRegnEncd != null and targetRegnEncd.size() >0 ">
+                ANd mList.target_regn_encd
+                in
+                <foreach collection="targetRegnEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isOporFish != null and isOporFish !=''">
+                ANd mList.is_opor_fish = #{isOporFish}
+            </if>
+        </where>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectMTabListsCount" resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        mov_bit_list AS mList
+        LEFT JOIN invty_doc AS iDoc ON
+        mList.invty_encd = iDoc.invty_encd
+        LEFT JOIN whs_doc AS wDoc ON
+        mList.whs_encd = wDoc.whs_encd
+        LEFT JOIN measr_corp_doc mDoc ON
+        iDoc.measr_corp_id = mDoc.measr_corp_id
+        <!-- LEFT JOIN regn ON
+        mList.regn_encd = regn.regn_encd -->
+        <where>
+            <if test="whsEncd != null and whsEncd.size() >0 ">
+                ANd mList.whs_encd
+                in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                ANd mList.whs_encd
+                in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0 ">
+                ANd mList.invty_encd
+                in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="batNum != null and  batNum.size() >0 ">
+                ANd mList.bat_num
+                in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+
+            <if test="oalBit != null and oalBit.size() >0 ">
+                ANd mList.oal_bit
+                in
+                <foreach collection="oalBit" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="targetBit != null and targetBit.size() >0 ">
+                ANd mList.target_bit
+                in
+                <foreach collection="targetBit" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="regnEncd != null and regnEncd.size() >0 ">
+                ANd mList.regn_encd
+                in
+                <foreach collection="regnEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="targetRegnEncd != null and targetRegnEncd.size() >0 ">
+                ANd mList.target_regn_encd
+                in
+                <foreach collection="targetRegnEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isOporFish != null and isOporFish !=''">
+                ANd mList.is_opor_fish = #{isOporFish}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWhsgds" resultType="map">
+        SELECT
+        whs_doc.whs_nm whsNm,
+        whs_doc.whs_encd whsEncd,
+        gds_bit.gds_bit_nm gdsBitNm,
+        gds_bit.gds_bit_encd gdsBitEncd,
+        regn.regn_nm regnNm,
+        regn.regn_encd regnEncd
+        FROM
+        whs_gds
+        JOIN whs_doc ON whs_doc.real_whs = whs_gds.real_whs
+        LEFT JOIN gds_bit ON gds_bit.gds_bit_encd = whs_gds.gds_bit_encd
+        LEFT JOIN regn ON whs_gds.regn_encd = regn.regn_encd
+        <where>
+            <if test="whsEncd != null and whsEncd.size() >0 ">
+                ANd whs_doc.whs_encd
+                in
+                <foreach collection="whsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                ANd whs_doc.whs_encd
+                in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="gdsBitEncd != null and gdsBitEncd.size() >0 ">
+                ANd gds_bit.gds_bit_encd
+                in
+                <foreach collection="gdsBitEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="regnEncd != null and regnEncd.size() >0 ">
+                ANd regn.regn_encd
+                in
+                <foreach collection="regnEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="realWhs != null and realWhs.size() >0 ">
+                ANd whs_doc.real_whs
+                in
+                <foreach collection="realWhs" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.CustDocDao">
+ <!--  新增客户档案 -->
+   <insert id="insertCustDoc" parameterType="CustDoc">
+    insert into cust_doc (cust_id, cust_nm, cust_sht_nm, 
+      cls_id, recvbl_bal, ltst_inv_tm, ltst_inv_amt, 
+      ltst_recv_tm, ltst_recv_amt, biz_lics_pic, bank_open_acct_lics,
+      contcr,tel,addr,scty_crdt_cd,memo,bllg_corp,opn_bnk,bkat_num,
+      bank_encd,delv_addr,dev_dt,setup_pers,setup_dt,tax_rate,cust_totl_corp,cust_totl_corp_id)
+    values (#{custId}, #{custNm}, #{custShtNm}, 
+      #{clsId}, #{recvblBal}, #{ltstInvTm}, 
+      #{ltstInvAmt}, #{ltstRecvTm}, #{ltstRecvAmt}, 
+      #{bizLicsPic}, #{bankOpenAcctLics},#{contcr},
+      #{tel},#{addr},#{sctyCrdtCd},#{memo},#{bllgCorp},
+      #{opnBnk},#{bkatNum},#{bankEncd},#{delvAddr},
+      #{devDt},#{setupPers},now(),#{taxRate},#{custTotlCorp},#{custTotlCorpId})
+  </insert>
+  
+   <!--  导入时使用的新增客户档案 -->
+   <insert id="insertCustDocUpload" parameterType="CustDoc">
+    insert into cust_doc (cust_id, cust_nm, cust_sht_nm, 
+      cls_id, recvbl_bal, ltst_inv_tm, ltst_inv_amt, 
+      ltst_recv_tm, ltst_recv_amt, biz_lics_pic, bank_open_acct_lics,
+      contcr,tel,addr,scty_crdt_cd,memo,bllg_corp,opn_bnk,bkat_num,
+      bank_encd,delv_addr,dev_dt,setup_pers,setup_dt,mdfr,modi_dt,tax_rate,cust_totl_corp,cust_totl_corp_id)
+    values (#{custId}, #{custNm}, #{custShtNm}, 
+      #{clsId}, #{recvblBal}, #{ltstInvTm}, 
+      #{ltstInvAmt}, #{ltstRecvTm}, #{ltstRecvAmt}, 
+      #{bizLicsPic}, #{bankOpenAcctLics},#{contcr},
+      #{tel},#{addr},#{sctyCrdtCd},#{memo},#{bllgCorp},
+      #{opnBnk},#{bkatNum},#{bankEncd},#{delvAddr},
+      #{devDt},#{setupPers},#{setupDt},#{mdfr},
+      #{modiDt},#{taxRate},#{custTotlCorp},#{custTotlCorpId})
+  </insert>
+  <!-- 修改客户档案 -->
+    <update id="updateCustDocByCustId" parameterType="CustDoc">
+    update cust_doc
+    <set>
+	  <if test="custTotlCorp != null">
+	    cust_totl_corp = #{custTotlCorp},
+	  </if>
+	  <if test="custTotlCorpId != null">
+        cust_totl_corp_id = #{custTotlCorpId},
+      </if>
+      <if test="custNm != null">
+        cust_nm = #{custNm},
+      </if>
+      <if test="custShtNm != null">
+        cust_sht_nm = #{custShtNm},
+      </if>
+      <if test="clsId != null">
+        cls_id = #{clsId},
+      </if>
+      <if test="recvblBal != null">
+        recvbl_bal = #{recvblBal},
+      </if>
+      <if test="ltstInvTm != null">
+        ltst_inv_tm = #{ltstInvTm},
+      </if>
+      <if test="ltstInvAmt != null">
+        ltst_inv_amt = #{ltstInvAmt},
+      </if>
+      <if test="ltstRecvTm != null">
+        ltst_recv_tm = #{ltstRecvTm},
+      </if>
+      <if test="ltstRecvAmt != null">
+        ltst_recv_amt = #{ltstRecvAmt},
+      </if>
+      <if test="bizLicsPic != null">
+        biz_lics_pic = #{bizLicsPic},
+      </if>
+      <if test="bankOpenAcctLics != null">
+        bank_open_acct_lics = #{bankOpenAcctLics},
+      </if>
+      <if test="contcr != null">
+        contcr = #{contcr},
+      </if>
+      <if test="tel != null">
+        tel = #{tel},
+      </if>
+      <if test="addr != null">
+        addr = #{addr},
+      </if>
+      <if test="sctyCrdtCd != null">
+        scty_crdt_cd = #{sctyCrdtCd},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+      <if test="bllgCorp != null">
+        bllg_corp = #{bllgCorp},
+      </if>
+      <if test="opnBnk != null">
+        opn_bnk = #{opnBnk},
+      </if>
+      <if test="bkatNum != null">
+        bkat_num = #{bkatNum},
+      </if>
+      <if test="bankEncd != null">
+        bank_encd = #{bankEncd},
+      </if>
+      <if test="delvAddr != null">
+        delv_addr = #{delvAddr},
+      </if>
+      <if test="devDt != null">
+        dev_dt = #{devDt},
+      </if>
+      <if test="mdfr != null">
+        mdfr = #{mdfr},
+      </if>
+      <if test="modiDt != null">
+        modi_dt = now(),
+      </if>
+      <if test="taxRate != null">
+        tax_rate = #{taxRate},
+      </if>
+    </set>
+    where cust_id = #{custId}
+  </update>
+  
+  <!-- 删除客户档案 -->
+  <delete id="deleteCustDocByCustId" parameterType="String">
+    delete from cust_doc where cust_id = #{custId}
+  </delete>
+  
+  <sql id="Base_Column_List">
+    cust_id, cust_nm, cust_sht_nm, cls_id, recvbl_bal, ltst_inv_tm, ltst_inv_amt, ltst_recv_tm, 
+    ltst_recv_amt, biz_lics_pic, bank_open_acct_lics, memo,cust_totl_corp,cust_totl_corp_id
+  </sql>
+  <!-- 按照客户编号查询客户档案 -->
+  <select id="selectCustDocByCustId" parameterType="String" resultMap="custDocMap">
+    select *,cs.memo as memos
+    <!-- <include refid="Base_Column_List" /> -->
+    from cust_doc as cd INNER JOIN cust_cls as cs ON cd.cls_id = cs.cls_id
+    where cd.cust_id = #{custId}
+  </select>
+
+  <!-- 查询所有客户档案 -->
+  <select id="selectCustDocList" parameterType="Map" resultMap="custDocMap">
+	SELECT *,cs.memo as memos
+	FROM cust_doc as cd INNER JOIN cust_cls as cs ON cd.cls_id = cs.cls_id
+  	<where>
+        <if test="custIdList!= null and custIdList.size() > 0">
+			AND cust_id in
+			<foreach item="custId" collection="custIdList" open="("
+				 close=")" separator=",">
+				 #{custId}
+		    </foreach>
+		</if>
+        <if test="custNm != null and custNm != ''">
+            AND cust_nm like "%"#{custNm}"%"
+        </if>
+          <if test="clsId!= null and clsId!= ''">
+			AND SUBSTRING(cd.cls_id,1,LENGTH(#{clsId}))=#{clsId}
+		</if>
+		<if test="custTotlCorpIdList!= null and custTotlCorpIdList.size() > 0">
+			AND cust_totl_corp_id in
+			<foreach item="custTotlCorpId" collection="custTotlCorpIdList" open="("
+				 close=")" separator=",">
+				 #{custTotlCorpId}
+		    </foreach>
+		</if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  <select id="selectCustDocListByItv" parameterType="Map" resultMap="custDocMap">
+	SELECT
+	* 
+FROM
+	(
+	SELECT
+		0.1+CONCAT(1,REPLACE(cust_id,'-','999')) AS oFlag,
+		cd.*,
+		cs.cls_nm,
+		cs.ico,
+		cs.level,
+		cs.pid,
+		cs.memo as memos,
+		cs.proj_encd
+		FROM 
+		cust_doc as cd INNER JOIN cust_cls as cs ON cd.cls_id = cs.cls_id
+		WHERE
+		cust_id LIKE CONCAT( #{tag}, '%' ) 
+	ORDER BY
+		oflag ASC 
+	) b 
+  	<where>
+  	oFlag &gt;= 0.1+CONCAT(1,REPLACE(#{start},'-','999'))
+	AND oFlag &lt;= 0.1+CONCAT(1,REPLACE(#{end},'-','999'))
+        <if test="custIdList!= null and custIdList.size() > 0">
+			AND cust_id in
+			<foreach item="custId" collection="custIdList" open="("
+				 close=")" separator=",">
+				 #{custId}
+		    </foreach>
+		</if>
+        <if test="custNm != null and custNm != ''">
+            AND cust_nm like "%"#{custNm}"%"
+        </if>
+          <if test="clsId!= null and clsId!= ''">
+			AND SUBSTRING(cd.cls_id,1,LENGTH(#{clsId}))=#{clsId}
+		</if>
+		<if test="custTotlCorpIdList!= null and custTotlCorpIdList.size() > 0">
+			AND cust_totl_corp_id in
+			<foreach item="custTotlCorpId" collection="custTotlCorpIdList" open="("
+				 close=")" separator=",">
+				 #{custTotlCorpId}
+		    </foreach>
+		</if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  <select id="selectCustDocCount" parameterType="Map" resultType="Integer">
+	SELECT count(*)
+  	FROM cust_doc as cd INNER JOIN cust_cls as cs ON cd.cls_id = cs.cls_id
+  	<where>
+  		<if test="custIdList!= null and custIdList.size() > 0">
+			AND cust_id in
+			<foreach item="custId" collection="custIdList" open="("
+				 close=")" separator=",">
+				 #{custId}
+		    </foreach>
+		</if>
+        <if test="custNm != null and custNm != ''">
+            AND cust_nm like "%"#{custNm}"%"
+        </if>
+          <if test="clsId!= null and clsId!= ''">
+			AND SUBSTRING(cd.cls_id,1,LENGTH(#{clsId}))=#{clsId}
+		</if>
+		<if test="custTotlCorpIdList!= null and custTotlCorpIdList.size() > 0">
+			AND cust_totl_corp_id in
+			<foreach item="custTotlCorpId" collection="custTotlCorpIdList" open="("
+				 close=")" separator=",">
+				 #{custTotlCorpId}
+		    </foreach>
+		</if>
+  	</where>
+  </select>
+  
+   <!-- 打印以及输入输出所有客户档案 -->
+  <select id="printingCustDocList" parameterType="Map" resultMap="custDocMap">
+	SELECT *,cs.memo as memos
+	FROM cust_doc as cd INNER JOIN cust_cls as cs ON cd.cls_id = cs.cls_id
+  	<where>
+  		<if test="custIdList!= null and custIdList.size() > 0">
+			AND cust_id in
+			<foreach item="custId" collection="custIdList" open="("
+				 close=")" separator=",">
+				 #{custId}
+		    </foreach>
+		</if>
+        <if test="custNm != null and custNm != ''">
+            AND cust_nm like "%"#{custNm}"%"
+        </if>
+        <if test="clsId!= null and clsId!= ''">
+			AND SUBSTRING(cd.cls_id,1,LENGTH(#{clsId}))=#{clsId}
+		</if>
+		<if test="custTotlCorpIdList!= null and custTotlCorpIdList.size() > 0">
+			AND cust_totl_corp_id in
+			<foreach item="custTotlCorpId" collection="custTotlCorpIdList" open="("
+				 close=")" separator=",">
+				 #{custTotlCorpId}
+		    </foreach>
+		</if>
+  	</where>
+  </select>
+  
+  <resultMap type="CustCls" id="custDocMap" autoMapping="true">
+		<id property="clsId" column="cls_id" />
+			<result property="memo" column="memos" />
+		<collection property="custDoc" ofType="CustDoc" autoMapping="true">
+			<id property="custId" column="cust_id" />
+		</collection>
+  </resultMap>
+  
+   <select id="selectClsId" parameterType="String" resultType="String">
+	SELECT cls_id FROM cust_doc where cust_id=#{custId}
+  </select>
+   <select id="selectCustTotalByCustId" parameterType="String" resultType="CustDoc">
+   	SELECT cust_id, cust_nm, cust_sht_nm, cls_id, recvbl_bal, ltst_inv_tm, ltst_inv_amt, ltst_recv_tm, 
+    ltst_recv_amt, biz_lics_pic, bank_open_acct_lics, memo,cust_totl_corp,cust_totl_corp_id  FROM cust_doc WHERE cust_id = #{custId}
+   </select>
+  
+   <!--   批量删除客户档案 -->
+  <delete id="deleteCustDocList" parameterType="java.util.List">
+	delete from cust_doc where cust_id in
+	<foreach item="custId" collection="list" open="(" close=")" separator=",">
+	     #{custId}
+	</foreach>
+  </delete>
+  <select id="selectHaving" parameterType="String" resultType="CustDoc">
+   	SELECT cust_id, cust_nm, cust_sht_nm, cls_id, recvbl_bal, ltst_inv_tm, ltst_inv_amt, ltst_recv_tm, 
+    ltst_recv_amt, biz_lics_pic, bank_open_acct_lics, memo,cust_totl_corp,cust_totl_corp_id  FROM cust_doc WHERE cust_id = #{custId}
+   </select>
+</mapper>

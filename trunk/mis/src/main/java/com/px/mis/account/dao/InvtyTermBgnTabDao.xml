@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtyTermBgnTabDao">
+	<!-- 库存期初分页查询所有 -->
+	<select id="selectInvtyTermBgnTabList" parameterType="Map" resultType="com.px.mis.account.entity.InvtyTermBgnTab">
+	 SELECT a.ordr_num ordrNum,a.whs_encd whsEncd,a.invty_encd invtyEncd,a.invty_cls_id invtyClsId,a.measr_corp_id measrCorpId,
+	 		a.qty qty,a.uprc uprc,a.amt amt,a.cntn_tax_uprc cntnTaxUprc,a.prc_tax_sum prxTaxSum,
+	 		a.bat_num batNum,a.prdc_dt prdcDt,a.qua_guar_per quaGuarPer,a.invty_subj_id invtySubjId,a.memo memo,
+	 		a.invldtn_dt invldtnDt,a.is_nt_boot_entry isNtBootEntry,a.dept_id deptId,
+	 		a.book_entry_pers bookEntryPers,a.book_entry_tm bookEntryTm,a.book_entry_num bookEntryNum,
+	 		a.setup_pers setupPers,a.setup_tm setupTm,a.setup_pers_num setupPersNum,
+	 		a.modi_pers modiPers,a.modi_tm modiTm,a.modi_pers_num modiPersNum,
+	 		a.chk_pers chkPers,a.chk_tm chkTm,a.chk_pers_num chkPersNum,
+	 		b.whs_nm whs,
+	 		c.invty_nm invtyNm,c.spc_model spcModel,c.bx_rule bxRule,
+	 		d.dept_name deptName
+	 FROM invty_term_bgn_tab a
+	 LEFT JOIN whs_doc b
+	 ON	a.whs_encd = b.whs_encd
+	 LEFT JOIN invty_doc c
+	 ON	a.invty_encd = c.invty_encd
+	 LEFT JOIN dept_doc d
+	 ON a.dept_id = d.dept_id
+	 ORDER BY ordr_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectInvtyTermBgnTabByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.InvtyTermBgnTab">
+	 SELECT a.ordr_num ordrNum,a.whs_encd whsEncd,a.invty_encd invtyEncd,a.invty_cls_id invtyClsId,a.measr_corp_id measrCorpId,
+	 		a.qty qty,a.uprc uprc,a.amt amt,a.cntn_tax_uprc cntnTaxUprc,a.prc_tax_sum prxTaxSum,
+	 		a.bat_num batNum,a.prdc_dt prdcDt,a.qua_guar_per quaGuarPer,a.invty_subj_id invtySubjId,a.memo memo,
+	 		a.invldtn_dt invldtnDt,a.is_nt_boot_entry isNtBootEntry,a.dept_id deptId,
+	 		a.book_entry_pers bookEntryPers,a.book_entry_tm bookEntryTm,a.book_entry_num bookEntryNum,
+	 		a.setup_pers setupPers,a.setup_tm setupTm,a.setup_pers_num setupPersNum,
+	 		a.modi_pers modiPers,a.modi_tm modiTm,a.modi_pers_num modiPersNum,
+	 		a.chk_pers chkPers,a.chk_tm chkTm,a.chk_pers_num chkPersNum,
+	 		b.whs_nm whs,
+	 		c.invty_nm invtyNm,c.spc_model spcModel,c.bx_rule bxRule,
+	 		d.dept_name deptName
+	 FROM invty_term_bgn_tab a
+	 LEFT JOIN whs_doc b
+	 ON	a.whs_encd = b.whs_encd
+	 LEFT JOIN invty_doc c
+	 ON	a.invty_encd = c.invty_encd
+	 LEFT JOIN dept_doc d
+	 ON a.dept_id = d.dept_id
+	 WHERE ordr_num=#{ordrNum}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectInvtyTermBgnTabCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM invty_term_bgn_tab
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertInvtyTermBgnTab" parameterType="com.px.mis.account.entity.InvtyTermBgnTab">
+		INSERT INTO invty_term_bgn_tab(whs_encd,invty_encd,invty_cls_id,measr_corp_id,
+			   qty,uprc,amt,cntn_tax_uprc,prx_tax_sum,
+			   bat_num,prdc_dt,qua_guar_per,invty_subj_id,memo,
+			   invldtn_dt,is_nt_boot_entry,dept_id,book_entry_pers,book_entry_tm,
+			   book_entry_num,setup_pers,now(),setup_pers_num,modi_pers,
+			   modi_tm,modi_pers_num,chk_pers,chk_tm,chk_pers_num)
+		VALUES(#{whsEncd},#{invtyEncd},#{invtyClsId},#{measrCorpId},
+			   #{qty},#{uprc},#{amt},#{cntnTaxUprc},#{prxTaxSum},
+			   #{batNum},#{prdcDt},#{quaGuarPer},#{invtySubjId},#{memo},
+			   #{invldtnDt},#{isNtBootEntry},#{deptId},#{bookEntryPers},#{bookEntryTm},
+			   #{bookEntryNum},#{setupPers},now(),#{setupPersNum},#{modiPers},
+			   #{modiTm},#{modiPersNum},#{chkPers},#{chkTm},#{chkPersNum})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteInvtyTermBgnTabByOrdrNum" parameterType="int">
+	 DELETE FROM invty_term_bgn_tab
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateInvtyTermBgnTabByOrdrNum" parameterType="com.px.mis.account.entity.InvtyTermBgnTab">
+	 UPDATE invty_term_bgn_tab
+	    <set>
+	      <if test="ordrNum != null">
+	        ordr_num = #{ordrNum,jdbcType=BIGINT},
+	      </if>
+	      <if test="whsEncd != null">
+	        whs_encd = #{whsEncd,jdbcType=VARCHAR},
+	      </if>
+	      <if test="invtyEncd != null">
+	        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+	      </if>
+	      <if test="invtyClsId != null">
+	        invty_cls_id = #{invtyClsId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="measrCorpId != null">
+	        measr_corp_id = #{measrCorpId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="qty != null">
+	        qty = #{qty,jdbcType=DECIMAL},
+	      </if>
+	      <if test="uprc != null">
+	        uprc = #{uprc,jdbcType=DECIMAL},
+	      </if>
+	      <if test="amt != null">
+	        amt = #{amt,jdbcType=DECIMAL},
+	      </if>
+	      <if test="cntnTaxUprc != null">
+	        cntn_tax_uprc = #{cntnTaxUprc,jdbcType=DECIMAL},
+	      </if>
+	      <if test="prxTaxSum != null">
+	        prc_tax_sum = #{prxTaxSum,jdbcType=DECIMAL},
+	      </if>
+	      <if test="batNum != null">
+	        bat_num = #{batNum,jdbcType=VARCHAR},
+	      </if>
+	      <if test="prdcDt != null">
+	        prdc_dt = #{prdcDt,jdbcType=DATE},
+	      </if>
+	      <if test="quaGuarPer != null">
+	        qua_guar_per = #{quaGuarPer,jdbcType=VARCHAR},
+	      </if>
+	      <if test="invtySubjId != null">
+	        invty_subj_id = #{invtySubjId,jdbcType=VARCHAR},
+	      </if>
+	      <if test="memo != null">
+	        memo = #{memo,jdbcType=VARCHAR},
+	      </if>
+	      <if test="invldtnDt != null">
+	        invldtn_dt = #{invldtnDt,jdbcType=DATE},
+	      </if>
+	      <if test="isNtBootEntry != null">
+	        is_nt_boot_entry = #{isNtBootEntry,jdbcType=INTEGER},
+	      </if>
+	      <if test="deptId != null">
+	        dept_id = #{deptId,jdbcType=VARCHAR},
+	      </if>
+	 	  <if test="bookEntryPers != null">
+	        book_entry_pers = #{bookEntryPers,jdbcType=VARCHAR},
+	      </if>
+	      <if test="bookEntryTm != null">
+	        book_entry_tm = #{bookEntryTm,jdbcType=DATE},
+	      </if>
+	      <if test="bookEntryNum != null">
+	        book_entry_num = #{bookEntryNum,jdbcType=VARCHAR},
+	      </if>
+	      <if test="setupPers != null">
+	        setup_pers = #{setupPers,jdbcType=VARCHAR},
+	      </if>
+	      <if test="setupTm != null">
+	        setup_tm = #{setupTm,jdbcType=DATE},
+	      </if>
+	      <if test="setupPersNum != null">
+	        setup_pers_num = #{setupPersNum,jdbcType=VARCHAR},
+	      </if>
+	 	  <if test="modiPers != null">
+	        modi_pers = #{modiPers,jdbcType=VARCHAR},
+	      </if>
+	      <if test="modiTm != null">
+	        modi_tm = #{modiTm,jdbcType=DATE},
+	      </if>
+	      <if test="modiPersNum != null">
+	        modi_pers_num = #{modiPersNum,jdbcType=VARCHAR},
+	      </if>
+	 	  <if test="chkPers != null">
+	        chk_pers = #{chkPers,jdbcType=VARCHAR},
+	      </if>
+	      <if test="chkTm != null">
+	        chk_tm = #{chkTm,jdbcType=DATE},
+	      </if>
+	      <if test="chkPersNum != null">
+	        chk_pers_num = #{chkPersNum,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	   WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+</mapper>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>存货档案</title>
+
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style>
+		#edit {
+			top: -40px;
+			z-index:99999999;
+		}
+		
+		#edit input,#edit select {
+			width: 100px;
+		}
+		
+		#edit form div div {
+			margin: 10px 30px;
+			float: left;
+			font-size: 12px!important;
+		}
+		
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+		#mengban.zhezhao{
+			/*margin-top:-140px*/
+			bottom: 0;
+		}
+		b {
+			color: red;
+		}
+	</style>
+
+<script>
+	document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/insertInvtyDoc.js?" + new Date().getTime() + "'></scr" + "ipt>");
+</script>
+	<body>
+		<div id="wwrap">
+			<div class="purchaseOrder">
+				<div class="purchaseTit" style="margin:20px">
+					<div class="buttons">
+						<button class="print">打印</button>
+						<button class="importExcel">u8导入</button>
+						<button class="importExcel1">新系统导入</button>
+						<button class="exportExcel">导出</button>
+						<button class="addOrder">增行</button>
+						<button class="delOrder">删行</button>
+						<button class="find">查询</button>
+						<span>
+							<form id="uploadForm" enctype="multipart/form-data">
+								<input type="file" name="FileUpload" id="FileUpload">
+							</form>
+						</span>
+						<!--<button class="all">全部</button>-->
+					</div>
+				</div>
+
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-3">
+								<span>存货编码</span>
+								<input type="text" class="invtyEncd1" name="invtyEncd1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货名称</span>
+								<input type="text" class="invtyNm1" name="invtyNm1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货分类编码</span>
+								<input type="text" class="invtyClsEncd1" name="invtyClsEncd1" value="" />
+							</div>
+							<div class="supplier col-md-3">
+								<span>存货分类名称</span>
+								<input type="text" class="invtyClsNm1" name="invtyClsNm1" value="" />
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<aside>
+					<!--左列树-->
+					<div id="tree"></div>
+				</aside>
+
+				<div id="wrap">
+					<table id="jqgrids"></table>
+					<div id="jqGridPager"></div>
+				</div>
+				<div id="edit">
+					<form action="">
+						<h3></h3>
+						<div class="top">
+							<div>&emsp;存货分类名称：<b>*</b>
+								<select id="select" style="width:100px;position:absolute;z-index:2;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+
+								</select>
+								<!--<input type="text" class="provrClsId"/>-->
+							</div>
+							<div style="margin-left:100px">&emsp;&emsp;&emsp;&emsp;存货编码：<b>*</b><input class="invtyEncd" type="text" /></div>
+							<div>&emsp;存货名称：<input class="invtyNm" type="text" /></div>
+							<div>&emsp;&emsp;&emsp;规格型号：<input type="text" class="spcModel" /></div>
+
+							<div>&emsp;&emsp;存货代码：<input type="text" class="invtyCd" /></div>
+							<div>供应商编码：<input type="text" class="provrId" /></div>
+							<div>&emsp;计量单位名称：<b>*</b>
+								<select id='measrCorpId' class="measrCorpId" style="width:100px;position:absolute;z-index:1;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0" /></select>
+							</div>
+							<div style="margin-left:130px">&emsp;&emsp;&emsp;&emsp;体积：<input type="text" class="vol" /></div>
+							<div>&emsp;&emsp;&emsp;重量：<input type="text" class="weight" /></div>
+							<div>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;长：<input type="text" class="longs" /></div>
+							<div>&emsp;&emsp;&emsp;&emsp;&emsp;宽：<input type="text" class="wide" /></div>
+							<div>&emsp;&emsp;&emsp;&emsp;高：<input type="text" class="hght" /></div>
+							<div>&emsp;&emsp;&emsp;&emsp;&emsp;箱规：<b>*</b><input type="number" class="bxRule" /></div>
+							<div style="margin-left:15px">保质期预警天数：<input type="text" class="baoZhiQiEarWarn" /></div>
+							<div>保质期天数：<b>*</b><input type="text" class="baoZhiQiDt" /></div>
+						</div>
+
+						<div class="mid">
+							<div>&emsp;&emsp;&emsp;&emsp;&emsp;产地：<input type="text" class="placeOfOrigin" /></div>
+							<div>&emsp;&emsp;注册商标：<input type="text" class="rgstBrand" /></div>
+							<div>&emsp;合格证号：<input type="text" class="cretNum" /></div>
+							<div>&emsp;生成许可证号：<input type="text" class="makeLicsNum" /></div>
+							<div>&emsp;&emsp;托架尺寸：<input type="text" class="traySize" /></div>
+							<div>数量/拖(50)：<input type="text" class="quantity" /></div>
+							<div>&emsp;&emsp;&emsp;计价方式：<input type="text" class="valtnMode" /></div>
+							<div>&emsp;&emsp;进项税率：<input type="text" class="iptaxRate" /></div>
+							<div>&emsp;销项税率：<input type="text" class="optaxRate" /></div>
+							<div>&emsp;&emsp;&emsp;最高进价：<input type="text" class="highestPurPrice" /></div>
+							<div>&emsp;&emsp;最低售价：<input type="text" class="loSellPrc" /></div>
+							<div>&emsp;最新成本：<input type="text" class="ltstCost" /></div>
+							<div>&emsp;&emsp;&emsp;参考成本：<b>*</b><input type="text" class="refCost" /></div>
+						</div>
+
+						<div class="bottom">
+							<div>&emsp;&emsp;参考售价：<b>*</b><input type="text" class="refSellPrc" /></div>
+							<div>对应条形码：<input type="text" class="crspdBarCd" /></div>
+							<div>&emsp;&emsp;&emsp;是否销售：
+								<select class="isNtSell" style="margin-left:-4px">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div>&emsp;&emsp;是否采购：
+								<select class="isNtPurs">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div>是否内销：
+								<select class="isDomSale" style="margin-left:3px">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div>&emsp;&emsp;&emsp;&emsp;&emsp;PTO：
+								<select class="pto" style="margin-left:-5px">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div style="margin-left:17px">是否保质期管理：
+								<select class="isQuaGuaPer">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div style="margin-left:7px">允许BOM主件：
+								<select class="allowBomMain">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div>&nbsp;允许BOM子件：
+								<select class="allowBomMinor">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							
+							<div id="isNtDiscnt">&emsp;&emsp;是否折扣：
+								<select class="isNtDiscnt">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div id="shdTaxLabour" style="margin-left:10px">是否应税劳务：
+								<select class="shdTaxLabour">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div id="isNtBarCdMgmt" style="margin-left:10px">&emsp;&emsp;&emsp;是否条形码：
+								<select class="isNtBarCdMgmt" style="margin-left:0px">
+									<option value="1">是</option>
+									<option value="0">否</option>
+								</select>
+							</div>
+							<div>项目档案标识：<input type="text" class="projDocInd" /></div>
+							<div>&emsp;&emsp;&emsp;备注：<input type="text" class="memo" /></div>
+						</div>
+
+					</form>
+					<button class="saveOrder" style="margin-top:5px;margin-left:350px">保存</button>
+					<button class="cancel" style="margin-top:5px">取消</button>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

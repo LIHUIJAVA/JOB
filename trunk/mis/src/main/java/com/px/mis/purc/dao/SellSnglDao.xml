@@ -1,0 +1,2417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.SellSnglDao">
+	<!-- 删除销售单信息 -->
+	<delete id="deleteSellSnglBySellSnglId" parameterType="String">
+		delete
+		ss,sss from sell_sngl as ss LEFT JOIN sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+		where ss.sell_sngl_id = #{sellSnglId}
+	</delete>
+	<!-- 新增销售单信息 -->
+	<insert id="insertSellSngl" parameterType="SellSngl">
+		insert into sell_sngl
+		(sell_sngl_id, sell_sngl_dt,
+		acc_num, user_name, cust_id,
+		biz_typ_id,sell_typ_id, recv_send_cate_id, delv_addr,
+		tx_id,
+		ec_order_id, is_nt_bllg, is_nt_chk,is_nt_book_entry, setup_pers,
+		setup_tm,
+		memo,recvr,recvr_tel,recvr_addr,recvr_eml,buyer_note,is_pick,deliver_self,cust_ordr_num,
+		dept_id,form_typ_encd,is_nt_make_vouch)
+		values (#{sellSnglId},
+		#{sellSnglDt},
+		#{accNum}, #{userName},#{custId}, #{bizTypId},
+		#{sellTypId}, #{recvSendCateId}, #{delvAddr},
+		#{txId}, #{ecOrderId}, 0,
+		0, 0,
+		#{setupPers}, now(), #{memo}, #{recvr}, #{recvrTel},
+		#{recvrAddr},#{recvrEml},
+		#{buyerNote}, 0, #{deliverSelf},#{custOrdrNum},#{deptId},#{formTypEncd},0)
+	</insert>
+	<!-- 删除时候备份一份到废弃表 -->
+	<insert id="insertSellSnglDl" parameterType="list">
+		insert into sell_sngl_dl
+		select * from sell_sngl where sell_sngl_id in
+		<foreach item="sell_sngl_id" collection="list" open="("
+			separator="," close=")">
+			#{sell_sngl_id}
+		</foreach>
+	</insert>
+
+	<!-- 导入时使用 -->
+	<insert id="insertSellSnglUpload" parameterType="SellSngl">
+		insert into sell_sngl (sell_sngl_id, sell_sngl_dt,
+		acc_num, user_name,cust_id, biz_typ_id,sell_typ_id, 
+		recv_send_cate_id, delv_addr,tx_id,ec_order_id, is_nt_bllg,
+		is_nt_chk,is_nt_book_entry, setup_pers,setup_tm,
+		memo,recvr,recvr_tel,recvr_addr,recvr_eml,
+		buyer_note,is_pick,deliver_self,cust_ordr_num,chkr,
+		chk_tm,book_entry_pers,book_entry_tm,mdfr,modi_tm,
+		dept_id,form_typ_encd,is_nt_make_vouch,mak_vouch_pers,mak_vouch_tm
+		)
+		values 
+		<foreach collection="list" item="item" index="index" separator="," close=";">
+			(#{item.sellSnglId},#{item.sellSnglDt},#{item.accNum}, #{item.userName},#{item.custId}, #{item.bizTypId},
+			#{item.sellTypId},#{item.recvSendCateId}, #{item.delvAddr},#{item.txId}, #{item.ecOrderId},
+			#{item.isNtBllg},#{item.isNtChk}, #{item.isNtBookEntry},#{item.setupPers},#{item.setupTm},
+			#{item.memo},#{item.recvr}, #{item.recvrTel}, #{item.recvrAddr},#{item.recvrEml},#{item.buyerNote}, 
+			#{item.isPick}, #{item.deliverSelf}, #{item.custOrdrNum},#{item.chkr},#{item.chkTm},
+			#{item.bookEntryPers},#{item.bookEntryTm},#{item.mdfr},#{item.modiTm},#{item.deptId},
+			'007',#{item.isNtMakeVouch},#{item.makVouchPers},#{item.makVouchTm})
+		</foreach>
+	</insert>
+	<!-- 修改销售单信息 -->
+	<update id="updateSellSnglBySellSnglId" parameterType="SellSngl">
+		update sell_sngl
+		<set>
+			<if test="custOrdrNum != null">
+				cust_ordr_num = #{custOrdrNum},
+			</if>
+			<if test="sellSnglDt != null">
+				sell_sngl_dt = #{sellSnglDt},
+			</if>
+			<if test="deptId != null">
+				dept_id = #{deptId},
+			</if>
+			<if test="accNum != null">
+				acc_num = #{accNum},
+			</if>
+			<if test="buyerNote != null">
+				buyer_note = #{buyerNote},
+			</if>
+			<if test="recvr != null">
+				recvr = #{recvr},
+			</if>
+			<if test="recvrTel != null">
+				recvr_tel = #{recvrTel},
+			</if>
+			<if test="recvrAddr != null">
+				recvr_addr = #{recvrAddr},
+			</if>
+			<if test="recvrEml != null">
+				recvr_eml = #{recvrEml},
+			</if>
+			<if test="ecOrderId != null">
+				ec_order_id = #{ecOrderId},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName},
+			</if>
+			<if test="custId != null">
+				cust_id = #{custId},
+			</if>
+			<if test="bizTypId != null">
+				biz_typ_id = #{bizTypId},
+			</if>
+			<if test="sellTypId != null">
+				sell_typ_id = #{sellTypId},
+			</if>
+			<if test="recvSendCateId != null">
+				recv_send_cate_id = #{recvSendCateId},
+			</if>
+			<if test="delvAddr != null">
+				delv_addr = #{delvAddr},
+			</if>
+			<if test="txId != null">
+				tx_id = #{txId},
+			</if>
+			<if test="mdfr != null">
+				mdfr = #{mdfr},
+			</if>
+			<if test="memo != null">
+				memo = #{memo},
+			</if>
+			<if test="deliverSelf != null">
+				deliver_self = #{deliverSelf},
+			</if>
+			<if test="isPick != null">
+				is_pick = #{isPick},
+			</if>
+			<if test="isNtMakeVouch != null">
+				is_nt_make_vouch = #{isNtMakeVouch},
+			</if>
+			modi_tm = now()
+		</set>
+		where sell_sngl_id = #{sellSnglId}
+	</update>
+	<!-- 查询销售单信息 -->
+	<sql id="Base_Column_List">
+		ss.*,sss.*,sss.memo as
+		memos,st.sell_typ_nm,bt.biz_typ_nm,dd.dept_name,
+		mu.user_name,cd.cust_nm,cd.addr as custDelv,mcd.measr_corp_nm,wd.whs_nm,
+		ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+		ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.crspd_bar_cd,
+		ind.shd_tax_labour,ind.is_nt_discnt,ftyp.form_typ_name,proj.proj_nm
+	</sql>
+
+	<!-- 按照编号查询销售单信息 -->
+	<select id="selectSellSnglBySellSnglId" parameterType="String"
+		resultMap="sellSnglMap">
+		select
+		<include refid="Base_Column_List" />
+		from sell_sngl ss JOIN sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+		LEFT JOIN sell_type as st ON
+		ss.sell_typ_id = st.sell_typ_id
+		LEFT JOIN mis_user mu on
+		ss.acc_num=mu.acc_num
+		LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+		LEFT JOIN biz_type bt on bt.biz_typ_id=ss.biz_typ_id
+		LEFT JOIN dept_doc
+		dd on ss.dept_id=dd.dept_id
+		<!-- LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=ss.recv_send_cate_id -->
+		LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+		LEFT JOIN invty_doc
+		ind on sss.invty_encd=ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd on
+		ind.measr_corp_id=mcd.measr_corp_id
+		LEFT JOIN form_typ_tabs AS ftyp ON ss.form_typ_encd = ftyp.form_typ_encd
+		LEFT JOIN proj_cls AS proj ON proj.proj_encd = sss.proj_encd
+		where ss.sell_sngl_id =
+		#{sellSnglId}
+	</select>
+
+	<!-- 按照编号查询销售单主子表信息 -->
+	<select id="selectSellSnglAndSubBySellSnglId"
+		parameterType="String" resultMap="sellSnglMap">
+		select
+		ss.*,
+		sss.*,sss.memo as
+		memos,ind.shd_tax_labour,ind.is_nt_discnt
+		from sell_sngl ss JOIN
+		sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+		left JOIN
+		invty_doc ind on sss.invty_encd=ind.invty_encd
+		where ss.sell_sngl_id =
+		#{sellSnglId}
+	</select>
+
+	<!-- 按照编号查询销售单主表信息 -->
+	<select id="selectSellSnglById" parameterType="String"
+		resultType="SellSngl">
+		select * from sell_sngl where sell_sngl_id=#{sellSnglId}
+	</select>
+
+	<!-- 销售单列表中查询所有销售单信息 -->
+	<select id="selectSellSnglList" parameterType="Map"
+		resultMap="sellSnglMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sell_sngl as ss JOIN sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+			LEFT JOIN sell_type as st ON ss.sell_typ_id = st.sell_typ_id
+			LEFT JOIN mis_user mu on ss.acc_num=mu.acc_num
+			LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+			LEFT JOIN biz_type bt on bt.biz_typ_id=ss.biz_typ_id
+			LEFT JOIN dept_doc dd on ss.dept_id=dd.dept_id
+			LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+			LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+			LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+			LEFT JOIN form_typ_tabs AS ftyp ON ss.form_typ_encd = ftyp.form_typ_encd
+			LEFT JOIN proj_cls AS proj ON proj.proj_encd = sss.proj_encd
+		<where>
+			<if test="sellSnglIdList != null and sellSnglIdList.size() > 0">
+				AND ss.sell_sngl_id in
+				<foreach item="sellSnglId" collection="sellSnglIdList"
+					open="(" close=")" separator=",">
+					#{sellSnglId}
+				</foreach>
+			</if>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.sell_sngl_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.sell_sngl_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND ss.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="txId != null and txId != ''">
+				AND ss.tx_id=#{txId}
+			</if>
+			<if test="ecOrderId != null and ecOrderId != ''">
+				AND ss.ec_order_id=#{ecOrderId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND ss.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND ss.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND ss.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND sss.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+		ORDER BY ss.sell_sngl_id DESC
+		LIMIT #{index},#{num}
+	</select>
+	
+	<select id="selectSellSnglCount" parameterType="Map"
+		resultType="Integer">
+		SELECT count(ss.sell_sngl_id)
+		FROM sell_sngl as ss
+		JOIN sell_sngl_sub as sss on ss.sell_sngl_id=sss.sell_sngl_id
+		LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+		<!-- LEFT JOIN sell_type as st ON ss.sell_typ_id = st.sell_typ_id LEFT 
+			JOIN mis_user mu on ss.acc_num=mu.acc_num LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id 
+			LEFT JOIN biz_type bt on bt.biz_typ_id=ss.biz_typ_id LEFT JOIN dept_doc dd 
+			on ss.dept_id=dd.dept_id LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=ss.recv_send_cate_id 
+			LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd LEFT JOIN measr_corp_doc 
+			mcd on ind.measr_corp_id=mcd.measr_corp_id -->
+		<where>
+			<if test="sellSnglIdList != null and sellSnglIdList.size() > 0">
+				AND ss.sell_sngl_id in
+				<foreach item="sellSnglId" collection="sellSnglIdList"
+					open="(" close=")" separator=",">
+					#{sellSnglId}
+				</foreach>
+			</if>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.sell_sngl_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.sell_sngl_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND ss.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="txId != null and txId != ''">
+				AND ss.tx_id=#{txId}
+			</if>
+			<if test="ecOrderId != null and ecOrderId != ''">
+				AND ss.ec_order_id=#{ecOrderId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND ss.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND ss.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND ss.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND sss.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+	</select>
+
+	<resultMap type="SellSngl" id="sellSnglMap"
+		autoMapping="true">
+		<id property="sellSnglId" column="sell_sngl_id" />
+		<collection property="sellSnglSub" ofType="SellSnglSub"
+			autoMapping="true">
+			<id property="ordrNum" column="ordr_num" />
+			<result property="memo" column="memos" /> 
+		</collection>
+	</resultMap>
+
+	<!-- 批量删除 -->
+	<delete id="deleteSellSnglList" parameterType="java.util.List">
+		delete ss,sss
+		FROM sell_sngl as ss LEFT JOIN sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+		where ss.sell_sngl_id in
+		<foreach item="sellSnglId" collection="list" open="("
+			close=")" separator=",">
+			#{sellSnglId}
+		</foreach>
+	</delete>
+
+	<!-- 审核时更新审核状态 -->
+	<update id="updateSellSnglIsNtChkList"
+		parameterType="java.util.List">
+		update sell_sngl
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_chk =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when
+					sell_sngl_id = #{item.sellSnglId} then #{item.isNtChk}
+				</foreach>
+			</trim>
+			<trim prefix="chkr =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.chkr != null and item.chkr!=''">
+						when sell_sngl_id = #{item.sellSnglId} then
+						#{item.chkr}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="chk_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when
+					sell_sngl_id = #{item.sellSnglId} then now()
+				</foreach>
+			</trim>
+		</trim>
+		where sell_sngl_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.sellSnglId}
+		</foreach>
+	</update>
+
+	<!-- 单个更新审核状态 -->
+	<update id="updateSellSnglIsNtChk" parameterType="SellSngl">
+		update sell_sngl
+		<set>
+			<if test="isNtChk != null">
+				is_nt_chk = #{isNtChk},
+			</if>
+			<if test="chkr != null">
+				chkr = #{chkr},
+			</if>
+			<if test="chkTm != null || chkTm == null">
+				chk_tm = now(),
+			</if>
+		</set>
+		where sell_sngl_id=#{sellSnglId} 
+		and is_nt_chk != #{isNtChk}
+	</update>
+
+	<!-- 打印及输入输出时查询所有销售单信息 -->
+	<select id="printingSellSnglList" parameterType="Map"
+		resultMap="SellSnglListOrderBy">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sell_sngl as ss JOIN sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+		LEFT JOIN sell_type as st ON
+		ss.sell_typ_id = st.sell_typ_id
+		LEFT JOIN mis_user mu on
+		ss.acc_num=mu.acc_num
+		LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+		LEFT JOIN biz_type bt on bt.biz_typ_id=ss.biz_typ_id
+		LEFT JOIN dept_doc
+		dd on ss.dept_id=dd.dept_id
+		LEFT JOIN recv_send_cate rsc on
+		rsc.recv_send_cate_id=ss.recv_send_cate_id
+		LEFT JOIN whs_doc wd on
+		sss.whs_encd=wd.whs_encd
+		LEFT JOIN invty_doc ind on
+		sss.invty_encd=ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd on
+		ind.measr_corp_id=mcd.measr_corp_id
+		LEFT JOIN form_typ_tabs AS ftyp ON ss.form_typ_encd = ftyp.form_typ_encd
+			LEFT JOIN proj_cls AS proj ON proj.proj_encd = sss.proj_encd
+		<where>
+			<if test="sellSnglIdList != null and sellSnglIdList.size() > 0">
+				AND ss.sell_sngl_id in
+				<foreach item="sellSnglId" collection="sellSnglIdList"
+					open="(" close=")" separator=",">
+					#{sellSnglId}
+				</foreach>
+			</if>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.sell_sngl_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.sell_sngl_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND ss.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="txId != null and txId != ''">
+				AND ss.tx_id=#{txId}
+			</if>
+			<if test="ecOrderId != null and ecOrderId != ''">
+				AND ss.ec_order_id=#{ecOrderId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND ss.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND ss.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND ss.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND sss.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+		ORDER BY ss.sell_sngl_id DESC
+	</select>
+
+	<!-- 查询审核状态 -->
+	<select id="selectSellSnglIsNtChk" parameterType="String"
+		resultType="Integer">
+		select is_nt_chk from sell_sngl where
+		sell_sngl_id=#{sellSnglId}
+	</select>
+
+	<!-- 查询拣货状态 -->
+	<select id="selectSellSnglIsPick" parameterType="String"
+		resultType="Integer">
+		select is_pick from sell_sngl where
+		sell_sngl_id=#{sellSnglId}
+	</select>
+
+	<!-- 根据销售单编号删除物流表信息 -->
+	<delete id="deleteLogisticsTab" parameterType="String">
+		delete FROM
+		logistics_tab where sale_encd=#{saleEncd}
+	</delete>
+
+	<!-- 按照订单外键查询销售单信息 -->
+	<select id="selectSellSnglByOrderId" parameterType="String"
+		resultType="SellSngl">
+		select
+		sell_sngl_id,sell_sngl_dt,acc_num,user_name,cust_id,biz_typ_id,
+		sell_typ_id,recv_send_cate_id,delv_addr,tx_id,is_nt_bllg,is_nt_chk,chkr,
+		chk_tm,is_nt_book_entry,book_entry_pers,book_entry_tm,setup_pers,setup_tm,
+		mdfr,modi_tm,memo,is_pick
+		from sell_sngl
+		where tx_id = #{orderId}
+	</select>
+
+
+	<!-- 根据销售单号查询物流表是否存在 -->
+	<select id="selectLogisticsTabBySellSnglId"
+		parameterType="String" resultType="LogisticsTab">
+		select sale_encd,order_id from logistics_tab where sale_encd=#{sellSnglId}
+	</select>
+
+	<!-- 单个修改开票状态 -->
+	<update id="updateSellSnglIsNtBllgOK" parameterType="String">
+		update sell_sngl set is_nt_bllg = 1
+		where sell_sngl_id=#{sellSnglId}
+	</update>
+
+	<!-- 单个修改开票状态 -->
+	<update id="updateSellSnglIsNtBllgNO" parameterType="String">
+		update sell_sngl set is_nt_bllg = 0
+		where sell_sngl_id=#{sellSnglId}
+	</update>
+
+	<!-- 查询根据销售出库单编码查询对应销售主表中的销售单号 -->
+	<select id="selectB" resultType="String" parameterType="Map">
+		select sow.sell_ordr_ind
+		from sell_out_whs sow left join sell_out_whs_sub sows on sow.out_whs_id =
+		sows.out_whs_id
+		where whs_encd='JD'
+		GROUP BY invty_encd,sows.out_whs_id HAVING COUNT(ordr_num) =1
+	</select>
+	<!-- 根据销售单编号修改销售单子表中批号、生产日期等 -->
+	<update id="updateA" parameterType="String">
+		update sell_sngl_sub a,sell_out_whs b,sell_out_whs_sub c
+		set a.bat_num=c.bat_num , a.prdc_dt=c.prdc_dt , a.invldtn_dt=c.invldtn_dt
+		, a.bao_zhi_qi=c.bao_zhi_qi
+		where a.sell_sngl_id = b.sell_ordr_ind and b.out_whs_id=c.out_whs_id and
+		a.sell_sngl_id = #{sellSnglId}
+	</update>
+	<!-- 销售统计表查询 -->
+	<select id="selectXSTJ" resultType="Map" parameterType="Map">
+		SELECT
+		*,ifnull(CB.CBJE1,0) CBJE,(KPView.noTaxAmt-(ifnull(CB.CBJE1,0))) as ML
+		FROM
+		KPView
+		LEFT JOIN (
+		SELECT
+		sow.sell_ordr_ind,sows.invty_encd,sows.bat_num,sows.no_tax_uprc,
+		sum(sows.no_tax_amt) AS CBJE1
+		FROM
+		sell_out_whs sow
+		JOIN sell_out_whs_sub sows ON sow.out_whs_id = sows.out_whs_id
+		GROUP BY
+		sow.sell_ordr_ind,
+		sows.invty_encd,
+		sows.bat_num
+		) AS CB ON kpview.sellSnglNums = cb.sell_ordr_ind
+		AND kpview.invtyEncd = cb.invty_encd
+		AND KPView.batNum = cb.bat_num
+		<where>
+			<if test="bllgDt1 != null and bllgDt1 != ''">
+				AND KPView.bllgDt &gt;=#{bllgDt1}
+			</if>
+			<if test="bllgDt2 != null and bllgDt2 != ''">
+				AND KPView.bllgDt &lt;=#{bllgDt2}
+			</if>
+			<if test="accNumList!= null and accNumList.size() > 0">
+				AND KPView.accNum in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="deptIdList!= null and deptIdList.size() > 0">
+				AND KPView.deptId in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="custIdList!= null and custIdList.size() > 0">
+				AND KPView.custId in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND KPView.invtyEncd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				AND KPView.invtyClsEncd in
+				<foreach item="invtyClsEncd" collection="invtyClsEncdList"
+					open="(" close=")" separator=",">
+					#{invtyClsEncd}
+				</foreach>
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND KPView.invtyCd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND KPView.batNum in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	<!-- 查询销售统计表总条数 -->
+	<select id="selectXSTJCount" resultType="Integer"
+		parameterType="Map">
+		SELECT
+		count(kpview.sellIvnNum)
+		FROM
+		KPView
+		LEFT JOIN (
+		SELECT
+		sow.sell_ordr_ind,sows.invty_encd,sows.bat_num,sows.no_tax_uprc,
+		sum(sows.no_tax_amt) AS CBJE1
+		FROM
+		sell_out_whs sow
+		JOIN sell_out_whs_sub sows ON sow.out_whs_id = sows.out_whs_id
+		GROUP BY
+		sow.sell_ordr_ind,
+		sows.invty_encd,
+		sows.bat_num
+		) AS CB ON kpview.sellSnglNums = cb.sell_ordr_ind
+		AND kpview.invtyEncd = cb.invty_encd
+		AND KPView.batNum = cb.bat_num
+		<where>
+			<if test="bllgDt1 != null and bllgDt1 != ''">
+				AND KPView.bllgDt &gt;=#{bllgDt1}
+			</if>
+			<if test="bllgDt2 != null and bllgDt2 != ''">
+				AND KPView.bllgDt &lt;=#{bllgDt2}
+			</if>
+			<if test="accNumList!= null and accNumList.size() > 0">
+				AND KPView.accNum in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="deptIdList!= null and deptIdList.size() > 0">
+				AND KPView.deptId in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="custIdList!= null and custIdList.size() > 0">
+				AND KPView.custId in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND KPView.invtyEncd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				AND KPView.invtyClsEncd in
+				<foreach item="invtyClsEncd" collection="invtyClsEncdList"
+					open="(" close=")" separator=",">
+					#{invtyClsEncd}
+				</foreach>
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND KPView.invtyCd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND KPView.batNum in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<!-- 销售统计表2 查询 -->
+	<select id="selectSalesCountList" parameterType="Map"
+		resultType="InvtyDetail">
+		SELECT
+		sel.cust_id,cust.cust_nm,sel.dept_id,dept.dept_name,sel.acc_num,sels.invty_encd,invty.invty_nm,sels.bat_num,
+		SUM(sels.qty) as qty,SUM(sels.no_tax_amt) as amt,SUM(sels.tax_amt)
+		sellAmt,SUM(sels.prc_tax_sum) sellInAmt
+		FROM
+		sell_comn_inv sel
+		INNER JOIN sell_comn_inv_sub sels ON sel.sell_inv_num = sels.sell_inv_num
+		LEFT JOIN cust_doc cust ON cust.cust_id = sel.cust_id
+		LEFT JOIN dept_doc dept ON dept.dept_id = sel.dept_id
+		LEFT JOIN invty_doc invty ON invty.invty_encd = sels.invty_encd
+		WHERE 1=1
+		<if test="bllgDt1 != null and bllgDt1 != ''">
+			AND sel.bllg_dt &gt;= #{bllgDt1}
+		</if>
+		<if test="bllgDt2 != null and bllgDt2 != ''">
+			AND sel.bllg_dt &lt;= #{bllgDt2}
+		</if>
+		<if test="accNumList!= null and accNumList.size() > 0">
+			AND sel.acc_num in
+			<foreach item="accNum" collection="accNumList" open="("
+				close=")" separator=",">
+				#{accNum}
+			</foreach>
+		</if>
+		<if test="deptIdList!= null and deptIdList.size() > 0">
+			AND sel.dept_id in
+			<foreach item="deptId" collection="deptIdList" open="("
+				close=")" separator=",">
+				#{deptId}
+			</foreach>
+		</if>
+		<if test="custIdList!= null and custIdList.size() > 0">
+			AND sel.cust_id in
+			<foreach item="custId" collection="custIdList" open="("
+				close=")" separator=",">
+				#{custId}
+			</foreach>
+		</if>
+		<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+			AND sels.invty_encd in
+			<foreach item="invtyEncd" collection="invtyEncdList" open="("
+				close=")" separator=",">
+				#{invtyEncd}
+			</foreach>
+		</if>
+		<if test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+			<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+		</if>
+		<if test="invtyCdList != null and invtyCdList.size() > 0">
+			AND invty.invty_cd in
+			<foreach item="invtyCd" collection="invtyCdList" open="("
+				close=")" separator=",">
+				#{invtyCd}
+			</foreach>
+		</if>
+		<if test="batNumList!= null and batNumList.size() > 0">
+			AND sels.bat_num in
+			<foreach item="batNum" collection="batNumList" open="("
+				close=")" separator=",">
+				#{batNum}
+			</foreach>
+		</if>
+		<if test="isAll !=null and isAll != ''">
+			GROUP BY sel.cust_id,sel.dept_id,sels.invty_encd
+			<if
+				test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+				ORDER BY ${sort} ${sortOrder}
+			</if>
+			LIMIT #{index},#{num}
+		</if>
+	</select>
+	<select id="selectSalesCost" parameterType="Map"
+		resultType="BigDecimal">
+		SELECT ROUND(SUM(BB.chengben),2) as chengben FROM
+		(select AA.out_whs_id, AA.invty_encd,AA.bat_num,SUM(AA.qty)*MAX(AA.uuuu) as
+		chengben from
+		(((SELECT
+		outws.out_whs_id,MAX(outws.no_tax_uprc) as uuuu,outws.invty_encd,outws.bat_num,'' as qty
+		FROM
+		sell_out_whs_sub outws
+		WHERE
+		outws.out_whs_id IN (
+		SELECT
+		outw.out_whs_id
+		FROM
+		sell_out_whs outw
+		WHERE
+		outw.sell_ordr_ind IN (
+		SELECT
+		sels.sell_sngl_nums
+		FROM
+		sell_comn_inv_sub sels
+		WHERE
+		sels.sell_inv_num IN (
+		SELECT
+		sel.sell_inv_num
+		FROM
+		sell_comn_inv sel
+		WHERE
+		1 = 1
+		<if test="custId != null and custId != ''">
+			AND sel.cust_id = #{custId}
+		</if>
+		<if test="deptId != null and deptId != ''">
+			AND sel.dept_id = #{deptId}
+		</if>
+		<if test="bllgDt1 != null and bllgDt1 != ''">
+			AND sel.bllg_dt &gt;= #{bllgDt1}
+		</if>
+		<if test="bllgDt2 != null and bllgDt2 != ''">
+			AND sel.bllg_dt &lt;= #{bllgDt2}
+		</if>
+		)
+		)
+		)
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND outws.invty_encd = #{invtyEncd}
+		</if>
+		group by outws.out_whs_id,outws.invty_encd,outws.bat_num)
+		UNION ALL
+		(
+		SELECT
+		sels.out_whs_id,'' as uuuu, sels.invty_encd,sels.bat_num,sels.qty as qty
+		FROM
+		sell_comn_inv_sub sels
+		WHERE
+		sels.sell_inv_num IN (
+		SELECT
+		sel.sell_inv_num
+		FROM
+		sell_comn_inv sel
+		WHERE
+		1 = 1
+		<if test="custId != null and custId != ''">
+			AND sel.cust_id = #{custId}
+		</if>
+		<if test="deptId != null and deptId != ''">
+			AND sel.dept_id = #{deptId}
+		</if>
+		<if test="bllgDt1 != null and bllgDt1 != ''">
+			AND sel.bllg_dt &gt;= #{bllgDt1}
+		</if>
+		<if test="bllgDt2 != null and bllgDt2 != ''">
+			AND sel.bllg_dt &lt;= #{bllgDt2}
+		</if>
+		)
+
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND sels.invty_encd = #{invtyEncd}
+		</if>
+		)) as AA)
+		group by AA.out_whs_id, AA.invty_encd,AA.bat_num)AS BB
+		group by BB.invty_encd
+	</select>
+	<select id="countSalesCountList" parameterType="Map"
+		resultType="int">
+		SELECT COUNT(*) FROM (
+		SELECT
+		sel.sell_inv_num
+		FROM
+		sell_comn_inv sel
+		INNER JOIN sell_comn_inv_sub sels ON sel.sell_inv_num = sels.sell_inv_num
+		LEFT JOIN cust_doc cust ON cust.cust_id = sel.cust_id
+		LEFT JOIN dept_doc dept ON dept.dept_id = sel.dept_id
+		LEFT JOIN invty_doc invty ON invty.invty_encd = sels.invty_encd
+		WHERE 1=1
+		<if test="bllgDt1 != null and bllgDt1 != ''">
+			AND sel.bllg_dt &gt;= #{bllgDt1}
+		</if>
+		<if test="bllgDt2 != null and bllgDt2 != ''">
+			AND sel.bllg_dt &lt;= #{bllgDt2}
+		</if>
+		<if test="accNumList!= null and accNumList.size() > 0">
+			AND sel.acc_num in
+			<foreach item="accNum" collection="accNumList" open="("
+				close=")" separator=",">
+				#{accNum}
+			</foreach>
+		</if>
+		<if test="deptIdList!= null and deptIdList.size() > 0">
+			AND sel.dept_id in
+			<foreach item="deptId" collection="deptIdList" open="("
+				close=")" separator=",">
+				#{deptId}
+			</foreach>
+		</if>
+		<if test="custIdList!= null and custIdList.size() > 0">
+			AND sel.cust_id in
+			<foreach item="custId" collection="custIdList" open="("
+				close=")" separator=",">
+				#{custId}
+			</foreach>
+		</if>
+		<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+			AND sels.invty_encd in
+			<foreach item="invtyEncd" collection="invtyEncdList" open="("
+				close=")" separator=",">
+				#{invtyEncd}
+			</foreach>
+		</if>
+		<if test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+			<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+		</if>
+		<if test="invtyCdList != null and invtyCdList.size() > 0">
+			AND invty.invty_cd in
+			<foreach item="invtyCd" collection="invtyCdList" open="("
+				close=")" separator=",">
+				#{invtyCd}
+			</foreach>
+		</if>
+		<if test="batNumList!= null and batNumList.size() > 0">
+			AND sels.bat_num in
+			<foreach item="batNum" collection="batNumList" open="("
+				close=")" separator=",">
+				#{batNum}
+			</foreach>
+		</if>
+		GROUP BY sel.cust_id,sel.dept_id,sels.invty_encd
+		) a
+	</select>
+
+
+	<!-- 销售明细查询 查询所有销售单对应的发票信息 -->
+	<select id="selectSellSnglInvtyEncd" parameterType="Map"
+		resultType="BeiYong">
+		SELECT
+		date_format(ss.bllg_dt,'%Y-%c-%d %T') formDt,ind.invty_encd invtyEncd,ind.invty_nm
+		invtyNm,ind.spc_model spcModel,
+		ind.invty_cd invtyCd,ind.bx_rule bxRule,mcd.measr_corp_nm measrCorpNm,sss.whs_encd
+		whsEncd,wd.whs_nm whsNm,sss.bat_num batNum,
+		sum(sss.no_tax_amt)/sum(sss.qty) noTaxUprc,sum(sss.no_tax_amt)
+		noTaxAmt,sum(sss.prc_tax_sum)/sum(sss.qty) cntnTaxUprc,
+		sum(sss.prc_tax_sum) prcTaxSum,sum(sss.qty) qty,sum(sss.bx_qty)
+		bxQty,sum(sss.tax_amt) taxAmt,sss.tax_rate taxRate,ss.cust_id
+		custId,cd.cust_nm custNm
+		FROM sell_comn_inv as ss JOIN sell_comn_inv_sub as sss on
+		ss.sell_inv_num=sss.sell_inv_num
+		LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+		LEFT JOIN mis_user mu on mu.acc_num=ss.acc_num
+		LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+		LEFT JOIN dept_doc dd on ss.dept_id=dd.dept_id
+		LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+		<where>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.bllg_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.bllg_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+		GROUP BY ss.cust_id,ss.acc_num,ss.dept_id,ss.bllg_dt
+		ORDER BY
+		<if
+			test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+			${sort} ${sortOrder},
+		</if>
+		ss.bllg_dt DESC
+
+		<if test="index != null and num !=null">
+			LIMIT #{index},#{num}
+		</if>
+	</select>
+	<select id="selectSellSnglInvtyEncdSums" parameterType="Map"
+		resultType="map">
+		SELECT
+		sum(sss.no_tax_amt) noTaxAmt,
+		sum(sss.prc_tax_sum) prcTaxSum,
+		sum(sss.qty) qty,
+		sum(sss.bx_qty)
+		bxQty,sum(sss.tax_amt) taxAmt
+		FROM sell_comn_inv as ss JOIN sell_comn_inv_sub as sss on
+		ss.sell_inv_num=sss.sell_inv_num
+		
+		LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+		<where>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.bllg_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.bllg_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+	</select>
+
+	<select id="selectSellSnglInvtyEncdCount" parameterType="Map"
+		resultType="Integer">
+		SELECT count(*)
+		FROM (SELECT
+		date_format(ss.bllg_dt,'%Y-%c-%d %T') formDt,ind.invty_encd invtyEncd,ind.invty_nm
+		invtyNm,ind.spc_model spcModel,
+		ind.invty_cd invtyCd,ind.bx_rule bxRule,mcd.measr_corp_nm measrCorpNm,sss.whs_encd
+		whsEncd,wd.whs_nm whsNm,sss.bat_num batNum,
+		sum(sss.no_tax_amt)/sum(sss.qty) noTaxUprc,sum(sss.no_tax_amt)
+		noTaxAmt,sum(sss.prc_tax_sum)/sum(sss.qty) cntnTaxUprc,
+		sum(sss.prc_tax_sum) prcTaxSum,sum(sss.qty) qty,sum(sss.tax_amt)
+		taxAmt,sum(sss.bx_qty) bxQty,sss.tax_rate taxRate,ss.cust_id
+		custId,cd.cust_nm custNm
+		FROM sell_comn_inv as ss JOIN sell_comn_inv_sub as sss on
+		ss.sell_inv_num=sss.sell_inv_num
+		LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+		LEFT JOIN mis_user mu on mu.acc_num=ss.acc_num
+		LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+		LEFT JOIN dept_doc dd on ss.dept_id=dd.dept_id
+		LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+		<where>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.bllg_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.bllg_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+		GROUP BY ss.cust_id,ss.acc_num,ss.dept_id,ss.bllg_dt
+		) as A
+	</select>
+
+	<!-- 按照编号查询销售单主表信息_参照时使用 -->
+	<select id="selectSellSnglListToCZ" parameterType="Map"
+		resultType="SellSngl">
+		SELECT
+		ss.*,st.sell_typ_nm,bt.biz_typ_nm,dd.dept_name,mu.user_name,cd.cust_nm
+		FROM sell_sngl as ss JOIN sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+		LEFT JOIN sell_type as st ON ss.sell_typ_id = st.sell_typ_id
+		LEFT JOIN mis_user mu on ss.acc_num=mu.acc_num
+		LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+		LEFT JOIN biz_type bt on bt.biz_typ_id=ss.biz_typ_id
+		LEFT JOIN dept_doc dd on ss.dept_id=dd.dept_id
+		LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+		<where>
+			<if test="sellSnglIdList != null and sellSnglIdList.size() > 0">
+				AND ss.sell_sngl_id in
+				<foreach item="sellSnglId" collection="sellSnglIdList"
+					open="(" close=")" separator=",">
+					#{sellSnglId}
+				</foreach>
+			</if>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.sell_sngl_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.sell_sngl_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND ss.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="txId != null and txId != ''">
+				AND ss.tx_id=#{txId}
+			</if>
+			<if test="ecOrderId != null and ecOrderId != ''">
+				AND ss.ec_order_id=#{ecOrderId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND ss.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND ss.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND ss.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND sss.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="rtnblQty!= null and rtnblQty!=''">
+				AND sss.rtnbl_qty!=0
+			</if>
+			<if test="unBllgQty!= null and unBllgQty!=''">
+				AND sss.un_bllg_qty!=0
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+		GROUP BY ss.sell_sngl_id
+		<if
+			test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+			ORDER BY ${sort} ${sortOrder}
+		</if>
+		LIMIT #{index},#{num}
+	</select>
+	<select id="selectSellSnglListToCZCount" parameterType="Map"
+		resultType="Integer">
+		SELECT count(DISTINCT(ss.sell_sngl_id))
+		FROM sell_sngl as ss
+		JOIN sell_sngl_sub as sss on ss.sell_sngl_id=sss.sell_sngl_id
+		LEFT JOIN
+		invty_doc ind on sss.invty_encd=ind.invty_encd
+		<where>
+			<if test="sellSnglIdList != null and sellSnglIdList.size() > 0">
+				AND ss.sell_sngl_id in
+				<foreach item="sellSnglId" collection="sellSnglIdList"
+					open="(" close=")" separator=",">
+					#{sellSnglId}
+				</foreach>
+			</if>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.sell_sngl_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.sell_sngl_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND ss.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="txId != null and txId != ''">
+				AND ss.tx_id=#{txId}
+			</if>
+			<if test="ecOrderId != null and ecOrderId != ''">
+				AND ss.ec_order_id=#{ecOrderId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND ss.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND ss.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND ss.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND sss.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+				<if test="unBllgQty!= null and unBllgQty!=''">
+					AND sss.un_bllg_qty!=0
+				</if>
+			</if>
+			<if test="rtnblQty!= null and rtnblQty!=''">
+				AND sss.rtnbl_qty!=0
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+	</select>
+
+	<!-- 参照时查询销售单退货单列表 -->
+	<select id="selectSellSnglCZLists" parameterType="Map"
+		resultType="SellSngl">
+		select a.sell_sngl_id,a.sell_sngl_dt,a.acc_num,a.user_name,a.cust_id,
+		a.dept_id,f.dept_name deptName,a.form_typ_encd,a.biz_typ_id,a.sell_typ_id,
+		a.cust_ordr_num,c.sell_typ_nm sellTypNm,d.biz_typ_nm bizTypNm,
+		g.cust_nm custNm,h.form_typ_name
+		from sell_sngl a INNER JOIN sell_sngl_sub b on
+		a.sell_sngl_id=b.sell_sngl_id
+		LEFT JOIN sell_type c ON a.sell_typ_id = c.sell_typ_id
+		LEFT JOIN biz_type d ON a.biz_typ_id = d.biz_typ_id
+		LEFT JOIN mis_user mu on a.acc_num=mu.acc_num
+		LEFT JOIN dept_doc f ON a.dept_id = f.dept_id
+		LEFT JOIN cust_doc g ON a.cust_id = g.cust_id
+		LEFT JOIN form_typ_tabs h ON a.form_typ_encd=h.form_typ_encd
+		
+		<where>
+			<if test="formIdList != null and formIdList.size() > 0">
+				AND a.sell_sngl_id in
+				<foreach item="formId" collection="formIdList" open="("
+					close=")" separator=",">
+					#{formId}
+				</foreach>
+			</if>
+			<if test="formDate1 != null and formDate1 != ''">
+				AND a.sell_sngl_dt &gt;=#{formDate1}
+			</if>
+			<if test="formDate2 != null and formDate2 != ''">
+				AND a.sell_sngl_dt &lt;=#{formDate2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND a.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND a.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND a.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND a.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND a.sell_typ_id=#{sellTypId}
+			</if>
+
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND a.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND b.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND b.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND b.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND a.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND a.is_nt_bllg=#{isNtBllg}
+			</if>
+				AND b.un_bllg_qty!=0
+		</where>
+		GROUP BY a.sell_sngl_id
+		UNION all
+		select a.rtn_goods_id id,a.rtn_goods_dt date,a.acc_num,a.user_name,
+		a.cust_id,a.dept_id,f.dept_name,a.form_typ_encd,a.biz_typ_id,
+		a.sell_typ_id,a.cust_ordr_num,c.sell_typ_nm sellTypNm,
+		d.biz_typ_nm bizTypNm,g.cust_nm custNm,h.form_typ_name
+		from rtn_goods a INNER JOIN rtn_goods_sub b on
+		a.rtn_goods_id=b.rtn_goods_id
+		LEFT JOIN sell_type c ON a.sell_typ_id = c.sell_typ_id
+		LEFT JOIN biz_type d ON a.biz_typ_id = d.biz_typ_id
+		LEFT JOIN mis_user mu on a.acc_num=mu.acc_num
+		LEFT JOIN dept_doc f ON a.dept_id = f.dept_id
+		LEFT JOIN cust_doc g ON a.cust_id = g.cust_id
+		LEFT JOIN form_typ_tabs h ON a.form_typ_encd=h.form_typ_encd
+		<where>
+			<if test="formIdList != null and formIdList.size() > 0">
+				AND a.rtn_goods_id in
+				<foreach item="formId" collection="formIdList" open="("
+					close=")" separator=",">
+					#{formId}
+				</foreach>
+			</if>
+			<if test="formDate1 != null and formDate1 != ''">
+				AND a.rtn_goods_dt &gt;=#{formDate1}
+			</if>
+			<if test="formDate2 != null and formDate2 != ''">
+				AND a.rtn_goods_dt &lt;=#{formDate2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND a.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND a.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND a.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND a.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND a.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND b.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND b.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND b.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND a.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND a.is_nt_bllg=#{isNtBllg}
+			</if>
+				AND b.un_bllg_qty!=0
+			
+		</where>
+		GROUP BY a.rtn_goods_id
+		<if test="sort !=null and sortOrder !=null and sort !='' and sortOrder !=''">
+			  ORDER BY ${sort} ${sortOrder}
+			</if>
+		<if test="index != null and num !=null">
+			LIMIT #{index},#{num}
+		</if>
+	</select>
+
+	<!-- 查询销售单退货单列表 -->
+	<select id="selectSellSnglCZListsCount" parameterType="Map"
+		resultType="Integer">
+		select count(*)
+		from (
+		select a.sell_sngl_id,a.sell_sngl_dt
+		from sell_sngl a INNER JOIN sell_sngl_sub b on
+		a.sell_sngl_id=b.sell_sngl_id
+		<where>
+			<if test="formIdList != null and formIdList.size() > 0">
+				AND a.sell_sngl_id in
+				<foreach item="formId" collection="formIdList" open="("
+					close=")" separator=",">
+					#{formId}
+				</foreach>
+			</if>
+			<if test="formDate1 != null and formDate1 != ''">
+				AND a.sell_sngl_dt &gt;=#{formDate1}
+			</if>
+			<if test="formDate2 != null and formDate2 != ''">
+				AND a.sell_sngl_dt &lt;=#{formDate2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND a.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND a.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND a.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND a.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND a.sell_typ_id=#{sellTypId}
+			</if>
+
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND a.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND b.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND b.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND b.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND a.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND a.is_nt_bllg=#{isNtBllg}
+			</if>
+				AND b.un_bllg_qty!=0
+			
+		</where>
+		GROUP BY a.sell_sngl_id
+		UNION all
+		select a.rtn_goods_id,a.rtn_goods_dt
+		from rtn_goods a INNER JOIN rtn_goods_sub b on
+		a.rtn_goods_id=b.rtn_goods_id
+		<where>
+			<if test="formIdList != null and formIdList.size() > 0">
+				AND a.rtn_goods_id in
+				<foreach item="formId" collection="formIdList" open="("
+					close=")" separator=",">
+					#{formId}
+				</foreach>
+			</if>
+			<if test="formDate1 != null and formDate1 != ''">
+				AND a.rtn_goods_dt &gt;=#{formDate1}
+			</if>
+			<if test="formDate2 != null and formDate2 != ''">
+				AND a.rtn_goods_dt &lt;=#{formDate2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND a.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND a.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND a.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND a.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND a.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND b.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND b.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND b.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND a.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND a.is_nt_bllg=#{isNtBllg}
+			</if>
+				AND b.un_bllg_qty!=0
+		</where>
+		GROUP BY a.rtn_goods_id
+		) as A
+	</select>
+	<resultMap
+		type="com.px.mis.purc.service.impl.SellSnglServiceImpl$zizhu"
+		id="SellSnglListOrderBy" autoMapping="true">
+		<id property="ordrNum" column="ordr_num"/>
+	</resultMap>
+	
+<!-- 分页+排序列表查询销售单 -->
+	<select id="selectSellSnglListOrderBy" parameterType="Map"
+		resultMap="SellSnglListOrderBy">
+		SELECT a.* from(
+SELECT
+	ss.sell_sngl_id,
+	ss.sell_sngl_dt,
+	ss.sell_typ_id,
+	wd.whs_nm,
+	ind.invty_encd,
+	ind.invty_cd,
+	ind.invty_nm,
+	ind.crspd_bar_cd,
+	sss.cntn_tax_uprc,
+	IFNULL(sss.qty,0) as qty,
+	sss.prc_tax_sum,
+	ind.bx_rule,
+	sss.bx_qty,
+	sss.prdc_dt,
+	sss.bat_num,
+	sss.invldtn_dt,
+	sss.bao_zhi_qi,
+	ss.cust_ordr_num,
+	sss.memo AS memos,
+	sss.proj_nm,
+	ss.recvr,
+	ss.recvr_tel,
+	ss.recvr_addr,
+	st.sell_typ_nm,
+	bt.biz_typ_nm,
+	mu.user_name,
+	dd.dept_name,
+	ss.delv_addr,
+	ss.is_nt_chk,
+	sss.whs_encd,
+	mcd.measr_corp_nm,
+	ind.spc_model,
+	sss.proj_encd,
+	sss.intl_bat,
+	IFNULL(sss.no_tax_uprc,0) as no_tax_uprc,
+	IFNULL(sss.no_tax_amt,0) as no_tax_amt,
+	sss.tax_rate,
+	IFNULL(sss.tax_amt,0) as tax_amt,
+	cd.cust_nm
+	FROM
+	 sell_sngl as ss JOIN sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+		LEFT JOIN sell_type as st ON ss.sell_typ_id = st.sell_typ_id
+		LEFT JOIN mis_user mu on ss.acc_num=mu.acc_num
+		LEFT JOIN cust_doc cd on ss.cust_id=cd.cust_id
+		LEFT JOIN biz_type bt on bt.biz_typ_id=ss.biz_typ_id
+		LEFT JOIN dept_doc dd on ss.dept_id=dd.dept_id
+		LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+		LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+		
+		<where>
+			<if test="sellSnglIdList != null and sellSnglIdList.size() > 0">
+				AND ss.sell_sngl_id in
+				<foreach item="sellSnglId" collection="sellSnglIdList"
+					open="(" close=")" separator=",">
+					#{sellSnglId}
+				</foreach>
+			</if>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.sell_sngl_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.sell_sngl_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND ss.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="txId != null and txId != ''">
+				AND ss.tx_id=#{txId}
+			</if>
+			<if test="ecOrderId != null and ecOrderId != ''">
+				AND ss.ec_order_id=#{ecOrderId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND ss.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND ss.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND ss.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND sss.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+		ORDER BY
+		<if
+			test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+			${sort} ${sortOrder},
+		</if>
+		ss.sell_sngl_dt DESC
+		
+		LIMIT #{index},#{num}
+		)a
+		
+		UNION ALL
+		<include refid="sell_sngl_sum_columns"/>
+	</select>
+	
+<sql id="sell_sngl_sum_columns">
+	SELECT
+		count(sss.sell_sngl_id) as sell_sngl_id,
+		'','','','','','','','',
+		IFNULL(sum( sss.qty),0) as qty,
+		IFNULL(sum( sss.prc_tax_sum ),0) AS prc_tax_sum,
+		'',IFNULL(sum(sss.bx_qty),0) bx_qty,'','','','','','','','','','','','','','','','','','','','','','',
+		IFNULL(sum( sss.no_tax_amt ),0) AS no_tax_amt,
+		'',
+		IFNULL(sum( sss.tax_amt ),0)  AS tax_amt,''
+		<!-- 此处为了配平列数,拼接总计-->
+		
+	FROM
+		sell_sngl AS ss
+		LEFT JOIN sell_sngl_sub AS sss ON sss.sell_sngl_id = ss.sell_sngl_id
+		LEFT JOIN mis_user mu ON ss.acc_num = mu.acc_num
+		LEFT JOIN sell_type AS st ON ss.sell_typ_id = st.sell_typ_id
+		LEFT JOIN biz_type bt ON bt.biz_typ_id = ss.biz_typ_id
+		LEFT JOIN cust_doc cd ON ss.cust_id = cd.cust_id
+		LEFT JOIN dept_doc dd ON ss.dept_id = dd.dept_id
+		LEFT JOIN whs_doc wd ON sss.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON sss.invty_encd = ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id 
+		<where>
+			<if test="sellSnglIdList != null and sellSnglIdList.size() > 0">
+				AND ss.sell_sngl_id in
+				<foreach item="sellSnglId" collection="sellSnglIdList"
+					open="(" close=")" separator=",">
+					#{sellSnglId}
+				</foreach>
+			</if>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.sell_sngl_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.sell_sngl_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND ss.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="txId != null and txId != ''">
+				AND ss.tx_id=#{txId}
+			</if>
+			<if test="ecOrderId != null and ecOrderId != ''">
+				AND ss.ec_order_id=#{ecOrderId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND ss.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND ss.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND ss.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND sss.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+</sql>
+
+	<select id="selectSellSnglListSums" parameterType="Map"
+		resultType="map">
+		SELECT
+		IFNULL(SUM(sss.qty),0.0) as qty,IFNULL(SUM(sss.prc_tax_sum),0.0) as prcTaxSum,
+		IFNULL(SUM(sss.no_tax_amt),0.0) noTaxAmt,IFNULL(SUM(sss.tax_amt),0.0) taxAmt
+		FROM sell_sngl as ss JOIN sell_sngl_sub as sss on
+		ss.sell_sngl_id=sss.sell_sngl_id
+		LEFT JOIN invty_doc ind on
+		sss.invty_encd=ind.invty_encd
+	
+		<where>
+			<if test="sellSnglIdList != null and sellSnglIdList.size() > 0">
+				AND ss.sell_sngl_id in
+				<foreach item="sellSnglId" collection="sellSnglIdList"
+					open="(" close=")" separator=",">
+					#{sellSnglId}
+				</foreach>
+			</if>
+			<if test="sellSnglDt1 != null and sellSnglDt1 != ''">
+				AND ss.sell_sngl_dt &gt;=#{sellSnglDt1}
+			</if>
+			<if test="sellSnglDt2 != null and sellSnglDt2 != ''">
+				AND ss.sell_sngl_dt &lt;=#{sellSnglDt2}
+			</if>
+			<if test="custIdList != null and custIdList.size() > 0">
+				AND ss.cust_id in
+				<foreach item="custId" collection="custIdList" open="("
+					close=")" separator=",">
+					#{custId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND ss.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND ss.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="bizTypId != null and bizTypId != ''">
+				AND ss.biz_typ_id=#{bizTypId}
+			</if>
+			<if test="sellTypId != null and sellTypId != ''">
+				AND ss.sell_typ_id=#{sellTypId}
+			</if>
+			<if test="txId != null and txId != ''">
+				AND ss.tx_id=#{txId}
+			</if>
+			<if test="ecOrderId != null and ecOrderId != ''">
+				AND ss.ec_order_id=#{ecOrderId}
+			</if>
+			<if test="custOrdrNumList != null and custOrdrNumList.size() > 0">
+				AND ss.cust_ordr_num in
+				<foreach item="custOrdrNum" collection="custOrdrNumList"
+					open="(" close=")" separator=",">
+					#{custOrdrNum}
+				</foreach>
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND ss.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND ss.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="invtyEncdList!= null and invtyEncdList.size() > 0">
+				AND sss.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND sss.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND sss.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND sss.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND ss.memo like #{memo}
+	        </if>
+		</where>
+	</select>
+
+</mapper>

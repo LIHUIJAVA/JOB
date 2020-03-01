@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.VouchCateDocDao">
+
+  <!-- 手动封装数据 -->
+  <resultMap type="com.px.mis.account.entity.VouchCateDoc" id="myResult">
+  	<id column="a" property="vouchCateWor"/>
+	<result column="b" property="vouchCateNm"/>
+	<result column="c" property="lmtMode"/>
+	<collection property="lmtSubjList" ofType="com.px.mis.account.entity.VouchCateDocSubTab">
+		<result column="e" property="lmtSubjId"/>
+		<result column="o" property="ordrNum"/>
+		<result column="l" property="vouchCateWor"/>
+	</collection>
+  </resultMap>
+  <!-- 根据主表做分页查询 -->
+  <select id="selectVouchCateDocList" resultMap="myResult">
+  	SELECT d.vouch_cate_wor a,d.vouch_cate_nm b,d.lmt_mode c,v.lmt_subj_id e,
+  	v.ordr_num o,v.vouch_cate_wor l
+	FROM vouch_cate_doc d LEFT JOIN vouch_cate_doc_sub_tab v
+	ON d.vouch_cate_wor=v.vouch_cate_wor
+	ORDER BY d.vouch_cate_wor
+	<if test="index != null and  num != null">
+	LIMIT #{index},#{num}
+	</if>
+  </select>
+  <!-- 根据主键查询单个 -->
+  <select id="selectVouchCateDocByVouchCateWor" resultMap="myResult">
+  	SELECT d.vouch_cate_wor a,d.vouch_cate_nm b,d.lmt_mode c,v.lmt_subj_id e,
+  	v.ordr_num o,v.vouch_cate_wor l
+	FROM vouch_cate_doc d LEFT JOIN vouch_cate_doc_sub_tab v
+	ON d.vouch_cate_wor=v.vouch_cate_wor
+	WHERE d.vouch_cate_wor=#{vouchCateWor}
+  </select>
+  <!-- 查询总行数 -->
+  <select id="selectVouchCateDocCount" resultType="Integer">
+	SELECT count(d.vouch_cate_wor)
+  	FROM vouch_cate_doc d LEFT JOIN vouch_cate_doc_sub_tab v
+	ON d.vouch_cate_wor=v.vouch_cate_wor
+  </select>
+  <!-- 根据主键删除 -->
+  <delete id="deleteVouchCateDocByVouchCateWor" parameterType="java.util.List">
+  	DELETE a,b
+  	FROM vouch_cate_doc a,vouch_cate_doc_sub_tab b
+  	WHERE a.vouch_cate_wor=b.vouch_cate_wor
+  	and a.vouch_cate_wor in
+  	<foreach item="vouchCateWor" collection="list" open="("
+			close=")" separator=",">
+			#{vouchCateWor}
+	</foreach>
+  </delete>
+  
+  <insert id="insertVouchCateDoc" parameterType="com.px.mis.account.entity.VouchCateDoc">
+  	INSERT INTO vouch_cate_doc
+  	VALUES(#{ordrNum},#{vouchCateWor},#{vouchCateNm},
+  	#{vouchCateSortNum},#{lmtMode},null,#{memo})
+  </insert>
+  
+  <update id="updateVouchCateDocByVouchCateWor" parameterType="com.px.mis.account.entity.VouchCateDoc">
+  	UPDATE vouch_cate_doc
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="vouchCateWor != null">
+        vouch_cate_wor = #{vouchCateWor,jdbcType=VARCHAR},
+      </if>
+      <if test="vouchCateNm != null">
+        vouch_cate_nm = #{vouchCateNm,jdbcType=VARCHAR},
+      </if>
+      <if test="vouchCateSortNum != null">
+        vouch_cate_sort_num = #{vouchCateSortNum,jdbcType=VARCHAR},
+      </if>
+      <if test="lmtMode != null">
+        lmt_mode = #{lmtMode,jdbcType=VARCHAR},
+      </if>
+      <if test="lmtSubjList != null">
+        lmt_subj_id = null,
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      
+    </set>
+    WHERE vouch_cate_wor = #{vouchCateWor,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 批量删除 -->
+  
+</mapper>

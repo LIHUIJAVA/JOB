@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.PlatWhsMappDao">
+ 
+  
+  <select id="select" parameterType="Map" resultType="String">
+  	SELECT offline from plat_whs_mapp where type=#{type} and online=#{online} 
+  </select>
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.PlatWhsMapp">
+  insert into plat_whs_mapp(type,online,offline,online_name)
+  values(#{type},#{online},#{offline},#{onlineName})
+  </insert>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.PlatWhsMapp">
+  update plat_whs_mapp set type=#{type},online=#{online},offline=#{offline},online_name=#{onlineName}
+  where id=#{id}
+  </update>
+  
+  <delete id="delete" parameterType="com.px.mis.ec.entity.PlatWhsMapp">
+  delete from plat_whs_mapp where id=#{id}
+  </delete>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.PlatWhsMapp">
+  select p.*,w.whs_nm as offlineName from plat_whs_mapp p,whs_doc w
+  <where>
+  		p.offline=w.whs_encd
+  		<if test="online != null and online != ''">
+            AND p.online=#{online}
+        </if>
+        <if test="offline != null and offline != ''">
+            AND p.offline=#{offline}
+        </if>
+  </where>
+  LIMIT #{index},#{num}
+  </select>
+  
+ <select id="selectCount"  parameterType="Map" resultType="Integer">
+ select count(p.id) from plat_whs_mapp p,whs_doc w
+  <where>
+  		p.offline=w.whs_encd
+  		<if test="online != null and online != ''">
+            AND p.online=#{online}
+        </if>
+        <if test="offline != null and offline != ''">
+            AND p.offline=#{offline}
+        </if>
+  </where>
+ 
+ </select>
+</mapper>

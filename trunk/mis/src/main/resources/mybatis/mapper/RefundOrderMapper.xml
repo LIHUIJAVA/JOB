@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RefundOrder">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.RefundOrder">
+	INSERT INTO refund_order (ref_id, store_id, store_name, ec_ref_id, apply_date, buyer_id, is_refund, all_ref_num, all_ref_money, 
+	ref_reason, ref_explain, ref_status, down_time, tre_date, operator, memo)
+    VALUES
+    (#{refId}, #{storeId}, #{storeName}, #{ecRefId}, #{applyDate}, #{buyerId}, #{isRefund}, #{allRefNum}, 
+    #{allRefMoney}, #{refReason}, #{refExplain}, #{refStatus}, 
+    #{downTime}, #{treDate}, #{operator}, #{memo})
+  </insert>
+  
+  <insert id="insertList" parameterType="com.px.mis.ec.entity.RefundOrder">
+	INSERT INTO refund_order (ref_id, store_id, store_name, ec_ref_id, apply_date, buyer_id, is_refund, all_ref_num, all_ref_money, 
+	ref_reason, ref_explain, ref_status, down_time, tre_date, operator, memo)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.refId}, #{item.storeId}, #{item.storeName}, #{item.ecRefId}, #{item.applyDate}, #{item.buyerId}, #{item.isRefund}, 
+      #{item.allRefNum}, #{item.allRefMoney}, #{item.refReason}, #{item.refExplain}, #{item.refStatus}, 
+      #{item.downTime}, #{item.treDate}, #{item.operator}, #{item.memo})
+    </foreach>
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.RefundOrder">
+  	SELECT ref_id, store_id, store_name, ec_ref_id, apply_date, buyer_id, is_refund, all_ref_num, all_ref_money, 
+	ref_reason, ref_explain, ref_status, down_time, tre_date, operator, memo
+  	FROM refund_order 
+  	WHERE ref_id = #{refId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  refund_order ro,refund_orders ros
+  	WHERE ro.ref_id = ros.ref_id AND ro.ref_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.RefundOrder">
+  	UPDATE refund_order 
+  	SET store_id=#{storeId}, store_name=#{storeName}, ec_ref_id=#{ecRefId}, apply_date=#{applyDate}, buyer_id=#{buyerId}, 
+  	is_refund=#{isRefund}, all_ref_num=#{refNum}, all_ref_money=#{allRefMoney}, ref_reason=#{refReason}, ref_explain=#{refExplain}, 
+  	ref_status=#{refStatus}, down_time=#{downTime}, tre_date=#{treDate}, operator=#{operator}, memo=#{memo}
+  	WHERE ref_id = #{refId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.RefundOrder">
+	SELECT ro.ref_id, ro.store_id, ro.store_name, ro.ec_ref_id, ro.apply_date, ro.buyer_id, ro.is_refund, ro.all_ref_num, 
+	ro.all_ref_money, ro.ref_reason, ro.ref_explain, ro.ref_status, ro.down_time, ro.tre_date, ro.operator, ros.good_id, 
+	ros.good_name, ros.good_sku, ros.can_ref_num, ros.can_ref_money, ros.ref_money, ros.ref_num, ros.batch_no, ros.ref_whs
+  	FROM refund_order ro,refund_orders ros
+  	WHERE ro.ref_id = ros.ref_id	
+  	<if test="refId != null and refId != ''">
+        AND ro.ref_id=#{refId}
+    </if>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(*)
+  	FROM refund_order ro,refund_orders ros
+  	WHERE ro.ref_id = ros.ref_id	
+  	<if test="refId != null and refId != ''">
+        AND ro.ref_id=#{refId}
+    </if>
+  </select>
+  
+  <update id="audit" parameterType="String">
+  	UPDATE aftermarket 
+  	SET is_audit = CASE is_audit WHEN 0 THEN 1 END
+	WHERE ref_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </update>
+    
+  <update id="noAudit" parameterType="String">
+  	UPDATE aftermarket 
+  	SET is_audit = CASE is_audit WHEN 1 THEN 0 END
+	WHERE ref_id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </update>
+  
+</mapper>

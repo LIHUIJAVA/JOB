@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MisUser">
+	<insert id="insert"
+		parameterType="com.px.mis.system.entity.MisUser">
+		INSERT INTO mis_user (acc_num, password, acc_set, user_name, dep_id,
+		dep_name, role_id, role_name, phone_no, email, create_date, whs_id,whs_name)
+		VALUES (#{accNum}, #{password}, #{accSet}, #{userName}, #{depId},
+		#{depName}, #{roleId}, #{roleName}, #{phoneNo}, #{email},
+		#{createDate}, #{whsId}, #{whsName})
+	</insert>
+
+	<select id="select" parameterType="java.lang.String"
+		resultType="com.px.mis.system.entity.MisUser">
+		SELECT acc_num, password, acc_set, user_name , dep_id , dep_name,
+		role_id , role_name , phone_no, email, create_date, whs_id, whs_name
+		FROM mis_user
+		WHERE acc_num = #{accNum}
+	</select>
+
+	<update id="update"
+		parameterType="com.px.mis.system.entity.MisUser">
+		UPDATE mis_user
+		SET password=#{password}, acc_set=#{accSet}, dep_id=#{depId},
+		dep_name=#{depName},
+		role_id=#{roleId}, role_name=#{roleName}, phone_no=#{phoneNo},
+		email=#{email},whs_id=#{whsId},whs_name=#{whsName}
+		WHERE acc_num=#{accNum}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM mis_user
+		WHERE acc_num = #{accNum}
+	</delete>
+
+	<select id="selectList" parameterType="Map"
+		resultType="com.px.mis.system.entity.MisUser">
+		SELECT acc_num, password, acc_set, user_name , dep_id , dep_name,
+		role_id , role_name , phone_no, email, create_date, whs_id, whs_name
+		FROM mis_user
+		<where>
+			<if test="accNum != null and accNum != ''">
+				AND acc_num=#{accNum}
+			</if>
+			<if test="accSet != null and accSet != ''">
+				AND acc_set=#{accSet}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND user_name=#{userName}
+			</if>
+			<if test="depId != null and depId != ''">
+				AND dep_id=#{depId}
+			</if>
+			<if test="roleId != null and roleId != ''">
+				AND role_id=#{roleId}
+			</if>
+			<if test="phoneNo != null and phoneNo != ''">
+				AND phone_no=#{phoneNo}
+			</if>
+			<if test="email != null and email != ''">
+				AND email=#{email}
+			</if>
+			<if
+				test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+				AND create_date BETWEEN #{startDate} AND #{endDate}
+			</if>
+			<if test="whsId != null and whsId != ''">
+				AND email=#{email}
+			</if>
+		</where>
+		LIMIT #{index},#{num}
+	</select>
+
+	<select id="selectCount" parameterType="Map" resultType="int">
+		SELECT count(*)
+		FROM mis_user
+		<where>
+			<if test="accNum != null and accNum != ''">
+				AND acc_num=#{accNum}
+			</if>
+			<if test="accSet != null and accSet != ''">
+				AND acc_set=#{accSet}
+			</if>
+			<if test="userName != null and userName != ''">
+				AND user_name=#{userName}
+			</if>
+			<if test="depId != null and depId != ''">
+				AND dep_id=#{depId}
+			</if>
+			<if test="roleId != null and roleId != ''">
+				AND role_id=#{roleId}
+			</if>
+			<if test="phoneNo != null and phoneNo != ''">
+				AND phone_no=#{phoneNo}
+			</if>
+			<if test="email != null and email != ''">
+				AND email=#{email}
+			</if>
+			<if
+				test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+				AND create_date BETWEEN #{startDate} AND #{endDate}
+			</if>
+			<if test="whsId != null and whsId != ''">
+				AND email=#{email}
+			</if>
+		</where>
+	</select>
+
+
+</mapper>

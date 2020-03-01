@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrderNo">
+  <resultMap id="BaseResultMap" type="com.px.mis.system.entity.OrderNo">
+    <result column="trans_type" jdbcType="VARCHAR" property="transType" />
+    <result column="trans_date" jdbcType="VARCHAR" property="transDate" />
+    <result column="counter" jdbcType="VARCHAR" property="counter" />
+  </resultMap>
+  <insert id="insert" parameterType="com.px.mis.system.entity.OrderNo">
+	INSERT INTO order_no ( trans_type, trans_date, counter)
+	VALUES (#{transType}, #{transDate}, #{counter})
+  </insert>
+  <update id="update" parameterType="com.px.mis.system.entity.OrderNo">
+  	UPDATE order_no 
+  	SET counter=#{counter}
+  	WHERE trans_type=#{transType} AND trans_date=#{transDate} 
+  </update>
+  <select id="select" parameterType="com.px.mis.system.entity.OrderNo" resultType="com.px.mis.system.entity.OrderNo">
+  	SELECT trans_type as transType,trans_date as transDate,counter
+  	FROM order_no
+  	WHERE trans_type=#{transType} AND trans_date=#{transDate}
+  </select>
+</mapper>

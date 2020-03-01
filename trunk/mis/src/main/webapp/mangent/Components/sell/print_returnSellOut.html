@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>红字销售出库单打印</title>
+		<!--<OBJECT classid="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2" height="0" id="WebBrowser3" width="0" VIEWASTEXT></OBJECT>-->
+
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<!--<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />-->
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<!--<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />-->
+		<script type="text/javascript" src="../../assets/js/common/art-template.js"></script>
+		<!--<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>-->
+		<!--<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>-->
+		<!--<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>-->
+		<script type="text/javascript" src="../../assets/js/common/qrcode.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<!--<script type="text/javascript" src="../../assets/js/common/jquery-barcode.js"></script>-->
+	</head>
+	<style>
+		td {
+			margin: 0;
+			padding: 0;
+		}
+		/*#tab {
+			height: ;
+		}*/
+		table {
+			font-size: 12px;
+			/*position: absolute;*/
+		}
+		td {
+			word-break: break-all;
+			word-wrap: break-word;
+			text-align: center;
+		}
+		
+		.tit {
+			display: inline-block;
+			width: 32.3333%;
+			/*position: relative;*/
+			/*top: 69px;*/
+		}
+		.into div {
+			display: inline-block;
+			text-align: left;
+			width: 32.3333%;
+		}
+		.into,.thead,
+		{
+			text-align: left;
+		}
+		
+		.into {
+			width: 1000px;
+			margin: 0 auto;
+			margin-bottom: 10px;
+		}
+		
+		.in_b {
+			margin-top: 20px;
+			width: 800px;
+			margin: 0 auto;
+			margin-top: 10px;
+		}
+		.in_b div {
+			display: inline-block;
+			width: 32.33333%;
+		}
+		@media print {
+			@page {
+				/*size: A4 portrait;*/
+				/*// A4大小 纵向*/
+				size: A4 landscape;
+				/*// A4大小 横向*/
+			}
+			.other-ele {
+				/*// 打印时将不需要的元素隐藏*/
+				display: none;
+			}
+			.pdf-title {
+				/*// 只在打印时候显示的元素*/
+				display: block;
+			}
+			.panel-sm {
+				/*// 打印时候改变某些元素的样式*/
+				margin: 0;
+				border: 1px solid #bce8f1;
+			}
+		}
+		.foot td, .head td {
+			border: 1px solid;
+		}
+		/*@page {
+	      size: auto;
+	      margin: 10mm;
+	    }*/
+	   tfoot {
+	   	margin-top: -100px;
+	   }
+		button {
+			font-size: 14px;
+		    text-align: center;
+		    margin-right: 10px;
+		    border-radius: 5px;
+		    background-color: #272631;
+		    color: #FFFFFF;
+		    border: none;
+		    padding: 3px 10px;
+		}
+		.print_dy {
+			font-size: 12px;
+		}
+		#qrcode {
+			/*background-color: red;*/
+			display: inline-block;
+			position: absolute;
+			top: 20px;
+			right: 0;
+		}
+		#qrcode img {
+			height: 75%!important;
+		}
+	</style>
+
+	<body>
+		<button class="other-ele print_dy">打印</button>
+		<div id="content"></div>
+		<script id="test" type="text/html">
+			
+			{{each data as item i}}
+			
+				<table align="center" width="1100px" height="100%" cellspacing="0" cellpadding="2"  style="border-collapse: collapse;">
+		
+					<thead style="display:table-header-group">
+						
+						<tr>
+							<td colspan="11" class="thead">
+								<h4>销售出库单</h4>
+								<div class="into">
+									
+									<!--<div class="one tit">-->
+										<div class="purchaseType">
+											<span>出库单号:</span>
+											<span id="outWhsId">{{item.outWhsId}}</span>
+										</div>
+										<div class="purchaseType">
+											<span>出库日期：</span>
+											<span>{{item.outWhsDt}}</span>
+										</div>
+										<div class="purchaseType">
+											<span>仓库：</span>
+											<span>{{item.whsNms}}</span>
+										</div>
+										<div class="purchaseType">
+											<span>业务类型：</span>
+											<span>{{item.bizTypNm}}</span>
+										</div>
+										<div class="purchaseType">
+											<span>业务号：</span>
+											<span>{{item.sellOrdrInd}}</span>
+										</div>
+										<div class="purchaseType">
+											<span>出库类别：</span>
+											<span>{{item.recvSendCateNm}}</span>
+										</div>
+										<div class="purchaseType">
+											<span>销售部门：</span>
+											<span>{{item.deptName}}</span>
+										</div>
+										<div class="purchaseType">
+											<span>业务员：</span>
+											<span>{{item.userName}}</span>
+										</div>
+										<div class="purchaseType">
+											<span>客户：</span>
+											<span>{{item.custNm}}</span>
+										</div>
+										<div class="purchaseType">
+											<span>备注：</span>
+											<span>{{item.memo}}</span>
+											<!--<span>11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</span>-->
+										</div>
+										<div class="purchaseType">
+											<span>客户地址：</span>
+											<span>{{item.custDelv}}</span>
+											<!--<span>222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222</span>-->
+										</div>
+										<div class="purchaseType">
+											<span>客户订单号：</span>
+											<span>{{item.custOrdrNum}}</span>
+										</div>
+										<div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
+								</div>
+								<tr class="head">
+									<td width="7%"><strong>存货编码</strong></td>
+									<td width="20%"><strong>存货名称</strong></td>
+									<td width="6%"><strong>数量</strong></td>
+									<td width="12%"><strong>单价</strong></td>
+									<td width="12%"><strong>金额</strong></td>
+									<td width="6%"><strong>生产日期</strong></td>
+									<td width="10%"><strong>批号</strong></td>
+									<td width="6.5%"><strong>失效日期</strong></td>
+									<td width="5%"><strong>箱规</strong></td>
+									<td width="5%"><strong>箱数</strong></td>
+									<td width="10.5%"><strong>备注</strong></td>
+								</tr>
+							</td>
+						</tr>
+					</thead>
+					<tr>
+						<td colspan="11">
+							<!--<table align="center" border="1px" width="1100px" height="30%" cellspacing="0" cellpadding="2" style="border-collapse: collapse;">-->
+							<table align="center" id="tab" border="1px" width="1100px" height="30%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;border-width:0px;">
+								{{each item.sellOutWhsSub k}}
+								<tr>
+									<td width="7%">{{k.invtyEncd}}</td>
+									<td width="20%">{{k.invtyNm}}</td>
+									<td width="6%">{{k.qty}}</td>
+									<td width="12%">{{k.noTaxUprc}}</td>
+									<td width="12%">{{k.noTaxAmt}}</td>
+									<td width="6%">{{k.prdcDt}}</td>
+									<td width="10%">{{k.batNum}}</td>
+									<td width="6.5%">{{k.invldtnDt}}</td>
+									<td width="5%">{{k.bxRule}}</td>
+									<td width="5%">{{k.bxQty}}</td>
+									<td width="10.5%">{{k.memo}}</td>
+								</tr>
+								{{/each}}
+								
+							</table>
+						</td>
+					</tr>
+					
+					<tfoot style="display: table-footer-group;font-weight: bold">
+						<tr class="foot">
+							<td width="7%">合计</td>
+							<td width="20%"></td>
+							<td width="6%">{{item.qtys}}</td>
+							<td width="12%">{{item.noTaxUprcs}}</td>
+							<td width="12%">{{item.noTaxAmts}}</td>
+							<td width="6%"></td>
+							<td width="10%"></td>
+							<td width="6.5%"></td>
+							<td width="5%"></td>
+							<td width="5%">{{item.bxQtys}}</td>
+							<td width="10.5%"></td>
+						</tr>
+						<!--<tr class="foot">
+							<td>合计</td>
+							<td></td>
+							<td>{{item.qtys}}</td>
+							<td>{{item.noTaxUprcs}}</td>
+							<td>{{item.noTaxAmts}}</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>{{item.bxQtys}}</td>
+							<td></td>
+						</tr>-->
+						<tr>
+							<td colspan="11">
+								
+								<!--<table align="center" border="1px" width="1100px" height="30%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;border-width:0px;">-->
+									
+								<!--</table>-->
+								<div class="in_b">
+									<div class="purchaseType">
+										<span>制单人：</span>
+										<span>{{item.setupPers}}</span>
+									</div>
+									<div class="purchaseType">
+										<span>审核人：</span>
+										<span>{{item.chkr}}</span>
+									</div>
+									<div class="purchaseType">
+										<span>打印日期：</span>
+										<span>{{item.theday}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			{{/each}}
+
+		</script>
+
+		</div>
+	</body>
+	<script>
+		$(document).on('click', '.print_dy', function() {
+			window.print(); 
+		})
+
+		var outWhsId = localStorage.getItem("outWhsId")
+		var savedata = {
+			reqHead,
+			"reqBody": {
+				"outWhsId":outWhsId
+			}
+		};
+		var saveData = JSON.stringify(savedata);
+		console.log(saveData)
+		$.ajax({
+			type: "post",
+			contentType: 'application/json; charset=utf-8',
+			url: url + '/mis/purc/SellOutWhs/querySellOutWhs',
+			async: false,
+			data: saveData,
+			dataType: 'json',
+			success: function(data) {
+				console.log(data)
+				const list = data.respBody
+				
+				var list1 = data.respBody.sellOutWhsSub
+				var qtys =0
+				var noTaxUprcs =0
+				var noTaxAmts =0
+				var bxQtys =0
+				var whsNms;
+				for(var j = 0; j<list1.length;j++) {
+					qtys += list1[j].qty
+					noTaxUprcs += list1[j].noTaxUprc
+					noTaxAmts += list1[j].noTaxAmt
+					bxQtys += list1[j].bxQty
+					whsNms = list1[0].whsNm
+				}
+				if(isNaN(qtys)) {
+					qtys = 0
+				}
+				if(isNaN(noTaxUprcs)) {
+					noTaxUprcs = 0
+				}
+				if(isNaN(noTaxAmts)) {
+					noTaxAmts = 0
+				}
+				if(isNaN(bxQtys)) {
+					bxQtys = 0
+				}
+				var t=new Date();
+				var y=t.getFullYear();
+				var m=t.getMonth()+1;
+				if(m<10){
+					m="0"+m;
+				}
+				var d=t.getDate();
+				var theday=y+"-"+m+"-"+d;
+				console.log(theday)
+				var obj = {}
+				obj.qtys = qtys
+				obj.noTaxUprcs = noTaxUprcs
+				obj.noTaxAmts = noTaxAmts
+				obj.bxQtys = bxQtys
+				obj.theday = theday
+				obj.whsNms = whsNms
+				console.log(obj)
+				function combin(list,obj){
+				    for(var i in obj){
+				        list[i] = obj[i]
+				    }
+				    return list;
+				}
+				var c = combin(list,obj)
+				console.log(c)
+				const num = [c];
+				console.log(num)
+				document.getElementById('content').innerHTML = template('test', {data: num});
+			},
+			error:function(error) {
+				console.log(error)
+			}
+		})	
+		// 二维码大小
+		var qrcode = new QRCode(document.getElementById("qrcode"), {
+			width : 100,
+			height : 100
+		});
+		function makeCode() {		
+			var elText = $("#outWhsId").text()  // 获取内容外部元素
+			console.log(elText)
+			// 判断有无内容
+			if (!elText) {
+				console.log("无")
+		//			elText.focus();
+				return;
+			}
+			// 生成
+			qrcode.makeCode(elText);
+		}
+		makeCode();
+	</script>
+
+</html>

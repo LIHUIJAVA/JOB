@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.CurmthIntoWhsCostTabDao">
+	<!-- 本月入库成本表分页查询所有 -->
+	<select id="selectCurmthIntoWhsCostTabList" parameterType="Map" resultType="com.px.mis.account.entity.CurmthIntoWhsCostTab">
+	 SELECT a.ordr_num ordrNum,a.acct_yr acctYr,a.accti_mth acctiMth,a.purs_inv_sub_tab_id pursInvSubTabId,
+			a.invty_encd invtyEncd,a.bat bat,a.qty qty,a.uncntn_tax_uprc uncntnTaxUprc,
+			a.uncntn_tax_amt uncntnTaxAmt,a.cntn_tax_uprc cntnTaxUprc,a.cntn_tax_amt cntnTaxAmt,
+	 		b.purs_inv_num pursInvNm,c.invty_nm invtyNm
+	 FROM curmth_into_whs_cost_tab a
+	 LEFT JOIN purs_inv_sub_tab b
+	 ON a.purs_inv_sub_tab_id = b.ordr_num
+	 LEFT JOIN invty_doc c
+	 ON a.invty_encd = c.invty_encd
+	 ORDER BY a.ordr_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectCurmthIntoWhsCostTabByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.CurmthIntoWhsCostTab">
+	 SELECT a.ordr_num ordrNum,a.acct_yr acctYr,a.accti_mth acctiMth,a.purs_inv_sub_tab_id pursInvSubTabId,
+			a.invty_encd invtyEncd,a.bat bat,a.qty qty,a.uncntn_tax_uprc uncntnTaxUprc,
+			a.uncntn_tax_amt uncntnTaxAmt,a.cntn_tax_uprc cntnTaxUprc,a.cntn_tax_amt cntnTaxAmt,
+	 		b.purs_inv_num pursInvNm,c.invty_nm invtyNm
+	 FROM curmth_into_whs_cost_tab a
+	 LEFT JOIN purs_inv_sub_tab b
+	 ON a.purs_inv_sub_tab_id = b.ordr_num
+	 LEFT JOIN invty_doc c
+	 ON a.invty_encd = c.invty_encd 
+	 WHERE a.ordr_num=#{ordrNum}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectCurmthIntoWhsCostTabCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM curmth_into_whs_cost_tab
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertCurmthIntoWhsCostTab" parameterType="com.px.mis.account.entity.CurmthIntoWhsCostTab">
+		INSERT INTO curmth_into_whs_cost_tab
+		VALUES(null,#{acctYr},#{acctiMth},#{pursInvSubTabId},
+				#{invtyEncd},#{bat},#{qty},#{uncntnTaxUprc},
+				#{uncntnTaxAmt},#{cntnTaxUprc},#{cntnTaxAmt})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteCurmthIntoWhsCostTabByOrdrNum" parameterType="int">
+	 DELETE FROM curmth_into_whs_cost_tab
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateCurmthIntoWhsCostTabById" parameterType="com.px.mis.account.entity.CurmthIntoWhsCostTab">
+	 UPDATE curmth_into_whs_cost_tab
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="acctYr != null">
+        acct_yr = #{acctYr,jdbcType=VARCHAR},
+      </if>
+      <if test="acctiMth != null">
+        accti_mth = #{acctiMth,jdbcType=VARCHAR},
+      </if>
+      <if test="pursInvSubTabId != null">
+        purs_inv_sub_tab_id = #{pursInvSubTabId,jdbcType=BIGINT},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="bat != null">
+        bat = #{bat,jdbcType=VARCHAR},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="uncntnTaxUprc != null">
+        uncntn_tax_uprc = #{uncntnTaxUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="uncntnTaxAmt != null">
+        uncntn_tax_amt = #{uncntnTaxAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cntnTaxUprc != null">
+        cntn_tax_uprc = #{cntnTaxUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="cntnTaxAmt != null">
+        cntn_tax_amt = #{cntnTaxAmt,jdbcType=DECIMAL},
+      </if>
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+</mapper>

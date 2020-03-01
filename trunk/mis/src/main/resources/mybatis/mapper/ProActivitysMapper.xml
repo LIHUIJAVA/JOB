@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProActivitys">
+  <resultMap id="BaseResultMap" type="com.px.mis.ec.entity.ProActivitys">
+    <result column="pro_act_id" jdbcType="VARCHAR" property="proActId" />
+    <result column="pro_act_name" jdbcType="VARCHAR" property="proActName" />
+    <result column="all_goods" jdbcType="VARCHAR" property="allGoods" />
+    <result column="goods_range" jdbcType="VARCHAR" property="goodsRange" />
+    <result column="plan_creator" jdbcType="VARCHAR" property="planCreator" />
+    <result column="gift_num" jdbcType="INTEGER" property="giftNum" />
+    <result column="has_gift_num" jdbcType="INTEGER" property="hasGiftNum" />
+    <result column="memo" jdbcType="VARCHAR" property="memo"/>
+  </resultMap>
+  <insert id="insert" parameterType="com.px.mis.ec.entity.ProActivitys">
+	INSERT INTO pro_activitys (pro_act_id,pro_act_name,all_goods,goods_range, plan_creator,gift_num,has_gift_num,memo)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.proActId,jdbcType=VARCHAR}, #{item.proActName,jdbcType=VARCHAR}, #{item.allGoods,jdbcType=VARCHAR}, #{item.goodsRange,jdbcType=VARCHAR},
+      #{item.planCreator,jdbcType=VARCHAR}, #{item.giftNum,jdbcType=INTEGER}, #{item.hasGiftNum,jdbcType=INTEGER}, #{item.memo,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ProActivitys">
+  	SELECT pro_act_id as proActId, pro_act_name as proActName, all_goods as allGoods, goods_range as goodsRange, plan_creator as planCreator, gift_num as giftNum, memo 
+  	FROM pro_activitys 
+  	WHERE pro_act_id = #{proActId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  pro_activitys
+  	WHERE pro_act_id=#{proActId}
+  </delete>
+  
+</mapper>

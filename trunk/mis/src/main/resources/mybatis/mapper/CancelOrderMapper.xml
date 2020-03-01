@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CancelOrder">
+
+  <insert id="insert" parameterType="com.px.mis.ec.entity.CancelOrder">
+	INSERT IGNORE INTO cancel_order (id, buyer_id, buyer_name, check_time, apply_time, apply_refund_sum, status,
+	check_user_name, order_id, check_remark, reason, system_id, is_audit, ec_id, store_id)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+    (#{item.id}, #{item.buyerId}, #{item.buyerName}, #{item.checkTime}, #{item.applyTime}, #{item.applyRefundSum}, #{item.status}, 
+    #{item.checkUserName}, #{item.orderId}, #{item.checkRemark}, #{item.reason}, #{item.systemId}, #{item.isAudit}, #{item.ecId}, #{item.storeId})
+    </foreach>
+  </insert>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.CancelOrder">
+  	UPDATE cancel_order 
+  	SET id=#{id}, buyer_id=#{buyerId}, buyer_name=#{buyerName}, check_time=#{checkTime}, apply_time=#{applyTime},
+  	apply_refund_sum=#{applyRefundSum}, status=#{status}, check_user_name=#{checkUserName}, order_id=#{orderId}, check_remark=#{checkRemark},
+  	reason=#{reason}, system_id=#{systemId}, is_audit=#{isAudit}, ec_id=#{ecId}, store_id=#{storeId}
+  	WHERE id=#{id}
+  </update>
+  
+  <update id="audit" parameterType="String">
+  	UPDATE cancel_order 
+  	SET is_audit = CASE is_audit WHEN 0 THEN 1 END
+	WHERE id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </update>
+  
+  <select id="selectByIds" resultType="com.px.mis.ec.entity.Compensate">
+	SELECT id, buyer_id, buyer_name, check_time, apply_time, apply_refund_sum, status,
+	check_user_name, order_id, check_remark, reason, system_id, is_audit, ec_id, store_id
+  	FROM cancel_order 
+  	WHERE is_audit = 0 AND id IN
+	<foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+           #{item}
+    </foreach>
+  </select>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.CancelOrder">
+	SELECT id, buyer_id, buyer_name, check_time, apply_time, apply_refund_sum, status,
+	check_user_name, order_id, check_remark, reason, system_id, is_audit, ec_id, store_id
+  	FROM cancel_order 
+  	<where>
+  		<if test="brokId != null and brokId != ''">
+            AND brok_id = #{brokId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(id)
+  	FROM cancel_order 
+  	<where>
+  		<if test="brokId != null and brokId != ''">
+            AND brok_id = #{brokId}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.GoodsActivityMiddleDao">
+	<!-- 商品活动中间表 分页查询所有 -->
+	<select id="selectGoodsActivityMiddleList" parameterType="Map" resultType="com.px.mis.ec.entity.GoodsActivityMiddle">
+	 SELECT no,store_id,invty_encd,sublist_no,priority,start_time,end_time,all_goods
+	 FROM  goods_activity_middle
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectGoodsActivityMiddleByPriority" parameterType="int" resultType="com.px.mis.ec.entity.GoodsActivityMiddle">
+	 SELECT no,store_id,invty_encd,sublist_no,priority,start_time,end_time,all_goods
+	 FROM  goods_activity_middle
+	 WHERE priority=#{priority}
+	</select>
+	<select id="selectGoodsActivityMiddleById" parameterType="int" resultType="com.px.mis.ec.entity.GoodsActivityMiddle">
+	 SELECT no,store_id,invty_encd,sublist_no,priority,start_time,end_time,all_goods
+	 FROM  goods_activity_middle
+	 WHERE no=#{no}
+	</select>
+	<select id="selectGoodsActivityMiddleByStoreId" parameterType="String" resultType="com.px.mis.ec.entity.GoodsActivityMiddle">
+	 SELECT no,store_id,invty_encd,sublist_no,priority,start_time,end_time,all_goods
+	 FROM  goods_activity_middle
+	 WHERE store_id=#{storeId}
+	 AND #{nowTime}<![CDATA[>=]]>start_time AND #{nowTime}<![CDATA[<=]]>end_time
+	</select>
+	<select id="selectGoodsActivityMiddleByInvtyEncd" parameterType="String" resultType="com.px.mis.ec.entity.GoodsActivityMiddle">
+	 SELECT no,store_id,invty_encd,sublist_no,priority,start_time,end_time,all_goods
+	 FROM  goods_activity_middle
+	 WHERE store_id=#{storeId} AND invty_encd=#{invtyEncd}
+	 AND #{nowTime}<![CDATA[>=]]>start_time AND #{nowTime}<![CDATA[<=]]>end_time
+	 UNION
+	 SELECT no,store_id,invty_encd,sublist_no,priority,start_time,end_time,all_goods
+	 FROM  goods_activity_middle
+	 WHERE store_id=#{storeId} AND invty_encd='all'
+	 AND #{nowTime}<![CDATA[>=]]>start_time AND #{nowTime}<![CDATA[<=]]>end_time
+	</select>
+	<select id="selectGoodsActivityMiddleByInvtyEncdORDERLIMIT" parameterType="String" resultType="com.px.mis.ec.entity.GoodsActivityMiddle">
+	 SELECT goods_activity_middle.*
+	 FROM  goods_activity_middle
+	 LEFT JOIN pro_activitys on pro_activitys.`no` =goods_activity_middle.sublist_no
+	 LEFT JOIN  pro_activity  on  pro_activity.pro_act_id=pro_activitys.pro_act_id
+	 
+	 WHERE store_id=#{storeId} 
+	 AND invty_encd  in (#{invtyEncd},'all')
+	 AND pro_activity.audit_result =1
+	 AND #{nowTime}<![CDATA[>=]]>start_time AND #{nowTime}<![CDATA[<=]]>end_time
+	 ORDER BY
+		priority ASC 
+		LIMIT 0, 1 
+	 
+<!-- 	 SELECT no,store_id,invty_encd,sublist_no,priority,start_time,end_time,all_goods
+	 FROM  goods_activity_middle
+	 WHERE store_id=#{storeId} AND invty_encd  in (#{invtyEncd},'all')
+	 AND #{nowTime}<![CDATA[>=]]>start_time AND #{nowTime}<![CDATA[<=]]>end_time
+	 ORDER BY
+		priority ASC 
+		LIMIT 0, 1  -->
+	</select>
+	<!-- 查询总行数 -->
+	<select id="selectGoodsActivityMiddleCount" resultType="int">
+		SELECT count(no)
+		FROM goods_activity_middle
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertGoodsActivityMiddle" parameterType="com.px.mis.ec.entity.GoodsActivityMiddle">
+		INSERT INTO goods_activity_middle(no,store_id,invty_encd,sublist_no,priority,start_time,end_time,all_goods)
+		VALUES(null,#{storeId},#{invtyEncd},#{sublistNo},#{priority},#{startTime},#{endTime},#{allGoods})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteGoodsActivityMiddleById" parameterType="int">
+	 DELETE FROM goods_activity_middle
+	 WHERE no=#{no} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateGoodsActivityMiddleById" parameterType="com.px.mis.ec.entity.GoodsActivityMiddle">
+	 UPDATE goods_activity_middle
+    <set>
+      <if test="no != null">
+        no = #{no,jdbcType=BIGINT},
+      </if>
+      <if test="storeId != null">
+        store_id = #{storeId,jdbcType=VARCHAR},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="sublistNo != null">
+        sublist_no = #{sublistNo,jdbcType=BIGINT},
+      </if>
+      <if test="priority != null">
+        priority = #{priority,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=DATE},
+      </if>
+      <if test="allGoods != null">
+        all_goods = #{allGoods,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE no = #{no,jdbcType=BIGINT}
+	</update>
+</mapper>

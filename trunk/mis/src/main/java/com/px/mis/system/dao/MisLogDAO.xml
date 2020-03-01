@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.system.dao.MisLogDAO">
+	<resultMap id="BaseResultMap"
+		type="com.px.mis.system.entity.MisLog">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="acc_num" jdbcType="VARCHAR" property="accNum" />
+		<result column="acc_num_ip" jdbcType="VARCHAR"
+			property="accNumIp" />
+		<result column="operation_name" jdbcType="VARCHAR"
+			property="operationName" />
+		<result column="operation_module" jdbcType="VARCHAR"
+			property="operationModule" />
+		<result column="operating_time" jdbcType="VARCHAR"
+			property="operatingTime" />
+		<result column="operating_state" jdbcType="VARCHAR"
+			property="operatingState" />
+		<result column="account_landing_time" jdbcType="VARCHAR"
+			property="accountLandingTime" />
+		<result column="operating_account" jdbcType="VARCHAR"
+			property="operatingAccount" />
+		<result column="operating_URL" jdbcType="VARCHAR"
+			property="operatingUrl" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="operating_results" jdbcType="VARCHAR" property="operatingResults" />
+		
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, acc_num, acc_num_ip, operation_name, operation_module,
+		operating_time, operating_state,
+		account_landing_time,
+		operating_account, operating_URL, remark,operating_results
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from mis_log
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="selectCount" parameterType="map" resultType="int">
+		select
+		count(id)
+		from mis_log
+		<where>
+			<if test="id != null  and id != ''">
+				AND id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="accNum != null and accNum != '' ">
+				AND acc_num = #{accNum,jdbcType=VARCHAR}
+			</if>
+			<if test="accNumIp != null and accNumIp != '' ">
+				AND acc_num_ip = #{accNumIp,jdbcType=VARCHAR}
+			</if>
+			<if test="operationName != null and operationName != ''">
+				AND operation_name = #{operationName,jdbcType=VARCHAR}
+			</if>
+			<if test="operationModule != null and operationModule != ''">
+				AND operation_module =
+				#{operationModule,jdbcType=VARCHAR}
+			</if>
+			<if test="operatingTimeStart != null and operatingTimeStart != ''">
+				AND operating_time <![CDATA[>=]]>
+				#{operatingTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if test="operatingTimeEnd != null and operatingTimeEnd != ''">
+				AND operating_time <![CDATA[<=]]>
+				#{operatingTimeEnd,jdbcType=VARCHAR}
+			</if>
+			<if
+				test="operatingState != null and operatingState != ''">
+				AND operating_state =
+				#{operatingState,jdbcType=VARCHAR}
+			</if>
+			<if
+				test="accountLandingTimeStart != null and accountLandingTimeStart != ''">
+				AND account_landing_time <![CDATA[>=]]>
+				#{accountLandingTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if
+				test="accountLandingTimeEnd != null and accountLandingTimeEnd != ''">
+				AND account_landing_time <![CDATA[<=]]>
+				#{accountLandingTimeEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="operatingAccount != null and operatingAccount != ''">
+				AND operating_account =
+				#{operatingAccount,jdbcType=VARCHAR}
+			</if>
+			<if test="operatingUrl != null and operatingUrl != ''">
+				AND operating_URL = #{operatingUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="remark != null and remark != ''">
+				AND remark = #{remark,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<select id="selectList" parameterType="map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from mis_log
+		<where>
+			<if test="id != null  and id != ''">
+				AND id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="accNum != null and accNum != '' ">
+				AND acc_num = #{accNum,jdbcType=VARCHAR}
+			</if>
+			<if test="accNumIp != null and accNumIp != '' ">
+				AND acc_num_ip = #{accNumIp,jdbcType=VARCHAR}
+			</if>
+			<if test="operationName != null and operationName != ''">
+				AND operation_name = #{operationName,jdbcType=VARCHAR}
+			</if>
+			<if test="operationModule != null and operationModule != ''">
+				AND operation_module =
+				#{operationModule,jdbcType=VARCHAR}
+			</if>
+			<if test="operatingTimeStart != null and operatingTimeStart != ''">
+				AND operating_time <![CDATA[>=]]>
+				#{operatingTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if test="operatingTimeEnd != null and operatingTimeEnd != ''">
+				AND operating_time <![CDATA[<=]]>
+				#{operatingTimeEnd,jdbcType=VARCHAR}
+			</if>
+			<if
+				test="operatingState != null and operatingState != ''">
+				AND operating_state =
+				#{operatingState,jdbcType=VARCHAR}
+			</if>
+			<if
+				test="accountLandingTimeStart != null and accountLandingTimeStart != ''">
+				AND account_landing_time <![CDATA[>=]]>
+				#{accountLandingTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if
+				test="accountLandingTimeEnd != null and accountLandingTimeEnd != ''">
+				AND account_landing_time <![CDATA[<=]]>
+				#{accountLandingTimeEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="operatingAccount != null and operatingAccount != ''">
+				AND operating_account =
+				#{operatingAccount,jdbcType=VARCHAR}
+			</if>
+			<if test="operatingUrl != null and operatingUrl != ''">
+				AND operating_URL = #{operatingUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="remark != null and remark != ''">
+				AND remark = #{remark,jdbcType=VARCHAR}
+			</if>
+		</where>
+		<if test="index != null and num != null ">
+			LIMIT #{index},#{num}
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		mis_log
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteList" parameterType="java.lang.Long">
+		delete from mis_log
+		where id in 
+		<foreach item="id" collection="list" open="(" close=")"
+			separator=",">
+			#{id,jdbcType=BIGINT}
+		</foreach>
+
+	</delete>
+	<insert id="insert" keyColumn="id" keyProperty="id"
+		parameterType="com.px.mis.system.entity.MisLog"
+		useGeneratedKeys="true">
+		insert into mis_log (acc_num, acc_num_ip,
+		operation_name,
+		operation_module, operating_time, operating_state,
+		account_landing_time, operating_account,
+		operating_URL, remark,operating_results)
+		values
+		(#{accNum,jdbcType=VARCHAR}, #{accNumIp,jdbcType=VARCHAR},
+		#{operationName,jdbcType=VARCHAR},
+		#{operationModule,jdbcType=VARCHAR},
+		#{operatingTime,jdbcType=VARCHAR},
+		#{operatingState,jdbcType=VARCHAR},
+		#{accountLandingTime,jdbcType=VARCHAR},
+		#{operatingAccount,jdbcType=VARCHAR},
+		#{operatingUrl,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+		,#{operatingResults,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" keyColumn="id" keyProperty="id"
+		parameterType="com.px.mis.system.entity.MisLog"
+		useGeneratedKeys="true">
+		insert into mis_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="accNum != null  and accNum != '' ">
+				acc_num,
+			</if>
+			<if test="accNumIp != null  and accNumIp != '' ">
+				acc_num_ip,
+			</if>
+			<if test="operationName != null  and operationName != '' ">
+				operation_name,
+			</if>
+			<if test="operationModule != null  and operationModule != '' ">
+				operation_module,
+			</if>
+			<if test="operatingTime != null  and operatingTime != '' ">
+				operating_time,
+			</if>
+			<if
+				test="operatingState != null  and operatingState != '' ">
+				operating_state,
+			</if>
+			<if
+				test="accountLandingTime != null  and accountLandingTime != '' ">
+				account_landing_time,
+			</if>
+			<if test="operatingAccount != null  and operatingAccount != '' ">
+				operating_account,
+			</if>
+			<if test="operatingUrl != null  and operatingUrl != '' ">
+				operating_URL,
+			</if>
+			<if test="remark != null  and remark != '' ">
+				remark,
+			</if>
+			<if test="operatingResults != null  and operatingResults != '' ">
+				operating_results,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="accNum != null  and accNum != '' ">
+				#{accNum,jdbcType=VARCHAR},
+			</if>
+			<if test="accNumIp != null  and accNumIp != '' ">
+				#{accNumIp,jdbcType=VARCHAR},
+			</if>
+			<if test="operationName != null  and operationName != '' ">
+				#{operationName,jdbcType=VARCHAR},
+			</if>
+			<if test="operationModule != null  and operationModule != '' ">
+				#{operationModule,jdbcType=VARCHAR},
+			</if>
+			<if test="operatingTime != null  and operatingTime != '' ">
+				#{operatingTime,jdbcType=VARCHAR},
+			</if>
+			<if
+				test="operatingState != null  and operatingState != '' ">
+				#{operatingState,jdbcType=VARCHAR},
+			</if>
+			<if
+				test="accountLandingTime != null  and accountLandingTime != '' ">
+				#{accountLandingTime,jdbcType=VARCHAR},
+			</if>
+			<if test="operatingAccount != null  and operatingAccount != '' ">
+				#{operatingAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="operatingUrl != null  and operatingUrl != '' ">
+				#{operatingUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null  and remark != '' ">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="operatingResults != null  and operatingResults != '' ">
+				#{operatingResults,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByList" parameterType="java.util.List">
+		update mis_log
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="acc_num =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.accNum != null and item.accNum != '' ">
+						when id =
+						#{item.id} then #{item.accNum}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="acc_num_ip =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.accNumIp != null and item.accNumIp != '' ">
+						when id =
+						#{item.id} then #{item.accNumIp}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="operation_name =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if
+						test="item.operationName != null and item.operationName != '' ">
+						when id =
+						#{item.id} then #{item.operationName}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="operation_module =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if
+						test="item.operationModule != null and item.operationModule != '' ">
+						when id =
+						#{item.id} then #{item.operationModule}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="operating_time =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if
+						test="item.operatingTime != null and item.operatingTime != '' ">
+						when id =
+						#{item.id} then #{item.operatingTime}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="operating_state =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if
+						test="item.operatingState != null and item.operatingState != '' ">
+						when id =
+						#{item.id} then #{item.operatingState}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="account_landing_time =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if
+						test="item.accountLandingTime != null and item.accountLandingTime != '' ">
+						when id =
+						#{item.id} then #{item.accountLandingTime}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="operating_account =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if
+						test="item.operatingAccount != null and item.operatingAccount != '' ">
+						when id =
+						#{item.id} then #{item.operatingAccount}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="operating_URL =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if
+						test="item.operatingUrl != null and item.operatingUrl != '' ">
+						when id =
+						#{item.id} then #{item.operatingUrl}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="remark =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.remark != null and item.remark != '' ">
+						when id =
+						#{item.id} then #{item.remark}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="operating_results =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.operatingResults != null and item.operatingResults != '' ">
+						when id =
+						#{item.id} then #{item.operatingResults}
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		where id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.id}
+		</foreach>
+	</update>
+
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.px.mis.system.entity.MisLog">
+		update mis_log
+		<set>
+			<if test="accNum != null and accNum != '' ">
+				acc_num = #{accNum,jdbcType=VARCHAR},
+			</if>
+			<if test="accNumIp != null and accNumIp != '' ">
+				acc_num_ip = #{accNumIp,jdbcType=VARCHAR},
+			</if>
+			<if test="operationName != null and operationName != '' ">
+				operation_name = #{operationName,jdbcType=VARCHAR},
+			</if>
+			<if test="operationModule != null and operationModule != '' ">
+				operation_module = #{operationModule,jdbcType=VARCHAR},
+			</if>
+			<if test="operatingTime != null and operatingTime != '' ">
+				operating_time = #{operatingTime,jdbcType=VARCHAR},
+			</if>
+			<if
+				test="operatingState != null and operatingState != '' ">
+				operating_state =
+				#{operatingState,jdbcType=VARCHAR},
+			</if>
+			<if
+				test="accountLandingTime != null and accountLandingTime != '' ">
+				account_landing_time =
+				#{accountLandingTime,jdbcType=VARCHAR},
+			</if>
+			<if test="operatingAccount != null and operatingAccount != '' ">
+				operating_account = #{operatingAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="operatingUrl != null and operatingUrl != '' ">
+				operating_URL = #{operatingUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null and remark != '' ">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="operatingResults != null and operatingResults != '' ">
+				operating_results = #{operatingResults,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.px.mis.system.entity.MisLog">
+		update mis_log
+		set acc_num = #{accNum,jdbcType=VARCHAR},
+		acc_num_ip = #{accNumIp,jdbcType=VARCHAR},
+		operation_name =
+		#{operationName,jdbcType=VARCHAR},
+		operation_module =
+		#{operationModule,jdbcType=VARCHAR},
+		operating_time =
+		#{operatingTime,jdbcType=VARCHAR},
+		operating_state =
+		#{operatingState,jdbcType=VARCHAR},
+		account_landing_time =
+		#{accountLandingTime,jdbcType=VARCHAR},
+		operating_account =
+		#{operatingAccount,jdbcType=VARCHAR},
+		operating_URL =
+		#{operatingUrl,jdbcType=VARCHAR},
+		remark = #{remark,jdbcType=VARCHAR},
+		operating_results = #{operatingResults,jdbcType=VARCHAR},
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

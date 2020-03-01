@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		
+		<meta charset="UTF-8">
+		<title>收发类别</title>
+	</head>
+	<style>
+		.level{
+			display:none
+		}
+		.dialog,.edit{
+			height:auto
+		}
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+	</style>
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/recvSendCate.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+		<div class="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">收发类别</h1>-->
+			</div>
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="print">打印</button>
+					<button class="recv_importExcel">导入</button>
+					<button class="recv_exportExcel">导出</button>
+					<button class="addOrder">新增</button>
+					<button class="recv_saveOrder">保存</button>
+					<button class="editOrder">编辑</button>
+					<button class="delOrder">删除</button>
+					<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>
+				</div>
+			</div>
+		</div>
+		<wrap>
+			<aside>
+				<!--左列树-->
+				<div id="recv_tree"></div>
+			</aside>
+		 	
+			<article>
+				<!--右列默认框-->
+				<div class="inputs">
+					<div class="inpu">
+						收发类别编码：<input class="input-group recvSendCateId" id="recvSendCateId" type="text" readonly="readonly" value=""/>
+					</div>
+					<div class="inpu">
+						收发类别名称：<input class="input-group recvSendCateNm" id="recvSendCateNm" type="text" readonly="readonly" value=""/>
+					</div>
+					<div class="inpu">
+						&emsp;&emsp;收发标识：<input class="input-group recvSendInd" id="recvSendInd" type="text" readonly="readonly" value=""/>
+					</div>
+					<div class="inpu">
+						对方科目编码：<input class="input-group cntPtySubjEncd" id="cntPtySubjEncd" type="text" readonly="readonly" value=""/>
+					</div>
+					<div class="inpu inpu1">
+						&emsp;&emsp;备注：<input class="input-group memo" id="memo" type="text" readonly="readonly" value=""/>
+					</div>
+				</div>
+				<!--增加弹窗-->
+				<div class="dialog">
+		        	<h3>增加收发类别</h3>
+					<div class="inpu">
+						收发类别编码：<input class="input-group recvSendCateId" id="addId" type="text" value=""/>
+					</div>
+					<div class="inpu">
+						收发类别名称：<input class="input-group recvSendCateNm" id="addNm" type="text" value=""/>
+					</div>
+					<div class="inpu"style="margin-left:-100px">
+						收发标识：
+						<label>收</label>
+				        <input type="radio" name="recv" value="1" checked="checked"/>
+				        <label>发</label>
+				        <input type="radio" name="recv" value="0" />
+					</div>
+					<div class="inpu">
+						对方科目编码：<input class="input-group cntPtySubjEncd" id="addEncd" type="text" value=""/>
+					</div>
+					<div class="inpu inpu1">
+						&emsp;&emsp;&emsp;&emsp;备注：<input class="input-group memo" id="addMemo" type="text" value=""/>
+					</div>
+					<button class="cancel">取消</button>
+		        </div>
+		        <!--编辑弹窗-->
+		        <div class="edit">
+		        	<h3>编辑收发类别</h3>
+			       	<div class="inpu">
+						收发类别编码：<input class="input-group recvSendCateId" id="updateId" type="text" readonly="readonly" value=""/>
+					</div>
+					<div class="inpu">
+						收发类别名称：<input class="input-group recvSendCateNm" id="updateNm" type="text" value=""/>
+					</div>
+					<div class="inpu"style="margin-left:-100px">
+						收发标识：
+						<label>收</label>
+				        <input type="radio" name="updateRecv" value="1" />
+				        <label>发</label>
+				        <input type="radio" name="updateRecv" value="0" checked="checked"/>
+					</div>
+					<div class="inpu">
+						对方科目编码：<input class="input-group cntPtySubjEncd" id="updateEncd" type="text" value=""/>
+					</div>
+					<div class="inpu inpu1">
+						&emsp;&emsp;&emsp;&emsp;备注：<input class="input-group memo" id="updateMemo" type="text" value=""/>
+					</div>
+					<button class="cancel">取消</button>
+		        </div>
+			</article>
+		 	
+		</wrap>
+		 	
+	</body>
+	
+</html>

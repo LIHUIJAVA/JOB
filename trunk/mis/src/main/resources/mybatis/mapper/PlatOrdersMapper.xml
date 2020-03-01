@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PlatOrders">
+  <insert id="insert" parameterType="com.px.mis.ec.entity.PlatOrders">
+	INSERT INTO plat_orders (good_id, good_num, good_money, pay_money, good_sku, order_id, batch_no, express_com, 
+	pro_act_id, discount_money, adjust_money, memo,good_price,pay_price,deliver_whs)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.goodId}, #{item.goodNum}, #{item.goodMoney}, #{item.payMoney}, #{item.goodSku}, #{item.orderId}, #{item.batchNo}, 
+      #{item.expressCom}, #{item.proActId}, #{item.discountMoney}, #{item.adjustMoney}, #{item.memo}, 
+      #{item.goodPrice}, #{item.payPrice},#{deliverWhs})
+    </foreach>
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.PlatOrders">
+  	SELECT no, good_id, good_num, good_money, pay_money, good_sku, order_id, batch_no, express_com, 
+	pro_act_id, discount_money, adjust_money, memo,good_price,pay_price,deliver_whs
+  	FROM plat_orders 
+  	WHERE order_id = #{orderId}
+  </select>
+  
+  <select id="selectById" parameterType="int" resultType="com.px.mis.ec.entity.PlatOrders"> 
+  	SELECT no, good_id, good_num, good_money, pay_money, good_sku, order_id, batch_no, express_com, 
+	pro_act_id, discount_money, adjust_money, memo,good_price,pay_price,deliver_whs
+  	FROM plat_orders 
+  	WHERE no = #{orderItemId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  plat_orders
+  	WHERE order_id = #{orderId}
+  </delete>
+  
+  <update id="update" parameterType="Map">
+  	UPDATE plat_orders 
+  	SET good_id=#{newGoodsID} 
+  	WHERE no = #{orderItemId}
+  </update>
+</mapper>

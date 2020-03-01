@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>银行档案</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/baseDoc/DeptDoc.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<style type="text/css">
+			.ui-state-highlight {
+				color: red !important;
+			}
+			
+			form {
+				display: inline-block;
+				font-size: 14px;
+			}
+			#mengban.zhezhao{
+				left:0px
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">银行档案</h1>-->
+			</div>
+			<div class="purchaseTit" style="margin:20px">
+				<div class="buttons">
+					<button class="print">打印</button>
+					<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>
+					<button class="addOrder">增行</button>
+					<button class="delOrder">删行</button>
+					<button class="saveOrder">保存</button>
+					<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>
+				</div>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqGridPager"></div>
+		</div>
+	</body>
+<script>
+	document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/bankDoc.js?" + new Date().getTime() + "'></scr" + "ipt>");
+</script>
+</html>

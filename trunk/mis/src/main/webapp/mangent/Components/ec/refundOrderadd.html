@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>		
+		<title>
+			退款单新增
+		</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css"/>
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>		
+	
+	</head>
+
+	
+	
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/ec/refundOrderadd.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+		<div class="box">
+		<div class="purchaseTit">
+			<!--<h1 class="title">退款单新增</h1>-->
+			<div class="buttons">			
+				<button class="addOrder">增加</button>
+				<button class="saveOrder">保存</button>
+				<!--<button class="update">更新</button>-->			
+			
+			</div>			
+		</div>
+			<div class="order-title">
+				<form class="row" id="formSave">			
+				<div class="info">
+					<div class="supplier col-md-4" >
+						<span>订单编码</span>
+						<input type="text" class="orderId" name="orderId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>店铺编码</span>
+						<input type="text" class="storeId" name="storeId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>店铺名称</span>
+						<input type="text" class="storeName" name="storeName1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>付款时间</span>
+						<input type="text" class="payTime" name="payTime1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>旗标</span>
+						<input type="text" class="waif" name="waif1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>是否客审</span>
+						<input type="text" class="isAudit" name="isAudit1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>审核提示</span>
+						<input type="text" class="auditHNumber" name="auditHNumber1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>商品数量</span>
+						<input type="text" class="goodNum" name="goodNum1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>商品金额</span>
+						<input type="text" class="goodMoney" name="goodMoney1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>实付金额</span>
+						<input type="text" class="payMoney" name="payMoney1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>买家留言</span>
+						<input type="text" class="buyerNote" name="buyerNote1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>卖家备注</span>
+						<input type="text" class="sellerNote" name="sellerNote1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>收货地址</span>
+						<input type="text" class="recAddress" name="recAddress1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>买家会员号</span>
+						<input type="text" class="buyerId" name="buyerId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>收货人姓名</span>
+						<input type="text" class="recName" name="recName1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>收货人电话</span>
+						<input type="text" class="recMobile" name="recMobile1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>电商订单号</span>
+						<input type="text" class="ecOrderId" name="ecOrderId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>是否开票</span>
+						<input type="text" class="isInvoice" name="isInvoice1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>发票抬头</span>
+						<input type="text" class="invoiceTiel" name="invoiceTiel1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>卖家备注旗帜</span>
+						<input type="text" class="onteFlag" name="onteFlag1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>是否关闭</span>
+						<input type="text" class="isClose" name="isClose1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>是否发货</span>
+						<input type="text" class="isShip" name="isShip1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>卖家调整金额</span>
+						<input type="text" class="adjustMoney" name="adjustMoney1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>系统优惠金额</span>
+						<input type="text" class="discountMoney" name="discountMoney1" value="" />
+					</div>
+				
+					<div class="supplier col-md-4" >
+						<span>订单状态</span>
+						<input type="text" class="orderStatus" name="orderStatus1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>退货状态</span>
+						<input type="text" class="returnStatus" name="returnStatus1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>调整状态</span>
+						<input type="text" class="adjustStatus" name="adjustStatus1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>交易时间</span>
+						<input type="text" class="tradeDt" name="tradeDt1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>业务类型编码</span>
+						<input type="text" class="bizTypId" name="bizTypId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>销售类型编码</span>
+						<input type="text" class="sellTypId" name="sellTypId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>收发类别编码</span>
+						<input type="text" class="recvSendCateId" name="recvSendCateId1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>退货状态</span>
+						<input type="text" class="returnStatus" name="returnStatus1" value="" />
+					</div>
+					<div class="supplier col-md-4" >
+						<span>是否含赠品</span>
+						<input type="text" class="hasGift" name="hasGift1" value="" />
+						<!--<span><img class="user" src="../../assets/img/biaoge.png" alt="" /></span>-->
+					</div>
+					<div class="supplier col-md-4" >
+						<span>备注</span>
+						<input type="text" class="memo" name="memo1" value="" />
+						<!--<span><img class="user" src="../../assets/img/biaoge.png" alt="" /></span>-->
+					
+					</div>
+					
+					
+				</div>	
+			</form>			
+			</div>		
+		<table id="jqgrids"></table>
+		<!--<div id="jqGridPager"></div>-->
+		
+		</div>
+	</body>
+</html>
+<style type="text/css">
+	.info>div{
+		display: inline-block;
+		width: 33%;
+	}
+</style>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+
+		<title>订单详情</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<!--<script type="text/javascript" src="../../assets/js/mis/ec/22.js"></script>-->
+		<script type="text/javascript" src="../../assets/js/mis/ec/platOrderDet.js"></script>
+
+		<script type="text/javascript" src="../../assets/laydate/laydate.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/ec/goodRecordList.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/ec/storeRecordList.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		
+		
+	</head>
+	<style>
+		select {
+			outline: none;
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			width: 220px;
+			border: 0;
+			border-bottom: 1px solid #B8C7CE
+		}
+		
+		select:-ms-expand {
+			display: none;
+		}
+		
+		#gview_good_jqgrids,#gbox_good_jqgrids {
+			width: 100%!important;
+		}
+		
+		.order-title {
+		    width: 1200px!important;
+		}
+		.order-title div {
+		    width: 400px;
+		}
+		#jqgh_add_jqGrids_goodName,
+		#jqgh_add_jqGrids_goodNum,
+		#jqgh_add_jqGrids_goodMoney,
+		#jqgh_add_jqGrids_payMoney,
+		#jqgh_add_jqGrids_goodPrice,
+		#jqgh_add_jqGrids_payPrice,
+		#jqgh_add_jqGrids_sellerPrice,
+		#jqgh_add_jqGrids_isGift {
+		    color: red;
+		}
+		body {
+			overflow-x:hidden;
+		}
+	</style>
+
+	<body>
+		<!--<div class="box">-->
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">订单新增</h1>-->
+				<div class="buttons">
+					<button class="delOrder">删行</button>
+					<!--<button class="aaaa">计算金额、数量与是否含赠品</button>-->
+					<button class="update">更新</button>
+					<button class="again">刷新</button>
+
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>订单编码</span>
+							<input type="text" class="orderId" name="orderId1" readonly="readonly"/>
+						</div>
+						<div class="supplier col-md-4">
+							<span>店铺编码<b>*</b></span>
+							<input type="text" id="storeId" class="storeId encds" name="storeId1" value="" />
+							<input type="text" id="storeName" class="storeNm names" name="storeNm1" value="" readonly="readonly" />
+							<span><img class="storeIds_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>付款时间<b>*</b></span>
+							<!--<input type="text" class="payTime" name="payTime1" value=""  calendar="YYYY-MM-DD" />-->
+							<input placeholder="请输入日期" class="payTime date f_date" name="payTime1" id="start" style="width:200px; margin-right:10px;">
+						</div>
+						<div class="supplier col-md-4">
+							<span>旗标</span>
+							<input type="text" class="waif" name="waif1" value="0" readonly="readonly"/>
+						</div>
+						<div class="supplier col-md-4">
+							<span>审核提示</span>
+							<input type="text" class="auditHint" name="auditHint1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>整单商品数量<b>*</b></span>
+							<input type="text" class="goodNum" name="goodNum1" value="" readonly="readonly"/>
+						</div>
+						<div class="supplier col-md-4">
+							<span>整单商品金额</span>
+							<input type="text" class="goodMoney" name="goodMoney1" value="" readonly="readonly"/>
+						</div>
+						<div class="supplier col-md-4">
+							<span>整单实付金额</span>
+							<input type="text" class="payMoney" name="payMoney1" value="" readonly="readonly"/>
+						</div>
+						<div class="supplier col-md-4">
+							<span>买家留言</span>
+							<input type="text" class="buyerNote" name="buyerNote1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>卖家备注</span>
+							<input type="text" class="sellerNote" name="sellerNote1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>收货人详细地址<b>*</b></span>
+							<input type="text" class="recAddress" name="recAddress1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>买家会员号</span>
+							<input type="text" class="buyerId" name="buyerId1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>收货人姓名<b>*</b></span>
+							<input type="text" class="recName" name="recName1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>收货人手机号<b>*</b></span>
+							<!--<input type="text" class="recMobile" name="recMobile1" value="" />-->
+							<input type="text" oninput="if(value.length>11)value=value.slice(0,11)" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" class="recMobile" name="recMobile1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>电商订单号<b>*</b></span>
+							<input type="text" class="ecOrderId" name="ecOrderId1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>发票抬头</span>
+							<input type="text" class="invoiceTiel" name="invoiceTiel1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>卖家调整金额</span>
+							<input type="text" class="adjustMoney" name="adjustMoney1" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>系统优惠金额</span>
+							<input type="text" class="discountMoney" name="discountMoney1" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>交易时间<b>*</b></span>
+							<!--<input type="text" class="tradeDt" name="tradeDt1" value="" calendar="YYYY-MM-DD" />-->
+							<input placeholder="请输入日期" class="tradeDt date f_date" name="tradeDt1" id="start1" style="width:200px; margin-right:10px;">
+						</div>
+						<div class="businessType col-md-4">
+							<span>发货仓库编码</span>
+							<input type="text" id="whsEncd" class="whsEncd encds" name="deliverWhs1" value="" />
+							<input type="text" id="whsNm" class="whsNm names" name="whsNm" value="" readonly="readonly" />
+							<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否含赠品</span>
+							<!--<input type="text" class="hasGift" name="hasGift1" value="" />-->
+							<!--<span><img class="user" src="../../assets/img/biaoge.png" alt="" /></span>-->
+							<select name="hasGift1" id="hasGift" disabled>
+								<option selected value=''>此项保存时计算</option>
+								<option value="0">不含</option>
+								<option value="1">含</option>
+							</select>
+						</div>
+						<div class="supplier col-md-4">
+							<span>表头备注</span>
+							<input type="text" class="memo" name="memo1" value="" />
+							<!--<span><img class="user" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>收货地址省<b>*</b></span>
+							<input type="text" id="province" name="province1" value=""/>
+							<!--<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>收货地址市<b>*</b></span>
+							<input type="text" id="city" name="city1" value=""/>
+							<!--<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>收货地址区<b>*</b></span>
+							<input type="text" id="county" name="county1" value=""/>
+							<!--<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>运费</span>
+							<input type="text" id="freightPrice" name="freightPrice1" value="" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"/>
+							<!--<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否自发货<b>*</b></span>
+							<select name="deliverSelf1" id="deliverSelf">
+								<option disabled selected value>请选择</option>
+								<option value="0">平台仓发货</option>
+								<option value="1">自发货</option>
+							</select>
+							<!--<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>是否匹配活动<b>*</b></span>
+							<select name="canMatchActive1" id="canMatchActive">
+								<option disabled selected value>请选择</option>
+								<option value="0">否</option>
+								<option value="1">是</option>
+							</select>
+							<!--<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="businessType col-md-4">
+							<span>快递公司编码</span>
+							<input type="text" id="ckys_kd" class="expressId encds" name="expressCode1" value="" />
+							<input type="text" id="expressName" class="expressName names" name="expressName" value="" readonly="readonly" />
+							<span><img class="expressCode_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier col-md-4">
+							<span>快递单号</span>
+							<input type="text" id="expressNo" name="expressNo1" value=""/>
+							<!--<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>重量</span>
+							<input type="text" id="weight" name="weight1" value="" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"/>
+							<!--<span><img class="deliverWhs_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>打印模板编号</span>
+							<input type="text" id="ckys_mb" name="expressTemplate1" value="" readonly="readonly"/>
+						</div>
+					</div>
+				</form>
+			</div>
+			<table id="det_jqGrids"></table>
+			<div id="add_jqGridPager"></div>
+		</div>
+
+		<!--店铺商品档案-->
+		<div id="good" style="opacity: 0;">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="define">确定</button>
+					<button class="abolish">取消</button>
+					<button id="finds_sea">条件查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>店铺编码 </span>
+							<input type="text" id="storeId2" name="storeId2" value="" />
+							<!--<span><img class="biao_storeId" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>商品编码 </span>
+							<input type="text" class="goodId" name="goodId" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>商品SKU</span>
+							<input type="text" class="goodSku" name="goodSku" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>商品名称 </span>
+							<input type="text" class="goodName" name="goodName" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>平台商品编码 </span>
+							<input type="text" class="ecGoodId" name="ecGoodId" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>平台商品名称 </span>
+							<input type="text" class="ecGoodName" name="ecGoodName" value="" />
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<table id="good_jqgrids_a"></table>
+			<div id="good_jqGridPager"></div>
+		</div>
+	</body>
+
+</html>
+<script>
+		var start = {
+			elem: '#start',
+			format: 'YYYY-MM-DD hh:mm:ss',
+			min: laydate.now(-90), //设定最小日期为当前日期
+			max: '2099-06-16', //最大日期
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+				end.min = datas; //开始日选好后，重置结束日的最小日期
+				end.start = datas //将结束日的初始值设定为开始日
+			}
+		};
+		var start1 = {
+			elem: '#start1',
+			format: 'YYYY-MM-DD hh:mm:ss',
+			min: laydate.now(-90), //设定最小日期为当前日期
+			max: '2099-06-16', //最大日期
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+				end.min = datas; //开始日选好后，重置结束日的最小日期
+				end.start = datas //将结束日的初始值设定为开始日
+			}
+		};
+		var end = {
+			elem: '#end',
+			format: 'YYYY-MM-DD hh:mm:ss',
+			min: laydate.now(),
+			max: '2099-06-16',
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+				start.max = datas; //结束日选好后，充值开始日的最大日期
+			}
+		};
+		laydate(start);
+		laydate(start1);
+		laydate(end);
+
+	</script>

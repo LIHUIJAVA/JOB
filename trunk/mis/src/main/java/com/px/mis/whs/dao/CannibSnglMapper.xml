@@ -1,0 +1,1150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.CannibSnglMapper">
+    <resultMap id="BaseResultMap" type="CannibSngl"
+               autoMapping="true">
+        <id column="form_num" property="formNum"/>
+        <result column="tranOutWhsEncdName"
+                property="tranOutWhsEncdName"/>
+        <result column="tranInWhsEncdName" property="tranInWhsEncdName"/>
+        <collection property="checkSnglList"
+                    ofType="CannibSnglSubTab" autoMapping="true">
+            <id column="ordr_num" property="ordrNum"/>
+            <association property="invtyDoc"
+                         javaType="com.px.mis.purc.entity.InvtyDoc" autoMapping="true">
+                <id property="invtyEncd" column="invty_encd"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <resultMap id="checkSnglList" type="CannibSnglSubTab"
+               autoMapping="true">
+        <id column="ordr_num" property="ordrNum"/>
+        <result column="bx_qty" property="bxQty"/>
+        <result column="form_num" property="formNum"/>
+        <result column="invty_id" property="invtyId"/>
+        <result column="cannib_qty" property="cannibQty"/>
+        <result column="recv_qty" property="recvQty"/>
+        <result column="bat_num" property="batNum"/>
+        <result column="invtyEncd" property="invtyEncd"/>
+
+    </resultMap>
+    <!-- 新增调拨单 -->
+    <insert id="insertCSngl" parameterType="CannibSngl">
+        insert into cannib_sngl
+        (form_num, form_dt,
+         cannib_dt, tran_out_whs_encd, tran_in_whs_encd,
+         tran_out_dept_encd, tran_in_dept_encd, cannib_status, memo,
+         is_nt_wms,
+         is_nt_chk, is_nt_cmplt,
+         is_nt_clos, print_cnt, setup_pers,
+         setup_tm, form_typ_encd)
+        values (#{formNum}, #{formDt},
+                #{cannibDt}, #{tranOutWhsEncd},
+                #{tranInWhsEncd},
+                #{tranOutDeptEncd}, #{tranInDeptEncd}, '处理中', #{memo},
+                0, 0, 0, 0, #{printCnt}, #{setupPers},
+                now(), #{formTypEncd})
+    </insert>
+
+    <insert id="insertCSnglSubTab" parameterType="java.util.List">
+        insert into cannib_sngl_sub_tab(ordr_num, form_num, invty_id,
+        cannib_qty, bat_num, invldtn_dt,
+        bao_zhi_qi, prdc_dt, tax_rate,
+        cntn_tax_uprc, un_tax_uprc, cntn_tax_amt,
+        un_tax_amt, bx_qty,proj_encd,tax_amt
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.ordrNum}, #{item.formNum}, #{item.invtyId},
+            #{item.cannibQty}, #{item.batNum}, #{item.invldtnDt},
+            #{item.baoZhiQi}, #{item.prdcDt}, #{item.taxRate},
+            #{item.cntnTaxUprc}, #{item.unTaxUprc}, #{item.cntnTaxAmt},
+            #{item.unTaxAmt},#{item.bxQty},#{item.projEncd},#{item.taxAmt}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 修改调拨单 -->
+    <update id="updateCSngl" parameterType="CannibSngl">
+        update cannib_sngl
+        <set>
+
+            <if test="formDt != null">
+                form_dt = #{formDt},
+            </if>
+            <if test="cannibDt != null">
+                cannib_dt = #{cannibDt},
+            </if>
+            <if test="tranOutWhsEncd != null">
+                tran_out_whs_encd = #{tranOutWhsEncd},
+            </if>
+            <if test="tranInWhsEncd != null">
+                tran_in_whs_encd = #{tranInWhsEncd},
+            </if>
+            <if test="tranOutDeptEncd != null">
+                tran_out_dept_encd = #{tranOutDeptEncd},
+            </if>
+            <if test="tranInDeptEncd != null">
+                tran_in_dept_encd = #{tranInDeptEncd},
+            </if>
+            <if test="cannibStatus != null">
+                cannib_status = #{cannibStatus},
+            </if>
+            <if test="memo != null">
+                memo = #{memo},
+            </if>
+            <if test="isNtWms != null">
+                is_nt_wms = #{isNtWms},
+            </if>
+            <if test="isNtChk != null">
+                is_nt_chk = #{isNtChk},
+            </if>
+            <if test="isNtCmplt != null">
+                is_nt_cmplt = #{isNtCmplt},
+            </if>
+            <if test="isNtClos != null">
+                is_nt_clos = #{isNtClos},
+            </if>
+            <if test="printCnt != null">
+                print_cnt = #{printCnt},
+            </if>
+            <if test="mdfr != null">
+                mdfr = #{mdfr},
+            </if>
+            modi_tm = now()
+        </set>
+        where form_num = #{formNum}
+    </update>
+
+    <!-- 删除调拨单 -->
+    <delete id="deleteCSnglSubTab" parameterType="java.lang.String">
+        delete
+        from cannib_sngl_sub_tab
+        where form_num = #{formNum}
+    </delete>
+    <!--批量删除 -->
+    <delete id="deleteAllCSngl" parameterType="java.util.List">
+        delete cs,csSubTab
+        from cannib_sngl as cs
+        left join cannib_sngl_sub_tab
+        as csSubTab
+        ON cs.form_num = csSubTab.form_num
+        where cs.form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </delete>
+    <!-- 简单查调拨单 -->
+    <sql id="Cannib_Sngl_List">
+        cannib_sngl.form_num, cannib_sngl.form_dt,
+		cannib_sngl.cannib_dt, cannib_sngl.tran_out_whs_encd,
+		cannib_sngl.tran_in_whs_encd,
+		cannib_sngl.tran_out_dept_encd,
+		cannib_sngl.tran_in_dept_encd, cannib_sngl.memo,
+		cannib_sngl.is_nt_wms, cannib_sngl.is_nt_chk,
+		cannib_sngl.is_nt_cmplt,
+		cannib_sngl.is_nt_clos,
+		cannib_sngl.print_cnt,
+		cannib_sngl.setup_pers,
+		cannib_sngl.setup_tm,
+		cannib_sngl.mdfr, cannib_sngl.modi_tm,
+		cannib_sngl.chkr,
+		cannib_sngl.chk_tm,
+		whs_doc.whs_nm as
+		tranOutWhsEncdName,
+		innm.whs_nm as
+		tranInWhsEncdName
+		,cannib_sngl.form_typ_encd formTypEncd,
+		form_typ_tabs.form_typ_name formTypName,
+		deptDocOut.dept_name tranOutDeptNm,
+		deptDocInto.dept_name tranInDeptNm
+
+    </sql>
+    <select id="selectCSngl" parameterType="java.lang.String"
+            resultType="CannibSngl">
+        select
+        <include refid="Cannib_Sngl_List"/>
+        from cannib_sngl LEFT JOIN whs_doc ON (
+        cannib_sngl.tran_out_whs_encd =
+        whs_doc.whs_encd
+        )LEFT JOIN whs_doc as innm ON (
+        cannib_sngl.tran_in_whs_encd =
+        innm.whs_encd
+        )
+        LEFT JOIN form_typ_tabs ON(
+        form_typ_tabs.form_typ_encd=cannib_sngl.form_typ_encd
+        )
+        LEFT JOIN dept_doc deptDocOut ON cannib_sngl.tran_out_dept_encd = deptDocOut.dept_id
+        LEFT JOIN dept_doc deptDocInto ON cannib_sngl.tran_in_dept_encd = deptDocInto.dept_id
+        where form_num =
+        #{formNum}
+    </select>
+    <sql id="Cannib_Sngl_Tab_List">
+        ordr_num as ordrNum, form_num as formNum, invty_id as
+		invtyId,
+		cannib_qty as cannibQty, bat_num as batNum, invldtn_dt as
+		invldtnDt,
+		bao_zhi_qi as baoZhiQi, prdc_dt as prdcDt, tax_rate as
+		taxRate,
+		cntn_tax_uprc as cntnTaxUprc, un_tax_uprc as unTaxUprc,
+		cntn_tax_amt as cntnTaxAmt, un_tax_amt as unTaxAmt,bx_qty as bxQty
+    </sql>
+    <select id="selectCSnglSubTabList" resultMap="checkSnglList">
+        SELECT
+        cSubTab.*, iDoc.*, mDoc.measr_corp_nm,cSubTab.invty_id invtyEncd,proj_cls.proj_nm
+        FROM
+        cannib_sngl_sub_tab AS
+        cSubTab LEFT JOIN
+        invty_doc AS iDoc on cSubTab.invty_id =
+        iDoc.invty_encd
+        LEFT JOIN
+        measr_corp_doc mDoc on iDoc.measr_corp_id =
+        mDoc.measr_corp_id
+        LEFT JOIN proj_cls  ON proj_cls.proj_encd = cSubTab.proj_encd
+        <where>
+            <if test="formNum != null and formNum != ''">
+                AND form_num = #{formNum}
+            </if>
+        </where>
+    </select>
+    <!-- 批量查询 -->
+    <select id="selectCSnglList" resultType="CannibSngl">
+        SELECT *
+        from cannib_sngl
+        WHERE form_num in
+        <foreach collection="formNum" item="formNum" open="("
+                 close=")" separator=",">
+            #{formNum}
+        </foreach>
+    </select>
+
+    <!-- 分页查 -->
+    <select id="selectList" parameterType="Map"
+            resultType="CannibSnglMap">
+        SELECT
+        cSngl.*,
+        whs_doc.whs_nm AS tranOutWhsEncdName,
+        innm.whs_nm AS tranInWhsEncdName,
+        form_typ_tabs.form_typ_name,
+        cSubTab.*,
+        iDoc.invty_nm invtyNm,
+        iDoc.spc_model spcModel,
+        iDoc.bx_rule bxRule,
+        iDoc.invty_cd invtyCd,
+        iDoc.crspd_bar_cd crspdBarCd,
+        mDoc.measr_corp_nm ,
+        deptDocOut.dept_name tranOutDeptNm,
+        deptDocInto.dept_name tranInDeptNm,
+        proj_cls.proj_nm
+        <!-- 	,cSubTab.cannib_qty / iDoc.bx_rule bxQty  -->
+        FROM
+        cannib_sngl AS cSngl
+        LEFT JOIN cannib_sngl_sub_tab AS cSubTab ON ( cSngl.form_num = cSubTab.form_num )
+        LEFT JOIN invty_doc AS iDoc ON ( cSubTab.invty_id = iDoc.invty_encd )
+        LEFT JOIN measr_corp_doc mDoc ON ( iDoc.measr_corp_id = mDoc.measr_corp_id )
+        LEFT JOIN whs_doc ON ( cSngl.tran_out_whs_encd = whs_doc.whs_encd )
+        LEFT JOIN whs_doc AS innm ON ( cSngl.tran_in_whs_encd = innm.whs_encd )
+        LEFT JOIN form_typ_tabs ON ( form_typ_tabs.form_typ_encd = cSngl.form_typ_encd )
+        LEFT JOIN dept_doc deptDocOut ON cSngl.tran_out_dept_encd = deptDocOut.dept_id
+        LEFT JOIN dept_doc deptDocInto ON cSngl.tran_in_dept_encd = deptDocInto.dept_id
+        LEFT JOIN proj_cls  ON proj_cls.proj_encd = cSubTab.proj_encd
+        <where>
+            <if test="formNumStart != null and formNumStart != '' ">
+                AND right(cSngl.form_num,12)  <![CDATA[>=]]> right(#{formNumStart},12)
+            </if>
+            <if test="formNumEnd != null and formNumEnd != '' ">
+                AND   right(cSngl.form_num,12) <![CDATA[<=]]> right(#{formNumEnd},12)
+            </if>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND cSngl.memo like #{memo}
+            </if>
+            <if test="tranOutDeptEncd != null and tranOutDeptEncd.size() >0 ">
+                AND cSngl.tran_out_dept_encd in
+                <foreach collection="tranOutDeptEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tranInDeptEncd != null and tranInDeptEncd.size() >0">
+                AND cSngl.tran_in_dept_encd in
+                <foreach collection="tranInDeptEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND (
+                cSngl.tran_out_whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                OR cSngl.tran_in_whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="formNum != null and formNum.size() >0 ">
+                AND cSngl.form_num in
+                <foreach collection="formNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and formTypEncd.size() >0">
+                AND cSngl.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND cSngl.form_dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND cSngl.form_dt &lt;= #{formDt2}
+            </if>
+            <if test="tranInWhsEncd != null and tranInWhsEncd.size() >0">
+                AND cSngl.tran_in_whs_encd in
+                <foreach collection="tranInWhsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tranOutWhsEncd != null and tranOutWhsEncd.size() >0">
+                AND cSngl.tran_out_whs_encd in
+                <foreach collection="tranOutWhsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null and isNtChk != '' ">
+                AND cSngl.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="setupPers != null and setupPers != '' ">
+                AND cSngl.setup_pers = #{setupPers}
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0">
+                AND cSubTab.invty_id in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="batNum != null and batNum.size() >0 ">
+                AND cSubTab.bat_num in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                 AND iDoc.invty_cls_encd like #{invtyClsEncd}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+
+        SELECT
+        count(cSngl.form_num ) form_num
+        FROM
+        cannib_sngl AS cSngl
+        LEFT JOIN cannib_sngl_sub_tab AS cSubTab ON ( cSngl.form_num = cSubTab.form_num )
+        LEFT JOIN invty_doc AS iDoc ON ( cSubTab.invty_id = iDoc.invty_encd )
+        LEFT JOIN measr_corp_doc mDoc ON ( iDoc.measr_corp_id = mDoc.measr_corp_id )
+        LEFT JOIN whs_doc ON ( cSngl.tran_out_whs_encd = whs_doc.whs_encd )
+        LEFT JOIN whs_doc AS innm ON ( cSngl.tran_in_whs_encd = innm.whs_encd )
+        <where>
+            <if test="formNumStart != null and formNumStart != '' ">
+                AND right(cSngl.form_num,12)  <![CDATA[>=]]> right(#{formNumStart},12)
+            </if>
+            <if test="formNumEnd != null and formNumEnd != '' ">
+                AND   right(cSngl.form_num,12) <![CDATA[<=]]> right(#{formNumEnd},12)
+            </if>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND cSngl.memo like #{memo}
+            </if>
+            <if test="tranOutDeptEncd != null and tranOutDeptEncd.size() >0 ">
+                AND cSngl.tran_out_dept_encd in
+                <foreach collection="tranOutDeptEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tranInDeptEncd != null and tranInDeptEncd.size() >0">
+                AND cSngl.tran_in_dept_encd in
+                <foreach collection="tranInDeptEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="whsId != null and whsId.size() >0 ">
+                AND (
+                cSngl.tran_out_whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                OR cSngl.tran_in_whs_encd in
+                <foreach collection="whsId" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+                )
+            </if>
+            <if test="formNum != null and formNum.size() >0 ">
+                AND cSngl.form_num in
+                <foreach collection="formNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and formTypEncd.size() >0">
+                AND cSngl.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND cSngl.form_dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND cSngl.form_dt &lt;= #{formDt2}
+            </if>
+            <if test="tranInWhsEncd != null and tranInWhsEncd.size() >0">
+                AND cSngl.tran_in_whs_encd in
+                <foreach collection="tranInWhsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tranOutWhsEncd != null and tranOutWhsEncd.size() >0">
+                AND cSngl.tran_out_whs_encd in
+                <foreach collection="tranOutWhsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null and isNtChk != '' ">
+                AND cSngl.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="setupPers != null and setupPers != '' ">
+                AND cSngl.setup_pers = #{setupPers}
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0">
+                AND cSubTab.invty_id in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="batNum != null and batNum.size() >0 ">
+                AND cSubTab.bat_num in
+                <foreach collection="batNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd != '' ">
+                <bind name="invtyClsEncd" value=" invtyClsEncd +'%'"/>
+                 AND iDoc.invty_cls_encd like #{invtyClsEncd}
+            </if>
+        </where>
+    </select>
+    <!-- 打印 -->
+    <select id="selectListDaYin" parameterType="Map"
+            resultMap="BaseResultMap">
+        SELECT
+        cSngl.*,
+        whs_doc.whs_nm AS tranOutWhsEncdName,
+        innm.whs_nm AS tranInWhsEncdName,
+        form_typ_tabs.form_typ_name,
+        cSubTab.*,
+        iDoc.invty_nm invtyNm,
+        iDoc.spc_model spcModel,
+        iDoc.bx_rule bxRule,
+        iDoc.invty_cd invtyCd,
+        iDoc.crspd_bar_cd crspdBarCd,
+        mDoc.measr_corp_nm ,
+        deptDocOut.dept_name tranOutDeptNm,
+        deptDocInto.dept_name tranInDeptNm
+        <!-- 	,cSubTab.cannib_qty / iDoc.bx_rule bxQty  -->
+        FROM
+        cannib_sngl AS cSngl
+        LEFT JOIN cannib_sngl_sub_tab AS cSubTab ON ( cSngl.form_num = cSubTab.form_num )
+        LEFT JOIN invty_doc AS iDoc ON ( cSubTab.invty_id = iDoc.invty_encd )
+        LEFT JOIN measr_corp_doc mDoc ON ( iDoc.measr_corp_id = mDoc.measr_corp_id )
+        LEFT JOIN whs_doc ON ( cSngl.tran_out_whs_encd = whs_doc.whs_encd )
+        LEFT JOIN whs_doc AS innm ON ( cSngl.tran_in_whs_encd = innm.whs_encd )
+        LEFT JOIN form_typ_tabs ON ( form_typ_tabs.form_typ_encd = cSngl.form_typ_encd )
+        LEFT JOIN dept_doc deptDocOut ON cSngl.tran_out_dept_encd = deptDocOut.dept_id
+        LEFT JOIN dept_doc deptDocInto ON cSngl.tran_in_dept_encd = deptDocInto.dept_id
+        <where>
+            <if test="formNumStart != null and formNumStart != '' ">
+                AND right(cSngl.form_num,12)  <![CDATA[>=]]> right(#{formNumStart},12)
+            </if>
+            <if test="formNumEnd != null and formNumEnd != '' ">
+                AND  right(cSngl.form_num,12) <![CDATA[<=]]> right(#{formNumEnd},12)
+            </if>
+            <if test="tranOutDeptEncd != null and tranOutDeptEncd.size() >0 ">
+                AND cSngl.tran_out_dept_encd in
+                <foreach collection="tranOutDeptEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tranInDeptEncd != null and tranInDeptEncd.size() >0">
+                AND cSngl.tran_in_dept_encd in
+                <foreach collection="tranInDeptEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formNum != null and formNum.size() >0 ">
+                AND cSngl.form_num in
+                <foreach collection="formNum" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formTypEncd != null and formTypEncd.size() >0">
+                AND cSngl.form_typ_encd in
+                <foreach collection="formTypEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="formDt1 != null and formDt1 != ''">
+                AND cSngl.form_dt &gt;= #{formDt1}
+            </if>
+            <if test="formDt2 != null and formDt2 != ''">
+                AND cSngl.form_dt &lt;= #{formDt2}
+            </if>
+            <if test="tranInWhsEncd != null and tranInWhsEncd.size() >0">
+                AND cSngl.tran_in_whs_encd in
+                <foreach collection="tranInWhsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tranOutWhsEncd != null and tranOutWhsEncd.size() >0">
+                AND cSngl.tran_out_whs_encd in
+                <foreach collection="tranOutWhsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isNtChk != null and isNtChk != '' ">
+                AND cSngl.is_nt_chk = #{isNtChk}
+            </if>
+            <if test="setupPers != null and setupPers != '' ">
+                AND cSngl.setup_pers = #{setupPers}
+            </if>
+            <if test="invtyEncd != null and invtyEncd.size() >0">
+                AND cSubTab.invty_id in
+                <foreach collection="invtyEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="invtyClsEncd != null and invtyClsEncd.size() >0 ">
+                AND iDoc.invty_cls_encd in
+                <foreach collection="invtyClsEncd" item="item"
+                         separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <!--调拨单审核 -->
+    <update id="updateCSnglChk" parameterType="java.util.List">
+        update cannib_sngl
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then 1
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when form_num = #{item.formNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then #{item.chkTm}
+                </foreach>
+            </trim>
+        </trim>
+        where form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.formNum}
+        </foreach>
+        and is_nt_chk = 0
+    </update>
+    <!--调拨单弃审 -->
+    <update id="updateCSnglNoChk" parameterType="java.util.List">
+        update cannib_sngl
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="is_nt_chk =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then 0
+                </foreach>
+            </trim>
+            <trim prefix="chkr =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.chkr != null and item.chkr!=''">
+                        when form_num = #{item.formNum} then #{item.chkr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="chk_tm =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when form_num =
+                    #{item.formNum} then now()
+                </foreach>
+            </trim>
+        </trim>
+        where form_num in
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            #{item.formNum}
+        </foreach>
+        and is_nt_chk = 1
+    </update>
+    <select id="selectOthIsDelete" resultType="OthOutIntoWhs">
+        select *
+        from oth_out_into_whs
+        where src_form_num = #{srcFromNum}
+    </select>
+    <!-- PDA -->
+    <select id="selectCSnglChkr" resultMap="BaseResultMap">
+        select cSngl.*,
+               cSubTab.*,
+               iDoc.*,
+               mDoc.measr_corp_nm
+        From cannib_sngl as cSngl,
+             cannib_sngl_sub_tab as cSubTab,
+             invty_doc as iDoc,
+             measr_corp_doc mDoc
+        where cSngl.form_num = cSubTab.form_num
+          AND cSubTab.invty_id = iDoc.invty_encd
+          AND iDoc.measr_corp_id = mDoc.measr_corp_id
+          AND cSngl.is_nt_chk = 0
+    </select>
+    <update id="updateCSnglSubTab" parameterType="CheckSnglSubTab">
+        update cannib_sngl_sub_tab
+        <set>
+
+            <if test="formNum != null">
+                form_num = #{formNum},
+            </if>
+            <if test="invtyId != null">
+                invty_id = #{invtyId},
+            </if>
+            <if test="cannibQty != null">
+                cannib_qty = #{cannibQty},
+            </if>
+            <if test="recvQty != null">
+                recv_qty = #{recvQty},
+            </if>
+            <if test="batNum != null">
+                bat_num = #{batNum},
+            </if>
+            <if test="invldtnDt != null">
+                invldtn_dt = #{invldtnDt},
+            </if>
+            <if test="baoZhiQi != null">
+                bao_zhi_qi = #{baoZhiQi},
+            </if>
+            <if test="prdcDt != null">
+                prdc_dt = #{prdcDt},
+            </if>
+            <if test="taxRate != null">
+                tax_rate = #{taxRate},
+            </if>
+            <if test="cntnTaxUprc != null">
+                cntn_tax_uprc = #{cntnTaxUprc},
+            </if>
+            <if test="unTaxUprc != null">
+                un_tax_uprc = #{unTaxUprc},
+            </if>
+            <if test="cntnTaxAmt != null">
+                cntn_tax_amt = #{cntnTaxAmt},
+            </if>
+
+            <if test="bxQty != null">
+                bx_qty = #{bxQty},
+            </if>
+            <if test="unTaxAmt != null">
+                un_tax_amt = #{unTaxAmt},
+            </if>
+        </set>
+        where
+        ordr_num = #{ordrNum}
+        AND
+        form_num = #{formNum}
+    </update>
+
+    <!--转出仓库 可用量减少(减法) -->
+    <update id="updateAInvtyTab" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="aval_qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when
+                    whs_encd = #{item.tranOutWhsEncd}
+                    and
+                    invty_encd =
+                    #{item.invtyEncd}
+                    and
+                    bat_num = #{item.batNum}
+                    then
+                    IFNULL(aval_qty,0)-#{item.avalQty}
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            whs_encd = #{item.tranOutWhsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!--转入仓库 可用量增加(加法) -->
+    <update id="updateAInvtyTabJia" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="aval_qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    when
+                    whs_encd = #{item.tranInWhsEncd}
+                    and
+                    invty_encd =
+                    #{item.invtyEncd}
+                    and
+                    bat_num = #{item.batNum}
+                    then
+                    IFNULL(aval_qty,0)
+                    +#{item.avalQty}
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            whs_encd = #{item.tranInWhsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!-- 审核量 增加 减少 -->
+    <!--转出仓库 现存量减少(减法) -->
+    <update id="updateInvtyTab" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="now_stok =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.nowStok != null and item.nowStok !=''">
+                        when
+                        whs_encd = #{item.tranOutWhsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        now_stok-#{item.nowStok}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            whs_encd = #{item.tranOutWhsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!--转入仓库 现存量增加(加法) -->
+    <update id="updateInvtyTabJia" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="now_stok =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.nowStok != null and item.nowStok !=''">
+                        when
+                        whs_encd = #{item.tranInWhsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        now_stok+#{item.nowStok}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            whs_encd = #{item.tranInWhsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!-- 弃审量 增加 减少 -->
+    <!--转入仓库 现存量减少(减法) -->
+    <update id="updateInvtyTabNo" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="now_stok =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.nowStok != null and item.nowStok !=''">
+                        when
+                        whs_encd = #{item.tranInWhsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        now_stok-#{item.nowStok}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            whs_encd = #{item.tranInWhsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!--转出仓库 现存量增加(加法) -->
+    <update id="updateInvtyTabJiaNo" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="now_stok =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.nowStok != null and item.nowStok !=''">
+                        when
+                        whs_encd = #{item.tranOutWhsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        now_stok+#{item.nowStok}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            whs_encd = #{item.tranOutWhsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!-- 查询是否已审核 -->
+    <select id="selectCanSnglChk" resultType="CannibSngl">
+        select *
+        from cannib_sngl
+        where form_num = #{formNum}
+    </select>
+    <!-- 查询库存表 -->
+    <!-- 查询库存表中是否有数据 -->
+    <select id="selectInvtyTabByTermOut" resultType="InvtyTab">
+        select *
+        from invty_tab
+        where whs_encd = #{tranOutWhsEncd}
+          and invty_encd =
+              #{invtyEncd}
+          and bat_num = #{batNum} for update
+    </select>
+    <select id="selectInvtyTabByTermIn" resultType="InvtyTab">
+        select *
+        from invty_tab
+        where whs_encd = #{tranInWhsEncd}
+          and invty_encd =
+              #{invtyEncd}
+          and bat_num = #{batNum} for update
+    </select>
+    <!-- 弃审中的可用量增加 减少 -->
+    <!--转入仓库 可用量减少(减法) -->
+    <update id="updateAInvtyTabNo" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="aval_qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.avalQty != null and item.avalQty !=''">
+                        when
+                        whs_encd = #{item.tranInWhsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(aval_qty,0)-#{item.avalQty}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            whs_encd = #{item.tranInWhsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!--转出仓库 可用量增加(加法) -->
+    <update id="updateAInvtyTabJiaNo" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="aval_qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.avalQty != null and item.avalQty !=''">
+                        when
+                        whs_encd = #{item.tranOutWhsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(aval_qty,0)+#{item.avalQty}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator="," open="(" close=")">
+            whs_encd = #{item.tranOutWhsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!-- 查询库存表的现存量 可用量 -->
+    <select id="selectInvty" parameterType="Map"
+            resultType="InvtyTab">
+        SELECT
+        invty_tab.ordr_num,
+        invty_tab.whs_encd,
+        invty_tab.invty_encd,
+        invty_tab.bat_num,
+        SUM(invty_tab.now_stok) now_stok,
+        SUM(invty_tab.aval_qty) aval_qty,
+        invty_tab.prdc_dt,
+        invty_tab.bao_zhi_qi,
+        invty_tab.invldtn_dt,
+        invty_tab.cntn_tax_uprc,
+        invty_tab.un_tax_uprc,
+        invty_tab.book_entry_uprc,
+        invty_tab.tax_rate,
+        invty_tab.cntn_tax_amt,
+        invty_tab.un_tax_amt,
+        invty_tab.regn_encd,
+        invty_tab.gds_bit_encd
+
+        FROM
+        invty_tab
+        <where>
+
+            <if test="tranOutWhsEncd != null and tranOutWhsEncd != ''">
+                invty_tab.whs_encd = #{tranOutWhsEncd}
+            </if>
+            <if test="invtyEncd != null and invtyEncd != ''">
+                AND invty_tab.invty_encd = #{invtyEncd}
+            </if>
+            <if test="batNum != null and batNum != ''">
+                AND invty_tab.bat_num = #{batNum}
+            </if>
+        </where>
+        GROUP BY invty_tab.invty_encd,invty_tab.whs_encd
+    </select>
+    <insert id="exInsertCSngl" parameterType="CannibSngl">
+        insert into cannib_sngl
+        (
+        form_num,
+        form_dt,
+        cannib_dt,
+        tran_out_whs_encd,
+        tran_in_whs_encd,
+        tran_out_dept_encd,
+        tran_in_dept_encd,
+        cannib_status,
+        memo,
+        is_nt_wms,
+        is_nt_chk,
+        is_nt_cmplt,
+        is_nt_clos,
+        print_cnt,
+        setup_pers,
+        setup_tm,
+        mdfr,
+        modi_tm,
+        chkr,
+        chk_tm,form_typ_encd
+        )
+        values (
+        #{formNum},
+        <if test="formDt  == '' ">
+            null
+        </if>
+        <if test="formDt  != '' ">
+            #{formDt}
+        </if>
+        ,
+        <if test="cannibDt  == '' ">
+            null
+        </if>
+        <if test="cannibDt  != '' ">
+            #{cannibDt}
+        </if>
+        ,
+        #{tranOutWhsEncd},
+        #{tranInWhsEncd},
+        #{tranOutDeptEncd},
+        #{tranInDeptEncd},
+        #{cannibStatus},
+        #{memo},
+        #{isNtWms},
+        #{isNtChk},
+        #{isNtCmplt},
+        #{isNtClos},
+        #{printCnt},
+        #{setupPers},
+        <if test="setupTm  == '' ">
+            null
+        </if>
+        <if test="setupTm  != '' ">
+            #{setupTm}
+        </if>
+        ,
+        #{mdfr},
+        <if test="modiTm  == '' ">
+            null
+        </if>
+        <if test="modiTm  != '' ">
+            #{modiTm}
+        </if>
+        ,
+        #{chkr},
+        <if test="chkTm  == '' ">
+            null
+        </if>
+        <if test="chkTm  != '' ">
+            #{chkTm}
+        </if>
+        ,#{formTypEncd}
+        )
+    </insert>
+    <insert id="exInsertCSnglSubTab" parameterType="java.util.List">
+        insert into cannib_sngl_sub_tab(ordr_num, form_num, invty_id,
+        cannib_qty, bat_num, invldtn_dt,
+        bao_zhi_qi, prdc_dt, tax_rate,
+        cntn_tax_uprc, un_tax_uprc, cntn_tax_amt,
+        un_tax_amt, bx_qty,recv_qty,proj_encd
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.ordrNum}, #{item.formNum}, #{item.invtyId},
+            #{item.cannibQty}, #{item.batNum},
+            <if test="item.invldtnDt  == '' ">
+                null
+            </if>
+            <if test="item.invldtnDt  != '' ">
+                #{item.invldtnDt}
+            </if>
+            ,
+            #{item.baoZhiQi},
+            <if test="item.prdcDt  == '' ">
+                null
+            </if>
+            <if test="item.prdcDt  != '' ">
+                #{item.prdcDt}
+            </if>
+            , #{item.taxRate},
+            #{item.cntnTaxUprc}, #{item.unTaxUprc},
+            #{item.cntnTaxAmt},
+            #{item.unTaxAmt},#{item.bxQty},#{item.recvQty},#{item.projEncd}
+            )
+        </foreach>
+    </insert>
+
+
+    <insert id="insertCSnglDl"
+            parameterType="java.util.List">
+        INSERT INTO cannib_sngl_dl SELECT
+        *
+        FROM
+        cannib_sngl
+        WHERE form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+    <insert id="insertCSnglSubTabDl"
+            parameterType="java.util.List">
+        INSERT INTO cannib_sngl_sub_tab_dl SELECT
+        *
+        FROM
+        cannib_sngl_sub_tab
+        WHERE form_num in
+        <foreach item="formNum" collection="list" open="(" close=")"
+                 separator=",">
+            #{formNum}
+        </foreach>
+    </insert>
+
+</mapper>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>盘点损益表</title>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style>
+		select{
+			outline: none;
+			appearance:none;
+			-moz-appearance:none;
+			-webkit-appearance:none;
+			width:220px;
+			border:0;
+			border-bottom:1px solid #B8C7CE
+		}
+		select:-ms-expand { display: none; }
+	</style>
+
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/whs/checkSnglLoss.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">盘点损益表</h1>-->
+				<div class="buttons">
+					<button class="print">打印</button>
+					<!--<button class="exportExcel">导出</button>-->
+					<button class="editOrder">修改</button>
+					<button class="saveOrder">保存</button>
+					<button class="delOrder">删除</button>
+					<button class="upOrder">放弃</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+				</div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="col-md-4">
+						<span>损益单号<b>*</b></span><input type="text" class="checkFormNum" name="checkFormNum" value="" readonly="readonly" />
+					</div>
+					<div class="col-md-4">
+						<span>损益日期<b>*</b></span><input type="text" class="checkDt" name="checkDt" value="" readonly="readonly"/>
+					</div>
+					<div class="businessType col-md-4">
+						<span>盘点仓库<b>*</b></span>
+						<input type="text" id="whsEncd" class="whsEncd encds" name="whsEncd" value="" />
+						<input type="text" id="whsNm" class="whsNm1 names" name="whsNm" value="" readonly="readonly" />
+						<span><img class="whsNm" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="col-md-4">
+						<span>账面日期 <b>*</b></span><input type="text" class="inputText" name="bookDt" value="" readonly="readonly"/>
+					</div>
+					<div class="col-md-4">
+						<span>来源单据号</span><input type="text" class="inputText" id="srcFormNum" readonly="readonly"/>
+					</div>
+					<div class="col-md-4">
+						<span>表头备注</span><input type="text" class="inputText" name="memo" value="" />
+					</div>
+				</form>
+			</div>
+			<table id="jqgrids"></table>
+			<div id="jqgridPager"></div>
+
+		</div>
+	</body>
+
+</html>

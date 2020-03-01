@@ -1,0 +1,96 @@
+#wwrap {
+	width: 100%;
+}
+
+/*.ui-jqgrid-bdiv {
+	height: auto !important;
+}*/
+
+.ui-state-highlight {
+	color: red !important;
+}
+
+/*#tree {
+	width: 200px;
+	float: left
+}*/
+
+
+#tree {
+	height: 500px;
+	/*background-color: red;*/
+	width: 200px;
+	display: inline-block;
+	float: left;
+	overflow: auto;
+	border: 1px solid #CCCCCC;
+	margin-right: 10px;
+}
+
+body {
+	overflow: hidden;
+	overflow-x: auto;
+}
+
+
+.close {
+	float: left;
+	opacity: 1;
+}
+
+.close:hover {
+	opacity: 1;
+}
+
+#wrap {
+	width: 79%;
+	float: left;
+	/*margin-left:50px;*/
+}
+
+.purchaseOrder {
+	position: relative;
+}
+
+.level {
+	display: none;
+}
+
+#edit {
+	width: 800px;
+	background-color: gainsboro;
+	border-radius: 10px;
+	position: absolute;
+	/*top:0;*/
+	left: 250px;
+	display: none
+}
+
+h3 {
+	text-align: center;
+}
+
+#edit form div div {
+	margin: 10px 40px;
+	float: left
+}
+
+select {
+	display: inline-block
+}
+
+option: {
+	float: left;
+}
+
+.calendar {
+	z-index: 999;
+	border: 1px solid black;
+	border-radius: 10px;
+}
+#buttonn{
+	margin:0 auto;
+	display:block;
+	width:15%;
+	padding-bottom:20px
+}

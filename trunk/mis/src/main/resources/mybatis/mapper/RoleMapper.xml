@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Role">
+  <insert id="insert" parameterType="com.px.mis.system.entity.Role">
+	INSERT INTO role (id,name,level,dep_id,dep_name)
+    VALUES(#{id}, #{name}, #{level}, #{depId}, #{depName})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.system.entity.Role">
+  	SELECT id, name, level, dep_id as depId, dep_name as depName
+  	FROM role 
+  	WHERE id = #{id}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  role
+  	WHERE id = #{id}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.system.entity.Role">
+  	UPDATE role 
+  	SET name=#{name}, level=#{level}, dep_id=#{depId}, dep_name=#{depName}
+  	WHERE id=#{id}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.system.entity.Role">
+	SELECT id, name, level, dep_id as depId, dep_name as depName
+  	FROM role 
+  	<where>
+  		<if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND name=#{name}
+        </if>
+        <if test="level != null and level != ''">
+            AND level=#{level}
+        </if>
+        <if test="depId != null and depId != ''">
+            AND dep_id=#{depId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(id)
+  	FROM role 
+  	<where>
+  		<if test="id != null and id != ''">
+            AND id=#{id}
+        </if>
+        <if test="name != null and name != ''">
+            AND name=#{name}
+        </if>
+        <if test="level != null and level != ''">
+            AND level=#{level}
+        </if>
+        <if test="depId != null and depId != ''">
+            AND dep_id=#{depId}
+        </if>
+  	</where>
+  </select>
+  
+   <select id="selectAll" resultType="Map">
+	SELECT id, name
+  	FROM role 
+  </select>
+  
+</mapper>

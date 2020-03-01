@@ -1,0 +1,58 @@
+body{
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.under{
+	width: 100%;
+	height: 100%;
+	margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.left{
+	width:50%;
+	height: 100%;
+	float: left;
+}
+.right{
+	width:92%;
+	height: 100%;
+	text-align: center;
+	border:1px solid grey;
+	padding: 40px ;
+}
+.right>.right-main{
+	margin-bottom: 20px;
+}
+#jqGridPager_left{
+	display: none;
+}
+#jqGridPager_center{
+	width: 30px!important;
+}
+
+.ui-jqgrid .ui-paging-pager td {
+     padding: 0px; 
+}
+.ui-jqgrid .ui-jqgrid-pager .ui-paging-info, .ui-jqgrid .ui-jqgrid-toppager .ui-paging-info {
+    font-weight: normal;
+    height: auto;
+    margin-top: 3px;
+    /* margin-right: 4px; */
+    display: inline;
+}
+.ui-jqgrid .ui-jqgrid-pager .ui-paging-info, .ui-jqgrid .ui-jqgrid-toppager .ui-paging-info {
+    font-weight: normal;
+    height: auto;
+    margin-top: 3px;
+    /* margin-right: 4px; */
+    display: inline;
+}
+.ui-pg-input.ui-corner-all{
+	width:26px;
+}

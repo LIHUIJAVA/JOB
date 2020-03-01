@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>总仓档案列表</title>
+
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<!--<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>-->
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/insertRealWhsList.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+
+	</head>
+	<style>
+		#edit {
+			/*display: block;*/
+			height: 550px;
+			width: 880px;
+			margin-left: -50px;
+			margin-top: -500px
+		}
+		
+		button.saveOrder {
+			margin-left:370px;
+			margin-top: 25px!important;
+		}
+		
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+		#edit form div div {
+		    margin: 10px 63px!important;
+		    /*float: left;*/
+		}
+		
+		b {
+			color: red;
+		}
+		
+		#mengban1 {
+			height: 200%!important;
+		}
+		
+		select {
+			width: 110px
+		}
+		.col-md-4 {
+			width: 33.33333%!important;
+		}
+		#edit .order-title, #zc_jqgrids {
+			width: 100%!important;
+		}
+		body {
+			overflow-x: hidden;
+		}
+	</style>
+
+	<body>
+		<!--<div id="wwrap">-->
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<button class="yes">确定</button>
+						<button class="cancel">取消</button>
+						<button class="finding">查询</button>
+					</div>
+				</div>
+
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-4">
+								<span>总仓编码</span>
+								<input type="text" class="realWhs" name="realWhs" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>总仓名称</span>
+								<input type="text" class="realNm" name="realNm" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>部门编码</span>
+								<input type="text" class="deptEncd" name="deptEncd" value="" />
+							</div>
+						</div>
+					</form>
+				</div>
+			
+			</div>
+			<table id="zc_jqgrids"></table>
+			<div id="zc_jqGridPager"></div>
+	</body>
+
+</html>

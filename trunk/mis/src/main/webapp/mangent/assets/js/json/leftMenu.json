@@ -1,0 +1,1321 @@
+[
+	{
+		"data_url": "Components/Home.html",
+		"title": "首页管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/Home.html",
+				"title": "首页订单",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/order.html",
+				"title": "首页到货",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "",
+		"title": "采购管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "",
+				"title": "采购订货",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/purchaseOrder.html",
+						"title": "采购订单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/purchaseOrderList.html",
+						"title": "采购订单列表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "采购到货",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/toGdsSngl.html",
+						"title": "到货单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/returnToGdsSngl.html",
+						"title": "到货拒收单",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/toGdsSnglList.html",
+						"title": "到货单列表",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "采购入库",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/intoWhs.html",
+						"title": "采购入库单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/returnWhs.html",
+						"title": "采购退货单",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "采购入库单列表",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "采购发票",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "",
+				"title": "报表",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "采购明细表",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "采购统计表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "到货明细表",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "入库明细表",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "结算明细表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "采购现存量",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}
+				]
+			}
+		]
+	}, {
+		"data_url": "",
+		"title": "销售管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "",
+				"title": "销售订单",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/saleSlip.html",
+						"title": "销售单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "退货单",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "销售单列表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "销售出库",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/saleOutlet.html",
+						"title": "销售出库单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/returnOrder.html",
+						"title": "销售出库单列表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "销售发票",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "",
+				"title": "委托代销",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/consignmentInvoice.html",
+						"title": "委托代销发货单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "委托代销退货单",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "委托代销发货单列表",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "委托代销结算单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "委托代销结算单列表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "委托代销调整单",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "报表",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "发货明细表",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "出库明细表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "销售明细表",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "现存量查询",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "发货统计表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "出库统计表",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "综合统计表",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "毛利分析表",
+						"icon": "icon iconfont icon-lanmupeizhi",
+						"isShow": 1
+					}
+				]
+			}
+		]
+	}, {
+		"data_url": "",
+		"title": "库存管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "",
+				"title": "调拨业务",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "调拨单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "调拨单列表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "盘点业务",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "盘点单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "盘点单列表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "其他出入库",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "其他出入库单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "其他出入库单列表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "组装拆卸",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "组装拆卸单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "组装拆卸单列表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "报表",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "现存量查询",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "出入库流水账",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "库存台账",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "收发存汇总表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "拣货明细表",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "保质期库存预警",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}
+		]
+	}, {
+		"data_url": "",
+		"title": "存货核算",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "",
+				"title": "系统选项",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "",
+				"title": "期初",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "期初余额",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "期初分期收款",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "期初委托代销",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "科目设置",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "存货科目",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "对方科目",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "应付科目",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/TaxSsubject.html",
+						"title": "税金科目",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "凭证摘要",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "记账",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "单据记账",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "恢复记账",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "期末处理",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "月末结账",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "凭证处理",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "生成凭证",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "查询凭证",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "对账",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "存货与总账对账",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "发出商品与总账对账",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "调整单",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "出入库调整单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "报表",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "收发存汇总表",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "发出商品汇总表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "发出商品明细账",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "流水账",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "明细账",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "进销存统计表",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}
+		]
+	}, {
+		"data_url": "",
+		"title": "电商管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "",
+				"title": "选项设置",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "订单处理设置",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "合并发货策略",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "促销管理",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "专用设置",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "订单免审策略",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "接口设置",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "店铺设置",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "订单处理",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "订单新增",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "订单审核",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "全部订单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "全部订单（含历史）",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "退款单",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "退款处理",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "全部退款单",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "电商处理日志",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "促销管理",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "促销活动",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "促销方案",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "促销活动列表",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "促销方案列表",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}
+				]
+			}
+		]
+	}, {
+		"data_url": "",
+		"title": "基本档案",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "",
+				"title": "机构人员",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "业务员档案",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/DeptDoc.html",
+						"title": "部门档案",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "存货信息",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+
+						"data_url": "components/insertInvtyDoc.html",
+
+						"title": "存货档案",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/insertInvtyCls.html",
+						"title": "存货分类",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/measrCorpDoc.html",
+						"title": "计量单位",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "客商信息",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/ProvrDoc.html",
+						"title": "供应商档案",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/ProvrCls.html",
+						"title": "供应商分类",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+
+						"data_url": "components/custDoc.html",
+
+						"title": "客户档案",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/CustCls.html",
+						"title": "客户分类",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "财务信息",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "会计科目",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "凭证类别",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/home.html",
+						"title": "项目分类",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}, {
+				"data_url": "",
+				"title": "业务",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": [
+					{
+						"data_url": "Components/Home.html",
+						"title": "仓库档案",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "产品结构",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "收发类别",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					},
+//					 {
+//						"data_url": "Components/Home.html",
+//						"title": "采购类型",
+//						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+//						"isShow": 1
+//					}, {
+//						"data_url": "Components/Home.html",
+//						"title": "销售类型",
+//						"icon": "icon iconfont icon-lunbotu",
+//						"isShow": 1
+//					}, {
+//						"data_url": "Components/Home.html",
+//						"title": "业务类型",
+//						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+//						"isShow": 1
+//					},
+					 {
+						"data_url": "Components/Home.html",
+						"title": "区域档案",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "货位档案",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "物流公司档案",
+						"icon": "icon iconfont icon-lunbotu",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "快递公司档案",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}, {
+						"data_url": "Components/Home.html",
+						"title": "硬件设置",
+						"icon": "icon iconfont icon-dongtaiweixuanzhong",
+						"isShow": 1
+					}
+				]
+			}
+		]
+	}, {
+		"data_url": "Components/userSearch.html",
+		"title": "用户管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/userSearch.html",
+				"title": "用户列表",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/userSearch.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/role.html",
+		"title": "角色管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/role.html",
+				"title": "角色列表",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/role.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/logRecord.html",
+		"title": "日志管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/logRecord.html",
+				"title": "日志记录",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/logRecord.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/memberRecord.html",
+		"title": "会员管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/memberRecord.html",
+				"title": "会员档案",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/memberRecord.html",
+				"title": "",
+				"icon": "icon iconfont icon-guanli",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/returnOrderStatus.html",
+		"title": "退款单状态管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/returnOrderStatus.html",
+				"title": "退款单状态列表",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/returnOrderStatus.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/returnStatus.html",
+		"title": "退货状态管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/returnStatus.html",
+				"title": "退货状态列表",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/returnStatus.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/OrderStatus.html",
+		"title": "订单状态管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/OrderStatus.html",
+				"title": "订单状态列表",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/OrderStatus.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/brokerage.html",
+		"title": "佣金扣点管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/brokerage.html",
+				"title": "佣金扣点",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/brokerage.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, 
+	{
+		"data_url": "Components/businessType.html",
+		"title": "业务类型管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/businessType.html",
+				"title": "业务类型",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/businessType.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, 
+	{
+		"data_url": "Components/storeSettings.html",
+		"title": "店铺接口管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/storeSettings.html",
+				"title": "店铺列表",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/storeSettings.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/ecPlatform.html",
+		"title": "电商平台管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/ecPlatform.html",
+				"title": "电商平台列表",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/ecPlatform.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/storeRecord.html",
+		"title": "店铺档案管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/storeRecord.html",
+				"title": "店铺档案",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/storeRecord.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "Components/goodRecord.html",
+		"title": "商品档案管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "Components/goodRecord.html",
+				"title": "商品档案",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "Components/goodRecord.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "components/express_crop.html",
+		"title": "快递公司管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "components/express_crop.html",
+				"title": "快递公司",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "components/express_crop.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "components/gd_flow_crop.html",
+		"title": "物流公司管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "components/gd_flow_crop.html",
+				"title": "物流公司",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "components/gd_flow_crop.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "components/menu.html",
+		"title": "菜单管理",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "components/menu.html",
+				"title": "菜单列表",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "components/menu.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "components/regn.html",
+		"title": "区域档案",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "components/regn.html",
+				"title": "区域档案",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "components/regn.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "components/qvanXfenpei.html",
+		"title": "权限分配",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "components/qvanXfenpei.html",
+				"title": "权限分配",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "components/qvanXfenpei.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "components/platHisOrder.html",
+		"title": "电商历史订单",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "components/platHisOrder.html",
+				"title": "电商历史订单",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "components/platHisOrder.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "components/prod_stru.html",
+		"title": "产品结构列表",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "components/prod_stru.html",
+				"title": "电商历史订单",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "components/prod_stru.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "components/ecPlatForm.html",
+		"title": "电商订单",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "components/ecPlatForm.html",
+				"title": "电商订单",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "components/ecPlatForm.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}, {
+		"data_url": "components/gds_bit.html",
+		"title": "货位档案",
+		"imgs": "assets/img/downs.jpg",
+		"clickImg": "1",
+		"children": [
+			{
+				"data_url": "components/gds_bit.html",
+				"title": "货位档案",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}, {
+				"data_url": "components/gds_bit.html",
+				"title": "",
+				"icon": "icon iconfont icon-zhuye",
+				"isShow": 0,
+				"children": []
+			}
+		]
+	}
+]

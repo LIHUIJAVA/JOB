@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<title>定时下载</title>
+	</head>
+	<style>
+		#time_jqgrids,#gbox_message_jqgrids,#message_jqgrids {
+			width: 100%!important;
+		}
+		.fl_div {
+			width: 40%;
+			float: left;
+			margin-top: 20px;
+		}
+		.fr_div {
+			width: 59%;
+			float: right;
+			margin-top: 20px;
+		}
+		#message_return_jqgrids {
+			width: 100%!important;
+		}
+	</style>
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/ec/downLoad.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+		<div class="purchaseTit">
+			<div class="buttons">
+				<button class="start">订单开始下载</button>
+				<button class="clean">清除订单下载信息</button>
+				<button class="start_r">退款单开始下载</button>
+				<button class="clean_r">清除退款单下载信息</button>
+				<button class="saveOrder">保存</button>
+			</div>
+		</div>
+		<div class="order-title">
+			<form class="row" id="formSave">
+				<div class="info">
+					<div class="supplier col-md-4">
+						<span>订单下载时间：</span>
+						<input type="text" class="d_startDate date1 date" name="d_startDate" value="" calendar="YYYY-MM-DD" readonly="readonly" />到<input type="text" class="d_endDate date2 date" name="d_endDate" value="" calendar="YYYY-MM-DD" readonly="readonly" />
+						<button class="suer1" onClick="return false;">确定</button>
+					</div>
+					<div class="supplier col-md-4">
+						<span>退款单下载时间：</span>
+						<input type="text" class="t_startDate date1 date" name="t_startDate" value="" calendar="YYYY-MM-DD" readonly="readonly" />到<input type="text" class="t_endDate date2 date" name="t_endDate" value="" calendar="YYYY-MM-DD" readonly="readonly" />
+						<button class="suer2" onClick="return false;">确定</button>
+					</div>
+					<div class="supplier col-md-4">
+						<span>订单下载间隔时间：</span>
+						<input type="number" class="d_jg date1 date" name="d_jg" value="" placeholder="请输入间隔时间"/>
+						<!--<button class="true1" onClick="return false;">确定</button>-->
+					</div>
+					<div class="supplier col-md-4">
+						<span>退款单下载间隔时间：</span>
+						<input type="number" class="t_jg date1 date" name="t_jg" value="" placeholder="请输入间隔时间"/>
+						<!--<button class="true2" onClick="return false;">确定</button>-->
+					</div>
+					<div class="supplier col-md-4">
+						<span>订单下载请求间隔时间：</span>
+						<input type="number" class="d_qq date1 date" name="d_qq" value="" placeholder="请输入间隔时间"/>
+						
+					</div>
+					<div class="supplier col-md-4">
+						<span>退款单下载请求间隔时间：</span>
+						<input type="number" class="t_qq date1 date" name="t_qq" value="" placeholder="请输入间隔时间"/>
+						
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="fl_div">
+			<table id="time_jqgrids"></table>
+			<div id="time_jqgridPager"></div>
+		</div>
+		<div class="fr_div">
+			<table id="message_jqgrids"></table>
+			<div id="message_jqgridPager"></div>
+		</div>
+		<div class="fr_div">
+			<table id="message_return_jqgrids"></table>
+			<div id="message_return_jqgridPager"></div>
+		</div>
+	</body>
+</html>

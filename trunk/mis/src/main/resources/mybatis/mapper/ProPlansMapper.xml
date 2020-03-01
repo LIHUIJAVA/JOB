@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProPlans">
+  <insert id="insert" parameterType="com.px.mis.ec.entity.ProPlans">
+	INSERT INTO pro_plans (pro_plan_id,money,number,integral_mul, gift_num,gift_way,gift_range,memo)
+    VALUES
+    <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.proPlanId,jdbcType=VARCHAR}, #{item.money,jdbcType=VARCHAR}, #{item.number,jdbcType=Integer}, #{item.integralMul,jdbcType=Integer},
+      #{item.giftNum,jdbcType=Integer}, #{item.giftWay,jdbcType=VARCHAR}, #{item.giftRange,jdbcType=VARCHAR}, #{item.memo,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.ProPlans">
+  	SELECT pro_plan_id,money,number,integral_mul, gift_num,gift_way,gift_range,memo
+  	FROM pro_plans 
+  	WHERE pro_plan_id = #{proPlanId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  pro_plans
+  	WHERE pro_plan_id = #{proPlanId}
+  </delete>
+  
+</mapper>

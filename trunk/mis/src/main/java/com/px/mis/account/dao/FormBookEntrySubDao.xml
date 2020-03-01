@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.FormBookEntrySubDao">
+
+	 <resultMap id="BaseResultMap" type="com.px.mis.account.entity.FormBookEntrySub">
+	 	<id column="ordr_num"   property="ordrNum" />
+	    <result column="form_num"   property="formNum" />
+	    <result column="invty_encd"   property="invtyEncd" />
+	    <result column="invty_nm"   property="invtyNm" />
+	    <result column="invty_cd"   property="invtyCd" />
+	    <result column="spc_model"   property="spcModel" />
+	    <result column="measr_corp_id"   property="measrCorpId" />
+	    <result column="measr_corp_nm"   property="measrCorpNm" />
+	    <result column="bx_rule"   property="bxRule" />
+	    <result column="invty_cls_encd"   property="invtyClsEncd" />
+	    <result column="invty_cls_nm"   property="invtyClsNm" />
+	    <result column="whs_encd"   property="whsEncd" />
+	    <result column="whs_nm"   property="whsNm" />
+	    <result column="no_tax_uprc"   property="noTaxUprc" />
+	    <result column="no_tax_amt"   property="noTaxAmt" />
+	    <result column="tax_amt"   property="taxAmt" />
+	    <result column="cntn_tax_uprc"   property="cntnTaxUprc" />
+	    <result column="prc_tax_sum"   property="prcTaxSum" />
+	    <result column="tax_rate"   property="taxRate" />
+	    <result column="qty"   property="qty" />
+	    <result column="bx_qty"   property="bxQty" />
+	    <result column="bat_num"   property="batNum" />
+	    <result column="intl_bat"   property="intlBat" />
+	    <result column="prdc_dt"  property="prdcDt" />
+	    <result column="invldtn_dt"  property="invldtnDt" />
+	    <result column="bao_zhi_qi"   property="baoZhiQi" />
+	    <result column="sub_credit_num"   property="subCreditNm" /> 
+	    <result column="sub_debit_nm"   property="subDebitNm" />
+	
+	    
+		<collection property="formBookEntry" ofType="com.px.mis.account.entity.FormBookEntry" autoMapping="true">
+		    <id property="formNum" column="form_num" /> 
+		    
+		</collection>
+		
+		    
+	 </resultMap>
+	 
+	 <insert id="insertSubList" parameterType="com.px.mis.account.entity.FormBookEntrySub">
+		INSERT INTO form_book_entry_sub (form_num, invty_encd, invty_nm, invty_cd, spc_model, measr_corp_id, measr_corp_nm, bx_rule, 
+        invty_cls_encd, invty_cls_nm, whs_encd,whs_nm, no_tax_uprc, no_tax_amt,tax_amt, cntn_tax_uprc, prc_tax_sum, tax_rate, qty, bx_qty, 
+        bat_num, intl_bat, prdc_dt,invldtn_dt,bao_zhi_qi,sub_credit_id, sub_credit_type, sub_credit_nm, sub_credit_money,sub_credit_debit_money, 
+        sub_credit_num, sub_credit_debit_num,sub_credit_path, sub_debit_id, sub_debit_type,sub_debit_nm, sub_debit_money, sub_debit_credit_money, 
+	    sub_debit_num, sub_debit_credit_num, sub_debit_path,to_ordr_num,un_bllg_qty,un_bllg_uprc,un_bllg_amt,proj_encd,	
+	    proj_nm)
+		VALUES 
+		<foreach collection="list" item="item" index="index" separator="," close=";">
+		(#{item.formNum}, #{item.invtyEncd},#{item.invtyNm},#{item.invtyCd},#{item.spcModel},#{item.measrCorpId},#{item.measrCorpNm},#{item.bxRule}, 
+         #{item.invtyClsEncd},#{item.invtyClsNm},#{item.whsEncd},#{item.whsNm},#{item.noTaxUprc},#{item.noTaxAmt},#{item.taxAmt},#{item.cntnTaxUprc},#{item.prcTaxSum}, 
+         #{item.taxRate},#{item.qty}, #{item.bxQty},#{item.batNum},#{item.intlBat},#{item.prdcDt},#{item.invldtnDt},#{item.baoZhiQi},
+         #{item.subjectCredit.subCreditId },#{item.subjectCredit.subCreditType }, #{item.subjectCredit.subCreditNm }, #{item.subjectCredit.subCreditMoney},
+         #{item.subjectCredit.subCreditDebitMoney },#{item.subjectCredit.subCreditNum }, #{item.subjectCredit.subCreditDebitNum },#{item.subjectCredit.subCreditPath},
+         #{item.subjectDebit.subDebitId}, #{item.subjectDebit.subDebitType },#{item.subjectDebit.subDebitNm},#{item.subjectDebit.subDebitMoney},
+	     #{item.subjectDebit.subDebitCreditMoney },#{item.subjectDebit.subDebitNum }, #{item.subjectDebit.subDebitCreditNum },
+	     #{item.subjectDebit.subDebitPath},#{item.toOrdrNum},#{item.unBllgQty}, #{item.unBllgUprc},#{item.unBllgAmt},#{item.projEncd},	
+	     #{item.projNm})
+		</foreach>
+	  </insert>
+	  <insert id="insertFormSub" parameterType="com.px.mis.account.entity.FormBookEntrySub">
+	  	 insert into form_book_entry_sub (form_num, invty_encd, invty_nm, invty_cd, spc_model, 
+	      measr_corp_id, measr_corp_nm, bx_rule, invty_cls_encd, invty_cls_nm, whs_encd, whs_nm, no_tax_uprc, no_tax_amt, 
+	      tax_amt, cntn_tax_uprc, prc_tax_sum, tax_rate, qty, bx_qty, bat_num, intl_bat, prdc_dt,invldtn_dt, bao_zhi_qi, sub_credit_id, 
+	      sub_credit_type, sub_credit_nm, sub_credit_money,sub_credit_debit_money, sub_credit_num, sub_credit_debit_num, 
+	      sub_credit_path, sub_debit_id, sub_debit_type,sub_debit_nm, sub_debit_money, sub_debit_credit_money, 
+	      sub_debit_num, sub_debit_credit_num, sub_debit_path,to_ordr_num,un_bllg_qty,un_bllg_uprc,un_bllg_amt,proj_encd,	
+	      proj_nm
+	      )
+	    values (#{formNum},#{invtyEncd },#{invtyNm }, #{invtyCd }, #{spcModel },#{measrCorpId}, #{measrCorpNm }, #{bxRule },#{invtyClsEncd },#{invtyClsNm },
+	     #{whsEncd }, #{whsNm }, #{noTaxUprc},#{noTaxAmt},#{taxAmt},#{cntnTaxUprc}, #{prcTaxSum },#{taxRate }, #{qty }, #{bxQty },#{batNum }, #{intlBat }, 
+	     #{prdcDt }, #{invldtnDt}, #{baoZhiQi }, #{subjectCredit.subCreditId },#{subjectCredit.subCreditType }, #{subjectCredit.subCreditNm }, 
+	     #{subjectCredit.subCreditMoney },#{subjectCredit.subCreditDebitMoney },#{subjectCredit.subCreditNum }, #{subjectCredit.subCreditDebitNum },
+	     #{subjectCredit.subCreditPath }, #{subjectDebit.subDebitId }, #{subjectDebit.subDebitType },#{subjectDebit.subDebitNm},#{subjectDebit.subDebitMoney},
+	     #{subjectDebit.subDebitCreditMoney },#{subjectDebit.subDebitNum }, #{subjectDebit.subDebitCreditNum }, #{subjectDebit.subDebitPath},
+	     #{toOrdrNum},#{unBllgQty}, #{unBllgUprc},#{unBllgAmt},#{projEncd},#{projNm}
+	      )
+	  </insert>
+	  <select id="selectDetailCount" resultType="int">
+	  	SELECT
+			count(*)
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND forms.invty_cls_encd = #{invtyClsEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND forms.bat_num = #{batNum}
+		</if>
+		<if test="whsEncd !=null and whsEncd !=''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		<if test="stockCode != null and stockCode != ''">
+			AND (
+			forms.sub_credit_id = #{stockCode}
+			OR forms.sub_debit_id = #{stockCode}
+		)
+		</if>
+		<if test="inWhsTyp != null and inWhsTyp.size() > 0 ">
+			AND form.out_into_whs_typ_id IN 
+			<foreach collection="inWhsTyp" item="inId" open="(" close=")" separator=",">
+				#{inId}
+			</foreach>
+		</if>
+		<if test="outWhsTyp != null and outWhsTyp.size() > 0 ">
+			AND form.out_into_whs_typ_id IN 
+			<foreach collection="outWhsTyp" item="outId" open="(" close=")" separator=",">
+				#{outId}
+			</foreach>
+		</if>
+	  </select>
+	  <sql id="Base_Column_List">
+	    ordr_num, form_num, invty_encd, invty_nm, invty_cd, spc_model, measr_corp_id, measr_corp_nm, 
+	    bx_rule, invty_cls_encd, invty_cls_nm, whs_encd, whs_nm, no_tax_uprc, no_tax_amt, 
+	    tax_amt, cntn_tax_uprc, prc_tax_sum, tax_rate, qty, bx_qty, bat_num, intl_bat, prdc_dt, 
+	    invldtn_dt, bao_zhi_qi, sub_credit_id, sub_credit_type, sub_credit_nm, sub_credit_money, 
+	    sub_credit_debit_money, sub_credit_num, sub_credit_debit_num, sub_credit_path, sub_debit_id, 
+	    sub_debit_type, sub_debit_nm, sub_debit_money, sub_debit_credit_money, sub_debit_num, 
+	    sub_debit_credit_num, sub_debit_path
+	  </sql>
+	  <select id="selectSubByFormNum" resultType="FormBookEntrySub">	  
+	    select 
+	    <include refid="Base_Column_List" />
+	    from form_book_entry_sub
+	    where form_num = #{formNum}
+	  </select>
+	  <!-- 查询明细帐 -->
+	  <select id="selectDetailList" resultMap="BaseResultMap">
+	  	SELECT
+			forms.*,form.out_into_whs_typ_id,form.book_ok_dt,form.make_vouch_id,form.make_vouch_abst
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+		AND form.is_nt_book_ok = 1
+		AND form.is_nt_chk = 1
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+            AND invty_encd=#{invtyEncd}
+        </if>
+		<if test="invtyClsEncd != null and invtyClsEncd != ''">
+			AND forms.invty_cls_encd = #{invtyClsEncd}
+		</if>
+		
+		<if test="batNum != null and batNum != ''">
+			AND forms.bat_num = #{batNum}
+		</if>
+		<if test="whsEncd !=null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		<if test="stockCode != null and stockCode != ''">
+			AND (
+			forms.sub_credit_id = #{stockCode}
+			OR forms.sub_debit_id = #{stockCode}
+		)
+		</if>
+		<if test="inWhsTyp != null and inWhsTyp.size() > 0 ">
+			AND form.out_into_whs_typ_id IN 
+			<foreach collection="inWhsTyp" item="inId" open="(" close=")" separator=",">
+				#{inId}
+			</foreach>
+		</if>
+		<if test="outWhsTyp != null and outWhsTyp.size() > 0 ">
+			AND form.out_into_whs_typ_id IN 
+			<foreach collection="outWhsTyp" item="outId" open="(" close=")" separator=",">
+				#{outId}
+			</foreach>
+		</if>
+		LIMIT #{index},#{num}
+	  </select>
+	  <select id="countBxQty" resultType="java.math.BigDecimal">
+	  	SELECT
+			SUM(forms.qty)
+		FROM
+			form_book_entry AS form
+		INNER JOIN form_book_entry_sub AS forms ON form.form_num = forms.form_num
+		AND form.is_nt_book_ok = 1
+		AND form.is_nt_chk = 1
+		<if test="invtyEncd != null and invtyEncd != ''">
+            AND invty_encd=#{invtyEncd}
+        </if>
+        <if test="batNum != null and batNum != ''">
+			AND forms.bat_num = #{batNum}
+		</if>
+		<if test="whsEncd !=null and whsEncd != ''">
+			AND forms.whs_encd = #{whsEncd}
+		</if>
+		<if test="formNum !=null and formNum != ''">
+			AND forms.form_num = #{formNum}
+		</if>
+	  </select>
+	
+	  <update id="updateNoTaxUprc">
+	  	update form_book_entry_sub
+		
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="no_tax_amt =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.noTaxAmt != null">
+						when ordr_num =#{item.ordrNum} then #{item.noTaxAmt}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="no_tax_uprc =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.noTaxUprc != null">
+						when ordr_num =#{item.ordrNum} then #{item.noTaxUprc}
+					</if>
+				</foreach>
+			</trim>
+			
+		</trim>
+		where ordr_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.ordrNum}
+		</foreach>
+	  </update>
+	  
+	  <update id="updateSubj">
+	  	update form_book_entry_sub
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="sub_credit_id =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.subCreditId != null">
+						when form_num =#{item.formNum} then #{item.subCreditId}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="sub_credit_nm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.subCreditNm != null">
+						when form_num =#{item.formNum} then #{item.subCreditNm}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="sub_debit_id =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.subDebitId != null">
+						when form_num =#{item.formNum} then #{item.subDebitId}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="sub_debit_nm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when form_num = #{item.formNum} then #{item.subDebitNm}
+				</foreach>
+			</trim>
+			
+		</trim>
+		where form_num in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.formNum}
+		</foreach>
+	  </update>
+	  
+	  <delete id="deleteList" parameterType="list">
+	  	delete from form_book_entry_sub
+    	where ordr_num in 
+        <foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.ordrNum}
+		</foreach>
+        
+	  </delete>
+</mapper>

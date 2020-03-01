@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       >
+
+    <context:property-placeholder location="classpath:properties/jdbc.properties" />
+
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="url" value="${jdbc.url}" />
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="username" value="${jdbc.user}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="maxTotal" value="60"/>
+        <property name="initialSize" value="100"/>
+        <property name="maxWaitMillis" value="10000"/> <!-- 超时等待时间 以毫秒为单位 -->
+        <property name="maxIdle" value="60"/><!-- 最大空闲连接 -->
+        <property name="minIdle" value="5"/><!-- 最小空闲连接 -->
+        <property name="removeAbandonedOnMaintenance" value="false"/><!-- 是否自动回收超时连接 -->
+        <property name="removeAbandonedTimeout" value="30"/><!-- 超时时间(以秒数为单位) -->
+        <property name="testWhileIdle" value="true"/><!-- 打开检查,用异步线程evict进行检查 -->
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="validationQuery" value="select 1"/>
+        <property name="numTestsPerEvictionRun" value="20"/>
+        <property name="minEvictableIdleTimeMillis" value="180"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis/mybatisConfig.xml" />
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.px.mis.whs.dao"></property>
+    </bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.px.mis.purc.dao"></property>
+    </bean>
+    
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.px.mis.account.dao"></property>
+    </bean>
+    
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.px.mis.ec.dao"></property>
+    </bean>
+    
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.px.mis.system.dao"></property>
+    </bean>
+    
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.px.mis.sell.dao"></property>
+    </bean>
+</beans>

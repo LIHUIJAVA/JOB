@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/ec/timelyDownload.js"></script>
+		<title>定时下载</title>
+	</head>
+	<style>
+		#time_jqgrids,#gbox_message_jqgrids,#message_jqgrids {
+			width: 100%!important;
+		}
+		.fl_div {
+			width: 40%;
+			float: left;
+			margin-top: 20px;
+		}
+		.fr_div {
+			width: 59%;
+			float: right;
+			margin-top: 20px;
+		}
+		#message_return_jqgrids {
+			width: 100%!important;
+		}
+		.order-title, .info {
+			float: right;
+		}
+		#order, #refund {
+			width: 50px;
+		}
+		.order-title div {
+		    width: 325px;
+		    margin-top: -19px;
+		    margin-right: 10px;
+		}
+	</style>
+	<body>
+		<div class="purchaseTit">
+			<div class="buttons">
+				<button class="start">订单开始下载</button>
+				<button class="end">订单停止下载</button>
+				<button class="clean">清除订单下载信息</button>
+				<button class="start_r">退款单开始下载</button>
+				<button class="end_r">退款单停止下载</button>
+				<button class="clean_r">清除退款单下载信息</button>
+				<button class="saveOrder">保存</button>
+			</div>
+		</div>
+		<div class="order-title">
+			<form class="row" id="formSave">
+				<div class="info">
+					<div class="supplier col-md-4">
+						<span>订单下载间隔时间(分钟)：</span>
+						<input type="number" id="order" name="order" value="30" />
+						<button class="suer1" onClick="return false;">确定</button>
+					</div>
+					<div class="supplier col-md-4">
+						<span>退款单下载间隔时间(分钟)：</span>
+						<input type="number" id="refund" name="refund" value="60" />
+						<button class="suer2" onClick="return false;">确定</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="fl_div">
+			<table id="time_jqgrids"></table>
+			<div id="time_jqgridPager"></div>
+		</div>
+		<div class="fr_div">
+			<table id="message_jqgrids"></table>
+			<div id="message_jqgridPager"></div>
+		</div>
+		<div class="fr_div">
+			<table id="message_return_jqgrids"></table>
+			<div id="message_return_jqgridPager"></div>
+		</div>
+		<!--<div id="mengban"></div>-->
+	</body>
+</html>

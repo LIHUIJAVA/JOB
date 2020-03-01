@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">-->
+
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<title>仓库平台快递公司映射</title>
+		<script type="text/javascript" src="../../assets/js/common/jquery-1.7.1.js"></script>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/whsDocList.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/whs/express_cropList.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/ec/Print_muBanList.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		
+		<style>
+			/*form {
+				display: inline-block;
+				font-size: 14px;
+			}*/
+			#f_jqgrids,#print_muBanList_jqgrids {
+				width: 100%!important;
+			}
+			select {
+				outline: none;
+				appearance: none;
+				-moz-appearance: none;
+				-webkit-appearance: none;
+				width: 220px;
+				border: 0;
+				border-bottom: 1px solid #B8C7CE
+			}
+			
+			select:-ms-expand {
+				display: none;
+			}
+			button {
+				font-size: 12px!important;
+			}
+		</style>
+	</head>
+
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/ec/whsPlatExpressMapp.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<!--<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>-->
+					<button class="addOrder">增行</button>
+					<button class="de">删行</button>
+					<button class="saveOrder">保存</button>
+					<button id="findes">查询</button>
+					<button class="print">打印</button>
+					<!--<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>-->
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="businessType col-md-4 three">
+							<span>仓库编码</span>
+							<input type="text" id="whsEncd" class="whsEncd1 encds" name="whsId1" value="" />
+							<input type="text" id="whsNm" class="whsNm1 names" name="whsNm" value="" readonly="readonly" />
+							<span><img class="biao_whsId" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="businessType col-md-4">
+							<span>快递公司编码</span>
+							<input type="text" id="expressId" class="expressId encds" name="expressId1" value="" />
+							<input type="text" id="expressName" class="expressName names" name="expressName" value="" readonly="readonly" />
+							<span><img class="biao_expressId" src="../../assets/img/biaoge.png" alt="" /></span>
+						</div>
+						<div class="supplier  col-md-4">
+							<span>电商平台 </span> 
+							<select class="ecId" name="ecId1">
+								</option>
+							</select>
+						</div>
+					</div>
+				</form>
+			</div>
+			<table id="f_jqgrids"></table>
+			<div id="f_jqGridPager"></div>
+		</div>
+		
+		<!--快递公司-->
+		<div class="box" style="opacity: 0;">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="save">确定</button>
+					<button class="cancel">取消</button>
+					<button id="findg">查询</button>
+				</div>
+			</div>
+
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>快递公司编码 <!--<b>*</b>--></span>
+							<input type="text" class="expressEncd" name="expressEncd1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>快递公司名称 <!--<b>*</b>--></span>
+							<input type="text" class="expressNm" name="expressNm1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>快递类型 <!--<b>*</b>--></span>
+							<input type="text" class="expressTyp" name="expressTyp1" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>创建人 <!--<b>*</b>--></span>
+							<input type="text" class="setupPers" name="setupPers1" value="" />
+						</div>
+
+					</div>
+				</form>
+			</div>
+			<table id="ex_jqgrids"></table>
+			<div id="ex_jqGridPager"></div>
+		</div>
+		
+		<!--仓库档案-->
+		<div id="whsDocList" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<div class="addWhs">确定</div>
+						<div class="cancel">取消</div>
+						<div class="whs_find">查询</div>
+					</div>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-4">
+								<span>仓库编码</span>
+								<input type="text" class="whsEncd" name="whsEncd" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>仓库名称</span>
+								<input type="text" class="whsNm" name="whsNm" value="" />
+							</div>
+
+						</div>
+					</form>
+				</div>
+				<table id="whs_jqgrids"></table>
+				<div id="whs_jqGridPager"></div>
+			</div>
+		</div>
+		
+		<div id="muban" style="opacity: 0;">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="yes">确定</button>
+					<button class="no">取消</button>
+					<button id="inquiry">查询</button>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="info">
+						<div class="supplier col-md-4">
+							<span>模板编码</span>
+							<!--<input type="text" id="storeName" style="display: none;"/>-->
+							<input type="text" id="templateId" name="templateId2" value=""/>
+							<!--<span><img class="storeId_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+
+						</div>
+						<div class="supplier col-md-4">
+							<span>模板名称 </span>
+							<input type="text" id="templateName" name="templateName2" value="" />
+							<!--<span><img class="storeId1_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+						</div>
+						<div class="supplier col-md-4">
+							<span>操作员 </span>
+							<input type="text" id="opid" name="opid2" value="" />
+						</div>
+						<!--<div class="supplier col-md-4">
+							<span>操作员姓名 </span>
+							<input type="text" id="opname" name="opname"  readonly="readonly" value="" />
+						</div>
+						<div class="supplier col-md-4">
+							<span>备注 </span>
+							<input type="text" id="reamrk" name="reamrk"  readonly="readonly" value="" />
+						</div>-->
+					</div>
+				</form>
+			</div>
+			
+			<table id="print_muBanList_jqgrids"></table>
+			<div id="print_muBanList_jqGridPager"></div>
+		</div>
+	</body>
+
+</html>

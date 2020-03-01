@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.GdFlowCorpMapper">
+    <resultMap id="BaseResultMap" type="GdFlowCorp"
+               autoMapping="true">
+        <id column="gd_flow_encd" jdbcType="VARCHAR" property="gdFlowEncd"/>
+        <result column="gd_flow_nm" jdbcType="VARCHAR"
+                property="gdFlowNm"/>
+        <result column="traff_mode" jdbcType="VARCHAR"
+                property="traffMode"/>
+    </resultMap>
+
+    <!-- 新增物流公司 -->
+    <insert id="insertGdFlowCorp" parameterType="GdFlowCorp">
+        insert into gd_flow_corp (gd_flow_encd, gd_flow_nm, traff_mode,
+                                  traff_vehic, traff_form_num, print_cnt, memo, is_nt_chk,
+                                  setup_pers, setup_tm)
+        values (#{gdFlowEncd}, #{gdFlowNm}, #{traffMode},
+                #{traffVehic}, #{traffFormNum}, #{printCnt},
+                #{memo}, 0,
+                #{setupPers}, now())
+    </insert>
+    <!-- 修改物流公司 -->
+    <update id="updateGdFlowCorp" parameterType="GdFlowCorp">
+        update gd_flow_corp
+        <set>
+            <if test="gdFlowNm != null and gdFlowNm !='' ">
+                gd_flow_nm = #{gdFlowNm},
+            </if>
+            <if test="traffMode != null and traffMode !=''">
+                traff_mode = #{traffMode},
+            </if>
+            <if test="traffVehic != null and traffVehic !=''">
+                traff_vehic = #{traffVehic},
+            </if>
+            <if test="traffFormNum != null and traffFormNum !=''">
+                traff_form_num = #{traffFormNum},
+            </if>
+            <!-- <if test="printCnt != null and printCnt !=''"> print_cnt = #{printCnt},
+                </if> -->
+            <if test="memo != null and memo !=''">
+                memo = #{memo},
+            </if>
+            <if test="isNtChk != null and isNtChk !=''">
+                is_nt_chk = #{isNtChk},
+            </if>
+            <if test="mdfr != null and mdfr !=''">
+                mdfr=#{mdfr},
+            </if>
+            modi_tm=now(),
+        </set>
+        where gd_flow_encd = #{gdFlowEncd}
+    </update>
+    <!-- 删除物流公司 -->
+    <delete id="deleteGdFlowCorp" parameterType="java.lang.String">
+        delete
+        from gd_flow_corp
+        where gd_flow_encd = #{gdFlowEncd}
+    </delete>
+    <!-- 批删 -->
+    <delete id="deleteGFlowCorpList" parameterType="java.util.List">
+        delete
+        from gd_flow_corp
+        where gd_flow_encd in
+        <foreach item="gdFlowEncd" collection="list" open="("
+                 close=")" separator=",">
+            #{gdFlowEncd}
+        </foreach>
+    </delete>
+    <!-- 批量查询 -->
+    <select id="selectGFlowCorpAllList" resultType="GdFlowCorp">
+        SELECT * from gd_flow_corp
+        WHERE gd_flow_encd in
+        <foreach collection="gdFlowEncd" item="gdFlowEncd" open="("
+                 close=")" separator=",">
+            #{gdFlowEncd}
+        </foreach>
+    </select>
+    <!-- 简单查 物流公司 -->
+    <sql id="GdFlow_Corp_List">
+        gd_flow_encd, gd_flow_nm, traff_mode, traff_vehic, traff_form_num,
+		print_cnt,memo,is_nt_chk, setup_pers,
+		setup_tm,mdfr,modi_tm,chkr,chk_tm
+    </sql>
+    <select id="selectGdFlowCorp" resultMap="BaseResultMap">
+        select
+        <include refid="GdFlow_Corp_List"/>
+        from gd_flow_corp
+        where gd_flow_encd = #{gdFlowEncd}
+    </select>
+    <select id="selectGdFlowCorpList" resultMap="BaseResultMap">
+        select
+        <include refid="GdFlow_Corp_List"/>
+        from gd_flow_corp
+        where gd_flow_encd = #{gdFlowEncd}
+    </select>
+    <!-- 分页查询 -->
+    <select id="selectList" parameterType="Map"
+            resultMap="BaseResultMap">
+        select
+        gCorp.*
+        From gd_flow_corp as gCorp
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND gCorp.memo like #{memo}
+            </if>
+            <if test="gdFlowEncd != null and gdFlowEncd != ''">
+                <bind name="gdFlowEncd" value="'%'+ gdFlowEncd +'%'"/>
+                AND gCorp.gd_flow_encd like #{gdFlowEncd}
+            </if>
+            <if test=" gdFlowNm!=null and  gdFlowNm!=''">
+                <bind name="gdFlowNm" value="'%'+ gdFlowNm +'%'"/>
+                AND gCorp.gd_flow_nm like #{gdFlowNm}
+            </if>
+            <if test=" traffVehic!= null and  traffVehic!= ''">
+                <bind name="traffVehic" value="'%'+ traffVehic +'%'"/>
+                AND gCorp.traff_vehic like #{traffVehic}
+            </if>
+            <if test=" setupPers!= null and  setupPers!= ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND gCorp.setup_pers like #{setupPers}
+            </if>
+        </where>
+        <if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+            ORDER BY ${sort} ${sortOrder}
+        </if>
+        LIMIT #{index},#{num}
+    </select>
+    <select id="selectCount" parameterType="Map"
+            resultType="Integer">
+        SELECT count(*)
+        From
+        gd_flow_corp as gCorp
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND gCorp.memo like #{memo}
+            </if>
+            <if test="gdFlowEncd != null and gdFlowEncd != ''">
+                <bind name="gdFlowEncd" value="'%'+ gdFlowEncd +'%'"/>
+                AND gCorp.gd_flow_encd like #{gdFlowEncd}
+            </if>
+            <if test=" gdFlowNm!=null and  gdFlowNm!=''">
+                <bind name="gdFlowNm" value="'%'+ gdFlowNm +'%'"/>
+                AND gCorp.gd_flow_nm like #{gdFlowNm}
+            </if>
+            <if test=" traffVehic!= null and  traffVehic!= ''">
+                <bind name="traffVehic" value="'%'+ traffVehic +'%'"/>
+                AND gCorp.traff_vehic like #{traffVehic}
+            </if>
+            <if test=" setupPers!= null and  setupPers!= ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                AND gCorp.setup_pers like #{setupPers}
+            </if>
+        </where>
+    </select>
+    <!-- 打印 -->
+    <select id="selectListDaYin" parameterType="Map"
+            resultType="GdFlowCorpMap">
+        select
+        gCorp.*
+        From gd_flow_corp as gCorp
+        <where>
+            <if test="memo != null and memo != ''">
+                <bind name="memo" value="'%'+ memo +'%'"/>
+                AND gCorp.memo like #{memo}
+            </if>
+            <if test="gdFlowEncd != null and gdFlowEncd != ''">
+                <bind name="gdFlowEncd" value="'%'+ gdFlowEncd +'%'"/>
+                AND gCorp.gd_flow_encd like #{gdFlowEncd}
+            </if>
+            <if test=" gdFlowNm!=null and  gdFlowNm!=''">
+                <bind name="gdFlowNm" value="'%'+ gdFlowNm +'%'"/>
+                AND gCorp.gd_flow_nm like #{gdFlowNm}
+            </if>
+            <if test=" traffVehic!= null and  traffVehic!= ''">
+                <bind name="traffVehic" value="'%'+ traffVehic +'%'"/>
+                AND gCorp.traff_vehic like #{traffVehic}
+            </if>
+            <if test=" setupPers!= null and  setupPers!= ''">
+                <bind name="setupPers" value="'%'+ setupPers +'%'"/>
+                 AND gCorp.setup_pers like #{setupPers}
+            </if>
+        </where>
+    </select>
+</mapper>

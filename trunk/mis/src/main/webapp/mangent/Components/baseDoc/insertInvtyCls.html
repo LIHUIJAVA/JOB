@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		
+		<meta charset="UTF-8">
+		<title>存货分类</title>
+	</head>
+	<style>	
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+	</style>
+	<script>
+		document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/baseDoc/insertInvtyCls.js?" + new Date().getTime() + "'></scr" + "ipt>");
+	</script>
+	<body>
+		<div class="purchaseOrder">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="print">打印</button>
+					<button class="invtyCls_importExcel">导入</button>
+					<button class="invtyCls_exportExcel">导出</button>
+					<button class="addOrder">新增</button>
+					<button class="invty_saveOrder">保存</button>
+					<button class="editOrder">编辑</button>
+					
+					<button class="delOrder">删除</button>
+					<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>
+				</div>
+			</div>
+			<div class="purchaseTit">
+				<!--<h1 class="title">存货分类</h1>-->
+			</div>
+			<hr />
+		</div>
+		<wrap>
+			<aside>
+				<!--左列树-->
+				<div id="tree" style="height:520px;width:200px;"></div>
+			</aside>
+			
+			<article>
+				<!--右列默认框-->
+				<div class="inputs">
+					<div class="inpu">
+						分类编码：<input class="input-group provrClsEncd" id="provrClsEncd" type="text" readonly="readonly" value=""/>
+					</div>
+					<div class="inpu">
+						分类名称：<input class="input-group provrClsNm" id="provrClsNm" type="text" readonly="readonly" value=""/>
+					</div>
+					<div class="inpu inpu1">
+						级别：<input class="input-group level" id="level" type="text" readonly="readonly" value=""/>
+					</div>
+				</div>
+				<!--增加弹窗-->
+				<div class="dialog">
+		        	<h3>增加存货分类</h3>
+			        <div class="inpu">
+						分类编码：<input class="input-group provrClsEncd" id="addprovrClsEncd" type="text"  value=""/>
+					</div>
+					<div class="inpu">
+						分类名称：<input class="input-group provrClsNm" id="addprovrClsNm" type="text" value=""/>
+					</div>
+					<button class="cancel">取消</button>
+		        </div>
+		        <!--编辑弹窗-->
+		        <div class="edit">
+		        	<h3>编辑存货分类</h3>
+			        <div class="inpu">
+						分类编码：<input class="input-group provrClsEncd" id="updateprovrClsEncd" type="text" readonly="readonly" value=""/>
+					</div>
+					<div class="inpu">
+						分类名称：<input class="input-group provrClsNm" id="updateprovrClsNm" type="text" value=""/>
+					</div>
+					<button class="cancel">取消</button>
+		        </div>
+			</article>
+		</wrap>
+	</body>
+	
+</html>

@@ -1,0 +1,146 @@
+
+ul,li {
+	list-style: none;
+}
+
+ul {
+	padding-left: 20px;
+}
+
+.close {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	background: url("../../../assets/img/close.png") no-repeat center;
+	background-size: contain;
+}
+
+.open {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	background: url("../../../assets/img/open.png") no-repeat center;
+	background-size: contain;
+}
+
+.leaf {
+	display: inline-block;
+	width: 15px;
+	height: 15px;
+	background: url("../../../assets/img/leaf.png") no-repeat center;
+	background-size: contain;
+}
+
+.leafName {
+	color: green;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.openTrue {
+	color: gray;
+}
+span{
+	cursor:pointer;
+}
+wrap{
+	
+	position:relative;
+}
+#tree{
+	height: 600px;
+	overflow: auto;
+}
+wrap aside{
+	width:450px;
+	position:absolute;
+	left:0;
+	
+}
+article{
+	height:500px;
+	position:absolute;
+	left:500px;
+	display: flex;
+	
+}
+wrap article .inputs{
+	margin-top:100px;
+	margin-left:150px;
+	height:300px;
+	width:500px;
+
+}
+wrap article .inputs .inpu{
+	margin-top:50px;
+}
+wrap article .inputs .inpu1{
+	margin-left:32px
+}
+
+.dialog{
+	width: 500px;
+    height: 300px;
+    border: solid 1px #b5b0b0;
+    border-radius: 5px;
+    position: absolute;
+    left: 10%;
+    bottom: 30%;
+    background: #eee;
+    line-height: 40px;
+    text-align: center;
+    display: none;
+    font-size:16px;
+}
+.edit{
+	width: 500px;
+    height: 300px;
+    border: solid 1px #b5b0b0;
+    border-radius: 5px;
+    position: absolute;
+    left: 10%;
+    bottom: 30%;
+    background: #eee;
+    line-height: 40px;
+    text-align: center;
+    display: none;
+    font-size:16px;
+}
+.addColor{
+	color:red!important;
+}
+.seleYes2,.seleNo2{
+	width: 360px;
+	height: 550px; 
+	display:inline-block; 
+	text-align: center;
+	padding: 10px 0px;
+	
+}
+.seleNo2{
+
+	
+}
+.seleYes2>div,.seleNo2>div{
+	margin-top: 5px;
+	display: inline-block;
+}
+
+
+
+.seleYes,.seleNo{
+	width: 360px;
+	height: 550px; 
+	display:inline-block; 
+	text-align: center;
+	padding: 20px 0px;
+	border: 1px solid grey;
+}
+.seleNo{
+	border-left: 0px ;
+	border: 1px solid grey;
+}
+.seleYes>div,.seleNo>div{
+	margin-top: 5px;
+	display: inline-block;
+}

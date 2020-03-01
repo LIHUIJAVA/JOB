@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<title>产品结构列表</title>
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+			<script type="text/javascript" src="../../assets/js/common/xlsx.full.min.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/whs/prod_struList.js"></script>
+		
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+	</head>
+	<style>
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+		select{
+			outline: none;
+			appearance:none;
+			-moz-appearance:none;
+			-webkit-appearance:none;
+			width:220px;
+			border:0;
+			border-bottom:1px solid #B8C7CE
+		}
+		select:-ms-expand { display: none; }
+	</style>
+	<body>
+
+		<div class="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">产品结构列表</h1>-->
+				<div class="buttons">
+					<button class="importExcel">导入</button>
+					<button class="exportExcel">导出</button>
+					<button class="delOrder">删除</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+					<button class="search">查询</button>
+					<span>
+						<form id="uploadForm" enctype="multipart/form-data">
+							<input type="file" name="FileUpload" id="FileUpload">
+						</form>
+					</span>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="purchaseType col-md-4">
+						<span>母件编码</span><input type="text" class="inputText" id="momEncd" name="momEncd" value="" />
+						<!--<span><img class="biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->						
+					</div>
+					<div class="supplierOrder col-md-4">
+						<span>是否审核</span>
+						<select name="isNtChk" id="isNtChk">
+							<option disabled selected value=''></option>
+							<option value="1">已审</option>
+							<option value="0">未审</option>
+						</select>
+					</div>
+				</form>
+			</div>
+			<table id="jqGrids"></table>
+			<div id="p_jqGridPager"></div>
+		</div>
+	</body>
+
+</html>

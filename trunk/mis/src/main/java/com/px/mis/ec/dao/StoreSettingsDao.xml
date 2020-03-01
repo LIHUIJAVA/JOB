@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.StoreSettingsDao">
+<!-- 店铺档案设置 -->
+  <insert id="insert" parameterType="com.px.mis.ec.entity.StoreSettings">
+	INSERT INTO store_settings (store_id,store_name,app_key,app_secret,access_token,vender_id,shop_id,token_date)
+    VALUES(#{storeId}, #{storeName}, #{appKey}, #{appSecret}, #{accessToken},#{venderId},#{shopId},#{tokenDate})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.StoreSettings">
+  	SELECT store_id as storeId,store_name as storeName, app_key as appKey, app_secret as appSecret, access_token as accessToken,
+  	vender_id as venderId,shop_id as shopId,token_date as tokenDate 
+  	FROM store_settings
+  	WHERE store_id = #{storeId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  store_settings
+  	WHERE store_id = #{storeId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.StoreSettings">
+  	UPDATE store_settings
+  	SET store_name=#{storeName}, app_key=#{appKey}, app_secret=#{appSecret}, access_token=#{accessToken},token_date=#{tokenDate},
+  	vender_id=#{venderId},shop_id=#{shopId}
+  	WHERE store_id=#{storeId}
+  </update>
+  
+  <select id="selectRelevantEC" resultType="Map">
+ 	SELECT sr.ec_id, ss.store_id, ss.store_name, ss.app_key, ss.app_secret, ss.access_token
+	FROM store_record sr,store_settings ss
+	WHERE sr.store_id=ss.store_id
+  </select>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.StoreSettings">
+	SELECT store_id as storeId,store_name as storeName, app_key as appKey, app_secret as appSecret, access_token as accessToken,
+	token_date as tokenDate,vender_id as venderId,shop_id as shopId
+  	FROM store_settings 
+  	<where>
+  		<if test="storeId != null and storeId != ''">
+            AND store_id=#{storeId}
+        </if>
+        <if test="storeName != null and storeName != ''">
+            AND store_name=#{storeName}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(store_id)
+  	FROM store_settings
+  	<where>
+  		<if test="storeId != null and storeId != ''">
+            AND store_id=#{storeId}
+        </if>
+        <if test="storeName != null and storeName != ''">
+            AND store_name=#{storeName}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

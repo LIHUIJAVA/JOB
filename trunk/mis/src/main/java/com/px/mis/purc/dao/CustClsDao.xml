@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.CustClsDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.purc.entity.CustCls">
+    <id column="cls_id" jdbcType="VARCHAR" property="clsId" />
+    <result column="cls_nm" jdbcType="VARCHAR" property="clsNm" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+  </resultMap>
+  <!--  新增客户分类 -->
+   <insert id="insertCustCls" parameterType="CustCls">
+    insert into cust_cls (cls_id,cls_nm,ico, level, pid, memo)  values (#{clsId}, #{clsNm},  #{ico}, #{level}, #{pid}, #{memo} )
+   </insert>
+  <!-- 修改客户分类 -->
+  <update id="updateCustClsByClsId" parameterType="CustCls">
+    update cust_cls
+    <set>
+      <if test="clsNm != null">
+        cls_nm = #{clsNm},
+      </if>
+      <if test="ico != null">
+        ico = #{ico},
+      </if>
+      <if test="level != null">
+        level = #{level},
+      </if>
+      <if test="pid != null">
+        pid = #{pid},
+      </if>
+      <if test="memo != null">
+        memo = #{memo},
+      </if>
+    </set>
+    where cls_id = #{clsId}
+  </update>
+  <!-- 删除客户分类 -->
+  <delete id="deleteCustClsByClsId" parameterType="String">
+    delete from cust_cls where cls_id = #{clsId}
+  </delete>
+  <!--   按照客户编号查询客户分类 -->
+  <sql id="Base_Column_List">
+    cls_id, cls_nm, ico, level, pid, memo
+  </sql>
+  <select id="selectCustClsByClsId" parameterType="String" resultType="CustCls">
+    select 
+    <include refid="Base_Column_List" />
+    from cust_cls
+    where cls_id = #{clsId}
+  </select>
+  <!-- 查询所有存货客户 -->
+  <select id="selectCustCls" resultType="CustCls">
+    select 
+    <include refid="Base_Column_List" />
+    from cust_cls
+  </select>
+  
+</mapper>

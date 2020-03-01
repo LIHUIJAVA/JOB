@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.FormBackFlushDao">
+	  <resultMap id="BaseResultMap" type="com.px.mis.account.entity.FormBackFlush">
+	    <id column="back_num"  property="backNum" />
+	    <result column="form_num"  property="formNum" />
+	    <result column="form_dt"  property="formDt" />
+	    <result column="back_dt"  property="backDt" />
+	    <result column="is_nt_chk"  property="isNtChk" />
+	    <result column="chkr"  property="chkr" />
+	    <result column="chk_tm"  property="chkTm" />
+	    <result column="out_into_whs_typ_id"  property="outIntoWhsTypId" />
+	    <result column="out_into_whs_typ_nm"  property="outIntoWhsTypNm" />
+	    <result column="biz_typ_id"  property="bizTypId" />
+	    <result column="biz_typ_nm"  property="bizTypNm" />
+	    <result column="sell_typ_id"  property="sellTypId" />
+	    <result column="sell_typ_nm"  property="sellTypNm" />
+	    <result column="purs_typ_id"  property="pursTypId" />
+	    <result column="purs_typ_nm"  property="pursTypNm" />
+	    <result column="provr_id"  property="provrId" />
+	    <result column="provr_nm"  property="provrNm" />
+	    <result column="recv_send_cate_id"  property="recvSendCateId" />
+	    <result column="recv_send_cate_nm"  property="recvSendCateNm" />
+	    <result column="cust_id"  property="custId" />
+	    <result column="cust_nm"  property="custNm" />
+	    <result column="acc_num"  property="accNum" />
+	    <result column="user_name"  property="userName" />
+	    <result column="is_nt_book_ok"  property="isNtBookOk" />
+	    <result column="book_ok_acc"  property="bookOkAcc" />
+	    <result column="book_ok_dt"  property="bookOkDt" />
+	    <result column="is_nt_bllg"  property="isNtBllg" />
+	    <result column="is_nt_stl"  property="isNtStl" />
+	    <result column="is_nt_make_vouch"  property="isNtMakeVouch" />
+	    <result column="is_nt_upload_head"  property="isNtUploadHead" />
+	    <result column="make_vouch_id"  property="makeVouchId" />
+	    <result column="make_vouch_abst"  property="makeVouchAbst" />
+	    <result column="memo"  property="memo" />
+	    <result column="is_mth_end_stl"  property="isMthEndStl" />
+	    <result column="sell_ordr_ind"  property="sellOrdrInd" />
+	    <result column="is_red_back"  property="isRedBack" />
+	    <collection property="formBackFlushSub" ofType="com.px.mis.account.entity.FormBackFlushSub" autoMapping="true">
+	    	  <id property="ordrNum" column="ordr_num" />
+	    </collection>
+	  </resultMap>
+	  <sql id="Base_Column_List">
+	    back_num, form_num, form_dt, back_dt, is_nt_chk, chkr, chk_tm, out_into_whs_typ_id, 
+	    out_into_whs_typ_nm, biz_typ_id, biz_typ_nm, sell_typ_id, sell_typ_nm, purs_typ_id, 
+	    purs_typ_nm, provr_id, provr_nm, recv_send_cate_id, recv_send_cate_nm, cust_id, cust_nm, 
+	    acc_num, user_name, is_nt_book_ok, book_ok_acc, book_ok_dt, is_nt_bllg, is_nt_stl, 
+	    is_nt_make_vouch, is_nt_upload_head, make_vouch_id, make_vouch_abst, memo, is_mth_end_stl, 
+	    sell_ordr_ind, is_red_back
+	  </sql>
+	 
+	  <delete id="delectFormBookList" parameterType="java.util.List">
+	 	delete form,forms 
+	  	FROM
+			form_back_flush AS form
+		INNER JOIN form_back_flush_sub AS forms ON form.back_num = forms.back_num
+	    where form.back_num in
+		<foreach item="formBook" collection="list" open="(" close=")" separator=",">
+		     #{formBook.backNum}
+		</foreach>
+	 </delete>
+	  <insert id="insertRedFormBackFlushList" parameterType="com.px.mis.account.entity.FormBackFlush">
+	    insert into form_back_flush (back_num, form_num, form_dt, back_dt, is_nt_chk, chkr, 
+	      chk_tm, out_into_whs_typ_id, out_into_whs_typ_nm,biz_typ_id, biz_typ_nm, sell_typ_id, 
+	      sell_typ_nm, purs_typ_id, purs_typ_nm, provr_id, provr_nm, recv_send_cate_id,recv_send_cate_nm, cust_id,
+	      cust_nm,acc_num, user_name, is_nt_book_ok,book_ok_acc, book_ok_dt, is_nt_bllg,is_nt_stl, is_nt_make_vouch, is_nt_upload_head, 
+	      make_vouch_id, make_vouch_abst, memo,is_mth_end_stl, sell_ordr_ind, is_red_back,setup_pers,setup_tm,form_typ_encd,form_typ_name
+	      )
+	    values 
+	      <foreach collection="list" item="item" index="index" separator="," close=";">
+		(#{item.backNum}, #{item.formNum}, #{item.formDt},#{item.backDt}, #{item.isNtChk}, #{item.chkr}, #{item.chkTm}, #{item.outIntoWhsTypId},#{item.outIntoWhsTypNm}, 
+	      #{item.bizTypId}, #{item.bizTypNm}, #{item.sellTypId},#{item.sellTypNm}, #{item.pursTypId}, #{item.pursTypNm}, #{item.provrId},#{item.provrNm}, #{item.recvSendCateId}, 
+	      #{item.recvSendCateNm}, #{item.custId}, #{item.custNm}, #{item.accNum}, #{item.userName}, #{item.isNtBookOk},#{item.bookOkAcc},#{item.bookOkDt}, #{item.isNtBllg}, #{item.isNtStl}, #{item.isNtMakeVouch}, #{item.isNtUploadHead}, 
+	      #{item.makeVouchId}, #{item.makeVouchAbst}, #{item.memo}, 
+	      #{item.isMthEndStl}, #{item.sellOrdrInd}, #{item.isRedBack},#{item.setupPers},#{item.setupTm},#{item.formTypEncd},#{item.formTypName}
+	      )
+		</foreach>
+	  </insert>
+  	<select id="selectIntoWhsByMap" parameterType="Map" resultMap="BaseResultMap">
+	    SELECT
+		 form.*, forms.*
+	    FROM
+		 form_back_flush AS form
+	    INNER JOIN form_back_flush_sub AS forms ON form.back_num = forms.back_num
+	    WHERE
+		  1 = 1
+        <if test="isNtBookOk != null and isNtBookOk != ''">
+			AND form.is_nt_book_ok = #{isNtBookOk}
+		</if>
+		<if test="isNtMakeVouch != null and isNtMakeVouch != ''">
+			AND form.is_nt_make_vouch = #{isNtMakeVouch}
+		</if>
+		<if test="comnVouchId != null and comnVouchId != ''">
+			AND form.make_vouch_id = #{comnVouchId}
+		</if>
+		<if test="isNtBllg != null and isNtBllg != ''">
+			AND form.is_nt_bllg = #{isNtBllg}
+		</if>
+		<if test="isRedBack != null and isRedBack != ''">
+			AND form.is_red_back = #{isRedBack}
+		</if>
+		<if test="isNtUploadHead != null and isNtUploadHead != ''">
+			AND form.is_nt_upload_head = #{isNtUploadHead}
+		</if>
+		<if test="isMthEndStl != null and isMthEndStl != ''">
+			AND form.is_mth_end_stl = #{isMthEndStl}
+		</if>
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT(form.book_ok_dt, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="bookOkDt != null and bookOkDt != ''">
+			AND DATE_FORMAT(form.book_ok_dt, '%Y%m') = DATE_FORMAT(#{bookOkDt}, '%Y%m')
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND form.form_num = #{formNum}
+		</if>
+		<if test="backNumList != null and backNumList.size() > 0 ">
+			AND form.form_num IN
+			<foreach collection="backNumList" item="formNum" open="(" close=")" separator=",">
+				#{formNum}
+			</foreach>
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND forms.invty_encd IN 
+			<foreach collection="invIdList" item="invId" open="(" close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+  	</select>
+  	<select id="selectBackFlushByMap" parameterType="Map" resultMap="BaseResultMap">
+  	    SELECT
+		 form.*, forms.*
+	    FROM
+		 form_back_flush AS form
+	    INNER JOIN form_back_flush_sub AS forms ON form.back_num = forms.back_num
+	    WHERE
+		  1 = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumStart != null and formNumStart != ''">
+			AND form.form_num &gt;= #{formNumStart}
+		</if>
+		<if test="formNumEnd != null and formNumEnd != ''">
+			AND form.form_num &lt;= #{formNumEnd}
+		</if>
+		<if test="makeVouchIdStart != null and makeVouchIdStart != ''">
+			AND form.make_vouch_id &gt;= #{makeVouchIdStart}
+		</if>
+		<if test="makeVouchIdEnd != null and makeVouchIdEnd != ''">
+			AND form.make_vouch_id &lt;= #{makeVouchIdEnd}
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="isRedBack != null and isRedBack != ''">
+			AND form.is_red_back = #{isRedBack}
+		</if>
+		<if test="provrId != null and provrId != ''">
+			AND form.provr_id =#{provrId}
+		</if>
+		LIMIT #{index},#{num}
+  	</select>
+  	
+  	<select id="countSelectBackFlushByMap"  parameterType="Map" resultType="int">
+  		SELECT
+		 count(*)
+	    FROM
+		 form_back_flush AS form
+	    INNER JOIN form_back_flush_sub AS forms ON form.back_num = forms.back_num
+	    WHERE
+		  1 = 1
+		<if test="formSDt != null and formSDt != ''">
+			AND form.form_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND form.form_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNumStart != null and formNumStart != ''">
+			AND form.form_num &gt;= #{formNumStart}
+		</if>
+		<if test="formNumEnd != null and formNumEnd != ''">
+			AND form.form_num &lt;= #{formNumEnd}
+		</if>
+		<if test="makeVouchIdStart != null and makeVouchIdStart != ''">
+			AND form.make_vouch_id &gt;= #{makeVouchIdStart}
+		</if>
+		<if test="makeVouchIdEnd != null and makeVouchIdEnd != ''">
+			AND form.make_vouch_id &lt;= #{makeVouchIdEnd}
+		</if>
+		<if test="bookOkSDt != null and bookOkSDt != ''">
+			AND form.book_ok_dt &gt;= #{bookOkSDt}
+		</if>
+		<if test="bookOkEDt != null and bookOkEDt != ''">
+			AND form.book_ok_dt &lt;= #{bookOkEDt}
+		</if>
+		<if test="isRedBack != null and isRedBack != ''">
+			AND form.is_red_back = #{isRedBack}
+		</if>
+		<if test="provrId != null and provrId != ''">
+			AND form.provr_id =#{provrId}
+		</if>
+  	</select>
+  	
+  	 <delete id="delectFormBackFlushAndSub" parameterType="java.util.List">
+	 	delete form,forms 
+	  	FROM
+			form_back_flush AS form
+		INNER JOIN form_back_flush_sub AS forms ON form.back_num = forms.back_num
+	    where form.back_num in
+		<foreach item="formBackFlush" collection="list" open="(" close=")" separator=",">
+		     #{formBackFlush.backNum}
+		</foreach>
+	 </delete>
+</mapper>

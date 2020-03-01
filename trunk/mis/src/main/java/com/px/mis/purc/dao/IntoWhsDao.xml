@@ -1,0 +1,2461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.IntoWhsDao">
+	<resultMap type="IntoWhs" id="intoWhsMap" autoMapping="true">
+		<id property="intoWhsSnglId" column="into_whs_sngl_id" />
+		<collection property="intoWhsSub" ofType="IntoWhsSub"
+			autoMapping="true">
+			<id property="ordrNum" column="ordr_num" />
+			<result property="memo" column="memos" />
+		</collection>
+	</resultMap>
+	<!-- 删除采购入库单表信息 -->
+	<delete id="deleteIntoWhsByIntoWhsSnglId" parameterType="String">
+		delete
+		iw,iws from into_whs as iw inner JOIN into_whs_sub as iws on
+		iw.into_whs_sngl_id=iws.into_whs_sngl_id
+		where iw.into_whs_sngl_id =
+		#{intoWhsSnglId}
+	</delete>
+	<!-- 新增采购入库单表信息 -->
+	<insert id="insertIntoWhs" parameterType="IntoWhs">
+		insert into into_whs
+		(into_whs_sngl_id, into_whs_dt, purs_typ_id,
+		recv_send_cate_id,out_into_whs_typ_id, provr_id, acc_num, user_name,
+		purs_ordr_id,
+		to_gds_sngl_id, provr_ordr_num, is_nt_bllg, is_nt_stl,
+		is_nt_chk,
+		is_nt_clos, is_nt_cmplt, setup_pers, setup_tm,
+		is_nt_book_entry, exa_rep, memo,
+		is_nt_rtn_good,dept_id,form_typ_encd,to_form_typ_encd,is_nt_make_vouch)
+		values (#{intoWhsSnglId}, #{intoWhsDt}, #{pursTypId}, "1","9",
+		#{provrId}, #{accNum}, #{userName}, #{pursOrdrId}, #{toGdsSnglId},
+		#{provrOrdrNum},
+		0, 0, 0, 0, 0, #{setupPers}, now(), 0, #{exaRep},
+		#{memo},#{isNtRtnGood},
+		#{deptId},#{formTypEncd},#{toFormTypEncd},0)
+	</insert>
+	<!-- 删除时候备份一份 -->
+	<insert id="insertIntoWhsDl" parameterType="list">
+		insert into into_whs_dl
+		select * from into_whs where into_whs_sngl_id
+		in
+		<foreach item="intoWhsSnglId" collection="list" open="("
+			close=")" separator=",">
+			#{intoWhsSnglId}
+		</foreach>
+	</insert>
+	<!-- 导入时新增采购入库单表信息 -->
+	<insert id="insertIntoWhsUpload" parameterType="IntoWhs">
+		insert into
+		into_whs (into_whs_sngl_id, into_whs_dt, purs_typ_id,
+		recv_send_cate_id,out_into_whs_typ_id, provr_id, acc_num, user_name,
+		purs_ordr_id,
+		to_gds_sngl_id, provr_ordr_num, is_nt_bllg, is_nt_stl,
+		is_nt_chk,chkr,chk_tm,
+		is_nt_clos, is_nt_cmplt, setup_pers, setup_tm,
+		mdfr,
+		modi_tm,is_nt_book_entry, book_entry_pers,
+		book_entry_tm,exa_rep,
+		memo,is_nt_rtn_good,dept_id,form_typ_encd,to_form_typ_encd,is_nt_make_vouch,
+		mak_vouch_pers,mak_vouch_tm)
+		values 
+		<foreach collection="list" item="item" index="index" separator="," close=";">
+			(#{item.intoWhsSnglId}, #{item.intoWhsDt},
+			#{item.pursTypId},
+			"1","9", #{item.provrId}, #{item.accNum}, #{item.userName},
+			#{item.pursOrdrId},
+			#{item.toGdsSnglId}, #{item.provrOrdrNum},#{item.isNtBllg}, #{item.isNtStl},
+			#{item.isNtChk},#{item.chkr},#{item.chkTm},#{item.isNtClos}, #{item.isNtCmplt},
+			#{item.setupPers},
+			#{item.setupTm}, #{item.mdfr}, #{item.modiTm},
+			#{item.isNtBookEntry},#{item.bookEntryPers},#{item.bookEntryTm},
+			#{item.exaRep},
+			#{item.memo},#{item.isNtRtnGood},#{item.deptId},#{item.formTypEncd},
+			#{item.toFormTypEncd},#{item.isNtMakeVouch},#{item.makVouchPers},#{item.makVouchTm})
+		</foreach>
+	</insert>
+	<!-- 修改采购入库单信息 -->
+	<update id="updateIntoWhsByIntoWhsSnglId"
+		parameterType="IntoWhs">
+		update into_whs
+		<set>
+			<if test="intoWhsDt != null">
+				into_whs_dt = #{intoWhsDt},
+			</if>
+			<if test="pursTypId != null">
+				purs_typ_id = #{pursTypId},
+			</if>
+			<if test="userName != null">
+				user_name = #{userName},
+			</if>
+			<if test="deptId != null">
+				dept_id = #{deptId},
+			</if>
+			<if test="outIntoWhsTypId != null">
+				out_into_whs_typ_id = #{outIntoWhsTypId},
+			</if>
+			<if test="recvSendCateId != null">
+				recv_send_cate_id = #{recvSendCateId},
+			</if>
+			<if test="provrId != null">
+				provr_id = #{provrId},
+			</if>
+			<if test="accNum != null">
+				acc_num = #{accNum},
+			</if>
+			<if test="pursOrdrId != null">
+				purs_ordr_id = #{pursOrdrId},
+			</if>
+			<if test="toGdsSnglId != null">
+				to_gds_sngl_id = #{toGdsSnglId},
+			</if>
+			<if test="provrOrdrNum != null">
+				provr_ordr_num = #{provrOrdrNum},
+			</if>
+			<if test="mdfr != null">
+				mdfr = #{mdfr},
+			</if>
+			<if test="exaRep != null">
+				exa_rep = #{exaRep},
+			</if>
+			<if test="memo != null">
+				memo = #{memo},
+			</if>
+			<if test="toFormTypEncd != null">
+				to_form_typ_encd = #{toFormTypEncd},
+			</if>
+			<if test="isNtMakeVouch != null">
+				is_nt_make_vouch = #{isNtMakeVouch},
+			</if>
+			modi_tm = now(),
+		</set>
+		where into_whs_sngl_id = #{intoWhsSnglId}
+	</update>
+
+	<!-- 查询采购入库单表 -->
+	<sql id="Base_Column_List">
+		iw.*,iws.*,iws.memo as
+		memos,pt.purs_typ_nm,rsc.recv_send_cate_nm,
+		pd.provr_nm,mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_nm,dd.dept_name,
+		ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+		ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.crspd_bar_cd,
+		typ.out_into_whs_typ_nm,ftyp.form_typ_name,proj.proj_nm
+	</sql>
+	<!-- 按照采购入库单编号查询采购入库单信息 -->
+	<select id="selectIntoWhsByIntoWhsSnglId" parameterType="String"
+		resultMap="intoWhsMap">
+		select
+		<include refid="Base_Column_List" />
+		from into_whs iw LEFT JOIN into_whs_sub as iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id 
+						LEFT JOIN purs_type as pt ON iw.purs_typ_id = pt.purs_typ_id
+						LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+						LEFT JOIN provr_doc pd on iw.provr_id=pd.provr_id
+						LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+						LEFT JOIN whs_doc wd on iws.whs_encd=wd.whs_encd
+						LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+						LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+						LEFT JOIN out_into_whs_typ AS typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+						LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd
+						LEFT JOIN proj_cls AS proj ON proj.proj_encd = iws.proj_encd
+		where iw.into_whs_sngl_id = #{intoWhsSnglId}
+	</select>
+
+	<!-- 根据采购入库单号查询采购入库单信息，主要用于验证采购入库单主表是否唯一 -->
+	<select id="selectIntoWhsById" parameterType="String"
+		resultType="IntoWhs">
+		select * from into_whs where into_whs_sngl_id =
+		#{intoWhsSnglId}
+	</select>
+	<!-- 在采购入库单列表中查询采购入库单信息 -->
+	<select id="selectIntoWhsList" parameterType="Map"
+		resultMap="intoWhsMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM into_whs as iw LEFT JOIN into_whs_sub as iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id
+							LEFT JOIN purs_type as pt ON iw.purs_typ_id = pt.purs_typ_id
+							LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+							LEFT JOIN provr_doc pd on iw.provr_id=pd.provr_id
+							LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+							LEFT JOIN whs_doc wd on iws.whs_encd=wd.whs_encd
+							LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+							LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+							LEFT JOIN out_into_whs_typ AS typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+							LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd
+							LEFT JOIN proj_cls AS proj ON proj.proj_encd = iws.proj_encd
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="whsIdList!= null and whsIdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsId" collection="whsIdList" open="("
+					close=")" separator=",">
+					#{whsId}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+		LIMIT #{index},#{num}
+	</select>
+	<select id="selectIntoWhsCount" parameterType="Map"
+		resultType="Integer">
+		SELECT count(iw.into_whs_sngl_id)
+		FROM into_whs as iw LEFT JOIN  into_whs_sub as iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id
+							LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="whsIdList!= null and whsIdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsId" collection="whsIdList" open="("
+					close=")" separator=",">
+					#{whsId}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+	        <if test="intlBat !=null and intlBat != ''">
+	        	AND iws.intl_bat = #{intlBat}
+	        </if>
+		</where>
+	</select>
+	<select id="selectIntoWhsCountLess" parameterType="Map"
+		resultType="Integer">
+		SELECT
+		COUNT(DISTINCT(iw.into_whs_sngl_id))
+		FROM into_whs as iw LEFT JOIN into_whs_sub as iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id
+							LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="whsIdList!= null and whsIdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsId" collection="whsIdList" open="("
+					close=")" separator=",">
+					#{whsId}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+	</select>
+
+	<!-- 批量采购入库单信息 -->
+	<delete id="deleteIntoWhsList" parameterType="java.util.List">
+		delete iw,iws
+		FROM into_whs as iw inner JOIN into_whs_sub as iws on
+		iw.into_whs_sngl_id=iws.into_whs_sngl_id
+		where iw.into_whs_sngl_id in
+		<foreach item="item" collection="list" open="("
+			close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+
+	<!-- 审核时更新审核状态 -->
+	<update id="updateIntoWhsIsNtChk" parameterType="java.util.List">
+		update into_whs
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_chk =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when
+					into_whs_sngl_id = #{item.intoWhsSnglId} then #{item.isNtChk}
+				</foreach>
+			</trim>
+			<trim prefix="chkr =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.chkr != null and item.chkr!=''">
+						when into_whs_sngl_id = #{item.intoWhsSnglId} then
+						#{item.chkr}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="chk_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					when
+					into_whs_sngl_id = #{item.intoWhsSnglId} then now()
+				</foreach>
+			</trim>
+		</trim>
+		where into_whs_sngl_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.intoWhsSnglId}
+		</foreach>
+	</update>
+	<!-- 单个修改审核状态 -->
+	<update id="updateIntoWhsIsNtChkByIntoWhs"
+		parameterType="IntoWhs">
+		update into_whs
+		<set>
+			<if test="isNtChk != null">
+				is_nt_chk = #{isNtChk},
+			</if>
+			<if test="chkr != null">
+				chkr = #{chkr},
+			</if>
+			<if test="chkTm != null || chkTm == null">
+				chk_tm = now(),
+			</if>
+		</set>
+		where into_whs_sngl_id=#{intoWhsSnglId}
+		<if test="isNtChk == '1' ">
+        and is_nt_chk = 0
+		</if>
+		<if test="isNtChk == '0' ">
+        and is_nt_chk = 1
+		</if>
+	</update>
+
+	<!-- 单个修改开票状态 -->
+	<update id="updateIntoWhsIsNtBllgOK" parameterType="String">
+		update
+		into_whs set is_nt_bllg = 1
+		where into_whs_sngl_id=#{intoWhsSnglId}
+	</update>
+
+	<!-- 单个修改开票状态 -->
+	<update id="updateIntoWhsIsNtBllgNO" parameterType="String">
+		update
+		into_whs set is_nt_bllg = 0
+		where into_whs_sngl_id=#{intoWhsSnglId}
+	</update>
+
+
+	<!-- 单个修改结算状态 -->
+	<update id="updateIntoWhsIsNtStl" parameterType="String">
+		update into_whs
+		update into_whs set is_nt_stl = #{isNtStl}
+		where
+		into_whs_sngl_id=#{intoWhsSnglId}
+	</update>
+
+	<!-- 打印及输入输出时查询采购入库单信息 -->
+	<select id="printingIntoWhsList" parameterType="Map"
+		resultMap="intoWhsOrderBy">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM into_whs as iw LEFT JOIN into_whs_sub as iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id
+							LEFT JOIN purs_type as pt ON iw.purs_typ_id = pt.purs_typ_id
+							LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+							LEFT JOIN provr_doc pd on iw.provr_id=pd.provr_id
+							LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+							LEFT JOIN whs_doc wd on iws.whs_encd=wd.whs_encd
+							LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+							LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+							LEFT JOIN out_into_whs_typ AS typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+							LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd
+							LEFT JOIN proj_cls AS proj ON proj.proj_encd = iws.proj_encd
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="whsIdList!= null and whsIdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsId" collection="whsIdList" open="("
+					close=")" separator=",">
+					#{whsId}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+		ORDER BY iw.into_whs_sngl_id DESC
+	</select>
+
+	<!-- 根据到货单号查询入库表信息 -->
+	<select id="selectIntoWhsByToGdsSnglId" parameterType="String"
+		resultType="IntoWhs">
+		select is_nt_chk,to_gds_sngl_id from into_whs where
+		to_gds_sngl_id =
+		#{toGdsSnglId}
+	</select>
+
+	<!-- 入库明细查询 -->
+	<select id="selectIntoWhsByInvtyEncd" parameterType="Map"
+		resultType="Map">
+		SELECT
+		date_format(iw.into_whs_dt,'%Y-%c-%d %T')
+		intoWhsDt,ind.invty_encd invtyEncd,ind.invty_nm
+		invtyNm,ind.spc_model
+		spcModel,
+		ind.invty_cd invtyCd,ind.bx_rule
+		bxRule,mcd.measr_corp_nm
+		measrCorpNm,iws.whs_encd whsEncd,wd.whs_nm
+		whsNm,iws.bat_num batNum,
+		date_format(iws.prdc_dt,'%Y-%c-%d %T') prdcDt,iws.bao_zhi_qi
+		baoZhiQi,date_format(iws.invldtn_dt,'%Y-%c-%d %T') invldtnDt,
+		sum(no_tax_amt)/sum(qty) noTaxUprc,sum(no_tax_amt)
+		noTaxAmt,sum(prc_tax_sum)/sum(qty) cntnTaxUprc,sum(prc_tax_sum)
+		prcTaxSum,
+		sum(qty) qty,sum(bx_qty) bxQty,tax_rate taxRate
+		FROM into_whs
+		as iw LEFT JOIN into_whs_sub as iws on
+		iw.into_whs_sngl_id=iws.into_whs_sngl_id
+		LEFT JOIN whs_doc wd on
+		iws.whs_encd=wd.whs_encd
+		LEFT JOIN invty_doc ind on
+		iws.invty_encd=ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd on
+		ind.measr_corp_id=mcd.measr_corp_id
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+		GROUP BY ind.invty_encd,wd.whs_encd,iws.bat_num,iw.into_whs_sngl_id
+		<if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+		ORDER BY   ${sort} ${sortOrder} 
+		</if> 
+		<if test="index != null and num !=null">
+			LIMIT #{index},#{num}
+		</if>
+	</select>
+	<!--入库明细表导出  -->
+	<select id="selectIntoWhsByInvtyEncdPrint" parameterType="Map"
+		resultType="Map">
+		SELECT
+		date_format(iw.into_whs_dt,'%Y-%c-%d %T')
+		单据日期,ind.invty_encd 存货编码,ind.invty_nm
+		存货名称,ind.spc_model
+		规格型号,
+		ind.invty_cd 存货代码,ind.bx_rule
+		箱规,mcd.measr_corp_nm
+		主计量单位,iws.whs_encd 仓库编码,wd.whs_nm
+		仓库名称,iws.bat_num 批次,
+		date_format(iws.prdc_dt,'%Y-%c-%d %T') 生产日期,iws.bao_zhi_qi
+		保质期,date_format(iws.invldtn_dt,'%Y-%c-%d %T') 失效日期,
+		sum(no_tax_amt)/sum(qty) 无税单价,sum(no_tax_amt)
+		无税金额,sum(prc_tax_sum)/sum(qty) 含税单价,sum(prc_tax_sum)
+		价税合计,
+		sum(qty) 数量,sum(bx_qty) 箱数,tax_rate 税率
+		FROM into_whs
+		as iw LEFT JOIN into_whs_sub as iws on
+		iw.into_whs_sngl_id=iws.into_whs_sngl_id
+		LEFT JOIN whs_doc wd on
+		iws.whs_encd=wd.whs_encd
+		LEFT JOIN invty_doc ind on
+		iws.invty_encd=ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd on
+		ind.measr_corp_id=mcd.measr_corp_id
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+		GROUP BY ind.invty_encd,wd.whs_encd,iws.bat_num,iw.into_whs_sngl_id	
+	</select>
+	
+	<select id="selectIntoWhsByInvtyEncdCount" parameterType="Map"
+		resultType="Integer">
+		SELECT count(*)
+		FROM (SELECT
+		date_format(iw.into_whs_dt,'%Y-%c-%d %T')
+		intoWhsDt,ind.invty_encd invtyEncd,ind.invty_nm
+		invtyNm,ind.spc_model
+		spcModel,
+		ind.invty_cd invtyCd,ind.bx_rule
+		bxRule,mcd.measr_corp_nm
+		measrCorpNm,iws.whs_encd whsEncd,wd.whs_nm
+		whsNm,iws.bat_num batNum,
+		date_format(iws.prdc_dt,'%Y-%c-%d %T') prdcDt,iws.bao_zhi_qi
+		baoZhiQi,date_format(iws.invldtn_dt,'%Y-%c-%d %T') invldtnDt,
+		sum(no_tax_amt)/sum(qty) noTaxUprc,sum(no_tax_amt)
+		noTaxAmt,sum(prc_tax_sum)/sum(qty) cntnTaxUprc,sum(prc_tax_sum)
+		prcTaxSum,
+		sum(qty) qty,sum(bx_qty) bxQty,tax_rate taxRate
+		FROM into_whs
+		as iw LEFT JOIN into_whs_sub as iws on
+		iw.into_whs_sngl_id=iws.into_whs_sngl_id
+		LEFT JOIN invty_doc ind on
+		iws.invty_encd=ind.invty_encd
+		
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+		GROUP BY ind.invty_encd,wd.whs_encd,iws.bat_num,iw.into_whs_sngl_id
+		)as A
+	</select>
+
+	<!-- 记账时使用的查询采购入库单信息 -->
+	<select id="selectIntoWhsIsInvty" parameterType="Map"
+		resultMap="intoWhsMap">
+		SELECT
+		iw.*,iws.*,iws.memo as
+		memos,pt.purs_typ_nm,mu.user_name,pd.provr_nm,dd.dept_name,
+		mcd.measr_corp_id,mcd.measr_corp_nm,wd.whs_encd,wd.whs_nm,ind.invty_nm,ind.spc_model,ind.invty_cd,
+		ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,ind.highest_pur_price,ind.lo_sell_prc,
+		ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.invty_cls_encd,cls.invty_cls_nm,typ.out_into_whs_typ_nm
+		FROM
+		into_whs AS iw
+		INNER JOIN into_whs_sub AS iws ON
+		iw.into_whs_sngl_id =
+		iws.into_whs_sngl_id
+		LEFT JOIN purs_type AS pt ON
+		iw.purs_typ_id = pt.purs_typ_id
+		LEFT JOIN mis_user mu ON iw.acc_num =
+		mu.acc_num
+		LEFT JOIN provr_doc pd ON iw.provr_id = pd.provr_id
+		LEFT JOIN
+		dept_doc dd on iw.dept_id=dd.dept_id
+		LEFT JOIN whs_doc wd ON
+		iws.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON iws.invty_encd =
+		ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id =
+		mcd.measr_corp_id
+		LEFT JOIN recv_send_cate rsc on
+		rsc.recv_send_cate_id=iw.recv_send_cate_id
+		LEFT JOIN invty_cls AS cls
+		ON cls.invty_cls_encd = ind.invty_cls_encd
+		LEFT JOIN out_into_whs_typ
+		as typ ON iw.out_into_whs_typ_id =
+		typ.out_into_whs_typ_id
+		where
+		iw.is_nt_chk = 1
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT( iw.into_whs_dt , '%Y%m' ) = DATE_FORMAT(
+			#{loginTime} ,
+			'%Y%m' )
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND iw.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="("
+				close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND iws.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND iws.invty_encd IN
+			<foreach collection="invIdList" item="invId" open="("
+				close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="memo != null and memo != ''">
+            <bind name="memo" value="'%'+ memo +'%'"/>
+            AND iw.memo like #{memo}
+        </if>
+	</select>
+
+
+	<select id="countSelectIntoWhsStream" parameterType="Map"
+		resultType="Integer">
+		SELECT
+		count(*)
+		FROM
+		into_whs AS iw
+		INNER JOIN into_whs_sub AS iws ON
+		iw.into_whs_sngl_id =
+		iws.into_whs_sngl_id
+		LEFT JOIN purs_type AS pt ON
+		iw.purs_typ_id = pt.purs_typ_id
+		LEFT JOIN mis_user mu ON iw.acc_num =
+		mu.acc_num
+		LEFT JOIN provr_doc pd ON iw.provr_id = pd.provr_id
+		LEFT JOIN
+		dept_doc dd on iw.dept_id=dd.dept_id
+		LEFT JOIN whs_doc wd ON
+		iws.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON iws.invty_encd =
+		ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id =
+		mcd.measr_corp_id
+		LEFT JOIN recv_send_cate rsc on
+		rsc.recv_send_cate_id=iw.recv_send_cate_id
+		LEFT JOIN invty_cls AS cls
+		ON cls.invty_cls_encd = ind.invty_cls_encd
+		LEFT JOIN out_into_whs_typ
+		as typ ON iw.out_into_whs_typ_id =
+		typ.out_into_whs_typ_id
+		where
+		iw.is_nt_chk = 1
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT( iw.into_whs_dt , '%Y%m' ) = DATE_FORMAT(
+			#{loginTime} ,
+			'%Y%m' )
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND iw.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="("
+				close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND iws.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND iws.invty_encd IN
+			<foreach collection="invIdList" item="invId" open="("
+				close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="whsEncdList != null and whsEncdList.size() > 0 ">
+			AND iws.whs_encd IN
+			<foreach collection="whsEncdList" item="whsEncd" open="("
+				close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND iw.into_whs_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND iw.into_whs_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND iw.into_whs_sngl_id = #{formNum}
+		</if>
+		<if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+			AND iw.out_into_whs_typ_id = #{outIntoWhsTypId}
+		</if>
+		<if test="memo != null and memo != ''">
+            <bind name="memo" value="'%'+ memo +'%'"/>
+            AND iw.memo like #{memo}
+        </if>
+	</select>
+	<select id="selectIntoWhsStream" parameterType="Map" resultMap="intoWhsMap">
+		SELECT
+			iw.*, iws.*, iws.memo AS memos,pt.purs_typ_nm,mu.user_name,pd.provr_nm,dd.dept_name,mcd.measr_corp_id,mcd.measr_corp_nm,
+			wd.whs_encd,wd.whs_nm,ind.invty_nm,ind.spc_model,ind.invty_cd,ind.bx_rule,ind.bao_zhi_qi_dt,ind.iptax_rate,ind.optax_rate,
+			ind.highest_pur_price,ind.lo_sell_prc,ind.ref_cost,ind.ref_sell_prc,ind.ltst_cost,ind.invty_cls_encd,cls.invty_cls_nm,
+			typ.out_into_whs_typ_nm,ftyp.form_typ_name form_typ_name,rsc.recv_send_cate_nm,proj.proj_nm
+		FROM
+			into_whs AS iw
+		INNER JOIN into_whs_sub AS iws ON iw.into_whs_sngl_id = iws.into_whs_sngl_id
+		LEFT JOIN purs_type AS pt ON iw.purs_typ_id = pt.purs_typ_id
+		LEFT JOIN mis_user mu ON iw.acc_num = mu.acc_num
+		LEFT JOIN provr_doc pd ON iw.provr_id = pd.provr_id
+		LEFT JOIN dept_doc dd ON iw.dept_id = dd.dept_id
+		LEFT JOIN whs_doc wd ON iws.whs_encd = wd.whs_encd
+		LEFT JOIN invty_doc ind ON iws.invty_encd = ind.invty_encd
+		LEFT JOIN measr_corp_doc mcd ON ind.measr_corp_id = mcd.measr_corp_id
+		LEFT JOIN recv_send_cate rsc ON rsc.recv_send_cate_id = iw.recv_send_cate_id
+		LEFT JOIN invty_cls AS cls ON cls.invty_cls_encd = ind.invty_cls_encd
+		LEFT JOIN out_into_whs_typ AS typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+		LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd
+		LEFT JOIN proj_cls AS proj ON proj.proj_encd = iws.proj_encd
+		WHERE
+			iw.is_nt_chk = 1
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT( iw.into_whs_dt , '%Y%m' ) = DATE_FORMAT(#{loginTime} ,'%Y%m' )
+		</if>
+		<if test="formCodeList != null and formCodeList.size() > 0 ">
+			AND iw.out_into_whs_typ_id IN
+			<foreach collection="formCodeList" item="formCode" open="("
+				close=")" separator=",">
+				#{formCode}
+			</foreach>
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND iws.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		<if test="invIdList != null and invIdList.size() > 0 ">
+			AND iws.invty_encd IN
+			<foreach collection="invIdList" item="invId" open="("
+				close=")" separator=",">
+				#{invId}
+			</foreach>
+		</if>
+		<if test="whsEncdList != null and whsEncdList.size() > 0 ">
+			AND iws.whs_encd IN
+			<foreach collection="whsEncdList" item="whsEncd" open="("
+				close=")" separator=",">
+				#{whsEncd}
+			</foreach>
+		</if>
+		<if test="formSDt != null and formSDt != ''">
+			AND iw.into_whs_dt &gt;= #{formSDt}
+		</if>
+		<if test="formEDt != null and formEDt != ''">
+			AND iw.into_whs_dt &lt;= #{formEDt}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND iw.into_whs_sngl_id = #{formNum}
+		</if>
+		<if test="outIntoWhsTypId != null and outIntoWhsTypId != ''">
+			AND iw.out_into_whs_typ_id = #{outIntoWhsTypId}
+		</if>
+		<if test="memo != null and memo != ''">
+            <bind name="memo" value="'%'+ memo +'%'"/>
+            AND iw.memo like #{memo}
+        </if>
+		LIMIT #{index},#{num}
+	</select>
+
+	<!-- 采购订收货统计表 -->
+	<select id="selectIntoWhsAndPursOrdr" parameterType="Map"
+		resultType="Map">
+		SELECT provr_id as provrId,
+		encd as invtyEncd,
+		invty_encd_nm as invtyNm,
+		spc_model as spcModel,
+		provr_nm as provrNm,
+		SUM(IF(`orderType`='订单数量',nums,0)) as pursQty,
+		SUM(IF(`orderType`='入库数量',nums,0)) as intoQty,
+		SUM(IF(`orderType`='退库数量',nums,0)) as returnQty
+		FROM
+		(
+		SELECT
+		'订单数量' AS
+		orderType,
+		purs_ordr_sub.invty_encd AS encd,
+		invty_doc.invty_nm AS
+		invty_encd_nm,
+		invty_doc.spc_model AS spc_model,
+		purs_ordr.provr_id as
+		provr_id,
+		provr_doc.provr_nm as provr_nm,
+		IFNULL(sum(purs_ordr_sub.qty), 0) AS nums
+		FROM
+		purs_ordr
+		LEFT JOIN
+		purs_ordr_sub on purs_ordr.purs_ordr_id =
+		purs_ordr_sub.purs_ordr_id
+		LEFT JOIN invty_doc ON
+		purs_ordr_sub.invty_encd = invty_doc.invty_encd
+		LEFT JOIN provr_doc ON
+		purs_ordr.provr_id = provr_doc.provr_id
+		<where>
+			<if test="provrId != null and provrId != ''">
+				AND purs_ordr.provr_id = #{provrId}
+			</if>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND purs_ordr_sub.invty_encd = #{invtyEncd}
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND purs_ordr.purs_ordr_dt &gt;= #{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND purs_ordr.purs_ordr_dt &lt;= #{intoWhsDt2}
+			</if>
+			<if test="invtyClsEncd != null and invtyClsEncd != ''">
+				AND invty_doc.invty_cls_encd= #{invtyClsEncd}
+			</if>
+			AND purs_ordr.is_nt_chk=1
+		</where>
+		GROUP BY
+		purs_ordr_sub.invty_encd,purs_ordr.provr_id
+		UNION
+		SELECT
+		'入库数量'
+		AS orderType,
+		into_whs_sub.invty_encd AS encd,
+		invty_doc.invty_nm AS
+		encd_nm,
+		invty_doc.spc_model AS spc_model,
+		into_whs.provr_id AS
+		provr_id,
+		provr_doc.provr_nm as provr_nm,
+		IFNULL(sum(into_whs_sub.qty),
+		0) AS nums
+		FROM
+		into_whs
+		LEFT JOIN into_whs_sub on
+		into_whs.into_whs_sngl_id =
+		into_whs_sub.into_whs_sngl_id
+		LEFT JOIN
+		invty_doc ON into_whs_sub.invty_encd = invty_doc.invty_encd
+		LEFT JOIN
+		provr_doc ON into_whs.provr_id = provr_doc.provr_id
+		<where>
+			<if test="provrId != null and provrId != ''">
+				AND into_whs.provr_id = #{provrId}
+			</if>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND into_whs_sub.invty_encd = #{invtyEncd}
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND into_whs.into_whs_dt &gt;= #{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND into_whs.into_whs_dt &lt;= #{intoWhsDt2}
+			</if>
+			<if test="invtyClsEncd != null and invtyClsEncd != ''">
+				AND invty_doc.invty_cls_encd= #{invtyClsEncd}
+			</if>
+			AND into_whs.is_nt_chk=1
+			and into_whs.is_nt_rtn_good=0
+		</where>
+		GROUP BY
+		into_whs_sub.invty_encd,into_whs.provr_id
+		UNION
+		SELECT
+		'退库数量' AS
+		orderType,
+		into_whs_sub.invty_encd AS encd,
+		invty_doc.invty_nm AS
+		encd_nm,
+		invty_doc.spc_model AS spc_model,
+		into_whs.provr_id AS
+		provr_id,
+		provr_doc.provr_nm as provr_nm,
+		IFNULL(sum(into_whs_sub.qty),
+		0) AS nums
+		FROM
+		into_whs
+		LEFT JOIN into_whs_sub on
+		into_whs.into_whs_sngl_id =
+		into_whs_sub.into_whs_sngl_id
+		LEFT JOIN
+		invty_doc ON into_whs_sub.invty_encd = invty_doc.invty_encd
+		LEFT JOIN
+		provr_doc ON into_whs.provr_id = provr_doc.provr_id
+		<where>
+			<if test="provrId != null and provrId != ''">
+				AND into_whs.provr_id = #{provrId}
+			</if>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND into_whs_sub.invty_encd = #{invtyEncd}
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND into_whs.into_whs_dt &gt;= #{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND into_whs.into_whs_dt &lt;= #{intoWhsDt2}
+			</if>
+			<if test="invtyClsEncd != null and invtyClsEncd != ''">
+				AND invty_doc.invty_cls_encd= #{invtyClsEncd}
+			</if>
+			AND into_whs.is_nt_chk=1
+			and into_whs.is_nt_rtn_good=1
+		</where>
+		GROUP BY
+		into_whs_sub.invty_encd,into_whs.provr_id
+		) as a
+		GROUP BY encd
+		<if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+		ORDER BY   ${sort} ${sortOrder} 
+		</if> 
+	</select>
+	<!-- 查询订货收货表总计 -->
+	<select id="selectIntoWhsAndPursOrdrSums" parameterType="Map"
+		resultType="Map">
+		SELECT 
+		SUM(IF(`orderType`='订单数量',nums,0)) as pursQty,
+		SUM(IF(`orderType`='入库数量',nums,0)) as intoQty,
+		SUM(IF(`orderType`='退库数量',nums,0)) as returnQty
+		FROM
+		(
+		SELECT
+		'订单数量' AS
+		orderType,
+		purs_ordr_sub.invty_encd AS encd,
+		invty_doc.invty_nm AS
+		invty_encd_nm,
+		invty_doc.spc_model AS spc_model,
+		purs_ordr.provr_id as
+		provr_id,
+		provr_doc.provr_nm as provr_nm,
+		IFNULL(sum(purs_ordr_sub.qty), 0) AS nums
+		FROM
+		purs_ordr
+		LEFT JOIN
+		purs_ordr_sub on purs_ordr.purs_ordr_id =
+		purs_ordr_sub.purs_ordr_id
+		LEFT JOIN invty_doc ON
+		purs_ordr_sub.invty_encd = invty_doc.invty_encd
+		LEFT JOIN provr_doc ON
+		purs_ordr.provr_id = provr_doc.provr_id
+		<where>
+			<if test="provrId != null and provrId != ''">
+				AND purs_ordr.provr_id = #{provrId}
+			</if>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND purs_ordr_sub.invty_encd = #{invtyEncd}
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND purs_ordr.purs_ordr_dt &gt;= #{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND purs_ordr.purs_ordr_dt &lt;= #{intoWhsDt2}
+			</if>
+			<if test="invtyClsEncd != null and invtyClsEncd != ''">
+				AND invty_doc.invty_cls_encd= #{invtyClsEncd}
+			</if>
+			AND purs_ordr.is_nt_chk=1
+		</where>
+		GROUP BY
+		purs_ordr_sub.invty_encd,purs_ordr.provr_id
+		UNION
+		SELECT
+		'入库数量'
+		AS orderType,
+		into_whs_sub.invty_encd AS encd,
+		invty_doc.invty_nm AS
+		encd_nm,
+		invty_doc.spc_model AS spc_model,
+		into_whs.provr_id AS
+		provr_id,
+		provr_doc.provr_nm as provr_nm,
+		IFNULL(sum(into_whs_sub.qty),
+		0) AS nums
+		FROM
+		into_whs
+		LEFT JOIN into_whs_sub on
+		into_whs.into_whs_sngl_id =
+		into_whs_sub.into_whs_sngl_id
+		LEFT JOIN
+		invty_doc ON into_whs_sub.invty_encd = invty_doc.invty_encd
+		LEFT JOIN
+		provr_doc ON into_whs.provr_id = provr_doc.provr_id
+		<where>
+			<if test="provrId != null and provrId != ''">
+				AND into_whs.provr_id = #{provrId}
+			</if>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND into_whs_sub.invty_encd = #{invtyEncd}
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND into_whs.into_whs_dt &gt;= #{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND into_whs.into_whs_dt &lt;= #{intoWhsDt2}
+			</if>
+			<if test="invtyClsEncd != null and invtyClsEncd != ''">
+				AND invty_doc.invty_cls_encd= #{invtyClsEncd}
+			</if>
+			AND into_whs.is_nt_chk=1
+			and into_whs.is_nt_rtn_good=0
+		</where>
+		GROUP BY
+		into_whs_sub.invty_encd,into_whs.provr_id
+		UNION
+		SELECT
+		'退库数量' AS
+		orderType,
+		into_whs_sub.invty_encd AS encd,
+		invty_doc.invty_nm AS
+		encd_nm,
+		invty_doc.spc_model AS spc_model,
+		into_whs.provr_id AS
+		provr_id,
+		provr_doc.provr_nm as provr_nm,
+		IFNULL(sum(into_whs_sub.qty),
+		0) AS nums
+		FROM
+		into_whs
+		LEFT JOIN into_whs_sub on
+		into_whs.into_whs_sngl_id =
+		into_whs_sub.into_whs_sngl_id
+		LEFT JOIN
+		invty_doc ON into_whs_sub.invty_encd = invty_doc.invty_encd
+		LEFT JOIN
+		provr_doc ON into_whs.provr_id = provr_doc.provr_id
+		<where>
+			<if test="provrId != null and provrId != ''">
+				AND into_whs.provr_id = #{provrId}
+			</if>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND into_whs_sub.invty_encd = #{invtyEncd}
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND into_whs.into_whs_dt &gt;= #{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND into_whs.into_whs_dt &lt;= #{intoWhsDt2}
+			</if>
+			<if test="invtyClsEncd != null and invtyClsEncd != ''">
+				AND invty_doc.invty_cls_encd= #{invtyClsEncd}
+			</if>
+			AND into_whs.is_nt_chk=1
+			and into_whs.is_nt_rtn_good=1
+		</where>
+		GROUP BY
+		into_whs_sub.invty_encd,into_whs.provr_id
+		) as a
+	</select>
+
+	<!-- 批量修改记账状态 -->
+	<update id="updateIntoWhsBookEntryList"
+		parameterType="java.util.List">
+		update into_whs
+		<trim prefix="set" suffixOverrides=",">
+			<trim prefix="is_nt_book_entry =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.isNtBookEntry != null ">
+						when into_whs_sngl_id =
+						#{item.intoWhsSnglId} then
+						#{item.isNtBookEntry}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_pers =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.bookEntryPers != null">
+						when into_whs_sngl_id = #{item.intoWhsSnglId} then
+						#{item.bookEntryPers}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="book_entry_tm =case" suffix="end,">
+				<foreach collection="list" item="item" index="index">
+					<if test="item.bookEntryTm != null">
+						when into_whs_sngl_id =
+						#{item.intoWhsSnglId} then
+						#{item.bookEntryTm}
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		where into_whs_sngl_id in
+		<foreach collection="list" index="index" item="item"
+			separator="," open="(" close=")">
+			#{item.intoWhsSnglId}
+		</foreach>
+	</update>
+
+	<!-- 根据入库单号查询审核状态 -->
+	<select id="selectIntoWhsIsNtChk" parameterType="String"
+		resultType="Integer">
+		select is_nt_chk from into_whs where into_whs_sngl_id =
+		#{intoWhsSnglId}
+	</select>
+	<!-- 根据入库单号查询开票状态 -->
+	<select id="selectIntoWhsIsNtBllg" parameterType="String"
+		resultType="Integer">
+		select is_nt_bllg from into_whs where into_whs_sngl_id =
+		#{intoWhsSnglId}
+	</select>
+	<!-- 根据入库单号查询结算状态 -->
+	<select id="selectIntoWhsIsNtStl" parameterType="String"
+		resultType="Integer">
+		select is_nt_stl from into_whs where into_whs_sngl_id =
+		#{intoWhsSnglId}
+	</select>
+	<!-- 根据入库单号查询记账状态 -->
+	<select id="selectIntoWhsIsNtBookEntry" parameterType="String"
+		resultType="Integer">
+		select is_nt_book_entry from into_whs where
+		into_whs_sngl_id =
+		#{intoWhsSnglId}
+	</select>
+	<!-- 根据入库单号查询退货状态 -->
+	<select id="selectIntoWhsIsNtRtn" parameterType="String"
+		resultType="Integer">
+		select is_nt_rtn_good from into_whs where into_whs_sngl_id
+		=
+		#{intoWhsSnglId}
+	</select>
+	<select id="selectUnTaxUprc" parameterType="Map"
+		resultType="BigDecimal">
+		select no_tax_uprc from into_whs iw INNER JOIN into_whs_sub iws on
+		iw.into_whs_sngl_id=iws.into_whs_sngl_id
+		<where>
+			<if test="invtyEncd != null and invtyEncd != ''">
+				AND invty_encd = #{invtyEncd}
+			</if>
+			<if test="whsEncd != null and whsEncd != ''">
+				AND whs_encd = #{whsEncd}
+			</if>
+			<if test="batNum != null and batNum != ''">
+				AND bat_num = #{batNum}
+			</if>
+		</where>
+		ORDER BY into_whs_dt DESC
+		LIMIT 1
+	</select>
+	<!--查询采购入库单原单的开票数量 -->
+	<select id="selectIntoWhsByInvty" parameterType="Map"
+		resultMap="intoWhsMap">
+
+		SELECT
+		iw.*,iws.*
+		FROM
+		into_whs AS iw
+		INNER JOIN into_whs_sub AS iws ON
+		iw.into_whs_sngl_id =
+		iws.into_whs_sngl_id
+		where iw.is_nt_chk = 1
+		<if test="loginTime != null and loginTime != ''">
+			AND DATE_FORMAT( iw.into_whs_dt , '%Y%m' ) = DATE_FORMAT(
+			#{loginTime} ,
+			'%Y%m' )
+		</if>
+		<if test="whsEncd != null and whsEncd != ''">
+			AND iws.whs_encd = #{whsEncd}
+		</if>
+		<if test="isNtBookOk != null and isNtBookOk != ''">
+			AND iw.is_nt_book_entry = #{isNtBookOk}
+		</if>
+		<if test="invtyEncd != null and invtyEncd != ''">
+			AND iws.invty_encd = #{invtyEncd}
+		</if>
+		<if test="batNum != null and batNum != ''">
+			AND iws.bat_num = #{batNum}
+		</if>
+		<if test="formNum != null and formNum != ''">
+			AND iw.into_whs_sngl_id = #{formNum}
+		</if>
+		<if test="toOrdrNum != null and toOrdrNum != ''">
+			AND iws.to_ordr_num = #{toOrdrNum}
+		</if>
+		<if test="memo != null and memo != ''">
+            <bind name="memo" value="'%'+ memo +'%'"/>
+            AND iw.memo like #{memo}
+        </if>
+	</select>
+
+	<!-- 在采购入库单列表中查询采购入库单信息 -->
+	<select id="selectIntoWhsLists" parameterType="Map"
+		resultMap="intoWhsMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM into_whs as iw LEFT JOIN into_whs_sub as iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id
+			                LEFT JOIN purs_type as pt ON iw.purs_typ_id = pt.purs_typ_id
+							LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+							LEFT JOIN provr_doc pd on iw.provr_id=pd.provr_id
+							LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+							LEFT JOIN whs_doc wd on iws.whs_encd=wd.whs_encd
+							LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+							LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+							LEFT JOIN out_into_whs_typ AS typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+							LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd
+							LEFT JOIN proj_cls AS proj ON proj.proj_encd = iws.proj_encd
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="unBllgQty!= null and unBllgQty!= ''">
+				AND iws.un_bllg_qty>0
+			</if>
+			<if test="returnQty!= null and returnQty!= ''">
+				AND iws.return_qty>0
+			</if>
+			<if test="whsIdList!= null and whsIdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsId" collection="whsIdList" open="("
+					close=")" separator=",">
+					#{whsId}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+		GROUP BY iw.into_whs_sngl_id
+		<if test="sort !=null and sortOrder != null and sort !='' and sortOrder !=''">
+		ORDER BY ${sort} ${sortOrder}
+		</if>
+		LIMIT
+		#{index},#{num}
+	</select>
+	<select id="selectIntoWhsCounts" parameterType="Map"
+		resultType="Integer">
+		SELECT count(DISTINCT(iw.into_whs_sngl_id))
+		FROM into_whs as iw 
+		LEFT JOIN into_whs_sub as iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id
+		LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="unBllgQty!= null and unBllgQty!= ''">
+				AND iws.un_bllg_qty>0
+			</if>
+			<if test="returnQty!= null and returnQty!= ''">
+				AND iws.return_qty>0
+			</if>
+			<if test="whsIdList!= null and whsIdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsId" collection="whsIdList" open="("
+					close=")" separator=",">
+					#{whsId}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+	</select>
+	<resultMap type="com.px.mis.purc.service.impl.PurcIntoWhsServiceImpl$zizhu"
+		id="intoWhsOrderBy" autoMapping="true">
+		<id property="ordrNum" column="ordr_num" />
+	</resultMap>
+	<select id="selectIntoWhsListOrderBy" parameterType="Map"
+		resultMap="intoWhsOrderBy">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM into_whs as iw LEFT JOIN into_whs_sub as iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id
+							LEFT JOIN purs_type as pt ON iw.purs_typ_id = pt.purs_typ_id
+							LEFT JOIN dept_doc dd on iw.dept_id=dd.dept_id
+							LEFT JOIN provr_doc pd on iw.provr_id=pd.provr_id
+							LEFT JOIN recv_send_cate rsc on rsc.recv_send_cate_id=iw.recv_send_cate_id
+							LEFT JOIN whs_doc wd on iws.whs_encd=wd.whs_encd
+							LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+							LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+							LEFT JOIN out_into_whs_typ AS typ ON iw.out_into_whs_typ_id = typ.out_into_whs_typ_id
+							LEFT JOIN form_typ_tabs AS ftyp ON iw.form_typ_encd = ftyp.form_typ_encd
+							LEFT JOIN proj_cls AS proj ON proj.proj_encd = iws.proj_encd
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="whsIdList!= null and whsIdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsId" collection="whsIdList" open="("
+					close=")" separator=",">
+					#{whsId}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+	<if test="sort != null and sort != '' and sortOrder !=null and sortOrder != '' ">
+		ORDER BY   ${sort} ${sortOrder} 
+	</if> 
+		LIMIT #{index},#{num}
+	</select>
+	<select id="selectIntoWhsListSum" parameterType="Map"
+		resultType="map">
+		SELECT
+		IFNULL(SUM(iws.qty),0.0) as qty,
+		IFNULL(SUM(iws.prc_tax_sum),0.0) prcTaxSum,
+		IFNULL(SUM(iws.no_tax_amt),0.0) noTaxAmt,
+		IFNULL(SUM(iws.tax_amt),0.0) taxAmt,
+		IFNULL(SUM(iws.bx_qty),0.0) bxQty
+		FROM into_whs as iw LEFT JOIN into_whs_sub as iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id
+							LEFT JOIN invty_doc ind on iws.invty_encd=ind.invty_encd
+		<where>
+			<if
+				test="intoWhsSnglIdList != null and intoWhsSnglIdList.size() > 0 != ''">
+				AND iw.into_whs_sngl_id in
+				<foreach item="intoWhsSnglId" collection="intoWhsSnglIdList"
+					open="(" close=")" separator=",">
+					#{intoWhsSnglId}
+				</foreach>
+			</if>
+			<if test="intoWhsDt1 != null and intoWhsDt1 != ''">
+				AND iw.into_whs_dt &gt;=#{intoWhsDt1}
+			</if>
+			<if test="intoWhsDt2 != null and intoWhsDt2 != ''">
+				AND iw.into_whs_dt &lt;=#{intoWhsDt2}
+			</if>
+			<if test="isNtChk != null and isNtChk != ''">
+				AND iw.is_nt_chk=#{isNtChk}
+			</if>
+			<if test="provrIdList != null and provrIdList.size() > 0">
+				AND iw.provr_id in
+				<foreach item="provrId" collection="provrIdList" open="("
+					close=")" separator=",">
+					#{provrId}
+				</foreach>
+			</if>
+			<if test="invtyEncdList != null and invtyEncdList.size() > 0">
+				AND iws.invty_encd in
+				<foreach item="invtyEncd" collection="invtyEncdList"
+					open="(" close=")" separator=",">
+					#{invtyEncd}
+				</foreach>
+			</if>
+			<if
+				test="invtyClsEncdList != null and invtyClsEncdList.size() > 0">
+				<bind name="bindInvtyClsEncd" value="invtyClsEncd +'%'"/>
+					AND ind.invty_cls_encd  like #{bindInvtyClsEncd}
+			</if>
+			<if test="invtyCdList != null and invtyCdList.size() > 0">
+				AND ind.invty_cd in
+				<foreach item="invtyCd" collection="invtyCdList" open="("
+					close=")" separator=",">
+					#{invtyCd}
+				</foreach>
+			</if>
+			<if test="whsEncdList!= null and whsEncdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsEncd" collection="whsEncdList" open="("
+					close=")" separator=",">
+					#{whsEncd}
+				</foreach>
+			</if>
+			<if test="isNtBllg != null and isNtBllg != ''">
+				AND iw.is_nt_bllg=#{isNtBllg}
+			</if>
+			<if test="isNtRtnGood != null and isNtRtnGood != ''">
+				AND iw.is_nt_rtn_good=#{isNtRtnGood}
+			</if>
+			<if test="deptIdList != null and deptIdList.size() > 0">
+				AND iw.dept_id in
+				<foreach item="deptId" collection="deptIdList" open="("
+					close=")" separator=",">
+					#{deptId}
+				</foreach>
+			</if>
+			<if test="accNumList != null and accNumList.size() > 0">
+				AND iw.acc_num in
+				<foreach item="accNum" collection="accNumList" open="("
+					close=")" separator=",">
+					#{accNum}
+				</foreach>
+			</if>
+			<if
+				test="provrOrdrNumList != null and provrOrdrNumList.size() > 0">
+				AND iw.provr_ordr_num in
+				<foreach item="provrOrdrNum" collection="provrOrdrNumList"
+					open="(" close=")" separator=",">
+					#{provrOrdrNum}
+				</foreach>
+			</if>
+			<if test="batNumList!= null and batNumList.size() > 0">
+				AND iws.bat_num in
+				<foreach item="batNum" collection="batNumList" open="("
+					close=")" separator=",">
+					#{batNum}
+				</foreach>
+			</if>
+			<if test="intlBatList!= null and intlBatList.size() > 0">
+				AND iws.intl_bat in
+				<foreach item="intlBat" collection="intlBatList" open="("
+					close=")" separator=",">
+					#{intlBat}
+				</foreach>
+			</if>
+			<if test="pursOrdrIdList!= null and pursOrdrIdList.size() > 0">
+				AND iw.purs_ordr_id in
+				<foreach item="pursOrdrId" collection="pursOrdrIdList"
+					open="(" close=")" separator=",">
+					#{pursOrdrId}
+				</foreach>
+			</if>
+			<if test="toGdsSnglIdList!= null and toGdsSnglIdList.size() > 0">
+				AND iw.to_gds_sngl_id in
+				<foreach item="toGdsSnglId" collection="toGdsSnglIdList"
+					open="(" close=")" separator=",">
+					#{toGdsSnglId}
+				</foreach>
+			</if>
+			<if test="isNtBookEntry!= null and isNtBookEntry != ''">
+				AND iw.is_nt_book_entry=#{isNtBookEntry}
+			</if>
+			<if test="whsIdList!= null and whsIdList.size() > 0">
+				AND iws.whs_encd in
+				<foreach item="whsId" collection="whsIdList" open="("
+					close=")" separator=",">
+					#{whsId}
+				</foreach>
+			</if>
+			<if test="memo != null and memo != ''">
+	            <bind name="memo" value="'%'+ memo +'%'"/>
+	            AND iw.memo like #{memo}
+	        </if>
+		</where>
+	</select>
+	<!-- 查询采购订单对应的采购入库单中数量为多少 -->
+	<select id="selectIntoWhsQtyByPursOrdrId" parameterType="Map"
+		resultType="map">	
+	select sum(qty) intoQty,purs_ordr_num pursOrdrNum 
+	from into_whs iw INNER JOIN into_whs_sub iws on iw.into_whs_sngl_id=iws.into_whs_sngl_id
+	<where>
+	    <if test="pursOrdrIds!= null and pursOrdrIds != ''">
+		   AND purs_ordr_id=#{pursOrdrIds}
+		</if>
+		<if test="intoWhsSnglId != null and intoWhsSnglId != ''">
+		   AND iw.into_whs_sngl_id!=#{intoWhsSnglId}
+		</if>
+	</where>
+	GROUP BY purs_ordr_num
+   </select>
+</mapper>

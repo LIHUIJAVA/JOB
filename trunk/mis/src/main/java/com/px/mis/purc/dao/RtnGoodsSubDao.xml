@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.purc.dao.RtnGoodsSubDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.purc.entity.RtnGoodsSub">
+    <id column="ordr_num" jdbcType="BIGINT" property="ordrNum" />
+    <result column="whs_encd" jdbcType="VARCHAR" property="whsEncd" />
+  </resultMap>
+  <!-- 查询退货单子表信息 -->
+  <sql id="Base_Column_List">
+    ordr_num, whs_encd, invty_encd, rtn_goods_id, qty,bx_qty, no_tax_uprc, no_tax_amt, tax_rate, 
+    tax_amt, cntn_tax_uprc, prc_tax_sum, prdc_dt, invldtn_dt,bao_zhi_qi, bat_num,intl_bat, is_complimentary, 
+    is_nt_rtn_goods,memo, proj_encd,proj_nm,discnt_ratio,to_ordr_num
+  </sql>
+  <select id="selectRtnGoodsSubByRtnGoodsId" parameterType="String" resultType="RtnGoodsSub">
+    select 
+    <include refid="Base_Column_List" />
+    from rtn_goods_sub
+    where rtn_goods_id = #{rtnGoodsId}
+  </select>
+  <!-- 删除退货单子表信息 -->
+  <delete id="deleteRtnGoodsSubByRtnGoodsId" parameterType="String">
+    delete from rtn_goods_sub
+    where rtn_goods_id = #{rtnGoodsId}
+  </delete> 
+  <!-- 新增退货单子表信息 -->
+  <insert id="insertRtnGoodsSub" parameterType="RtnGoodsSub">
+    insert into rtn_goods_sub (ordr_num, whs_encd, invty_encd, 
+      rtn_goods_id, qty, bx_qty, no_tax_uprc, 
+      no_tax_amt, tax_rate, tax_amt, 
+      cntn_tax_uprc, prc_tax_sum, prdc_dt, 
+      invldtn_dt,bao_zhi_qi, bat_num,intl_bat, 
+      is_complimentary,is_nt_rtn_goods,
+      proj_encd,proj_nm,discnt_ratio,memo,to_ordr_num,un_bllg_qty)
+    values
+     <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.ordrNum}, #{item.whsEncd}, #{item.invtyEncd}, 
+      #{item.rtnGoodsId}, #{item.qty}, #{item.bxQty}, #{item.noTaxUprc}, 
+      #{item.noTaxAmt}, #{item.taxRate}, #{item.taxAmt}, 
+      #{item.cntnTaxUprc}, #{item.prcTaxSum}, #{item.prdcDt}, 
+      #{item.invldtnDt},#{item.baoZhiQi}, #{item.batNum},
+      #{item.intlBat}, #{item.isComplimentary},1, 
+      #{item.projEncd}, #{item.projNm}, #{item.discntRatio},
+      #{item.memo},#{item.toOrdrNum},#{item.unBllgQty})
+    </foreach>
+  </insert>
+  <!-- 删除时候备份一下 -->
+  <insert id="insertRtnGoodsSubDl" parameterType="list">
+    insert into rtn_goods_sub_dl
+    select * from rtn_goods_sub where rtn_goods_id in
+    <foreach collection="list" item="lists2" open="(" separator="," close=")">
+    #{lists2}
+    </foreach>
+  </insert>
+  
+  <select id="selectRtnGoodsSubQty" parameterType="RtnGoodsSub" resultType="BigDecimal">
+    select  qty  from rtn_goods rg left join rtn_goods_sub rgs on rg.rtn_goods_id=rgs.rtn_goods_id
+    where whs_encd = #{whsEncd} and invty_encd = #{invtyEncd} and bat_num = #{batNum} 
+    and rgs.rtn_goods_id=#{rtnGoodsId} and rgs.ordr_num=#{ordrNum}
+  </select>
+  
+  <update id="updateRtnGoodsUnBllgQtyByOrdrNum" parameterType="Map">
+    update rtn_goods_sub
+    <set>
+        un_bllg_qty = un_bllg_qty-#{unBllgQty}
+    </set>
+    where ordr_num=#{ordrNum}
+  </update>
+  <select id="selectRtnGoodsUnBllgQtyByOrdrNum" parameterType="Map" resultType="BigDecimal">
+    select 
+    un_bllg_qty
+    from rtn_goods_sub  
+    where ordr_num = #{ordrNum}
+  </select>
+  <!-- 根据退货单子表序号查询退货子表信息 -->
+  <select id="selectRtnGoodsSubByRtGoIdAndOrdrNum"
+		parameterType="Map" resultType="RtnGoodsSub">
+		select
+		<include refid="Base_Column_List" />
+		from rtn_goods_sub as sss LEFT JOIN whs_doc wd on sss.whs_encd=wd.whs_encd
+						          LEFT JOIN invty_doc ind on sss.invty_encd=ind.invty_encd
+						          LEFT JOIN measr_corp_doc mcd on ind.measr_corp_id=mcd.measr_corp_id
+        <where>
+			<if test="ordrNum != null and ordrNum!= ''">
+				AND ordr_num =#{ordrNum}
+		    </if>
+		</where>
+	</select>
+	<!-- 参照时根据退货单号及子表未开票数量批量查询子表信息  -->
+  <select id="selectRtnGoodsSubByRtnGoodsIdAndUnBllgQty" parameterType="String" resultType="RtnGoodsSub">
+    select 
+    <include refid="Base_Column_List" />
+    from rtn_goods_sub
+    where rtn_goods_id = #{rtnGoodsId} and un_bllg_qty>0
+  </select>
+  
+  <!-- 根据退货单子表序号查询退货单的来源单据号-->
+  <select id="selectRtnGoodsSubToOrdrNum" parameterType="Long" resultType="RtnGoodsSub">
+    select  to_ordr_num,whs_encd,invty_encd  from rtn_goods_sub where ordr_num=#{ordrNum}
+  </select>
+  
+</mapper>

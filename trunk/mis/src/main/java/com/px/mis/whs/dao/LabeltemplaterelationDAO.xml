@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.LabeltemplaterelationDAO">
+    <resultMap id="BaseResultMap"
+               type="com.px.mis.whs.entity.LabelTemplateRelation">
+        <id column="idx" jdbcType="INTEGER" property="idx"/>
+        <result column="Warehouse_Id" jdbcType="VARCHAR"
+                property="warehouseId"/>
+        <result column="Warehouse_Name" jdbcType="VARCHAR"
+                property="warehouseName"/>
+        <result column="Platform_Id" jdbcType="VARCHAR"
+                property="platformId"/>
+        <result column="Platform_Name" jdbcType="VARCHAR"
+                property="platformName"/>
+        <result column="Template_ID" jdbcType="VARCHAR"
+                property="templateId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        idx, Warehouse_Id, Warehouse_Name, Platform_Id,
+		Platform_Name, Template_ID
+    </sql>
+    <select id="selectByPrimaryKey"
+            parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from labeltemplaterelation
+        where idx = #{idx,jdbcType=BIGINT}
+    </select>
+    <select id="selectByPrimaryId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from labeltemplaterelation
+        <where>
+            <if test="labelTemplateRelation.warehouseId != null and labelTemplateRelation.warehouseId != '' ">
+                <bind name="labelTemplateRelation.warehouseId" value="'%'+ labelTemplateRelation.warehouseId +'%'"/>
+                and Warehouse_Id like
+                #{labelTemplateRelation.warehouseId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplateRelation.warehouseName != null and labelTemplateRelation.warehouseName != ''">
+                <bind name="labelTemplateRelation.warehouseName" value="'%'+ labelTemplateRelation.warehouseName +'%'"/>
+                and Warehouse_Name like
+                #{labelTemplateRelation.warehouseName,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplateRelation.platformId != null and labelTemplateRelation.platformId != ''">
+                <bind name="labelTemplateRelation.platformId" value="'%'+ labelTemplateRelation.platformId +'%'"/>
+                and Platform_Id like
+                #{labelTemplateRelation.platformId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplateRelation.platformName != null and labelTemplateRelation.platformName != ''">
+                <bind name="labelTemplateRelation.platformName" value="'%'+ labelTemplateRelation.platformName +'%'"/>
+                and Platform_Name like
+                #{labelTemplateRelation.platformName,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplateRelation.templateId != null and labelTemplateRelation.templateId != ''">
+                <bind name="labelTemplateRelation.templateId" value="'%'+ labelTemplateRelation.templateId +'%'"/>
+                and Template_ID like
+                #{labelTemplateRelation.templateId,jdbcType=VARCHAR}
+            </if>
+        </where>
+        <if test="index != null and num != null">
+            LIMIT #{index},#{num}
+        </if>
+    </select>
+    <select id="selectByTemplateCount"
+            resultType="java.lang.Integer">
+        select
+        Count(idx)
+        from labeltemplaterelation
+        <where>
+            <if test="labelTemplateRelation.warehouseId != null and labelTemplateRelation.warehouseId != '' ">
+                <bind name="labelTemplateRelation.warehouseId" value="'%'+ labelTemplateRelation.warehouseId +'%'"/>
+                and Warehouse_Id like
+                #{labelTemplateRelation.warehouseId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplateRelation.warehouseName != null and labelTemplateRelation.warehouseName != ''">
+                <bind name="labelTemplateRelation.warehouseName" value="'%'+ labelTemplateRelation.warehouseName +'%'"/>
+                and Warehouse_Name like
+                #{labelTemplateRelation.warehouseName,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplateRelation.platformId != null and labelTemplateRelation.platformId != ''">
+                <bind name="labelTemplateRelation.platformId" value="'%'+ labelTemplateRelation.platformId +'%'"/>
+                and Platform_Id like
+                #{labelTemplateRelation.platformId,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplateRelation.platformName != null and labelTemplateRelation.platformName != ''">
+                <bind name="labelTemplateRelation.platformName" value="'%'+ labelTemplateRelation.platformName +'%'"/>
+                and Platform_Name like
+                #{labelTemplateRelation.platformName,jdbcType=VARCHAR}
+            </if>
+            <if test="labelTemplateRelation.templateId != null and labelTemplateRelation.templateId != ''">
+                <bind name="labelTemplateRelation.templateId" value="'%'+ labelTemplateRelation.templateId +'%'"/>
+                and Template_ID like
+                #{labelTemplateRelation.templateId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.util.List">
+        delete from labeltemplaterelation
+        where idx in
+        <foreach item="idx" collection="list" open="(" close=")"
+                 separator=",">
+            #{idx}
+        </foreach>
+    </delete>
+
+    <insert id="insert" keyColumn="idx" keyProperty="idx"
+            parameterType="com.px.mis.whs.entity.LabelTemplateRelation"
+            useGeneratedKeys="true">
+        insert into labeltemplaterelation (Warehouse_Id,
+                                           Warehouse_Name,
+                                           Platform_Id,
+                                           Platform_Name, Template_ID)
+        values (#{warehouseId,jdbcType=VARCHAR}, #{warehouseName,jdbcType=VARCHAR},
+                #{platformId,jdbcType=VARCHAR},
+                #{platformName,jdbcType=VARCHAR},
+                #{templateId,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" keyColumn="idx" keyProperty="idx"
+            parameterType="com.px.mis.whs.entity.LabelTemplateRelation"
+            useGeneratedKeys="true">
+        insert into labeltemplaterelation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="warehouseId != null">
+                Warehouse_Id,
+            </if>
+            <if test="warehouseName != null">
+                Warehouse_Name,
+            </if>
+            <if test="platformId != null">
+                Platform_Id,
+            </if>
+            <if test="platformName != null">
+                Platform_Name,
+            </if>
+            <if test="templateId != null">
+                Template_ID,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="warehouseId != null">
+                #{warehouseId,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseName != null">
+                #{warehouseName,jdbcType=VARCHAR},
+            </if>
+            <if test="platformId != null">
+                #{platformId,jdbcType=VARCHAR},
+            </if>
+            <if test="platformName != null">
+                #{platformName,jdbcType=VARCHAR},
+            </if>
+            <if test="templateId != null">
+                #{templateId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective"
+            parameterType="com.px.mis.whs.entity.LabelTemplateRelation">
+        update labeltemplaterelation
+        <set>
+            <if test="warehouseId != null">
+                Warehouse_Id = #{warehouseId,jdbcType=VARCHAR},
+            </if>
+            <if test="warehouseName != null">
+                Warehouse_Name = #{warehouseName,jdbcType=VARCHAR},
+            </if>
+            <if test="platformId != null">
+                Platform_Id = #{platformId,jdbcType=VARCHAR},
+            </if>
+            <if test="platformName != null">
+                Platform_Name = #{platformName,jdbcType=VARCHAR},
+            </if>
+            <if test="templateId != null">
+                Template_ID = #{templateId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where idx = #{idx,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey"
+            parameterType="com.px.mis.whs.entity.LabelTemplateRelation">
+        update labeltemplaterelation
+        set Warehouse_Id   =
+                #{warehouseId,jdbcType=VARCHAR},
+            Warehouse_Name =
+                #{warehouseName,jdbcType=VARCHAR},
+            Platform_Id    =
+                #{platformId,jdbcType=VARCHAR},
+            Platform_Name  =
+                #{platformName,jdbcType=VARCHAR},
+            Template_ID    =
+                #{templateId,jdbcType=VARCHAR}
+        where idx = #{idx,jdbcType=INTEGER}
+    </update>
+</mapper>

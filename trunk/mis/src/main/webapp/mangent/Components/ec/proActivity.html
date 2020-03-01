@@ -1,0 +1,249 @@
+	<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+		<title>促销活动</title>
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+		
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+		<script type="text/javascript" src="../../assets/laydate/laydate.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/ec/proPlanList.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/insertInvtyList.js"></script>
+		<script type="text/javascript" src='../../assets/js/mis/system/baseDocAll.js'></script>
+		
+		<style>
+			select {
+				outline: none;
+				appearance: none;
+				-moz-appearance: none;
+				-webkit-appearance: none;
+				width: 220px;
+				border: 0;
+				border-bottom: 1px solid #B8C7CE
+			}
+			
+			select:-ms-expand {
+				display: none;
+			}
+			#proAc_jqgrids, #insert_jqgrids {
+				width: 100%!important;
+			}
+			#mengban {
+				height: 92%!important;
+				/*background-color: red;*/
+				bottom: 0;
+			}
+			.inline {
+				width: 160px!important;
+			}
+		</style>
+	</head>
+<script>
+	document.write("<s" + "cript type='text/javascript' src='../../assets/js/mis/ec/proActivity.js?" + new Date().getTime() + "'></scr" + "ipt>");
+</script>
+	<body>
+		<div id="mengban"></div>
+		<div id="purchaseOrder">
+			<div class="purchaseTit">
+				<!--<h1 class="title">促销活动</h1>-->
+				<div class="buttons">
+					<button class="addOrder">增加</button>
+					<button class="editOrder">修改</button>
+					<button class="saveOrder">保存</button>
+					<button class="del">删除</button>
+					<button class="toExamine">审核</button>
+					<button class="noTo">弃审</button>
+					<button class="upOrder">重置</button>
+				</div>
+
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="purchaseType col-md-4">
+						<span>促销活动编码<b>*</b></span><input type="text" class="inp" id="proActId" name="proActId" value=""/>
+						<!--<span><img class="biao_proActId" src="../../assets/img/biaoge.png" alt="" /></span>-->
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>促销活动名称<b>*</b></span><input type="text" class="proActName inp" name="proActName" value="" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>日期<b>*</b></span>
+						<!--<input type="text" class="startDate date2" name="startDate" value="" readonly="readonly"  calendar="YYYY-MM-DD" />到<input type="text" class="endDate" readonly="readonly"  name="endDate" value="" calendar="YYYY-MM-DD" />-->
+						<input placeholder="请输入日期" class="inline date l_date" name="startDate1" id="start" style="width:200px; margin-right:10px;">到<input placeholder="请输入日期" class="inline date inp" name="endDate1" id="end" style="width:200px;">
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>限量促销<b>*</b></span>
+						<select name="limitPro" id="limitPro" class="inp">
+							<option disabled selected value=''>请选择</option>
+							<option value="0">否</option>
+							<option value="1">是</option>
+						</select>
+					</div>
+					<div class="supplier col-md-4">
+						<span>参与店铺<b>*</b></span>
+						<input type="text" id="storeId" class="storeId encds inp" name="takeStore1" value="" />
+						<input type="text" id="storeName" class="storeNm names inp" name="takeStore" value="" readonly="readonly" />
+						<span><img class="storeId_biaoge" src="../../assets/img/biaoge.png" alt="" /></span>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>优先级<b>*</b></span>
+						<!--<input type="number" class="priority" name="priority" value=""/>-->
+						<input class="priority inp" name="priority" value="" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>制单人</span><input type="text" class="creator inp" name="creator" value="" readonly="readonly" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>制单日期</span><input type="text" class="createDate inp" name="createDate" value="" readonly="readonly"/>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>审核人</span><input type="text" readonly="readonly" class="auditor inp" name="auditor" value=""/>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>审核日期</span><input type="text" class="auditDate inp" name="auditDate" value="" readonly="readonly"/>
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>审核状态</span>
+						<select name="auditResult" id="auditResult" class="inp" disabled>
+							<option value="0" selected>未审</option>
+							<option value="1">已审</option>
+						</select>
+					</div>
+					<div class="supplier col-md-4">
+						<span>表头备注</span><input type="text" id="supplier" class="memo inp" name="memo" value=""/>
+						<!--<span><img class="biaoge" src="../../assets/img/biaoge.png" alt="" /></span>-->
+					</div>
+					<div id="fuze" class="inp" style="display: none;"></div>
+					<div id="departmentEncd" class="inp" style="display: none;"></div>
+
+				</form>
+
+			</div>
+			<table id="proAc_jqgrids"></table>
+			<!--<table id="jqGrids"></table>-->
+			<div id="proAc_jqgridPager"></div>
+		</div>
+		
+		
+		<div id="proPlanList" style="opacity: 0;">
+			<div class="purchaseTit">
+				<div class="buttons">
+					<button class="search">查询</button>
+					<div class="addWhs">确定</div>
+					<div class="cancel">取消</div>
+				</div>
+			</div>
+			<div class="order-title">
+				<form class="row" id="formSave">
+					<div class="businessType col-md-4">
+						<span>促销方案编码</span><input type="text" class="proPlanId" name="proPlanId" value="" />
+					</div>
+					<div class="orderNumbers col-md-4">
+						<span>促销方案名称 </span><input type="text" class="proPlanName" name="proPlanName" value="" />
+					</div>
+				</form>
+			</div>
+			<table id="jqGrids"></table>
+			<div id="jqGridPager"></div>
+		</div>
+		
+		<div id="insertList" style="opacity: 0;">
+			<div class="purchaseOrder">
+				<div class="purchaseTit">
+					<div class="buttons">
+						<button class="find">查询</button>
+						<button class="addWhses">确定</button>
+						<button class="canceles">取消</button>
+					</div>
+				</div>
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-6">
+								<span>存货编码</span>
+								<input type="text" class="invtyEncd1" name="invtyEncd1" value="" />
+							</div>
+							<div class="supplier col-md-6">
+								<span>存货名称</span>
+								<input type="text" class="invtyNm1" name="invtyNm1" value="" />
+							</div>
+							<div class="supplier col-md-6">
+								<span>存货分类编码</span>
+								<input type="text" class="invtyClsEncd1" name="invtyClsEncd1" value="" />
+							</div>
+							<div class="supplier col-md-6">
+								<span>存货分类名称</span>
+								<input type="text" class="invtyClsNm1" name="invtyClsNm1" value="" />
+							</div>
+						</div>
+					</form>
+				</div>
+				<div id="supplier" style="display: none;"></div>
+				<aside>
+					<!--左列树-->
+					<div id="tree"></div>
+				</aside>
+
+				<div id="wrap">
+					<table id="insert_jqgrids"></table>
+					<div id="insert_jqGridPager"></div>
+				</div>
+			</div>
+		</div>
+	</body>
+<script>
+		var start = {
+			elem: '#start',
+			format: 'YYYY-MM-DD hh:mm:ss',
+			min: laydate.now(-90), //设定最小日期为当前日期
+			max: '2099-06-16', //最大日期
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+				end.min = datas; //开始日选好后，重置结束日的最小日期
+				end.start = datas //将结束日的初始值设定为开始日
+			}
+		};
+		var end = {
+			elem: '#end',
+			format: 'YYYY-MM-DD hh:mm:ss',
+			min: laydate.now(),
+			max: '2099-06-16',
+			istime: true,
+			istoday: false,
+			choose: function(datas) {
+				start.max = datas; //结束日选好后，充值开始日的最大日期
+			}
+		};
+		laydate(start);
+		laydate(end);
+
+		$('.nav-tabs li').click(function() {　　
+			$(this).addClass('active').siblings().removeClass('active');　　
+			var _id = $(this).attr('data-id');　　
+			$('.tabs-contents').find('#' + _id).addClass('active').siblings().removeClass('active');　　
+
+		});
+		
+	</script>
+</html>

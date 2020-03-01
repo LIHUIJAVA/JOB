@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.whs.dao.InvtyNumMapper">
+
+    <!-- 现存量减少(减法) -->
+    <update id="updateInvtyTab" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="now_stok =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.nowStok != null and item.nowStok !=''">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(now_stok,0)
+                        -#{item.nowStok}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator=")or(" open="(" close=")">
+            whs_encd = #{item.whsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!-- 现存量增加(加法) -->
+    <update id="updateInvtyTabJia" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="now_stok =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.nowStok != null and item.nowStok !=''">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(now_stok,0)
+                        +#{item.nowStok}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator=")or(" open="(" close=")">
+            whs_encd = #{item.whsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!-- 可用量减少(减法) -->
+    <update id="updateAInvtyTab" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="aval_qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(aval_qty,0)
+                        -IFNULL(#{item.avalQty},0)
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator=")or(" open="(" close=")">
+            whs_encd = #{item.whsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!-- 可用量增加(加法) -->
+    <update id="updateAInvtyTabJia" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="aval_qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(aval_qty,0)
+                        +IFNULL(#{item.avalQty},0)
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator=")or(" open="(" close=")">
+            whs_encd = #{item.whsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+
+    <!-- 查出入库单分配的货位是否原有货位 -->
+    <select id="selectAllMbit" resultType="MovBitTab">
+        select * from mov_bit_tab
+        <where>
+            <foreach collection="list" item="item"
+                     separator=")or(" open="(" close=")">
+                <if test="item.invtyEncd != null and item.invtyEncd != ''">
+                    invty_encd=#{item.invtyEncd}
+                </if>
+                <if test="item.whsEncd != null and item.whsEncd != ''">
+                    AND whs_encd = #{item.whsEncd}
+                </if>
+                <if test="item.regnEncd != null and item.regnEncd != ''">
+                    AND regn_encd = #{item.regnEncd}
+                </if>
+                <if test="item.gdsBitEncd != null and item.gdsBitEncd != ''">
+                    AND gds_bit_encd=#{item.gdsBitEncd}
+                </if>
+                <if test="item.batNum != null and item.batNum != ''">
+                    AND bat_num=#{item.batNum}
+                </if>
+            </foreach>
+        </where>
+    </select>
+    <!-- 增加移位表 -->
+    <insert id="insertMovBitTab" parameterType="java.util.List">
+        insert into mov_bit_tab(invty_encd,whs_encd,regn_encd,
+        gds_bit_encd,qty,bat_num,prdc_dt,into_dt
+        )
+        values
+        <foreach item="item" collection="list"
+                 separator=",">
+            (#{item.invtyEncd},#{item.whsEncd},#{item.regnEncd},
+            #{item.gdsBitEncd},#{item.qty},#{item.batNum},#{item.prdcDt},now()
+            )
+        </foreach>
+    </insert>
+    <!-- 查询现存量 -->
+    <select id="selectInvtyTab" resultType="InvtyTab">
+        select * from invty_tab
+        <where>
+            invty_encd = #{invtyEncd}
+            and bat_num = #{batNum}
+        </where>
+    </select>
+    <!-- 通过货位查询区域 -->
+    <select id="selectRegn" resultType="GdsBit">
+        select * from gds_bit
+        <where>
+            <if test="gdsBitEncd != null and gdsBitEncd != ''">
+                gds_bit_encd = #{gdsBitEncd}
+            </if>
+        </where>
+    </select>
+    <!-- 修改移位表数量(减法) -->
+    <update id="updateMovbitTab" parameterType="java.util.List">
+        update mov_bit_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.qty != null and item.qty !=''">
+                        when
+                        invty_encd=#{item.invtyEncd}
+                        AND
+                        whs_encd =
+                        #{item.whsEncd}
+                        AND
+                        bat_num = #{item.batNum}
+                        AND
+                        gds_bit_encd=#{item.gdsBitEncd}
+                        then
+                        IFNULL(qty,0)
+                        -#{item.qty}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator=")or(" open="(" close=")">
+            invty_encd=#{item.invtyEncd}
+            AND
+            whs_encd = #{item.whsEncd}
+            AND
+            bat_num = #{item.batNum}
+            AND
+            gds_bit_encd=#{item.gdsBitEncd}
+        </foreach>
+    </update>
+    <!-- <update id="updateMovbitTab" parameterType="java.util.List"> -->
+    <!-- update mov_bit_tab -->
+    <!-- <trim prefix="set" suffixOverrides=","> -->
+    <!-- <trim prefix="qty =case" suffix="end,"> -->
+    <!-- <foreach collection="list" item="item" > -->
+    <!-- <if test="item.qty != null and item.qty !=''"> -->
+    <!-- when -->
+    <!-- invty_encd=#{item.invtyEncd} -->
+    <!-- AND -->
+    <!-- whs_encd = #{item.whsEncd} -->
+    <!-- AND -->
+    <!-- regn_encd = #{item.regnEncd} -->
+    <!-- AND -->
+    <!-- gds_bit_encd=#{item.gdsBitEncd} -->
+    <!-- then qty-#{item.qty} -->
+    <!-- </if> -->
+    <!-- </foreach> -->
+    <!-- </trim> -->
+    <!-- </trim> -->
+    <!-- where -->
+    <!-- <foreach collection="list"  item="item" separator=")or("
+        open="(" close=")"> -->
+    <!-- invty_encd=#{item.invtyEncd} -->
+    <!-- AND -->
+    <!-- whs_encd = #{item.whsEncd} -->
+    <!-- AND -->
+    <!-- regn_encd = #{item.regnEncd} -->
+    <!-- AND -->
+    <!-- gds_bit_encd=#{item.gdsBitEncd} -->
+    <!-- </foreach> -->
+    <!-- </update> -->
+    <!-- 修改移位表数量(加法) -->
+    <update id="updateMovbitTabJia" parameterType="java.util.List">
+        update mov_bit_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="qty =case" suffix="end,">
+                <foreach collection="list" item="item">
+                    <if test="item.qty != null and item.qty !=''">
+                        when
+                        invty_encd=#{item.invtyEncd}
+                        AND
+                        whs_encd =
+                        #{item.whsEncd}
+                        AND
+                        bat_num = #{item.batNum}
+                        AND
+                        gds_bit_encd=#{item.gdsBitEncd}
+                        then
+                        IFNULL(qty,0)
+                        +#{item.qty}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator=")or(" open="(" close=")">
+            invty_encd=#{item.invtyEncd}
+            AND
+            whs_encd = #{item.whsEncd}
+            AND
+            bat_num = #{item.batNum}
+            AND
+            gds_bit_encd=#{item.gdsBitEncd}
+        </foreach>
+    </update>
+    <!-- <update id="updateMovbitTabJia" parameterType="java.util.List"> -->
+    <!-- update mov_bit_tab -->
+    <!-- <trim prefix="set" suffixOverrides=","> -->
+    <!-- <trim prefix="qty =case" suffix="end,"> -->
+    <!-- <foreach collection="list" item="item" > -->
+    <!-- <if test="item.qty != null and item.qty !=''"> -->
+    <!-- when -->
+    <!-- invty_encd=#{item.invtyEncd} -->
+    <!-- AND -->
+    <!-- whs_encd = #{item.whsEncd} -->
+    <!-- AND -->
+    <!-- regn_encd = #{item.regnEncd} -->
+    <!-- AND -->
+    <!-- gds_bit_encd=#{item.gdsBitEncd} -->
+    <!-- then qty+#{item.qty} -->
+    <!-- </if> -->
+    <!-- </foreach> -->
+    <!-- </trim> -->
+    <!-- </trim> -->
+    <!-- where -->
+    <!-- <foreach collection="list"  item="item" separator=")or("
+        open="(" close=")"> -->
+    <!-- invty_encd=#{item.invtyEncd} -->
+    <!-- AND -->
+    <!-- whs_encd = #{item.whsEncd} -->
+    <!-- AND -->
+    <!-- regn_encd = #{item.regnEncd} -->
+    <!-- AND -->
+    <!-- gds_bit_encd=#{item.gdsBitEncd} -->
+    <!-- </foreach> -->
+    <!-- </update> -->
+    <!-- 查询库存表 -->
+    <!-- 查询库存表中是否有数据 -->
+    <select id="selectInvtyTabByTerm" resultType="InvtyTab">
+        select *
+        from invty_tab
+        where whs_encd = #{whsEncd}
+          and invty_encd = #{invtyEncd}
+          and bat_num = #{batNum}  for update
+    </select>
+    <!-- 在库存表中批量新增数据 -->
+    <insert id="insertInvtyTabList" parameterType="java.util.List">
+        insert into invty_tab (whs_encd, invty_encd,aval_qty,now_stok,
+        bat_num,
+        prdc_dt, bao_zhi_qi, invldtn_dt, cntn_tax_uprc,
+        un_tax_uprc,
+        tax_rate, cntn_tax_amt, un_tax_amt,regn_encd,
+        gds_bit_encd)
+        values
+        <foreach collection="list" item="item"
+                 separator=",">
+            ( #{item.whsEncd},
+            #{item.invtyEncd},#{item.avalQty},#{item.nowStok},
+            #{item.batNum},
+            <if test="item.prdcDt =='' ">null</if>
+            <if test="item.prdcDt !='' ">#{item.prdcDt}</if>
+            ,
+            #{item.baoZhiQi},
+            <if test="item.invldtnDt =='' ">null</if>
+            <if test="item.invldtnDt !='' ">#{item.invldtnDt}</if>
+            ,
+            #{item.cntnTaxUprc}, #{item.unTaxUprc},
+            #{item.taxRate},
+            #{item.cntnTaxAmt},
+            #{item.unTaxAmt},#{item.regnEncd} ,
+            #{item.gdsBitEncd})
+        </foreach>
+    </insert>
+    <!-- 修改库存表的数量 金额等信息 -->
+    <!-- 其他出入库审核时更新库存表 现存量增加 -->
+    <update id="updateInvtyTabAmtJia" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="now_stok =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(now_stok,0)+IFNULL(#{item.nowStok},0)
+                </foreach>
+            </trim>
+            <trim prefix="un_tax_amt =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(un_tax_amt,0)
+                        +IFNULL(#{item.unTaxAmt},0)
+                </foreach>
+            </trim>
+            <trim prefix="un_tax_uprc =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        (un_tax_amt)/(now_stok)
+                </foreach>
+            </trim>
+            <trim prefix="cntn_tax_uprc =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        (un_tax_uprc)*(IFNULL(#{item.taxRate},0)/100+1)
+                </foreach>
+            </trim>
+            <trim prefix="cntn_tax_amt =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        (un_tax_amt)*(IFNULL(#{item.taxRate},0)/100+1)
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator=")or(" open="(" close=")">
+            whs_encd = #{item.whsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+    <!-- 其他出入库审核时更新库存表 现存量减少 -->
+    <update id="updateInvtyTabAmt" parameterType="java.util.List">
+        update invty_tab
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="now_stok =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(now_stok,0)
+                        -IFNULL(#{item.nowStok},0)
+                </foreach>
+            </trim>
+            <trim prefix="un_tax_amt =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        IFNULL(un_tax_amt,0)
+                        -IFNULL(#{item.unTaxAmt},0)
+                </foreach>
+            </trim>
+            <!-- 库存减少不改变单价 -->
+            <!-- 			<trim prefix="un_tax_uprc =case" suffix="end,">
+                            <foreach collection="list" item="item" >
+                                <if test="item.unTaxUprc != null and item.unTaxUprc !=''">
+                                    when
+                                    whs_encd = #{item.whsEncd}
+                                    and
+                                    invty_encd =
+                                    #{item.invtyEncd}
+                                    and
+                                    bat_num = #{item.batNum}
+                                    then
+                                    (un_tax_amt)/(now_stok)
+                                </if>
+                            </foreach>
+                        </trim> -->
+            <!-- 			<trim prefix="cntn_tax_uprc =case" suffix="end,">
+                            <foreach collection="list" item="item" >
+                                <if test="item.cntnTaxUprc != null and item.cntnTaxUprc !=''">
+                                    when
+                                    whs_encd = #{item.whsEncd}
+                                    and
+                                    invty_encd =
+                                    #{item.invtyEncd}
+                                    and
+                                    bat_num = #{item.batNum}
+                                    then
+                                    (un_tax_uprc)*(IFNULL(#{item.taxRate},0)/100+1)
+                                </if>
+                            </foreach>
+                        </trim> -->
+            <trim prefix="cntn_tax_amt =case" suffix="end,">
+                <foreach collection="list" item="item">
+                        when
+                        whs_encd = #{item.whsEncd}
+                        and
+                        invty_encd =
+                        #{item.invtyEncd}
+                        and
+                        bat_num = #{item.batNum}
+                        then
+                        (un_tax_amt)*(IFNULL(#{item.taxRate},0)/100+1)
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="list" item="item"
+                 separator=")or(" open="(" close=")">
+            whs_encd = #{item.whsEncd}
+            and
+            invty_encd = #{item.invtyEncd}
+            and
+            bat_num = #{item.batNum}
+        </foreach>
+    </update>
+
+    <!-- 根据仓库 货物编码 查批次 数量>0 的数据 -->
+    <select id="selectInvtyTabByBatNum" resultType="InvtyTab">
+        SELECT aval_qty,
+               invty_encd,
+               whs_encd,
+               bat_num,
+               prdc_dt,
+               bao_zhi_qi,
+               invldtn_dt
+        FROM invty_tab
+        WHERE whs_encd = #{whsEncd}
+          and invty_encd = #{invtyEncd}
+          and aval_qty > 0
+        ORDER BY invldtn_dt
+            asc
+
+    </select>
+
+    <!-- 查出入库货位 -->
+    <select id="selectMbit" resultType="MovBitTab">
+        select * from mov_bit_tab
+        <where>
+            invty_encd=#{invtyEncd}
+            AND whs_encd = #{whsEncd}
+            AND gds_bit_encd=#{gdsBitEncd}
+            AND bat_num=#{batNum}  for update
+        </where>
+    </select>
+
+
+    <!-- 加 -->
+    <update id="updateJiaMbit" parameterType="MovBitTab">
+        update
+            mov_bit_tab
+        set qty = IFNULL(qty, 0) + #{qty}
+        where mov_bit_tab.mov_bit_encd
+                  = #{movBitEncd}
+    </update>
+    <!-- 减 -->
+    <update id="updateJianMbit" parameterType="MovBitTab">
+        update
+            mov_bit_tab
+        set qty = IFNULL(qty, 0) - #{qty}
+        where mov_bit_tab.mov_bit_encd
+                  = #{movBitEncd}
+    </update>
+    <!-- 增加移位表 -->
+    <insert id="insertMovBitTabJia" parameterType="MovBitTab">
+        insert into mov_bit_tab(invty_encd, whs_encd, regn_encd,
+                                gds_bit_encd, qty, bat_num, prdc_dt, into_dt)
+        values (#{invtyEncd}, #{whsEncd}, #{regnEncd},
+                #{gdsBitEncd}, #{qty}, #{batNum}, #{prdcDt}, now())
+    </insert>
+
+</mapper>

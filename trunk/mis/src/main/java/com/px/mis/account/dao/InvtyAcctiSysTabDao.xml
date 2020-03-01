@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.InvtyAcctiSysTabDao">
+	<!-- 存货核算系统表分页查询所有 -->
+	<select id="selectInvtyAcctiSysTabList" parameterType="Map" resultType="com.px.mis.account.entity.InvtyAcctiSysTab">
+	 SELECT ordr_num ordrNum,acct_yr acctYr,accti_mth acctMth,is_nt_book_entry isNtBookEntry,
+	 		is_nt_end_tm_deal isNtEndTmDeal,is_nt_mth_end_stl isNtMthEndStl,
+	 		term_bgn_is_nt_book_entry termBgnIsNtBookEntry
+	 FROM invty_accti_sys_tab 
+	 ORDER BY ordr_num
+	 LIMIT #{index},#{num}
+	</select>
+	
+	<!-- 查询单个 -->
+	<select id="selectInvtyAcctiSysTabByOrdrNum" parameterType="int" resultType="com.px.mis.account.entity.InvtyAcctiSysTab">
+	 SELECT ordr_num ordrNum,acct_yr acctYr,accti_mth acctMth,is_nt_book_entry isNtBookEntry,
+	 		is_nt_end_tm_deal isNtEndTmDeal,is_nt_mth_end_stl isNtMthEndStl,
+	 		term_bgn_is_nt_book_entry termBgnIsNtBookEntry
+	 FROM invty_accti_sys_tab 
+	 WHERE ordr_num=#{ordrNum}
+	</select>
+	
+	<!-- 查询总行数 -->
+	<select id="selectInvtyAcctiSysTabCount" resultType="int">
+		SELECT count(ordr_num)
+		FROM invty_accti_sys_tab
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="insertInvtyAcctiSysTab" parameterType="com.px.mis.account.entity.InvtyAcctiSysTab">
+		INSERT INTO invty_accti_sys_tab
+		VALUES(null,#{acctYr},#{acctMth},#{isNtBookEntry},#{isNtEndTmDeal},
+				#{isNtMthEndStl},#{termBgnIsNtBookEntry})
+	</insert>
+	
+	<!-- 根据主键删除 -->
+	<delete id="deleteInvtyAcctiSysTabByOrdrNum" parameterType="int">
+	 DELETE FROM invty_accti_sys_tab
+	 WHERE ordr_num=#{ordrNum} 
+	</delete>
+	
+	<!-- 根据主键更新 -->
+	<update id="updateInvtyAcctiSysTabByOrdrNum" parameterType="com.px.mis.account.entity.InvtyAcctiSysTab">
+	 UPDATE invty_accti_sys_tab
+    <set>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="acctYr != null">
+        acct_yr = #{acctYr,jdbcType=VARCHAR},
+      </if>
+      <if test="acctMth != null">
+        accti_mth = #{acctMth,jdbcType=VARCHAR},
+      </if>
+      <if test="isNtBookEntry != null">
+        is_nt_book_entry = #{isNtBookEntry,jdbcType=INTEGER},
+      </if>
+       <if test="isNtEndTmDeal != null">
+        is_nt_end_tm_deal = #{isNtEndTmDeal,jdbcType=INTEGER},
+      </if>
+	  <if test="isNtMthEndStl != null">
+        is_nt_mth_end_stl = #{isNtMthEndStl,jdbcType=INTEGER},
+      </if> 
+      <if test="termBgnIsNtBookEntry != null">
+        term_bgn_is_nt_book_entry = #{termBgnIsNtBookEntry,jdbcType=INTEGER},
+      </if>
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+	</update>
+</mapper>

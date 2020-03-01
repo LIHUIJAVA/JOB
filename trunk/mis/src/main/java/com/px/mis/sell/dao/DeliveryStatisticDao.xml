@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.sell.dao.DeliveryStatisticDao">
+	<select id="selectDeliveryStatistictList" parameterType="map"
+		resultType="com.px.mis.sell.entity.DeliveryStatistic">
+		SELECT
+		base.sell_sngl_id,
+		base.sell_sngl_dt,
+		base.cust_id,
+		cust_doc.cust_nm,
+		whs_doc.whs_nm,
+		base.invty_encd,
+		invty_doc.invty_nm,
+		invty_doc.spc_model,
+		measr_corp_nm,
+		base.qty,
+		base.prc_tax_sum,
+		base.开票数量
+		as bllg_qty,
+		IFNULL( sum( sell_out_whs_sub.qty ), 0 ) as out_qty,
+		IFNULL( sum( sell_out_whs_sub.no_tax_amt ), 0 ) out_no_tax_amt,
+		(
+		IF
+		(
+		base.form_typ_encd='007',
+		base.qty, 0 )+
+		IF
+		( base.form_typ_encd =
+		'0230',
+		base.qty, 0 )) AS netDelivery,
+		(
+		IF
+		( base.form_typ_encd =
+		'008',
+		base.qty, 0 )+
+		IF
+		( base.form_typ_encd =
+		'0231',base.qty, 0 )) AS
+		netReturn
+		FROM
+		(
+		(
+		SELECT
+		main.sell_sngl_id ,
+		main.sell_sngl_dt ,
+		main.cust_id,
+		main.form_typ_encd,
+		sub.whs_encd,
+		sub.invty_encd,
+		sub.bat_num,
+		sub.qty,
+		sub.prc_tax_sum,
+		sub.qty - sub.un_bllg_qty AS 开票数量,
+		sub.ordr_num
+		FROM
+		sell_sngl main
+		INNER JOIN sell_sngl_sub sub ON
+		main.sell_sngl_id =
+		sub.sell_sngl_id
+		<if test="formDt1 != null and formDt1 !='' ">
+			AND
+			main.sell_sngl_dt &gt;= #{formDt1}
+		</if>
+		<if test="formDt2 != null and formDt2 !='' ">
+			AND
+			main.sell_sngl_dt &lt;= #{formDt2}
+		</if>
+		<if test="formId != null and formId !='' ">
+			AND
+			main.sell_sngl_id = #{formId}
+		</if>
+
+		<if test="custId != null and custId !='' ">
+			AND
+			main.cust_id = #{custId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd !='' ">
+			AND
+			sub.invty_encd = #{invtyEncd}
+		</if>
+
+		) UNION ALL
+		(
+		SELECT
+		main.rtn_goods_id ,
+		main.rtn_goods_dt ,
+		main.cust_id,
+		main.form_typ_encd,
+		sub.whs_encd,
+		sub.invty_encd,
+		sub.bat_num,
+		sub.qty,
+		sub.prc_tax_sum,
+		sub.qty -
+		sub.un_bllg_qty AS
+		开票数量,
+		sub.ordr_num
+		FROM
+		rtn_goods main
+		INNER
+		JOIN
+		rtn_goods_sub sub ON
+		main.rtn_goods_id =
+		sub.rtn_goods_id
+		<if test="formDt1 != null and formDt1 !='' ">
+			AND
+			main.rtn_goods_dt &gt;= #{formDt1}
+		</if>
+		<if test="formDt2 != null and formDt2 !='' ">
+			AND
+			main.rtn_goods_dt &lt;= #{formDt2}
+		</if>
+		<if test="formId != null and formId !='' ">
+			AND
+			main.rtn_goods_id = #{formId}
+		</if>
+
+		<if test="custId != null and custId !='' ">
+			AND
+			main.cust_id = #{custId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd !='' ">
+			AND
+			sub.invty_encd = #{invtyEncd}
+		</if>
+
+		) UNION ALL
+		(
+		SELECT
+		main.delv_sngl_id ,
+		main.delv_sngl_dt ,
+		main.cust_id,
+		concat(main.form_typ_encd,main.is_nt_rtn_good),
+		sub.whs_encd,
+		sub.invty_encd,
+		sub.bat_num,
+		sub.qty,
+		sub.prc_tax_sum,
+		sub.qty -
+		sub.un_bllg_qty AS 开票数量,
+		sub.ordr_num
+		FROM
+		entrs_agn_delv main
+		INNER JOIN
+		entrs_agn_delv_sub sub ON
+		main.delv_sngl_id = sub.delv_sngl_id
+
+		<if test="invtyEncd != null and invtyEncd !='' ">
+			AND
+			sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="formDt1 != null and formDt1 !='' ">
+			AND
+			main.delv_sngl_dt &gt;= #{formDt1}
+		</if>
+		<if test="formDt2 != null and formDt2 !='' ">
+			AND
+			main.delv_sngl_dt &lt;= #{formDt2}
+		</if>
+		<if test="formId != null and formId !='' ">
+			AND
+			main.delv_sngl_id = #{formId}
+		</if>
+
+		<if test="custId != null and custId !='' ">
+			AND
+			main.cust_id = #{custId}
+		</if>
+
+		)
+		) base
+		LEFT JOIN cust_doc ON
+		base.cust_id =
+		cust_doc.cust_id
+		LEFT JOIN
+		whs_doc ON base.whs_encd =
+		whs_doc.whs_encd
+		LEFT JOIN invty_doc ON
+		base.invty_encd =
+		invty_doc.invty_encd
+		LEFT JOIN
+		measr_corp_doc ON
+		invty_doc.measr_corp_id
+		=
+		measr_corp_doc.measr_corp_id
+		LEFT JOIN
+		sell_out_whs_sub ON
+		base.ordr_num = sell_out_whs_sub.to_ordr_num
+		GROUP
+		BY base.ordr_num
+		<if test="index != null  and  num != null ">
+			LIMIT #{index},#{num}
+		</if>
+	</select>
+	<!-- ************************************* -->
+	<select id="selectDeliveryStatistictListCount"
+		parameterType="map" resultType="int">
+		SELECT
+	count(*)
+		FROM
+		(
+		(
+		SELECT
+		main.sell_sngl_id ,
+		main.sell_sngl_dt ,
+		main.cust_id,
+		main.form_typ_encd,
+		sub.whs_encd,
+		sub.invty_encd,
+		sub.ordr_num
+		FROM
+		sell_sngl main
+		INNER JOIN sell_sngl_sub sub ON
+		main.sell_sngl_id =
+		sub.sell_sngl_id
+		<if test="formDt1 != null and formDt1 !='' ">
+			AND
+			main.sell_sngl_dt &gt;= #{formDt1}
+		</if>
+		<if test="formDt2 != null and formDt2 !='' ">
+			AND
+			main.sell_sngl_dt &lt;= #{formDt2}
+		</if>
+		<if test="formId != null and formId !='' ">
+			AND
+			main.sell_sngl_id = #{formId}
+		</if>
+
+		<if test="custId != null and custId !='' ">
+			AND
+			main.cust_id = #{custId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd !='' ">
+			AND
+			sub.invty_encd = #{invtyEncd}
+		</if>
+
+		) UNION ALL
+		(
+		SELECT
+		main.rtn_goods_id ,
+		main.rtn_goods_dt ,
+		main.cust_id,
+		main.form_typ_encd,
+		sub.whs_encd,
+		sub.invty_encd,
+		sub.ordr_num
+		FROM
+		rtn_goods main
+		INNER
+		JOIN
+		rtn_goods_sub sub ON
+		main.rtn_goods_id =
+		sub.rtn_goods_id
+		<if test="formDt1 != null and formDt1 !='' ">
+			AND
+			main.rtn_goods_dt &gt;= #{formDt1}
+		</if>
+		<if test="formDt2 != null and formDt2 !='' ">
+			AND
+			main.rtn_goods_dt &lt;= #{formDt2}
+		</if>
+		<if test="formId != null and formId !='' ">
+			AND
+			main.rtn_goods_id = #{formId}
+		</if>
+
+		<if test="custId != null and custId !='' ">
+			AND
+			main.cust_id = #{custId}
+		</if>
+		<if test="invtyEncd != null and invtyEncd !='' ">
+			AND
+			sub.invty_encd = #{invtyEncd}
+		</if>
+
+		) UNION ALL
+		(
+		SELECT
+		main.delv_sngl_id ,
+		main.delv_sngl_dt ,
+		main.cust_id,
+		concat(main.form_typ_encd,main.is_nt_rtn_good),
+		sub.whs_encd,
+		sub.invty_encd,
+		sub.ordr_num
+		FROM
+		entrs_agn_delv main
+		INNER JOIN
+		entrs_agn_delv_sub sub ON
+		main.delv_sngl_id = sub.delv_sngl_id
+
+		<if test="invtyEncd != null and invtyEncd !='' ">
+			AND
+			sub.invty_encd = #{invtyEncd}
+		</if>
+		<if test="formDt1 != null and formDt1 !='' ">
+			AND
+			main.delv_sngl_dt &gt;= #{formDt1}
+		</if>
+		<if test="formDt2 != null and formDt2 !='' ">
+			AND
+			main.delv_sngl_dt &lt;= #{formDt2}
+		</if>
+		<if test="formId != null and formId !='' ">
+			AND
+			main.delv_sngl_id = #{formId}
+		</if>
+
+		<if test="custId != null and custId !='' ">
+			AND
+			main.cust_id = #{custId}
+		</if>
+
+		)
+		) base
+		LEFT JOIN cust_doc ON
+		base.cust_id =
+		cust_doc.cust_id
+		LEFT JOIN
+		whs_doc ON base.whs_encd =
+		whs_doc.whs_encd
+		LEFT JOIN invty_doc ON
+		base.invty_encd =
+		invty_doc.invty_encd
+		LEFT JOIN
+		measr_corp_doc ON
+		invty_doc.measr_corp_id
+		=
+		measr_corp_doc.measr_corp_id
+		LEFT JOIN
+		sell_out_whs_sub ON
+		base.ordr_num = sell_out_whs_sub.to_ordr_num
+		
+	</select>
+</mapper>

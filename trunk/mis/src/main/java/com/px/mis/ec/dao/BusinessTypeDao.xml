@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.ec.dao.BusinessTypeDao">
+  
+  <insert id="insert" parameterType="com.px.mis.ec.entity.BusinessType">
+	INSERT INTO business_type (bus_type_id,bus_type_name,memo)
+    VALUES(#{busTypeId}, #{busTypeName}, #{memo})
+  </insert>
+  
+  <select id="select" parameterType="java.lang.String" resultType="com.px.mis.ec.entity.BusinessType">
+  	SELECT bus_type_id, bus_type_name, memo
+  	FROM business_type 
+  	WHERE bus_type_id = #{busTypeId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.String">
+  	DELETE FROM  business_type
+  	WHERE bus_type_id = #{busTypeId}
+  </delete>
+  
+  <update id="update" parameterType="com.px.mis.ec.entity.BusinessType">
+  	UPDATE business_type 
+  	SET bus_type_id=#{busTypeId}, bus_type_name=#{busTypeName}, memo=#{memo}
+  	WHERE bus_type_id = #{busTypeId}
+  </update>
+  
+  <select id="selectList" parameterType="Map" resultType="com.px.mis.ec.entity.BusinessType">
+	SELECT bus_type_id, bus_type_name, memo
+  	FROM business_type 
+  	<where>
+  		<if test="busTypeId != null and busTypeId != ''">
+            AND bus_type_id = #{busTypeId}
+        </if>
+  	</where>
+  	LIMIT #{index},#{num}
+  </select>
+  
+  <select id="selectCount" parameterType="Map" resultType="int">
+	SELECT count(*)
+  	FROM business_type 
+  	<where>
+  		<if test="busTypeId != null and busTypeId != ''">
+            AND bus_type_id = #{busTypeId}
+        </if>
+  	</where>
+  </select>
+  
+</mapper>

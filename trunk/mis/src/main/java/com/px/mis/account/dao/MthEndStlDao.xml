@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.MthEndStlDao">
+  <resultMap id="BaseResultMap" type="com.px.mis.account.entity.MthEndStl">
+    <id column="order_num"  property="orderNum" />
+    <result column="mth_bgn"   property="mthBgn" />
+    <result column="mth_end"   property="mthEnd" />
+    <result column="acct_yr"   property="acctYr" />
+    <result column="acct_mth"   property="acctMth" />
+    <result column="is_mth_end_stl"  property="isMthEndStl" />
+    <result column="acc_num"   property="accNum" />
+    <result column="stl_dt"   property="stlDt" />
+    <result column="oprr_dt"   property="oprrDt" />
+    <result column="is_mth_seal" property="isMthSeal"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_num, mth_bgn, mth_end, acct_yr, acct_mth, is_mth_end_stl, acc_num, stl_dt, 
+    oprr_dt,is_mth_seal
+  </sql>
+  <select id="selectByMap" parameterType="map" resultType="com.px.mis.account.entity.MthEndStl">
+  	 select 
+     <include refid="Base_Column_List" />
+     from mth_end_stl where 1=1 
+     <if test="year != null">
+     	and acct_yr = #{year}
+     </if>
+      <if test="month != null">
+     	and acct_mth = #{month}
+     </if>
+     <if test="orderNum != null and orderNum != '' ">
+     	and order_num = #{orderNum}
+     </if>
+     <if test="isMthEndStl != null and isMthEndStl != ''">
+        and is_mth_end_stl = #{isMthEndStl}
+     </if>
+     <if test="isSealBook != null and isSealBook != ''">
+     	and is_mth_seal = #{isSealBook}
+     </if>
+     <if test="loginTime != null and loginTime != ''">
+     	AND DATE_FORMAT(mth_end, '%Y%m') = DATE_FORMAT(#{loginTime}, '%Y%m')
+     </if>
+  </select>
+  <update id="updateIsMthEndStl" parameterType="com.px.mis.account.entity.MthEndStl">
+  	update mth_end_stl
+    <set>
+      <if test="isMthEndStl != null">
+        is_mth_end_stl = #{isMthEndStl},
+      </if>
+      <if test="accNum != null">
+        acc_num = #{accNum},
+      </if>     
+       stl_dt = #{stlDt},
+      <if test="oprrDt != null">
+        oprr_dt = #{oprrDt},
+      </if>
+      <if test="isMthSeal != null">
+      	is_mth_seal = #{isMthSeal} 
+      </if>
+    </set>
+    where order_num = #{orderNum}
+  </update>
+  
+  <delete id="delectByYear" parameterType="String">
+  	DELETE FROM mth_end_stl where acct_yr = #{year}
+  </delete>
+  <insert id="insertListAllYear" parameterType="java.util.List">
+  	insert into mth_end_stl (mth_bgn, mth_end,acct_yr, acct_mth, is_mth_end_stl,acc_num,stl_dt,oprr_dt,is_mth_seal)
+    VALUES 
+	<foreach collection="list" item="item" index="index" separator="," close=";">
+	(#{item.mthBgn}, #{item.mthEnd},#{item.acctYr}, #{item.acctMth}, #{item.isMthEndStl},#{item.accNum}, #{item.stlDt}, #{item.oprrDt}
+      ,#{item.isMthSeal})
+	</foreach>
+  </insert>
+</mapper>

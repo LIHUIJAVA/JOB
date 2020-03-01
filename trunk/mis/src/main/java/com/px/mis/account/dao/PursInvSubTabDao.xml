@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.px.mis.account.dao.PursInvSubTabDao">
+  <!-- 采购专用发票子表 -->
+  <!-- 根据外键删除 -->
+  <delete id="deletePursInvSubTabByOrdrNum" parameterType="java.lang.String">
+  		DELETE FROM purs_inv_sub_tab
+  		WHERE purs_inv_num=#{pursInvNum}
+  </delete>
+  <!-- 添加 -->
+  <insert id="insertPursInvSubTab" parameterType="com.px.mis.account.entity.PursInvSubTab">
+  	INSERT INTO purs_inv_sub_tab(ordr_num,purs_inv_num,invty_fst_lvl_cls,crspd_into_whs_sngl_num,into_whs_sngl_sub_tab_id,
+		  	invty_encd,whs_encd,qty,no_tax_uprc,no_tax_amt,
+		  	tax_amt,cntn_tax_uprc,prc_tax_sum,tax_rate,bat_num,intl_bat,
+		  	measr_corp_id,stl_dt,stl_tm,memo,bx_qty,is_nt_rtn_goods)
+  	VALUES(null,#{pursInvNum},#{invtyFstLvlCls},#{crspdIntoWhsSnglNum},#{intoWhsSnglSubtabId},
+		  	#{invtyEncd},#{whsEncd},#{qty},#{noTaxUprc},#{noTaxAmt},
+		  	#{taxAmt},#{cntnTaxUprc},#{prcTaxSum},#{taxRate},#{batNum},#{intlBat},
+		  	#{measrCorpId},#{stlDt},#{stlTm},#{memo},#{bxQty},#{isNtRtnGoods})
+  </insert>
+  
+    <!-- 添加 -->
+  <insert id="insertPursInvSubTabUpload" parameterType="com.px.mis.account.entity.PursInvSubTab">
+  	INSERT INTO purs_inv_sub_tab(ordr_num,purs_inv_num,invty_fst_lvl_cls,crspd_into_whs_sngl_num,
+  	        into_whs_sngl_sub_tab_id,invty_encd,whs_encd,qty,no_tax_uprc,no_tax_amt,
+		  	tax_amt,cntn_tax_uprc,prc_tax_sum,tax_rate,bat_num,intl_bat,
+		  	measr_corp_id,stl_dt,stl_tm,memo,bx_qty,is_nt_rtn_goods)
+  	VALUES
+  	<!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+    <foreach collection="list" item="item" index="index" separator="," close=";">
+      (#{item.ordrNum}, #{item.pursInvNum}, #{item.invtyFstLvlCls}, 
+      #{item.crspdIntoWhsSnglNum}, #{item.intoWhsSnglSubtabId}, #{item.invtyEncd}, 
+      #{item.whsEncd}, #{item.qty}, #{item.noTaxUprc}, 
+      #{item.noTaxAmt}, #{item.taxAmt}, #{item.cntnTaxUprc}, 
+      #{item.prcTaxSum}, #{item.taxRate}, #{item.batNum}, 
+      #{item.intlBat}, #{item.measrCorpId}, #{item.stlDt}, 
+      #{item.stlTm}, #{item.memo}, #{item.bxQty}, #{item.isNtRtnGoods} )
+    </foreach>
+  </insert>
+  <!-- 根据主键更新 -->
+  <update id="updatePursInvSubTabByOrdrNum" parameterType="com.px.mis.account.entity.PursInvSubTab">
+  	UPDATE purs_inv_sub_tab
+    <set>
+     <if test="bxQty != null">
+        bx_qty = #{bxQty},
+      </if>
+      <if test="ordrNum != null">
+        ordr_num = #{ordrNum,jdbcType=BIGINT},
+      </if>
+      <if test="pursInvNum != null">
+        purs_inv_num = #{pursInvNum,jdbcType=VARCHAR},
+      </if>
+      <if test="invtyFstLvlCls != null">
+        invty_fst_lvl_cls = #{invtyFstLvlCls,jdbcType=VARCHAR},
+      </if>
+      <if test="crspdIntoWhsSnglNum != null">
+        crspd_into_whs_sngl_num = #{crspdIntoWhsSnglNum,jdbcType=VARCHAR},
+      </if>
+      <if test="intoWhsSnglSubtabId != null">
+        into_whs_sngl_sub_tab_id = #{intoWhsSnglSubtabId,jdbcType=BIGINT},
+      </if>
+      <if test="invtyEncd != null">
+        invty_encd = #{invtyEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="whsEncd != null">
+        whs_encd = #{whsEncd,jdbcType=VARCHAR},
+      </if>
+      <if test="qty != null">
+        qty = #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="noTaxUprc != null">
+        no_tax_uprc = #{noTaxUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="noTaxAmt != null">
+        no_tax_amt = #{noTaxAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="taxAmt != null">
+        tax_amt = #{taxAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="cntnTaxUprc != null">
+        cntn_tax_uprc = #{cntnTaxUprc,jdbcType=DECIMAL},
+      </if>
+      <if test="prcTaxSum != null">
+        prc_tax_sum = #{prcTaxSum,jdbcType=DECIMAL},
+      </if>
+      <if test="taxRate != null">
+        tax_rate = #{taxRate,jdbcType=DECIMAL},
+      </if>
+      <if test="batNum != null">
+        bat_num = #{batNum,jdbcType=VARCHAR},
+      </if>
+      <if test="measrCorpId != null">
+        measr_corp_id = #{measrCorpId,jdbcType=VARCHAR},
+      </if>
+      <if test="stlDt != null">
+        stl_dt = #{stlDt,jdbcType=DATE},
+      </if>
+      <if test="stlTm != null">
+        stl_tm = #{stlTm,jdbcType=DATE},
+      </if>
+      <if test="memo != null">
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    WHERE ordr_num = #{ordrNum,jdbcType=BIGINT}
+  </update>
+</mapper>

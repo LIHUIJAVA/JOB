@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<title>客户档案</title>
+
+		<link rel="stylesheet" href="../../assets/css/common/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../assets/js/jqGrid/css/ui.jqgrid-bootstrap4.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/common/octions.css" />
+		<link rel="stylesheet" href="../../assets/js/jqueryUI/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="../../assets/css/Order/orderPublic.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrCls.css" />
+		<link rel="stylesheet" href="../../assets/css/baseDoc/provrDoc.css" />
+		<link type="text/css" rel="stylesheet" href="../../assets/css/baseDoc/calendar.min.css" />
+
+		<script src="http://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/jquery.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqueryUI/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/i18n/grid.locale-cn.js"></script>
+		<script type="text/javascript" src="../../assets/js/jqGrid/js/jquery.jqGrid.js"></script>
+		<script type="text/javascript" src="../../assets/js/common/bootstrap.min.js"></script>
+
+		<script type="text/javascript" src="../../assets/js/common/location.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/custDoc.js"></script>
+		<script type="text/javascript" src="../../assets/js/mis/baseDoc/calendar.js"></script>
+	</head>
+	<style>
+		form {
+			display: inline-block;
+			font-size: 14px;
+		}
+		#edit form div div {
+		    margin: 9px 40px;
+		    float: left;
+		    font-size: 12px!important;
+		}
+		#mengban {
+			top:-200px
+		}
+	</style>
+
+	<body>
+		<div id="wwrap">
+			<div class="purchaseOrder">
+				<div class="purchaseTit" style="margin:20px">
+					<div class="buttons">
+						<button class="print">打印</button>
+						<button class="importExcel">导入</button>
+						<button class="exportExcel">导出</button>
+						<button class="addOrder">增行</button>
+						<button class="delOrder">删行</button>
+						<button class="find">查询</button>
+						<span>
+							<form id="uploadForm" enctype="multipart/form-data">
+								<input type="file" name="FileUpload" id="FileUpload">
+							</form>
+						</span>
+					</div>
+				</div>
+
+				<div class="order-title">
+					<form class="row" id="formSave">
+						<div class="info">
+							<div class="supplier col-md-4">
+								<span>客户编码</span>
+								<input type="text" class="custId1" name="custId1" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>客户名称</span>
+								<input type="text" class="custNm1" name="custNm1" value="" />
+							</div>
+							<div class="supplier col-md-4">
+								<span>分类编码</span>
+								<input type="text" class="clsId1" name="clsId1" value="" />
+							</div>
+
+						</div>
+					</form>
+				</div>
+				<aside>
+					<!--左列树-->
+					<div id="tree"></div>
+				</aside>
+
+				<div id="wrap">
+					<table id="jqgrids"></table>
+					<div id="jqGridPager"></div>
+				</div>
+				<div id="edit" style="top:-20px">
+					<form action="">
+						<h3></h3>
+						<div class="left">
+							<div>&emsp;&emsp;客户分类：
+								<select id="select" style="width:156px;position:absolute;z-index:1;" data-edit-select="1"   onmousedown="if(this.options.length>10){this.size=11}" onblur="this.size=0" onchange="this.size=0"  >
+
+								</select>
+							</div>
+							<div style="margin-left:206px">&emsp;客户编码：<input class="custId" type="text" /></div>
+							<div>&emsp;&emsp;客户名称：<input class="custNm" type="text" /></div>
+							<div>&emsp;&emsp;客户简称：<input type="text" class="custShtNm" /></div>
+
+							<div>&emsp;客户总公司：
+								<input type="text" id="custTotlCorpId" class="custTotlCorp" readonly="readonly"/>
+								<span><img class="biao_custId1" id="custNm" src="../../assets/img/biaoge.png" alt="" /></span>
+							</div>
+							<div style="margin-left:32px">&emsp;应收余额：<input type="text" class="recvblBal" /></div>
+							<div>最近发票时间：<input type="text" class="ltstInvTm" calendar="YYYY-MM-DD" /></div>
+							<div>最近发票金额：<input type="text" class="ltstInvAmt" /></div>
+							<div>最近收款时间：<input type="text" class="ltstRecvTm" calendar="YYYY-MM-DD" /></div>
+							<div>最近收款金额：<input type="text" class="ltstRecvAmt" /></div>
+							<div>营业执照照片：<input type="text" class="bizLicsPic" /></div>
+							<div style="margin-left:26px">银行开户许可证：<input type="text" class="bankOpenAcctLics" /></div>
+
+							<div>&emsp;&emsp;&emsp;联系人：<input class="contcr" type="text" /></div>
+							<div>&emsp;&emsp;&emsp;&emsp;电话：<input type="text" class="tel" /></div>
+
+							<div>&emsp;&emsp;&emsp;&emsp;地址：<input type="text" class="addr" /></div>
+							<div style="margin-left:11px">统一社会信用代码：<input type="text" class="sctyCrdtCd" /></div>
+							<div>&emsp;&emsp;开票单位：<input type="text" id="bllgCorp" class="bllgCorp" />
+								<span><img class="biao_custId2" src="../../assets/img/biaoge.png" alt="" /></span>
+							</div>
+							<div>开户银行：<input type="text" class="opnBnk" /></div>
+							<div>&emsp;&emsp;银行账号：<input type="text" class="bkatNum" /></div>
+							<div>所属银行编码：<input type="text" class="bankEncd" /></div>
+							<div>&emsp;&emsp;发货地址：<input type="text" class="delvAddr" /></div>
+
+							<div>&emsp;&emsp;发展日期：<input type="text" class="devDt" calendar="YYYY-MM-DD" /></div>
+							<div>&emsp;&emsp;&emsp;创建人：<input type="text" class="setupPers" /></div>
+							<div>&emsp;&emsp;创建时间：<input type="text" class="setupDt" calendar="YYYY-MM-DD" /></div>
+							<div>&emsp;&emsp;&emsp;修改人：<input type="text" class="mdfr" /></div>
+							<div>&emsp;&emsp;修改时间：<input type="text" class="modiDt" calendar="YYYY-MM-DD" /></div>
+							<div>&emsp;&emsp;&emsp;&emsp;税率：<input type="text" class="taxRate" /></div>
+
+							<div>&emsp;&emsp;&emsp;&emsp;备注：<input type="text" class="memo" /></div>
+							<div id="addr" style="display: none;"></div>
+							<div style="display: none;">&emsp;&emsp;&emsp;&emsp;<input id="custId1" type="text" class="gh" /></div>
+						</div>
+
+					</form>
+					<div id="buttonn">
+						<button class="saveOrder">保存</button>
+						<button class="update">保存</button>
+						<button class="cancel">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
